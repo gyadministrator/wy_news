@@ -1,5 +1,6 @@
 package com.android.wy.news.activity
 
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
@@ -20,17 +21,25 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     }
 
     override fun initData() {
-        val mTitles = Constants.mTitleList
+        val titleList = Constants.mNewsTitleList
         val fragments = ArrayList<Fragment>()
-        for (i in mTitles.indices) {
-            val fragment = NewsFragment.newInstance(mTitles[i])
-            fragments.add(fragment)
+        val mTitles = arrayListOf<String>()
+        if (titleList.size > 0) {
+            for (i in titleList.indices) {
+                val titleEntity = titleList[i]
+                val tid = titleEntity.tid
+                mTitles.add(titleEntity.title)
+                if (!TextUtils.isEmpty(tid)) {
+                    val fragment = NewsFragment.newInstance(tid)
+                    fragments.add(fragment)
+                }
+            }
+            viewPager.offscreenPageLimit = mTitles.size
+            viewPager.adapter =
+                FragmentPageAdapter(supportFragmentManager, fragments, mTitles.toTypedArray())
+            tabLayout.setupWithViewPager(viewPager)
+            tabLayout.initLayout()
         }
-        viewPager.offscreenPageLimit = mTitles.size
-        viewPager.adapter =
-            FragmentPageAdapter(supportFragmentManager, fragments, mTitles.toTypedArray())
-        tabLayout.setupWithViewPager(viewPager)
-        tabLayout.initLayout()
     }
 
     override fun initEvent() {

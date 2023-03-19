@@ -1,5 +1,7 @@
 package com.android.wy.news.common
 
+import com.android.wy.news.entity.NewsTitleEntity
+
 /*     
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/3/16 19:18
@@ -10,7 +12,8 @@ class Constants {
     companion object {
         const val BASE_URL = "https://3g.163.com"
         const val BASE_HEAD_URL = "http://c.m.163.com"
-        val map = hashMapOf<String, String>()
+        val mNewsTitleList = arrayListOf<NewsTitleEntity>()
+        /*val map = hashMapOf<String, String>()
         val mTitleList = arrayListOf<String>()
         fun initUrl() {
             map.clear()
@@ -37,6 +40,6 @@ class Constants {
             while (iterator.hasNext()) {
                 mTitleList.add(iterator.next())
             }
-        }
+        }*/
     }
 }

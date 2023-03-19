@@ -12,6 +12,5 @@ import com.android.wy.news.common.Constants
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        Constants.initUrl()
     }
 }

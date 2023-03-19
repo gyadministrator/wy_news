@@ -1,5 +1,6 @@
 package com.android.wy.news.common
 
+import android.content.Context
 import android.content.res.Resources
 import android.text.TextUtils
 import android.view.View
@@ -10,6 +11,9 @@ import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -45,13 +49,33 @@ class CommonTools {
                             content.substring(content.indexOf("["), content.length - 1)
                         val gson = Gson()
                         dataList = gson.fromJson(
-                            realContent,
-                            object : TypeToken<ArrayList<NewsEntity>>() {}.type
+                            realContent, object : TypeToken<ArrayList<NewsEntity>>() {}.type
                         )
                     }
                 }
             }
             return dataList
+        }
+
+        fun getAssertContent(context: Context, json: String): String {
+            val stringBuilder = StringBuilder()
+            val inputStream: InputStream
+            try {
+                inputStream = context.resources.assets.open(json)
+                val inputStreamReader = InputStreamReader(inputStream)
+                val bufferedReader = BufferedReader(inputStreamReader)
+                var jsonLine = bufferedReader.readLine()
+                while (jsonLine != null) {
+                    stringBuilder.append(jsonLine)
+                    jsonLine = bufferedReader.readLine()
+                }
+                bufferedReader.close()
+                inputStreamReader.close()
+                inputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return stringBuilder.toString()
         }
     }
 }

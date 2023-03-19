@@ -49,7 +49,8 @@
         </activity>
         <activity
             android:name=".activity.HomeActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".activity.WebActivity"
             android:exported="true" />

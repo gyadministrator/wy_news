@@ -5,14 +5,12 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.android.wy.news.R
+import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.NewsAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentNewsBinding
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.viewmodel.NewsViewModel
-import com.android.wy.news.activity.WebActivity
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.jcodecraeer.xrecyclerview.ProgressStyle
 import com.jcodecraeer.xrecyclerview.XRecyclerView
@@ -20,7 +18,6 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView
 
 class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     XRecyclerView.LoadingListener, NewsAdapter.OnNewsListener {
-    private var mTitle: String = ""
     private var pageStart = 0
     private var tid: String? = null
     private lateinit var rvContent: XRecyclerView
@@ -30,24 +27,23 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     private var isLoading = false
 
     companion object {
-        private const val mKey: String = "news_title"
-        fun newInstance(title: String): NewsFragment {
+        private const val mKey: String = "news_tid"
+        fun newInstance(tid: String): NewsFragment {
             val newsFragment = NewsFragment()
             val bundle = Bundle()
-            bundle.putString(mKey, title)
+            bundle.putString(mKey, tid)
             newsFragment.arguments = bundle
             return newsFragment
         }
     }
 
     override fun initView() {
-        shimmerRecyclerView=mBinding.shimmerRecyclerView
+        shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
         rvContent = mBinding.rvContent
         rvContent.defaultFootView.setNoMoreHint("没有更多数据了")
         rvContent.defaultFootView.setLoadingHint("正在加载...")
         rvContent.defaultRefreshHeaderView.setRefreshTimeVisible(true)
-        //rvContent.defaultRefreshHeaderView.setArrowImageView(R.mipmap.loading)
         rvContent.setLimitNumberToCallLoadMore(2)
         rvContent.setRefreshProgressStyle(ProgressStyle.BallPulse)
         rvContent.setLoadingMoreProgressStyle(ProgressStyle.BallPulse)
@@ -68,9 +64,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     override fun initEvent() {
         val arguments = arguments
         if (arguments != null) {
-            mTitle = arguments.getString(mKey, "")
+            tid = arguments.getString(mKey, "")
         }
-        tid = Constants.map[mTitle]
         getNewsData()
     }
 

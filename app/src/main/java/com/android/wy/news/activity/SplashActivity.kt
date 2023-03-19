@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import androidx.lifecycle.Observer
 import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.view.LoadingView
@@ -19,13 +21,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initData() {
-        mViewModel.init()
-        Handler(Looper.getMainLooper()).postDelayed({
-            loadingView.stopLoadingAnim()
-            val intent = Intent(mActivity, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 1500)
+        mViewModel.init(this)
     }
 
     override fun initEvent() {
@@ -45,6 +41,15 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun onNotifyDataChanged() {
-
+        mViewModel.isReadFinish.observe(this) {
+            if (it) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    loadingView.stopLoadingAnim()
+                    val intent = Intent(mActivity, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }, 1500)
+            }
+        }
     }
 }
