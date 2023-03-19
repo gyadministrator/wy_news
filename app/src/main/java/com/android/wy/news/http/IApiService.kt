@@ -14,8 +14,7 @@ import retrofit2.http.Path
 interface IApiService {
     @GET("/touch/reconstruct/article/list/{tid}/{pageStart}-10.html")
     fun getNewsList(
-        @Path("tid") tid: String,
-        @Path("pageStart") pageStart: Int
+        @Path("tid") tid: String, @Path("pageStart") pageStart: Int
     ): Call<ResponseBody>
 
     @GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-10.do?callback=videoList")
@@ -23,6 +22,6 @@ interface IApiService {
         @Path("pageStart") pageStart: Int
     ): Call<ResponseBody>
 
-    @GET("/nc/article/headline/T1348647853363/0-10.html")
-    fun getHeaderNews(): Call<ResponseBody>
+    @GET("/nc/article/headline/T1348647853363/{pageStart}-10.html")
+    fun getHeaderNews(@Path("pageStart") pageStart: Int): Call<ResponseBody>
 }

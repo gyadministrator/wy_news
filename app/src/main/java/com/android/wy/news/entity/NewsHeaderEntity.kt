@@ -1,0 +1,131 @@
+package com.android.wy.news.entity
+
+data class NewsHeaderEntity(
+    val TAGS: String,
+    val ads: List<Ad>,
+    val alias: String,
+    val boardid: String,
+    val category: String,
+    val cid: String,
+    val commentStatus: Int,
+    val daynum: String,
+    val digest: String,
+    val docid: String,
+    val downTimes: Int,
+    val editor: List<Any>,
+    val ename: String,
+    val extraShowFields: String,
+    val hasAD: Int,
+    val hasCover: Boolean,
+    val hasHead: Int,
+    val hasIcon: Boolean,
+    val hasImg: Int,
+    val imgType: Int,
+    val imgsrc: String,
+    val length: Int,
+    val lmodify: String,
+    val ltitle: String,
+    val mtime: String,
+    val order: Int,
+    val postid: String,
+    val priority: Int,
+    val ptime: String,
+    val quality: Int,
+    val replyCount: Int,
+    val replyid: String,
+    val riskLevel: Int,
+    val skipID: String,
+    val skipType: String,
+    val source: String,
+    val sourceId: String,
+    val subtitle: String,
+    val template: String,
+    val title: String,
+    val tname: String,
+    val topic_background: String,
+    val topicid: String,
+    val upTimes: Int,
+    val url: String,
+    val url_3w: String,
+    val videoID: String,
+    val videoTopic: VideoTopic,
+    val videoinfo: Videoinfo,
+    val videosource: String,
+    val votecount: Int
+)
+
+data class Ad(
+    val imgsrc: String,
+    val skipID: String,
+    val skipType: String,
+    val subtitle: String,
+    val tag: String,
+    val title: String,
+    val url: String
+)
+
+data class VideoTopic(
+    val alias: String,
+    val certificationImg: String,
+    val certificationText: String,
+    val ename: String,
+    val tid: String,
+    val tname: String,
+    val topic_icons: String
+)
+
+data class Videoinfo(
+    val cover: String,
+    val description: String,
+    val firstFrameImg: String,
+    val length: Int,
+    val m3u8_url: String,
+    val mp4_url: String,
+    val playCount: Int,
+    val playersize: Int,
+    val ptime: String,
+    val replyBoard: String,
+    val replyCount: Int,
+    val replyid: String,
+    val sectiontitle: String,
+    val shortVideoImg: String,
+    val title: String,
+    val vid: String,
+    val videoRatio: Double,
+    val video_data: VideoData,
+    val videosource: String
+)
+
+data class VideoData(
+    val duration: Int,
+    val hd_preload_size: Int,
+    val hd_size: Int,
+    val hd_url: String,
+    val hevc_hdpreload_size: Int,
+    val hevc_preload_size: Int,
+    val hevc_shdpreload_size: Int,
+    val hevc_size: Int,
+    val hevc_url: String,
+    val hideAd: Boolean,
+    val knowledgeVideo: Int,
+    val play_info: List<PlayInfo>,
+    val play_info_hevc: Any,
+    val ratio: Double,
+    val sd_preload_size: Int,
+    val sd_size: Int,
+    val sd_url: String,
+    val shd_preload_size: Int,
+    val shd_size: Int,
+    val shd_url: String,
+    val soloVideo: String
+)
+
+data class PlayInfo(
+    val encode_format: String,
+    val label: String,
+    val preload_size: Int,
+    val quality_desc: String,
+    val quality_index: Int,
+    val size: Int,
+    val url: String
+)

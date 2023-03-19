@@ -9,6 +9,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityHomeBinding
 import com.android.wy.news.common.Constants
 import com.android.wy.news.fragment.NewsFragment
+import com.android.wy.news.fragment.NewsHeaderFragment
 import com.android.wy.news.viewmodel.HomeViewModel
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
@@ -24,6 +25,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         val titleList = Constants.mNewsTitleList
         val fragments = ArrayList<Fragment>()
         val mTitles = arrayListOf<String>()
+        fragments.add(NewsHeaderFragment.newInstance())
         if (titleList.size > 0) {
             for (i in titleList.indices) {
                 val titleEntity = titleList[i]

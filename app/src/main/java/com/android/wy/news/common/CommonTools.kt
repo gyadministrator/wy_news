@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.android.wy.news.entity.NewsEntity
+import com.android.wy.news.entity.NewsHeaderEntity
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -52,6 +53,20 @@ class CommonTools {
                             realContent, object : TypeToken<ArrayList<NewsEntity>>() {}.type
                         )
                     }
+                }
+            }
+            return dataList
+        }
+
+        fun parseHeaderData(data: String?): ArrayList<NewsHeaderEntity> {
+            var dataList = ArrayList<NewsHeaderEntity>()
+            if (data != null && !TextUtils.isEmpty(data)) {
+                if (data.contains("[") && data.endsWith("]}")) {
+                    val realContent = data.substring(data.indexOf("["), data.length - 1)
+                    val gson = Gson()
+                    dataList = gson.fromJson(
+                        realContent, object : TypeToken<ArrayList<NewsHeaderEntity>>() {}.type
+                    )
                 }
             }
             return dataList
