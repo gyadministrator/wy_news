@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import androidx.lifecycle.Observer
-import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.view.LoadingView
 import com.android.wy.news.viewmodel.SplashViewModel
 
@@ -37,7 +35,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun onClear() {
-
+        loadingView.stopLoadingAnim()
     }
 
     override fun onNotifyDataChanged() {
@@ -45,7 +43,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
             if (it) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     loadingView.stopLoadingAnim()
-                    val intent = Intent(mActivity, HomeActivity::class.java)
+                    val intent = Intent(mActivity, NewsMainActivity::class.java)
                     startActivity(intent)
                     finish()
                 }, 1500)

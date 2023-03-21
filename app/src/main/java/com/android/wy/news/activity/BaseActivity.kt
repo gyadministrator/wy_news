@@ -3,8 +3,6 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.KeyEvent
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.android.wy.news.R
@@ -23,7 +21,6 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     protected lateinit var mBinding: V
     protected lateinit var mViewModel: M
     protected lateinit var mActivity: AppCompatActivity
-    private var firstTime: Long = 0
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,24 +41,5 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     override fun onDestroy() {
         super.onDestroy()
         onClear()
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN && this.javaClass.name.equals(
-                    "MainActivity"
-                )
-            ) {
-                val secondTime = System.currentTimeMillis()
-                if (secondTime - firstTime > 2000) {
-                    Toast.makeText(mActivity, "再按一次退出程序", Toast.LENGTH_SHORT).show()
-                    firstTime = secondTime
-                    return true
-                } else {
-                    finish()
-                }
-            }
-        }
-        return super.onKeyDown(keyCode, event)
     }
 }

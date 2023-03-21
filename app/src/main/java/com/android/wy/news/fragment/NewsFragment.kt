@@ -3,8 +3,6 @@ package com.android.wy.news.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.NewsAdapter
 import com.android.wy.news.common.CommonTools
@@ -12,7 +10,6 @@ import com.android.wy.news.databinding.FragmentNewsBinding
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.viewmodel.NewsViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
-import com.jcodecraeer.xrecyclerview.ProgressStyle
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 
 
@@ -41,17 +38,6 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
         rvContent = mBinding.rvContent
-        rvContent.defaultFootView.setNoMoreHint("没有更多数据了")
-        rvContent.defaultFootView.setLoadingHint("正在加载...")
-        rvContent.defaultRefreshHeaderView.setRefreshTimeVisible(true)
-        rvContent.setLimitNumberToCallLoadMore(2)
-        rvContent.setRefreshProgressStyle(ProgressStyle.BallPulse)
-        rvContent.setLoadingMoreProgressStyle(ProgressStyle.BallPulse)
-        (rvContent.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        (rvContent.itemAnimator as SimpleItemAnimator).changeDuration = 0
-        val recycledViewPool = RecyclerView.RecycledViewPool()
-        recycledViewPool.setMaxRecycledViews(0, 10)
-        rvContent.setRecycledViewPool(recycledViewPool)
     }
 
     override fun initData() {
@@ -86,7 +72,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     }
 
     override fun onClear() {
-
+        rvContent.destroy()
     }
 
     override fun onNotifyDataChanged() {
@@ -115,7 +101,6 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     }
 
     override fun onRefresh() {
-        newsAdapter
         isRefresh = true
         rvContent.setNoMore(false)
         pageStart = 0
@@ -128,16 +113,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
         getNewsData()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        rvContent.destroy()
-    }
-
     override fun onNewsItemClickListener(view: View, newsEntity: NewsEntity) {
-        WebActivity.startActivity(mActivity, newsEntity.url)
-    }
-
-    override fun onNewsItemLongClickListener(view: View, newsEntity: NewsEntity) {
-
+        WebActivity.startActivity(mActivity, newsEntity.docid)
     }
 }

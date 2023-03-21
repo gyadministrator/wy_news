@@ -10,11 +10,16 @@ import com.android.wy.news.entity.NewsTitleEntity
   * //map["视频"] = "/touch/nc/api/video/recommend/Video_Recom/0-10.do?callback=videoList"
   * //0-10，表示从0开始，取10条，下一组数据可以拼 10-10
     //touch/reconstruct/article/list/BBM54PGAwangning/0-10.html
+    * {
+    "title": "新闻",
+    "tid": "BBM54PGAwangning"
+  }
  */
 class Constants {
     companion object {
         const val BASE_URL = "https://3g.163.com"
         const val BASE_HEAD_URL = "http://c.m.163.com"
+        const val WEB_URL = "https://3g.163.com/news/article/"
         val mNewsTitleList = arrayListOf<NewsTitleEntity>()
     }
 }

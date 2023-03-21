@@ -64,4 +64,5 @@ dependencies {
     implementation 'io.github.youth5201314:banner:2.2.2'
     //完整版引入
     implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.3.5-release-jitpack'
+    implementation 'com.github.gyadministrator:GYBottomBar:3.4'
 }

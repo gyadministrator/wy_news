@@ -2,7 +2,7 @@ package com.android.wy.news.entity
 
 data class NewsHeaderEntity(
     val TAGS: String,
-    val ads: List<Ad>,
+    val ads: List<Ad>?,
     val alias: String,
     val boardid: String,
     val category: String,
