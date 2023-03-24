@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.entity.IpEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.http.HttpManager
@@ -27,13 +28,34 @@ class SplashViewModel : BaseViewModel() {
 
     fun init(context: Context) {
         ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
-        ThreadExecutorManager.mInstance.startExecute { getLiveHeader() }
+        ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
+        ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
     }
 
-    private fun getLiveHeader() {
+    private fun getIpInfo() {
+        val apiService =
+            HttpManager.mInstance.getApiService(Constants.IP_INFO_URL, IApiService::class.java)
+        val observable = apiService.getCityByIp()
+        observable.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val s = response.body()?.string()
+                val gson = Gson()
+                val ipEntity = gson.fromJson(s, IpEntity::class.java)
+                val result = ipEntity.result
+                Constants.currentCity = result.city
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.message?.let { msg.postValue(it) }
+            }
+
+        })
+    }
+
+    private fun getLiveClassify() {
         val apiService =
             HttpManager.mInstance.getApiService(Constants.LIVE_URL, IApiService::class.java)
-        val observable = apiService.getLiveHeader()
+        val observable = apiService.getLiveClassify()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()

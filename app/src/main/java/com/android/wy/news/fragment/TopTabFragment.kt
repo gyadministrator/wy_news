@@ -1,6 +1,9 @@
 package com.android.wy.news.fragment
 
+import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +12,9 @@ import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentTabTopBinding
+import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.Ad
+import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.viewmodel.TopViewModel
 import com.bumptech.glide.Glide
@@ -31,6 +36,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private var isLoading = false
     private lateinit var newsHeaderAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
+    private lateinit var llContent: LinearLayout
 
     companion object {
         fun newInstance() = TopTabFragment()
@@ -40,6 +46,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
         rvContent = mBinding.rvContent
+        llContent = mBinding.llContent
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
@@ -52,7 +59,12 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun initEvent() {
-        getHeaderData()
+        getTopData()
+        getCityData()
+    }
+
+    private fun getCityData() {
+        mViewModel.getCityNews(Constants.currentCity)
     }
 
     override fun getViewBinding(): FragmentTabTopBinding {
@@ -68,7 +80,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun onNotifyDataChanged() {
-        mViewModel.headDataList.observe(this) {
+        mViewModel.topNewsList.observe(this) {
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -103,6 +115,51 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 refreshLayout.finishLoadMore()
             }
         }
+
+        mViewModel.cityNewsList.observe(this) {
+            addCityNewsHeader(it)
+        }
+    }
+
+    private fun addCityNewsHeader(it: ArrayList<House>?) {
+        if (it != null && it.size > 0) {
+            llContent.removeAllViews()
+            for (i in 0 until it.size) {
+                val cityItemBinding = LayoutTopCityItemBinding.inflate(layoutInflater)
+                val tvTitle = cityItemBinding.tvTitle
+                val tvSource = cityItemBinding.tvSource
+                val tvTime = cityItemBinding.tvTime
+
+                val house = it[i]
+                tvTitle.text = house.title
+                val time = CommonTools.parseTime(house.ptime)
+                if (TextUtils.isEmpty(time)) {
+                    tvTime.text = house.ptime
+                } else {
+                    tvTime.text = time
+                }
+                tvSource.text = house.source
+
+                val root = cityItemBinding.root
+                val parent = root.parent
+                if (parent != null && parent is ViewGroup) {
+                    parent.removeView(root)
+                }
+                llContent.tag = house
+                llContent.setOnClickListener(CityNewsClickListener())
+                llContent.addView(root)
+            }
+        }
+    }
+
+    private class CityNewsClickListener : View.OnClickListener {
+        override fun onClick(p0: View?) {
+            if (p0 != null) {
+                val house = p0.tag as House
+                WebActivity.startActivity(p0.context, house.link)
+            }
+        }
+
     }
 
     private fun addBannerHeader(topEntity: TopEntity) {
@@ -134,20 +191,21 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
 
-    private fun getHeaderData() {
-        mViewModel.getHeaderNews(pageStart)
+    private fun getTopData() {
+        mViewModel.getTopNews(pageStart)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
         pageStart = 0
-        getHeaderData()
+        getTopData()
+        getCityData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         isLoading = true
         pageStart += 10
-        getHeaderData()
+        getTopData()
     }
 
     override fun onTopItemClickListener(view: View, topEntity: TopEntity) {

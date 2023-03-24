@@ -4,6 +4,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -23,14 +24,20 @@ interface IApiService {
     ): Call<ResponseBody>
 
     @GET("/nc/article/headline/T1348647853363/{pageStart}-10.html")
-    fun getHeaderNews(@Path("pageStart") pageStart: Int): Call<ResponseBody>
+    fun getTopNews(@Path("pageStart") pageStart: Int): Call<ResponseBody>
 
     @GET("/livechannel/classifylist.json")
-    fun getLiveHeader(): Call<ResponseBody>
+    fun getLiveClassify(): Call<ResponseBody>
 
     @GET("/livechannel/classify/{liveId}/{pageNum}.json")
     fun getLiveList(@Path("liveId") liveId: Int, @Path("pageNum") pageNum: Int): Call<ResponseBody>
 
     @GET("api/v1/pc-wap/rolling-word")
     fun getHotWord(): Call<ResponseBody>
+
+    @GET("/locate/api/getLocByIp")
+    fun getCityByIp(): Call<ResponseBody>
+
+    @GET("/bj/api/indexCmsNews?")
+    fun getCurrentCityNewsList(@Query("city") city: String): Call<ResponseBody>
 }
