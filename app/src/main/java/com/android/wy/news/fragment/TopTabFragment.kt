@@ -1,44 +1,39 @@
 package com.android.wy.news.fragment
 
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.adapter.NewsAdapter
+import com.android.wy.news.adapter.HeaderAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
-import com.android.wy.news.databinding.FragmentNewsBinding
-import com.android.wy.news.entity.NewsEntity
-import com.android.wy.news.viewmodel.NewsViewModel
+import com.android.wy.news.databinding.FragmentTabTopBinding
+import com.android.wy.news.entity.Ad
+import com.android.wy.news.entity.NewsHeaderEntity
+import com.android.wy.news.viewmodel.TopViewModel
+import com.bumptech.glide.Glide
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.holder.BannerImageHolder
+import com.youth.banner.indicator.CircleIndicator
 
-
-class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
-    OnRefreshListener, OnLoadMoreListener, NewsAdapter.OnNewsListener {
+class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
+    HeaderAdapter.OnNewsListener, OnRefreshListener, OnLoadMoreListener {
     private var pageStart = 0
-    private var tid: String? = null
     private lateinit var rvContent: RecyclerView
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
-    private lateinit var newsAdapter: NewsAdapter
     private var isRefresh = false
     private var isLoading = false
+    private lateinit var newsHeaderAdapter: HeaderAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
 
     companion object {
-        private const val mKey: String = "news_tid"
-        fun newInstance(tid: String): NewsFragment {
-            val newsFragment = NewsFragment()
-            val bundle = Bundle()
-            bundle.putString(mKey, tid)
-            newsFragment.arguments = bundle
-            return newsFragment
-        }
+        fun newInstance() = TopTabFragment()
     }
 
     override fun initView() {
@@ -51,33 +46,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     }
 
     override fun initData() {
-        newsAdapter = NewsAdapter(mActivity, this)
+        newsHeaderAdapter = HeaderAdapter(mActivity, this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
-        rvContent.adapter = newsAdapter
+        rvContent.adapter = newsHeaderAdapter
     }
 
     override fun initEvent() {
-        val arguments = arguments
-        if (arguments != null) {
-            tid = arguments.getString(mKey, "")
-        }
-        getNewsData()
+        getHeaderData()
     }
 
-    private fun getNewsData() {
-        tid.let {
-            if (it != null) {
-                mViewModel.getNewsList(it, pageStart)
-            }
-        }
+    override fun getViewBinding(): FragmentTabTopBinding {
+        return FragmentTabTopBinding.inflate(layoutInflater)
     }
 
-    override fun getViewBinding(): FragmentNewsBinding {
-        return FragmentNewsBinding.inflate(layoutInflater)
-    }
-
-    override fun getViewModel(): NewsViewModel {
-        return CommonTools.getViewModel(this, NewsViewModel::class.java)
+    override fun getViewModel(): TopViewModel {
+        return CommonTools.getViewModel(this, TopViewModel::class.java)
     }
 
     override fun onClear() {
@@ -85,7 +68,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     }
 
     override fun onNotifyDataChanged() {
-        mViewModel.dataList.observe(this) {
+        mViewModel.headDataList.observe(this) {
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -99,10 +82,11 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
                 }
             } else {
                 if (isRefresh) {
-                    newsAdapter.refreshData(it)
+                    newsHeaderAdapter.refreshData(it)
                 } else {
-                    newsAdapter.loadMoreData(it)
+                    newsHeaderAdapter.loadMoreData(it)
                 }
+                addBannerHeader(it[0])
             }
             shimmerRecyclerView.hideShimmerAdapter()
             isRefresh = false
@@ -121,20 +105,53 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
         }
     }
 
-    override fun onNewsItemClickListener(view: View, newsEntity: NewsEntity) {
+    private fun addBannerHeader(newsHeaderEntity: NewsHeaderEntity) {
+        val banner = mBinding.banner
+        val titleList = ArrayList<String>()
+        val ads = newsHeaderEntity.ads
+        if (ads != null && ads.isNotEmpty()) {
+            for (i in ads.indices) {
+                val ad = ads[i]
+                titleList.add(ad.title)
+            }
+            banner.setAdapter(object : BannerImageAdapter<Ad?>(ads) {
+
+                override fun onBindView(
+                    holder: BannerImageHolder?, data: Ad?, position: Int, size: Int
+                ) {
+                    if (holder != null && data != null) {
+                        //图片加载自己实现
+                        Glide.with(holder.itemView).load(data.imgsrc).into(holder.imageView)
+                    }
+                }
+            })
+                //.addBannerLifecycleObserver(mActivity!!) //添加生命周期观察者
+                .setIndicator(CircleIndicator(mActivity)).setBannerGalleryEffect(10, 10)
+                .setIndicatorHeight(10)
+            //.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)//设置页码与标题
+            //.setBannerTitles(titleList)
+        }
+    }
+
+    override fun onNewsItemClickListener(view: View, newsEntity: NewsHeaderEntity) {
         val url = Constants.WEB_URL + newsEntity.docid + ".html"
         WebActivity.startActivity(mActivity, url)
+    }
+
+    private fun getHeaderData() {
+        mViewModel.getHeaderNews(pageStart)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
         pageStart = 0
-        getNewsData()
+        getHeaderData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         isLoading = true
         pageStart += 10
-        getNewsData()
+        getHeaderData()
     }
+
 }

@@ -7,15 +7,15 @@ import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
-import com.android.wy.news.viewmodel.ChannelViewModel
-import com.android.wy.news.databinding.FragmentChannelBinding
+import com.android.wy.news.databinding.FragmentTabClassifyBinding
+import com.android.wy.news.viewmodel.ClassifyTabViewModel
 
-class ChannelFragment : BaseFragment<FragmentChannelBinding, ChannelViewModel>() {
+class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTabViewModel>() {
     private lateinit var tabLayout: CustomTabLayout
     private lateinit var viewPager: ViewPager
 
     companion object {
-        fun newInstance() = ChannelFragment()
+        fun newInstance() = ClassifyTabFragment()
     }
 
     override fun initView() {
@@ -50,12 +50,12 @@ class ChannelFragment : BaseFragment<FragmentChannelBinding, ChannelViewModel>()
 
     }
 
-    override fun getViewBinding(): FragmentChannelBinding {
-        return FragmentChannelBinding.inflate(layoutInflater)
+    override fun getViewBinding(): FragmentTabClassifyBinding {
+        return FragmentTabClassifyBinding.inflate(layoutInflater)
     }
 
-    override fun getViewModel(): ChannelViewModel {
-        return CommonTools.getViewModel(this, ChannelViewModel::class.java)
+    override fun getViewModel(): ClassifyTabViewModel {
+        return CommonTools.getViewModel(this, ClassifyTabViewModel::class.java)
     }
 
     override fun onClear() {

@@ -3,9 +3,8 @@ package com.android.wy.news.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.common.CommonTools
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.bumptech.glide.Glide
-import com.jcodecraeer.xrecyclerview.XRecyclerView
 
 
 /*
@@ -14,23 +13,28 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView
   * @Version:        1.0
   * @Description:    
  */
-class NewsRecyclerView : XRecyclerView {
+class NewsRecyclerView : RecyclerView {
     private var mContext: Context?
 
-    constructor(context: Context?) : this(context, null)
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
         context,
         attrs,
         defStyle
     ) {
         mContext = context
-        CommonTools.initRecyclerView(this)
+        overScrollMode = OVER_SCROLL_NEVER
+        (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        (itemAnimator as SimpleItemAnimator).changeDuration = 0
+        val recycledViewPool = RecycledViewPool()
+        recycledViewPool.setMaxRecycledViews(0, 10)
+        setRecycledViewPool(recycledViewPool)
         initListener()
     }
 
     private fun initListener() {
-        addOnScrollListener(LoadScrollListener(mContext))
+        //addOnScrollListener(LoadScrollListener(mContext))
     }
 
     private class LoadScrollListener(var context: Context?) : OnScrollListener() {

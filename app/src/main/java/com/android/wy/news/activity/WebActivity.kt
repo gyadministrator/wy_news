@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.ActivityWebBinding
 import com.android.wy.news.view.LoadingView
 import com.android.wy.news.viewmodel.WebViewModel
@@ -26,10 +25,10 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     private lateinit var loadingView: LoadingView
 
     companion object {
-        private const val DOC_ID = "doc_id"
-        fun startActivity(context: Context, docID: String) {
+        private const val WEB_URL = "web_url"
+        fun startActivity(context: Context, url: String) {
             val intent = Intent(context, WebActivity::class.java)
-            intent.putExtra(DOC_ID, docID)
+            intent.putExtra(WEB_URL, url)
             context.startActivity(intent)
         }
     }
@@ -44,9 +43,8 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
 
     override fun initData() {
         val intent = intent
-        if (intent.hasExtra(DOC_ID)) {
-            val docID = intent.getStringExtra(DOC_ID).toString()
-            url = Constants.WEB_URL + docID + ".html"
+        if (intent.hasExtra(WEB_URL)) {
+            url = intent.getStringExtra(WEB_URL).toString()
         }
         llContent.visibility = View.GONE
         agentWeb = AgentWeb.with(this)
@@ -143,6 +141,10 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun setDefaultImmersionBar(): Boolean {
+        return true
     }
 
 }

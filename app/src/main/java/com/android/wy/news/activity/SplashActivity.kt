@@ -43,11 +43,15 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
             if (it) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     loadingView.stopLoadingAnim()
-                    val intent = Intent(mActivity, NewsMainActivity::class.java)
+                    val intent = Intent(mActivity, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 }, 1500)
             }
         }
+    }
+
+    override fun setDefaultImmersionBar(): Boolean {
+        return true
     }
 }

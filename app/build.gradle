@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.android.wy.news"
-        minSdk 21
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -59,10 +59,19 @@ dependencies {
     // 基础依赖包，必须要依赖
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
-    implementation 'com.jcodecraeer:xrecyclerview:1.6.0'
     //轮播图
     implementation 'io.github.youth5201314:banner:2.2.2'
     //完整版引入
     implementation 'com.github.CarGuo.GSYVideoPlayer:GSYVideoPlayer:v8.3.5-release-jitpack'
-    implementation 'com.github.gyadministrator:GYBottomBar:3.4'
+    implementation 'com.github.gyadministrator:GYBottomBar:3.8'
+
+    //刷新
+    implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖
+    implementation 'io.github.scwang90:refresh-header-classics:2.0.5'    //经典刷新头
+    implementation 'io.github.scwang90:refresh-header-radar:2.0.5'       //雷达刷新头
+    implementation 'io.github.scwang90:refresh-header-falsify:2.0.5'     //虚拟刷新头
+    implementation 'io.github.scwang90:refresh-header-material:2.0.5'    //谷歌刷新头
+    implementation 'io.github.scwang90:refresh-header-two-level:2.0.5'   //二级刷新头
+    implementation 'io.github.scwang90:refresh-footer-ball:2.0.5'        //球脉冲加载
+    implementation 'io.github.scwang90:refresh-footer-classics:2.0.5'    //经典加载
 }

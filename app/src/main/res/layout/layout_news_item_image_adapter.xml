@@ -16,19 +16,16 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="今日说法" />
 
-    <ImageView
-        android:id="@+id/iv_cover"
+    <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:adjustViewBounds="true"
-        android:src="@mipmap/img_default"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
     <TextView
-        android:id="@+id/tv_read"
+        android:id="@+id/tv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
@@ -38,8 +35,8 @@
         android:textColor="@color/third_title"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_cover"
-        tools:text="1000次播放" />
+        app:layout_constraintTop_toBottomOf="@id/ll_content"
+        tools:text="1000评论" />
 
     <TextView
         android:id="@+id/tv_source"
@@ -52,8 +49,8 @@
         android:maxLines="1"
         android:textColor="@color/third_title"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tv_read"
-        app:layout_constraintTop_toBottomOf="@id/iv_cover"
+        app:layout_constraintStart_toEndOf="@+id/tv_comment"
+        app:layout_constraintTop_toBottomOf="@id/ll_content"
         tools:text="今日晚报" />
 
     <TextView
@@ -65,7 +62,7 @@
         android:textColor="@color/third_title"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@id/tv_source"
-        app:layout_constraintTop_toBottomOf="@id/iv_cover"
+        app:layout_constraintTop_toBottomOf="@id/ll_content"
         tools:text="2023-03-21" />
 
     <View

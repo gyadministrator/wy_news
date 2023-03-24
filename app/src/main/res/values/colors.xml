@@ -13,4 +13,9 @@
     <color name="main_title">#000000</color>
     <color name="title_desc">#99000000</color>
     <color name="third_title">#66000000</color>
+    <color name="status_bar_color">@color/text_select_color</color>
+    <color name="text_normal_color">#CCCCCC</color>
+    <color name="text_select_color">#d81e06</color>
+    <color name="refresh_bg_color">@color/main_bg_color</color>
+    <color name="refresh_hint_color">@color/third_title</color>
 </resources>

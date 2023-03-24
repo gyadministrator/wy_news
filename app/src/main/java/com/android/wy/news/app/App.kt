@@ -1,7 +1,6 @@
 package com.android.wy.news.app
 
 import android.app.Application
-import com.android.wy.news.common.Constants
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -10,6 +9,7 @@ import com.android.wy.news.common.Constants
   * @Description:    
  */
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
     }

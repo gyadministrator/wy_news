@@ -1,6 +1,6 @@
 package com.android.wy.news.viewmodel
 
-class ChannelViewModel : BaseViewModel() {
+class ClassifyTabViewModel : BaseViewModel() {
     override fun clear() {
 
     }

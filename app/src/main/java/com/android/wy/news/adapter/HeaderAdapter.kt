@@ -3,6 +3,7 @@ package com.android.wy.news.adapter
 import android.R.attr.banner
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.android.wy.news.entity.NewsHeaderEntity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.youth.banner.Banner
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 
@@ -27,7 +29,7 @@ import com.youth.banner.holder.BannerImageHolder
   * @Description:    
  */
 class HeaderAdapter(var context: Context, var newsListener: OnNewsListener) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener{
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<NewsHeaderEntity>()
 
     companion object {
@@ -72,7 +74,14 @@ class HeaderAdapter(var context: Context, var newsListener: OnNewsListener) :
         if (holder is NormalViewHolder) {
             holder.tvTitle.text = newsEntity.title
             holder.tvSource.text = newsEntity.source
-            holder.tvTime.text = newsEntity.ptime
+
+            val time = CommonTools.parseTime(newsEntity.ptime)
+            if (!TextUtils.isEmpty(time)) {
+                holder.tvTime.text = time
+            } else {
+                holder.tvTime.text = newsEntity.ptime
+            }
+
             val replyCount = newsEntity.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
@@ -87,7 +96,14 @@ class HeaderAdapter(var context: Context, var newsListener: OnNewsListener) :
             holder.tvTitle.text = newsEntity.title
             holder.tvDesc.text = newsEntity.digest
             holder.tvSource.text = newsEntity.source
-            holder.tvTime.text = newsEntity.ptime
+
+            val time = CommonTools.parseTime(newsEntity.ptime)
+            if (!TextUtils.isEmpty(time)) {
+                holder.tvTime.text = time
+            } else {
+                holder.tvTime.text = newsEntity.ptime
+            }
+
             val replyCount = newsEntity.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
@@ -97,29 +113,32 @@ class HeaderAdapter(var context: Context, var newsListener: OnNewsListener) :
                     holder.tvRead.text = replyCount.toString() + "评论"
                 }
             }
-            val ads = newsEntity.ads
-            holder.banner.setAdapter(object : BannerImageAdapter<Ad?>(ads) {
-
-                override fun onBindView(
-                    holder: BannerImageHolder?,
-                    data: Ad?,
-                    position: Int,
-                    size: Int
-                ) {
-                    if (holder != null && data != null) {
-                        //图片加载自己实现
-                        Glide.with(holder.itemView)
-                            .load(data.imgsrc)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(30)))
-                            .into(holder.imageView)
-                    }
-                }
-            })
-            // .addBannerLifecycleObserver(this) //添加生命周期观察者
-            //.setIndicator(CircleIndicator(this))
+            loadBanner(holder, newsEntity)
         }
         holder.itemView.tag = position
         holder.itemView.setOnClickListener(this)
+    }
+
+    private fun loadBanner(viewHolder: BannerViewHolder, newsEntity: NewsHeaderEntity) {
+        viewHolder.banner.setAdapter(object : BannerImageAdapter<Ad?>(newsEntity.ads) {
+
+            override fun onBindView(
+                holder: BannerImageHolder?,
+                data: Ad?,
+                position: Int,
+                size: Int
+            ) {
+                if (holder != null && data != null) {
+                    //图片加载自己实现
+                    Glide.with(holder.itemView)
+                        .load(data.imgsrc)
+                        .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
+                        .into(holder.imageView)
+                }
+            }
+        })
+        // .addBannerLifecycleObserver(this) //添加生命周期观察者
+        //.setIndicator(CircleIndicator(this))
     }
 
     override fun getItemCount(): Int {

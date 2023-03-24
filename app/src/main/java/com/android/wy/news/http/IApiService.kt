@@ -24,4 +24,13 @@ interface IApiService {
 
     @GET("/nc/article/headline/T1348647853363/{pageStart}-10.html")
     fun getHeaderNews(@Path("pageStart") pageStart: Int): Call<ResponseBody>
+
+    @GET("/livechannel/classifylist.json")
+    fun getLiveHeader(): Call<ResponseBody>
+
+    @GET("/livechannel/classify/{liveId}/{pageNum}.json")
+    fun getLiveList(@Path("liveId") liveId: Int, @Path("pageNum") pageNum: Int): Call<ResponseBody>
+
+    @GET("api/v1/pc-wap/rolling-word")
+    fun getHotWord(): Call<ResponseBody>
 }

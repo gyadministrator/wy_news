@@ -22,12 +22,19 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     protected lateinit var mViewModel: M
     protected lateinit var mActivity: AppCompatActivity
 
+    abstract fun setDefaultImmersionBar(): Boolean
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;//竖屏
-        ImmersionBar.with(this).statusBarColor(R.color.main_bg_color)
-            .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(true).init()
+        if (setDefaultImmersionBar()) {
+            ImmersionBar.with(this).statusBarColor(R.color.main_bg_color)
+                .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(true).init()
+        } else {
+            ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
+                .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
+        }
         mActivity = this
         mBinding = getViewBinding()
         setContentView(mBinding.root)

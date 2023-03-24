@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
   * @Description:    
  */
 abstract class BaseViewModel : ViewModel() {
-    protected val msg = MutableLiveData<String>()
+    val msg = MutableLiveData<String>()
 
     abstract fun clear()
     override fun onCleared() {

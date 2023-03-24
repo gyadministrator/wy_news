@@ -4,27 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context=".activity.HomeActivity">
+    android:orientation="vertical">
 
-    <com.android.tablib.view.CustomTabLayout
-        android:id="@+id/tab_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:normalTextColor="#666666"
-        app:normalTextSize="12sp"
-        app:selectTextColor="#FF0000"
-        app:selectTextSize="14sp"
-        app:tabIndicatorColor="#FF0000"
-        app:tabIndicatorFullWidth="true"
-        app:tabMaxWidth="0dp"
-        app:tabMode="auto" />
+        android:layout_height="wrap_content"
+        android:background="@color/status_bar_color">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_search">
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:src="@mipmap/search"
+                tools:ignore="ContentDescription" />
+
+            <com.android.wy.news.view.MarqueeTextView
+                android:id="@+id/marqueeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/iv_search"
+                android:gravity="center_vertical" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.android.bottombar.view.GYBottomBarView
+        android:id="@+id/bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fixed="true"
+        app:isPageRepeatLoading="false"
+        app:normalTextColor="@color/text_normal_color"
+        app:selectTextColor="@color/text_select_color" />
 </LinearLayout>

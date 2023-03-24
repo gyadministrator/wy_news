@@ -1,44 +1,32 @@
 package com.android.wy.news.fragment
 
-import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.adapter.NewsAdapter
+import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
-import com.android.wy.news.databinding.FragmentNewsBinding
-import com.android.wy.news.entity.NewsEntity
-import com.android.wy.news.viewmodel.NewsViewModel
+import com.android.wy.news.databinding.FragmentTabVideoBinding
+import com.android.wy.news.entity.VideoEntity
+import com.android.wy.news.viewmodel.VideoTabViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
-
-class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
-    OnRefreshListener, OnLoadMoreListener, NewsAdapter.OnNewsListener {
+class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
+    OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnNewsListener {
     private var pageStart = 0
-    private var tid: String? = null
     private lateinit var rvContent: RecyclerView
-    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
-    private lateinit var newsAdapter: NewsAdapter
     private var isRefresh = false
     private var isLoading = false
+    private lateinit var videoAdapter: VideoAdapter
+    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private lateinit var refreshLayout: SmartRefreshLayout
 
     companion object {
-        private const val mKey: String = "news_tid"
-        fun newInstance(tid: String): NewsFragment {
-            val newsFragment = NewsFragment()
-            val bundle = Bundle()
-            bundle.putString(mKey, tid)
-            newsFragment.arguments = bundle
-            return newsFragment
-        }
+        fun newInstance() = VideoTabFragment()
     }
 
     override fun initView() {
@@ -51,33 +39,21 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
     }
 
     override fun initData() {
-        newsAdapter = NewsAdapter(mActivity, this)
+        videoAdapter = VideoAdapter(mActivity, this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
-        rvContent.adapter = newsAdapter
+        rvContent.adapter = videoAdapter
     }
 
     override fun initEvent() {
-        val arguments = arguments
-        if (arguments != null) {
-            tid = arguments.getString(mKey, "")
-        }
-        getNewsData()
+        getVideoData()
     }
 
-    private fun getNewsData() {
-        tid.let {
-            if (it != null) {
-                mViewModel.getNewsList(it, pageStart)
-            }
-        }
+    override fun getViewBinding(): FragmentTabVideoBinding {
+        return FragmentTabVideoBinding.inflate(layoutInflater)
     }
 
-    override fun getViewBinding(): FragmentNewsBinding {
-        return FragmentNewsBinding.inflate(layoutInflater)
-    }
-
-    override fun getViewModel(): NewsViewModel {
-        return CommonTools.getViewModel(this, NewsViewModel::class.java)
+    override fun getViewModel(): VideoTabViewModel {
+        return CommonTools.getViewModel(this, VideoTabViewModel::class.java)
     }
 
     override fun onClear() {
@@ -99,9 +75,9 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
                 }
             } else {
                 if (isRefresh) {
-                    newsAdapter.refreshData(it)
+                    videoAdapter.refreshData(it)
                 } else {
-                    newsAdapter.loadMoreData(it)
+                    videoAdapter.loadMoreData(it)
                 }
             }
             shimmerRecyclerView.hideShimmerAdapter()
@@ -121,20 +97,23 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
         }
     }
 
-    override fun onNewsItemClickListener(view: View, newsEntity: NewsEntity) {
-        val url = Constants.WEB_URL + newsEntity.docid + ".html"
-        WebActivity.startActivity(mActivity, url)
+    private fun getVideoData() {
+        mViewModel.getVideoList(pageStart)
+    }
+
+    override fun onNewsItemClickListener(view: View, videoEntity: VideoEntity) {
+
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
         pageStart = 0
-        getNewsData()
+        getVideoData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         isLoading = true
         pageStart += 10
-        getNewsData()
+        getVideoData()
     }
 }

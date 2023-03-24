@@ -36,6 +36,7 @@ override fun onComplete() {
 
 class NewsViewModel : BaseViewModel() {
     val dataList = MutableLiveData<ArrayList<NewsEntity>>()
+
     fun getNewsList(tid: String, pageStart: Int) {
         val apiService =
             HttpManager.mInstance.getApiService(Constants.BASE_URL, IApiService::class.java)

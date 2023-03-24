@@ -2,14 +2,26 @@ package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.databinding.LayoutNewsItemBinding
+import com.android.wy.news.databinding.LayoutNewsItemNormalAdapterBinding
+import com.android.wy.news.databinding.LayoutNewsItemImageAdapterBinding
+import com.android.wy.news.databinding.LayoutItemImageBinding
 import com.android.wy.news.entity.NewsEntity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 
 
 /*
@@ -19,42 +31,170 @@ import com.android.wy.news.entity.NewsEntity
   * @Description:    
  */
 class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
-    RecyclerView.Adapter<NewsAdapter.ViewHolder>(), View.OnClickListener{
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<NewsEntity>()
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val mBinding = LayoutNewsItemBinding.bind(itemView)
+    companion object {
+        const val ITEM_TYPE_NORMAL = 0
+        const val ITEM_TYPE_IMAGE = 1
+    }
+
+    class NormalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mBinding = LayoutNewsItemNormalAdapterBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
-        var tvRead = mBinding.tvRead
+        var tvComment = mBinding.tvComment
+        var tvDesc = mBinding.tvDesc
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
-        var ivCover = mBinding.ivCover
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.layout_news_item, parent, false)
-        return ViewHolder(view)
+    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mBinding = LayoutNewsItemImageAdapterBinding.bind(itemView)
+        var tvTitle = mBinding.tvTitle
+        var tvComment = mBinding.tvComment
+        var llContent = mBinding.llContent
+        var tvTime = mBinding.tvTime
+        var tvSource = mBinding.tvSource
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ITEM_TYPE_IMAGE -> {
+                val view =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.layout_news_item_image_adapter, parent, false)
+                ImageViewHolder(view)
+            }
+            else -> {
+                val view =
+                    LayoutInflater.from(context)
+                        .inflate(R.layout.layout_news_item_normal_adapter, parent, false)
+                NormalViewHolder(view)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val newsEntity = mDataList[position]
-        holder.tvTitle.text = newsEntity.title
+        when (holder) {
+            is ImageViewHolder -> {
+                setNewsContent(
+                    holder.tvTitle,
+                    holder.tvComment,
+                    holder.tvSource,
+                    holder.tvTime,
+                    newsEntity
+                )
+                loadImage(holder, newsEntity)
+            }
+            is NormalViewHolder -> {
+                holder.tvTitle.text = newsEntity.title
+                if (TextUtils.isEmpty(newsEntity.digest)) {
+                    holder.tvDesc.visibility = View.GONE
+                } else {
+                    holder.tvDesc.text = newsEntity.digest
+                }
+                val commentCount = newsEntity.commentCount
+                if (commentCount > 0) {
+                    if (commentCount > 10000) {
+                        val fl = commentCount / 10000f
+                        holder.tvComment.text = "%.1f".format(fl) + "w评论"
+                    } else {
+                        holder.tvComment.text = commentCount.toString() + "评论"
+                    }
+                } else {
+                    holder.tvComment.visibility = View.GONE
+                }
+                holder.tvSource.text = newsEntity.source
+
+                val time = CommonTools.parseTime(newsEntity.ptime)
+                if (!TextUtils.isEmpty(time)) {
+                    holder.tvTime.text = time
+                } else {
+                    holder.tvTime.text = newsEntity.ptime
+                }
+            }
+        }
+
+        holder.itemView.tag = position
+        holder.itemView.setOnClickListener(this)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setNewsContent(
+        tvTitle: TextView,
+        tvComment: TextView,
+        tvSource: TextView,
+        tvTime: TextView,
+        newsEntity: NewsEntity
+    ) {
+        tvTitle.text = newsEntity.title
         val commentCount = newsEntity.commentCount
         if (commentCount > 0) {
             if (commentCount > 10000) {
                 val fl = commentCount / 10000f
-                holder.tvRead.text = "%.1f".format(fl) + "w评论"
+                tvComment.text = "%.1f".format(fl) + "w评论"
             } else {
-                holder.tvRead.text = commentCount.toString() + "评论"
+                tvComment.text = commentCount.toString() + "评论"
             }
         }
-        holder.tvSource.text = newsEntity.source
-        holder.tvTime.text = newsEntity.ptime
+        tvSource.text = newsEntity.source
 
-        CommonTools.loadImage(context,newsEntity.imgsrc,holder.ivCover)
+        val time = CommonTools.parseTime(newsEntity.ptime)
+        if (!TextUtils.isEmpty(time)) {
+            tvTime.text = time
+        } else {
+            tvTime.text = newsEntity.ptime
+        }
+    }
 
-        holder.itemView.tag = position
-        holder.itemView.setOnClickListener(this)
+    private fun loadImage(holder: ImageViewHolder, newsEntity: NewsEntity) {
+        if (newsEntity.hasImg == 1) {
+            loadOneImage(newsEntity.imgsrc, holder)
+        } else {
+            val imgExtra = newsEntity.imgextra
+            if (imgExtra != null && imgExtra.isNotEmpty()) {
+                for (i in imgExtra.indices) {
+                    val imgextra = imgExtra[i]
+                    loadOneImage(imgextra.imgsrc, holder)
+                }
+            }
+        }
+    }
+
+    private fun loadOneImage(imgSrc: String, holder: ImageViewHolder) {
+        holder.llContent.removeAllViews()
+        Glide.with(context)
+            .asBitmap()
+            .load(imgSrc)
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
+            .diskCacheStrategy(DiskCacheStrategy.ALL).override(
+                //关键代码，加载原始大小
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+            )
+            //设置为这种格式去掉透明度通道，可以减少内存占有
+            .format(DecodeFormat.PREFER_RGB_565)
+            .placeholder(R.mipmap.img_default)
+            .error(R.mipmap.img_error)
+            .into(object : SimpleTarget<Bitmap>(
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+            ) {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap?>?
+                ) {
+                    val mBinding = LayoutItemImageBinding.inflate(LayoutInflater.from(context))
+                    mBinding.ivCover.setImageBitmap(resource)
+                    val root = mBinding.root
+                    if (root.parent != null) {
+                        val viewGroup = root.parent as ViewGroup
+                        viewGroup.removeView(root)
+                    }
+                    holder.llContent.addView(root)
+                }
+            })
     }
 
     override fun getItemCount(): Int {
@@ -84,5 +224,16 @@ class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
             val newsEntity = mDataList[tag]
             newsListener.onNewsItemClickListener(p0, newsEntity)
         }
+    }
+
+
+    override fun getItemViewType(position: Int): Int {
+        val newsEntity = mDataList[position]
+        val hasImg = newsEntity.hasImg
+        val imgExtra = newsEntity.imgextra
+        if (hasImg == 1 || (imgExtra != null && imgExtra.isNotEmpty())) {
+            return ITEM_TYPE_IMAGE
+        }
+        return ITEM_TYPE_NORMAL
     }
 }
