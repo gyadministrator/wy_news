@@ -9,13 +9,12 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="main_bg_color">#FAFAFA</color>
-    <color name="divider_bg_color">#ece8e8</color>
-    <color name="main_title">#000000</color>
-    <color name="title_desc">#99000000</color>
-    <color name="third_title">#66000000</color>
+    <color name="divider_bg_color">#e7e7e7</color>
+    <color name="main_title">#242424</color>
+    <color name="second_title">#949494</color>
     <color name="status_bar_color">@color/text_select_color</color>
-    <color name="text_normal_color">#CCCCCC</color>
-    <color name="text_select_color">#d81e06</color>
+    <color name="text_normal_color">#222222</color>
+    <color name="text_select_color">#ff5757</color>
     <color name="refresh_bg_color">@color/main_bg_color</color>
-    <color name="refresh_hint_color">@color/third_title</color>
+    <color name="refresh_hint_color">@color/second_title</color>
 </resources>

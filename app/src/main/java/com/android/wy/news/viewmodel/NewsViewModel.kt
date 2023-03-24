@@ -44,7 +44,7 @@ class NewsViewModel : BaseViewModel() {
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
-                val list = CommonTools.parseData(s)
+                val list = CommonTools.parseNewsData(s)
                 dataList.postValue(list)
             }
 

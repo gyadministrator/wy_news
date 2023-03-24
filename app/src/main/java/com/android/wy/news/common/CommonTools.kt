@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.android.wy.news.R
 import com.android.wy.news.entity.NewsEntity
-import com.android.wy.news.entity.NewsHeaderEntity
+import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
@@ -68,7 +68,7 @@ class CommonTools {
             return (pxValue / scale + 0.5f).toInt() // 四舍五入取整
         }
 
-        fun parseData(data: String?): ArrayList<NewsEntity> {
+        fun parseNewsData(data: String?): ArrayList<NewsEntity> {
             var dataList = ArrayList<NewsEntity>()
             if (data != null && !TextUtils.isEmpty(data)) {
                 if (data.contains("(") && data.endsWith(")")) {
@@ -104,14 +104,14 @@ class CommonTools {
             return dataList
         }
 
-        fun parseHeaderData(data: String?): ArrayList<NewsHeaderEntity> {
-            var dataList = ArrayList<NewsHeaderEntity>()
+        fun parseTopData(data: String?): ArrayList<TopEntity> {
+            var dataList = ArrayList<TopEntity>()
             if (data != null && !TextUtils.isEmpty(data)) {
                 if (data.contains("[") && data.endsWith("]}")) {
                     val realContent = data.substring(data.indexOf("["), data.length - 1)
                     val gson = Gson()
                     dataList = gson.fromJson(
-                        realContent, object : TypeToken<ArrayList<NewsHeaderEntity>>() {}.type
+                        realContent, object : TypeToken<ArrayList<TopEntity>>() {}.type
                     )
                 }
             }

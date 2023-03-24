@@ -1,6 +1,6 @@
 package com.android.wy.news.entity
 
-data class NewsHeaderEntity(
+data class TopEntity(
     val TAGS: String,
     val ads: List<Ad>?,
     val alias: String,
@@ -48,8 +48,8 @@ data class NewsHeaderEntity(
     val url: String,
     val url_3w: String,
     val videoID: String,
-    val videoTopic: VideoTopic,
-    val videoinfo: Videoinfo,
+    val videoTopic: VideoTopic?,
+    val videoinfo: Videoinfo?,
     val videosource: String,
     val votecount: Int
 )

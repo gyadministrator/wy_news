@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
-import com.android.wy.news.entity.LiveHeaderEntity
-import com.android.wy.news.entity.NewsTitleEntity
+import com.android.wy.news.entity.LiveClassifyEntity
+import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.utils.ThreadExecutorManager
@@ -38,8 +38,8 @@ class SplashViewModel : BaseViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
                 val gson = Gson()
-                val dataList = gson.fromJson<ArrayList<LiveHeaderEntity>>(
-                    s, object : TypeToken<ArrayList<LiveHeaderEntity>>() {}.type
+                val dataList = gson.fromJson<ArrayList<LiveClassifyEntity>>(
+                    s, object : TypeToken<ArrayList<LiveClassifyEntity>>() {}.type
                 )
                 Constants.mNewsLiveTitleList.clear()
                 Constants.mNewsLiveTitleList.addAll(dataList)
@@ -55,8 +55,8 @@ class SplashViewModel : BaseViewModel() {
     private fun readNewsTitle(context: Context) {
         val content = CommonTools.getAssertContent(context, "title.json")
         val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<NewsTitleEntity>>(
-            content, object : TypeToken<ArrayList<NewsTitleEntity>>() {}.type
+        val dataList = gson.fromJson<ArrayList<NewsClassifyEntity>>(
+            content, object : TypeToken<ArrayList<NewsClassifyEntity>>() {}.type
         )
         Constants.mNewsTitleList.clear()
         Constants.mNewsTitleList.addAll(dataList)

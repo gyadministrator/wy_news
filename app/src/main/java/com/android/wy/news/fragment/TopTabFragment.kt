@@ -5,12 +5,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.adapter.HeaderAdapter
+import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.entity.Ad
-import com.android.wy.news.entity.NewsHeaderEntity
+import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.viewmodel.TopViewModel
 import com.bumptech.glide.Glide
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
@@ -22,14 +22,14 @@ import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
 
-class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
-    HeaderAdapter.OnNewsListener, OnRefreshListener, OnLoadMoreListener {
+class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
+    OnLoadMoreListener, TopAdapter.OnTopListener {
     private var pageStart = 0
     private lateinit var rvContent: RecyclerView
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var isRefresh = false
     private var isLoading = false
-    private lateinit var newsHeaderAdapter: HeaderAdapter
+    private lateinit var newsHeaderAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
 
     companion object {
@@ -46,7 +46,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
     }
 
     override fun initData() {
-        newsHeaderAdapter = HeaderAdapter(mActivity, this)
+        newsHeaderAdapter = TopAdapter(mActivity, this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = newsHeaderAdapter
     }
@@ -105,10 +105,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
         }
     }
 
-    private fun addBannerHeader(newsHeaderEntity: NewsHeaderEntity) {
+    private fun addBannerHeader(topEntity: TopEntity) {
         val banner = mBinding.banner
         val titleList = ArrayList<String>()
-        val ads = newsHeaderEntity.ads
+        val ads = topEntity.ads
         if (ads != null && ads.isNotEmpty()) {
             for (i in ads.indices) {
                 val ad = ads[i]
@@ -133,10 +133,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
         }
     }
 
-    override fun onNewsItemClickListener(view: View, newsEntity: NewsHeaderEntity) {
-        val url = Constants.WEB_URL + newsEntity.docid + ".html"
-        WebActivity.startActivity(mActivity, url)
-    }
 
     private fun getHeaderData() {
         mViewModel.getHeaderNews(pageStart)
@@ -152,6 +148,11 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(),
         isLoading = true
         pageStart += 10
         getHeaderData()
+    }
+
+    override fun onTopItemClickListener(view: View, topEntity: TopEntity) {
+        val url = Constants.WEB_URL + topEntity.docid + ".html"
+        WebActivity.startActivity(mActivity, url)
     }
 
 }

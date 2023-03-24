@@ -6,7 +6,7 @@ package com.android.wy.news.entity
   * @Version:        1.0
   * @Description:    
  */
-data class LiveHeaderEntity(
+data class LiveClassifyEntity(
     val defaultCollection: Int,
     val id: Int,
     val name: String,

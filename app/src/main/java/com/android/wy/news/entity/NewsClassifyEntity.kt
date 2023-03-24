@@ -1,6 +1,6 @@
 package com.android.wy.news.entity
 
-data class NewsTitleEntity(
+data class NewsClassifyEntity(
     var title: String,
     var tid: String
 )

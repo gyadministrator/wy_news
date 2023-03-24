@@ -3,7 +3,7 @@
 
     <style name="dividerItemStyle">
         <item name="android:background">@color/divider_bg_color</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">0.5dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">3dp</item>
     </style>

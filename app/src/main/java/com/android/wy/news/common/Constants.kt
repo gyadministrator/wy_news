@@ -1,7 +1,7 @@
 package com.android.wy.news.common
 
-import com.android.wy.news.entity.LiveHeaderEntity
-import com.android.wy.news.entity.NewsTitleEntity
+import com.android.wy.news.entity.LiveClassifyEntity
+import com.android.wy.news.entity.NewsClassifyEntity
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -24,7 +24,7 @@ class Constants {
         const val LIVE_WEB_URL = "https://live.163.com/room/"
         const val LIVE_URL = "http://data.live.126.net"
         const val HOT_WORD_URL = "https://gw.m.163.com/search/"
-        val mNewsTitleList = arrayListOf<NewsTitleEntity>()
-        val mNewsLiveTitleList = arrayListOf<LiveHeaderEntity>()
+        val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
+        val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
     }
 }

@@ -5,6 +5,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/iv_user"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/main_title"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/iv_user"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="456" />
+
+    <TextView
+        android:id="@+id/tv_user_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/second_title"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/iv_user"
+        app:layout_constraintTop_toBottomOf="@id/tv_user"
+        tools:text="456" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content"
         android:layout_width="match_parent"
@@ -12,7 +52,7 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/iv_user">
 
         <TextView
             android:id="@+id/tv_title"
@@ -27,30 +67,19 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="21211212" />
 
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/title_desc"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title"
-            tools:text="5455454545454544544554545445454554544451212121278712124121221121212222112" />
-
-        <com.youth.banner.Banner
-            android:id="@+id/banner"
+        <ImageView
+            android:id="@+id/iv_cover"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_marginTop="3dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_desc"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/tv_read"
+            android:id="@+id/tv_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -58,10 +87,10 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/third_title"
+            android:textColor="@color/second_title"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/banner"
+            app:layout_constraintTop_toBottomOf="@id/iv_cover"
             tools:text="1000评论" />
 
         <TextView
@@ -69,14 +98,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="7dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/third_title"
+            android:textColor="@color/second_title"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_read"
-            app:layout_constraintTop_toBottomOf="@id/banner"
+            app:layout_constraintStart_toEndOf="@+id/tv_comment"
+            app:layout_constraintTop_toBottomOf="@id/iv_cover"
             tools:text="1221" />
 
         <TextView
@@ -85,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:layout_marginTop="6dp"
-            android:textColor="@color/third_title"
+            android:textColor="@color/second_title"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_source"
