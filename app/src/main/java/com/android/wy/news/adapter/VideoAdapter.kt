@@ -10,6 +10,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutVideoItemBinding
 import com.android.wy.news.entity.VideoEntity
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 
 /*
@@ -18,17 +19,17 @@ import com.android.wy.news.entity.VideoEntity
   * @Version:        1.0
   * @Description:    
  */
-class VideoAdapter(var context: Context, var newsListener: OnNewsListener) :
-    RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener{
+class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
+    RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<VideoEntity>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutVideoItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
-        var tvRead = mBinding.tvRead
+        var tvPlay = mBinding.tvPlay
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
-        var ivCover = mBinding.ivCover
+        var playVideo = mBinding.playVideo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +37,7 @@ class VideoAdapter(var context: Context, var newsListener: OnNewsListener) :
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val videoEntity = mDataList[position]
         holder.tvTitle.text = videoEntity.title
@@ -43,15 +45,21 @@ class VideoAdapter(var context: Context, var newsListener: OnNewsListener) :
         if (playCount > 0) {
             if (playCount > 10000) {
                 val fl = playCount / 10000f
-                holder.tvRead.text = "%.1f".format(fl) + "w次播放"
+                holder.tvPlay.text = "%.1f".format(fl) + "w次播放"
             } else {
-                holder.tvRead.text = playCount.toString() + "次播放"
+                holder.tvPlay.text = playCount.toString() + "次播放"
             }
         }
         holder.tvSource.text = videoEntity.topicName
         holder.tvTime.text = videoEntity.ptime
 
-        CommonTools.loadImage(context,videoEntity.cover,holder.ivCover)
+        val setUp =
+            holder.playVideo.setUp(videoEntity.mp4_url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+        if (setUp) {
+            val thumbImageView = holder.playVideo.thumbImageView
+            CommonTools.loadImage(context, videoEntity.cover, thumbImageView)
+            //holder.playVideo.startButton.performClick()
+        }
 
         holder.itemView.tag = position
         holder.itemView.setOnClickListener(this)
@@ -74,15 +82,15 @@ class VideoAdapter(var context: Context, var newsListener: OnNewsListener) :
         notifyItemRangeInserted(originSize + 1, dataList.size)
     }
 
-    interface OnNewsListener {
-        fun onNewsItemClickListener(view: View, videoEntity: VideoEntity)
+    interface OnVideoListener {
+        fun onVideoItemClickListener(view: View, videoEntity: VideoEntity)
     }
 
     override fun onClick(p0: View?) {
         if (p0 != null) {
             val tag = p0.tag as Int
             val videoEntity = mDataList[tag]
-            newsListener.onNewsItemClickListener(p0, videoEntity)
+            videoListener.onVideoItemClickListener(p0, videoEntity)
         }
     }
 }

@@ -2,6 +2,8 @@ package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.view.View
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
@@ -97,7 +99,11 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     override fun onSelected(position: Int) {
-
+        if (position == 2) {
+            hideSearch()
+        } else {
+            showSearch()
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -118,5 +124,15 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onPause() {
         super.onPause()
         JCVideoPlayer.releaseAllVideos()
+    }
+
+    fun hideSearch() {
+        val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
+        rlSearch.visibility = View.GONE
+    }
+
+    fun showSearch() {
+        val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
+        rlSearch.visibility = View.VISIBLE
     }
 }
