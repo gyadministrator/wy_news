@@ -102,8 +102,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onSelected(position: Int) {
         if (position == 2) {
             hideSearch()
+            ImmersionBar.with(this).statusBarColor(R.color.black)
+                .navigationBarColor(R.color.black).statusBarDarkFont(false).init()
         } else {
             showSearch()
+            ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
+                .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
         }
     }
 

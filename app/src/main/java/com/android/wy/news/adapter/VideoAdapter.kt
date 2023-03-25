@@ -2,6 +2,7 @@ package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<VideoEntity>()
-    private var currentPosition: Int = 0
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutVideoItemBinding.bind(itemView)
@@ -52,25 +52,23 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
             }
         }
         holder.tvSource.text = videoEntity.topicName
-        holder.tvTime.text = videoEntity.ptime
+
+        val time = CommonTools.parseTime(videoEntity.ptime)
+        if (TextUtils.isEmpty(time)) {
+            holder.tvTime.text = videoEntity.ptime
+        } else {
+            holder.tvTime.text = time
+        }
 
         val setUp =
             holder.playVideo.setUp(videoEntity.mp4_url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
             CommonTools.loadImage(context, videoEntity.cover, thumbImageView)
-            if (currentPosition==position) {
-                holder.playVideo.startButton.performClick()
-            }
         }
 
         holder.itemView.tag = position
         holder.itemView.setOnClickListener(this)
-    }
-
-    fun setPosition(position: Int){
-        currentPosition=position
-        notifyItemChanged(position)
     }
 
     override fun getItemCount(): Int {

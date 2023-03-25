@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/status_bar_color"
-        android:paddingBottom="6dp">
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="6dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            tools:text="今日说法" />
-    </RelativeLayout>
+    android:layout_height="match_parent">
 
     <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
         android:id="@+id/play_video"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="6dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        tools:text="今日说法" />
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <TextView
@@ -45,8 +38,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/second_title"
-            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             tools:text="1000次播放" />
 
         <TextView
@@ -58,8 +51,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/second_title"
-            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             tools:text="今日晚报" />
 
         <TextView
@@ -68,8 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="3dp"
-            android:textColor="@color/second_title"
-            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             tools:text="2023-03-21" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
