@@ -32,6 +32,7 @@
         tools:targetApi="tiramisu">
         <activity
             android:name=".activity.HomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:launchMode="singleTop" />
 

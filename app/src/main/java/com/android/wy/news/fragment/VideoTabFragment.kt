@@ -115,6 +115,10 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     }
 
+    override fun onVideoFinish() {
+        playVideo(currentPosition)
+    }
+
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
         getVideoData()
@@ -132,7 +136,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private fun playVideo(position: Int) {
         Handler(Looper.getMainLooper()).post {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
-            if (holder is VideoAdapter.ViewHolder){
+            if (holder is VideoAdapter.ViewHolder) {
                 holder.playVideo.startButton.performClick()
             }
         }
@@ -173,8 +177,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
+        requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     JCVideoPlayer.backPress()

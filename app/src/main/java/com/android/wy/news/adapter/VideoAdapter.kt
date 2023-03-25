@@ -6,6 +6,8 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
@@ -21,7 +23,8 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
   * @Description:    
  */
 class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
-    RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener {
+    RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener,
+    SeekBar.OnSeekBarChangeListener {
     private var mDataList = ArrayList<VideoEntity>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -65,6 +68,7 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
 
         val setUp =
             holder.playVideo.setUp(videoEntity.mp4_url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+        holder.playVideo.progressBar.setOnSeekBarChangeListener(this)
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
             CommonTools.loadImage(context, videoEntity.fullSizeImg, thumbImageView)
@@ -100,6 +104,7 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
 
     interface OnVideoListener {
         fun onVideoItemClickListener(view: View, videoEntity: VideoEntity)
+        fun onVideoFinish()
     }
 
     override fun onClick(p0: View?) {
@@ -108,5 +113,19 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
             val videoEntity = mDataList[tag]
             videoListener.onVideoItemClickListener(p0, videoEntity)
         }
+    }
+
+    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+        if (p1 == 100) {
+            videoListener.onVideoFinish()
+        }
+    }
+
+    override fun onStartTrackingTouch(p0: SeekBar?) {
+
+    }
+
+    override fun onStopTrackingTouch(p0: SeekBar?) {
+
     }
 }
