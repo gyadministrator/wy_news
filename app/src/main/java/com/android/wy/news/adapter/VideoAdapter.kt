@@ -31,6 +31,9 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
         var playVideo = mBinding.playVideo
+        var ivUser = mBinding.ivUser
+        var tvUser = mBinding.tvUser
+        var tvUserSource = mBinding.tvUserSource
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -64,7 +67,14 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
             holder.playVideo.setUp(videoEntity.mp4_url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
-            CommonTools.loadImage(context, videoEntity.cover, thumbImageView)
+            CommonTools.loadImage(context, videoEntity.fullSizeImg, thumbImageView)
+        }
+
+        val videoTopic = videoEntity.videoTopic
+        if (videoTopic != null) {
+            holder.tvUser.text = videoTopic.tname
+            holder.tvUserSource.text = videoTopic.alias
+            CommonTools.loadImage(context, videoTopic.topic_icons, holder.ivUser)
         }
 
         holder.itemView.tag = position

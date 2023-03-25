@@ -63,6 +63,7 @@ dependencies {
     implementation 'io.github.youth5201314:banner:2.2.2'
     implementation 'fm.jiecao:jiecaovideoplayer:4.8.3'
     implementation 'com.github.gyadministrator:GYBottomBar:3.8'
+    implementation 'com.makeramen:roundedimageview:2.2.1'
 
     //刷新
     implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖

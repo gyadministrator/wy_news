@@ -52,7 +52,7 @@ data class VideoEntity(
     val verticalVideo: Boolean,
     val vid: String,
     val videoRatio: Double,
-    val videoTopic: VideoTopic1,
+    val videoTopic: VideoTopic1?,
     val videosource: String,
     val voteCount: Int
 )

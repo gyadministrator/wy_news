@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_user"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -15,6 +15,8 @@
         android:src="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="10dp"
+        app:riv_oval="true"
         tools:ignore="ContentDescription" />
 
     <TextView
