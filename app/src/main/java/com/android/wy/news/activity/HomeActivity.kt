@@ -30,8 +30,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private val list = ArrayList<String>()
 
     override fun initBarItems() {
-        barItems.add(GYBarItem("头条", R.mipmap.header))
-        barItems.add(GYBarItem("频道", R.mipmap.channel))
+        barItems.add(GYBarItem("头条", R.mipmap.top))
+        barItems.add(GYBarItem("频道", R.mipmap.classify))
         barItems.add(GYBarItem("视频", R.mipmap.video))
         barItems.add(GYBarItem("直播", R.mipmap.live))
     }
@@ -65,10 +65,10 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     override fun initSelectIcons() {
-        icons.add(R.mipmap.header_selected)
-        icons.add(R.mipmap.channel_selected)
-        icons.add(R.mipmap.video_selected)
-        icons.add(R.mipmap.live_selected)
+        icons.add(R.mipmap.top_p)
+        icons.add(R.mipmap.classify_p)
+        icons.add(R.mipmap.video_p)
+        icons.add(R.mipmap.live_p)
     }
 
     override fun initContentView(): Int {
