@@ -22,6 +22,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<VideoEntity>()
+    private var currentPosition: Int = 0
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutVideoItemBinding.bind(itemView)
@@ -58,11 +59,18 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
             CommonTools.loadImage(context, videoEntity.cover, thumbImageView)
-            //holder.playVideo.startButton.performClick()
+            if (currentPosition==position) {
+                holder.playVideo.startButton.performClick()
+            }
         }
 
         holder.itemView.tag = position
         holder.itemView.setOnClickListener(this)
+    }
+
+    fun setPosition(position: Int){
+        currentPosition=position
+        notifyItemChanged(position)
     }
 
     override fun getItemCount(): Int {

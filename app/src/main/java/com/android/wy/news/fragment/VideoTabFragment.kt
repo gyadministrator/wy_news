@@ -1,8 +1,11 @@
 package com.android.wy.news.fragment
 
-import android.util.Log
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.adapter.VideoAdapter
@@ -17,6 +20,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
     OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener {
@@ -27,6 +31,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var layoutManager: VideoLayoutManager
+    private var currentPosition: Int = 0
 
     companion object {
         fun newInstance() = VideoTabFragment()
@@ -125,23 +130,51 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun playVideo(position: Int) {
-        Log.e("gy", "playVideo: $position")
+        Handler(Looper.getMainLooper()).post {
+            videoAdapter.setPosition(position)
+        }
     }
 
     override fun onPageRelease(isNext: Boolean, position: Int) {
-        val index: Int = if (isNext) {
-            0
-        } else {
-            1
-        }
-        releaseVideo(index)
+        releaseVideo(position)
     }
 
     private fun releaseVideo(index: Int) {
-        Log.e("gy", "releaseVideo: $index")
+        //JCVideoPlayer.releaseAllVideos()
     }
 
     override fun onPageSelected(position: Int, isBottom: Boolean) {
-        playVideo(0)
+        currentPosition = position
+        playVideo(position)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        JCVideoPlayer.releaseAllVideos()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            JCVideoPlayer.releaseAllVideos()
+        } else {
+            playVideo(currentPosition)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    JCVideoPlayer.backPress()
+                }
+            })
+    }
+
+    override fun handleBackPressed(): Boolean {
+        JCVideoPlayer.backPress()
+        return true
     }
 }
