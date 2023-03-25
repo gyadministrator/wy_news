@@ -140,12 +140,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         JCVideoPlayer.releaseAllVideos()
     }
 
-    fun hideSearch() {
+    private fun hideSearch() {
         val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
         rlSearch.visibility = View.GONE
     }
 
-    fun showSearch() {
+    private fun showSearch() {
         val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
         rlSearch.visibility = View.VISIBLE
     }
