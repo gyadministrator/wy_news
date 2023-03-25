@@ -6,12 +6,14 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutTopNormalItemBinding
 import com.android.wy.news.databinding.LayoutTopVideoItemBinding
 import com.android.wy.news.entity.TopEntity
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 
 /*
@@ -44,7 +46,7 @@ class TopAdapter(var context: Context, var topListener: OnTopListener) :
         var tvUser = mBinding.tvUser
         var tvUserSource = mBinding.tvUserSource
         var tvTitle = mBinding.tvTitle
-        var ivCover = mBinding.ivCover
+        var playVideo = mBinding.playVideo
         var tvComment = mBinding.tvComment
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
@@ -110,7 +112,12 @@ class TopAdapter(var context: Context, var topListener: OnTopListener) :
             val videoInfo = topEntity.videoinfo
             if (videoInfo != null) {
                 val cover = videoInfo.cover
-                CommonTools.loadImage(context, cover, holder.ivCover)
+                val mp4Url = videoInfo.mp4_url
+                val setUp = holder.playVideo.setUp(mp4Url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+                if (setUp) {
+                    val thumbImageView = holder.playVideo.thumbImageView
+                    CommonTools.loadImage(context, cover, thumbImageView)
+                }
             }
             val videoTopic = topEntity.videoTopic
             if (videoTopic != null) {
@@ -168,5 +175,15 @@ class TopAdapter(var context: Context, var topListener: OnTopListener) :
             }
         }
         return super.getItemViewType(position)
+    }
+
+    fun onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return
+        }
+    }
+
+    fun onPause() {
+        JCVideoPlayer.releaseAllVideos()
     }
 }

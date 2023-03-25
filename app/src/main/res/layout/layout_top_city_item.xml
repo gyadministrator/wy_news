@@ -45,11 +45,4 @@
             android:textSize="12sp"
             tools:text="2023-03-21" />
     </LinearLayout>
-
-    <View
-        style="@style/dividerItemStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_time" />
 </LinearLayout>

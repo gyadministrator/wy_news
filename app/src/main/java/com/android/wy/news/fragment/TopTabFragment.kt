@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.WebActivity
@@ -34,7 +35,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var isRefresh = false
     private var isLoading = false
-    private lateinit var newsHeaderAdapter: TopAdapter
+    private lateinit var topAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var llContent: LinearLayout
 
@@ -52,15 +53,27 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         refreshLayout.setOnLoadMoreListener(this)
     }
 
+    override fun onPause() {
+        super.onPause()
+        topAdapter.onPause()
+    }
+
     override fun initData() {
-        newsHeaderAdapter = TopAdapter(mActivity, this)
+        topAdapter = TopAdapter(mActivity, this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
-        rvContent.adapter = newsHeaderAdapter
+        rvContent.adapter = topAdapter
     }
 
     override fun initEvent() {
         getTopData()
         getCityData()
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    topAdapter.onBackPressed()
+                }
+            })
     }
 
     private fun getCityData() {
@@ -94,9 +107,9 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 }
             } else {
                 if (isRefresh) {
-                    newsHeaderAdapter.refreshData(it)
+                    topAdapter.refreshData(it)
                 } else {
-                    newsHeaderAdapter.loadMoreData(it)
+                    topAdapter.loadMoreData(it)
                 }
                 addBannerHeader(it[0])
             }
