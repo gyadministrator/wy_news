@@ -7,8 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.android.wy.news.R
 import com.android.wy.news.common.IBaseCommon
+import com.android.wy.news.listener.IBackPressedListener
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.gyf.immersionbar.ImmersionBar
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -27,7 +29,7 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;//竖屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
         if (setDefaultImmersionBar()) {
             ImmersionBar.with(this).statusBarColor(R.color.main_bg_color)
                 .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(true).init()
@@ -48,5 +50,34 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     override fun onDestroy() {
         super.onDestroy()
         onClear()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return
+        }
+        if (!interceptBackPressed()) {
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * 拦截事件
+     */
+    private fun interceptBackPressed(): Boolean {
+        supportFragmentManager.fragments.forEach {
+            if (it is IBackPressedListener) {
+                if (it.handleBackPressed()) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        JCVideoPlayer.releaseAllVideos()
     }
 }

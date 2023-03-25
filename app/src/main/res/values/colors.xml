@@ -15,6 +15,6 @@
     <color name="status_bar_color">@color/text_select_color</color>
     <color name="text_normal_color">#222222</color>
     <color name="text_select_color">#ff5757</color>
-    <color name="refresh_bg_color">@color/main_bg_color</color>
+    <color name="refresh_bg_color">#CCCCCC</color>
     <color name="refresh_hint_color">@color/second_title</color>
 </resources>

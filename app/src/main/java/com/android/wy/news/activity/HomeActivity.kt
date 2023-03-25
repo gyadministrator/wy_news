@@ -2,7 +2,6 @@ package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.view.KeyEvent
 import android.widget.Toast
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
@@ -10,12 +9,13 @@ import com.android.bottombar.view.GYBottomBarView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.fragment.ClassifyTabFragment
-import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
+import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import java.util.*
 
 
@@ -86,7 +86,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;//竖屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
         ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
             .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
         bottomView = findViewById(R.id.bottomView)
@@ -100,19 +100,23 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
-                val secondTime = System.currentTimeMillis()
-                if (secondTime - firstTime > 2000) {
-                    Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
-                    firstTime = secondTime
-                    return true
-                } else {
-                    finish()
-                }
-            }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return
         }
-        return super.onKeyDown(keyCode, event)
+        val secondTime = System.currentTimeMillis()
+        if (secondTime - firstTime > 2000) {
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
+            firstTime = secondTime
+        } else {
+            finish()
+        }
+        super.onBackPressed()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        JCVideoPlayer.releaseAllVideos()
     }
 }

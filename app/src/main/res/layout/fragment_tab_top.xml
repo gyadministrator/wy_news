@@ -8,7 +8,7 @@
     app:srlPrimaryColor="@color/refresh_bg_color">
     <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
     <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
-    <com.scwang.smart.refresh.header.ClassicsHeader
+    <com.scwang.smart.refresh.header.BezierRadarHeader
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -59,7 +59,7 @@
 
     </FrameLayout>
 
-    <com.scwang.smart.refresh.footer.ClassicsFooter
+    <com.scwang.smart.refresh.footer.BallPulseFooter
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srlPrimaryColor="@color/refresh_bg_color" />

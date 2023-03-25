@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.android.wy.news.common.IBaseCommon
+import com.android.wy.news.listener.IBackPressedListener
 import com.android.wy.news.viewmodel.BaseViewModel
 
 /*     
@@ -16,14 +17,13 @@ import com.android.wy.news.viewmodel.BaseViewModel
   * @Version:        1.0
   * @Description:    
  */
-abstract class BaseFragment<V : ViewBinding, M : BaseViewModel> : Fragment(), IBaseCommon<V, M> {
+abstract class BaseFragment<V : ViewBinding, M : BaseViewModel> : Fragment(), IBaseCommon<V, M>,
+    IBackPressedListener {
     protected lateinit var mBinding: V
     protected lateinit var mViewModel: M
     protected lateinit var mActivity: Activity
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         mActivity = requireActivity()
         mBinding = getViewBinding()
@@ -42,5 +42,10 @@ abstract class BaseFragment<V : ViewBinding, M : BaseViewModel> : Fragment(), IB
     override fun onDestroy() {
         super.onDestroy()
         onClear()
+    }
+
+    override fun handleBackPressed(): Boolean {
+        //默认不响应
+        return false
     }
 }

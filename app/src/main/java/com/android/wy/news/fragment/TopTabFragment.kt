@@ -1,5 +1,6 @@
 package com.android.wy.news.fragment
 
+import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
@@ -25,6 +27,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
 
@@ -64,9 +67,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         rvContent.adapter = topAdapter
     }
 
-    override fun initEvent() {
-        getTopData()
-        getCityData()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -74,6 +76,16 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                     topAdapter.onBackPressed()
                 }
             })
+    }
+
+    override fun handleBackPressed(): Boolean {
+        topAdapter.onBackPressed()
+        return true
+    }
+
+    override fun initEvent() {
+        getTopData()
+        getCityData()
     }
 
     private fun getCityData() {
@@ -194,12 +206,12 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                         Glide.with(holder.itemView).load(data.imgsrc).into(holder.imageView)
                     }
                 }
-            })
-                //.addBannerLifecycleObserver(mActivity!!) //添加生命周期观察者
+            }).addBannerLifecycleObserver(this) //添加生命周期观察者
                 .setIndicator(CircleIndicator(mActivity)).setBannerGalleryEffect(10, 10)
-                .setIndicatorHeight(10)
-            //.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)//设置页码与标题
-            //.setBannerTitles(titleList)
+                .setIndicatorHeight(20).setIndicatorHeight(20).setBannerRound(10f)
+                .setBannerRound2(10f).setIndicatorNormalColorRes(R.color.text_normal_color)
+                .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
+                .setIndicatorGravity(Direction.CENTER)
         }
     }
 
