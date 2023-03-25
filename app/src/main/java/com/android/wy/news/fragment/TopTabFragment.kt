@@ -30,6 +30,7 @@ import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
     OnLoadMoreListener, TopAdapter.OnTopListener {
@@ -81,6 +82,13 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     override fun handleBackPressed(): Boolean {
         topAdapter.onBackPressed()
         return true
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden){
+            JCVideoPlayer.releaseAllVideos()
+        }
     }
 
     override fun initEvent() {

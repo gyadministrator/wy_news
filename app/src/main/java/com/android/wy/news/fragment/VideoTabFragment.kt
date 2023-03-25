@@ -162,6 +162,12 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         }
     }
 
+    @Deprecated("Deprecated in Java", ReplaceWith("super.setUserVisibleHint(isVisibleToUser)"))
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        playVideo(currentPosition)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         requireActivity().onBackPressedDispatcher.addCallback(

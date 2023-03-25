@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
 import com.android.bottombar.view.GYBottomBarView
@@ -104,6 +105,19 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         } else {
             showSearch()
         }
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun getShowFragment(): Fragment? {
+        val fragments: List<Fragment> = supportFragmentManager.fragments
+        var fragment: Fragment? = null
+        for (i in fragments.indices) {
+            fragment = fragments[i]
+            if (fragment.isAdded && fragment.isMenuVisible) {
+                break
+            }
+        }
+        return fragment
     }
 
     @Deprecated("Deprecated in Java")
