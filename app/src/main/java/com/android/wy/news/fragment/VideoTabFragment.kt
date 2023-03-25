@@ -20,7 +20,6 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
     OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener {
-    private var pageStart = 0
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
@@ -104,7 +103,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun getVideoData() {
-        mViewModel.getVideoList(pageStart)
+        mViewModel.getVideoList()
     }
 
     override fun onVideoItemClickListener(view: View, videoEntity: VideoEntity) {
@@ -113,13 +112,11 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
-        pageStart = 0
         getVideoData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
         isLoading = true
-        pageStart += 10
         getVideoData()
     }
 

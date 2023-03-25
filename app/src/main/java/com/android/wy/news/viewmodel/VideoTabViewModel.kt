@@ -14,10 +14,10 @@ import retrofit2.Response
 class VideoTabViewModel : BaseViewModel() {
     val dataList = MutableLiveData<ArrayList<VideoEntity>>()
 
-    fun getVideoList(pageStart: Int) {
+    fun getVideoList() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.BASE_URL, IApiService::class.java)
-        val observable = apiService.getVideoList(pageStart)
+            HttpManager.mInstance.getApiService(Constants.VIDEO_URL, IApiService::class.java)
+        val observable = apiService.getVideoList()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()

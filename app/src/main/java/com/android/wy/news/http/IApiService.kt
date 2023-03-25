@@ -18,10 +18,8 @@ interface IApiService {
         @Path("tid") tid: String, @Path("pageStart") pageStart: Int
     ): Call<ResponseBody>
 
-    @GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-10.do?callback=videoList")
-    fun getVideoList(
-        @Path("pageStart") pageStart: Int
-    ): Call<ResponseBody>
+    @GET("/recommend/getChanListNews?channel=T1457068979049&size=10")
+    fun getVideoList(): Call<ResponseBody>
 
     @GET("/nc/article/headline/T1348647853363/{pageStart}-10.html")
     fun getTopNews(@Path("pageStart") pageStart: Int): Call<ResponseBody>

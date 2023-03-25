@@ -89,11 +89,10 @@ class CommonTools {
         fun parseVideoData(data: String?): ArrayList<VideoEntity> {
             var dataList = ArrayList<VideoEntity>()
             if (data != null && !TextUtils.isEmpty(data)) {
-                if (data.contains("(") && data.endsWith(")")) {
-                    val content = data.substring(data.indexOf("(") + 1, data.length - 1)
-                    if (content.contains("[") && content.endsWith("]}")) {
+                if (data.startsWith("{") && data.endsWith("}")) {
+                    if (data.contains("[{")) {
                         val realContent =
-                            content.substring(content.indexOf("["), content.length - 1)
+                            data.substring(data.indexOf("[{"), data.length - 1)
                         val gson = Gson()
                         dataList = gson.fromJson(
                             realContent, object : TypeToken<ArrayList<VideoEntity>>() {}.type

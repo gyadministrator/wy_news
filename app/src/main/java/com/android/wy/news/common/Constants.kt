@@ -26,6 +26,7 @@ class Constants {
         const val HOT_WORD_URL = "https://gw.m.163.com/search/"
         const val IP_INFO_URL = "https://ipservice.ws.126.net"
         const val CITY_URL = "https://xf.house.163.com"
+        const val VIDEO_URL = "http://c.m.163.com"
         var currentCity: String = ""
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
