@@ -69,8 +69,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
+        requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     topAdapter.onBackPressed()
@@ -125,6 +124,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                     refreshLayout.setNoMoreData(true)
                 }
             } else {
+                loadingView.visibility = View.GONE
                 if (isRefresh) {
                     topAdapter.refreshData(it)
                 } else {
@@ -132,7 +132,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 }
                 addBannerHeader(it[0])
             }
-            loadingView.visibility = View.GONE
             isRefresh = false
             isLoading = false
         }
@@ -149,6 +148,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         }
 
         mViewModel.cityNewsList.observe(this) {
+            loadingView.visibility = View.GONE
             addCityNewsHeader(it)
         }
     }
@@ -188,7 +188,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         override fun onClick(p0: View?) {
             if (p0 != null) {
                 val house = p0.tag as House
-                WebActivity.startActivity(p0.context, house.link)
+                val url = Constants.WEB_URL + house.docid + ".html"
+                WebActivity.startActivity(p0.context, url)
             }
         }
 
