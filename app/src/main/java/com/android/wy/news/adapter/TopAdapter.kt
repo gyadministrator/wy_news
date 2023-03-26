@@ -116,6 +116,8 @@ class TopAdapter(var context: Context, var topListener: OnTopListener) :
                 val setUp = holder.playVideo.setUp(mp4Url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
                 if (setUp) {
                     val thumbImageView = holder.playVideo.thumbImageView
+                    thumbImageView.adjustViewBounds = true
+                    thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
                     CommonTools.loadImage(context, cover, thumbImageView)
                 }
             }
