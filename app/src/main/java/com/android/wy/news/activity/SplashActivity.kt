@@ -4,18 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
+import android.widget.ImageView
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.view.LoadingView
 import com.android.wy.news.viewmodel.SplashViewModel
+import com.wang.avi.AVLoadingIndicatorView
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
-    private lateinit var loadingView: LoadingView
+    private lateinit var avLoading: AVLoadingIndicatorView
+    private lateinit var ivAd: ImageView
 
     override fun initView() {
-        loadingView = mBinding.loadingView
-        loadingView.startLoadingAnim()
+        avLoading = mBinding.avLoading
+        ivAd = mBinding.ivAd
     }
 
     override fun initData() {
@@ -23,7 +28,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initEvent() {
-
+        if (!TextUtils.isEmpty(Constants.splash_ad_url)) {
+            Constants.splash_ad_url?.let { CommonTools.loadImage(mActivity, it, ivAd) }
+        } else {
+            avLoading.show()
+        }
     }
 
     override fun getViewBinding(): ActivitySplashBinding {
@@ -35,14 +44,15 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun onClear() {
-        loadingView.stopLoadingAnim()
     }
 
     override fun onNotifyDataChanged() {
         mViewModel.isReadFinish.observe(this) {
             if (it) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    loadingView.stopLoadingAnim()
+                    if (TextUtils.isEmpty(Constants.splash_ad_url)) {
+                        avLoading.hide()
+                    }
                     val intent = Intent(mActivity, HomeActivity::class.java)
                     startActivity(intent)
                     finish()

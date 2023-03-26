@@ -30,6 +30,43 @@ class SplashViewModel : BaseViewModel() {
         ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
         ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
         ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
+        ThreadExecutorManager.mInstance.startExecute { getAdInfo() }
+    }
+
+    private fun getAdInfo() {
+        val apiService =
+            HttpManager.mInstance.getApiService(Constants.AD_URL, IApiService::class.java)
+        val observable = apiService.getAdInfo()
+        observable.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val s = response.body()?.string()
+                val adData = CommonTools.parseAdData(s)
+                if (adData != null) {
+                    val ads = adData.ads
+                    if (ads != null && ads.isNotEmpty()) {
+                        val adItem = ads[0]
+                        if (adItem != null) {
+                            val resources = adItem.resources
+                            if (resources != null && resources.isNotEmpty()) {
+                                val resource = resources[0]
+                                if (resource != null) {
+                                    val urls = resource.urls
+                                    if (urls != null && urls.isNotEmpty()) {
+                                        val adUrl = urls[0]
+                                        Constants.splash_ad_url = adUrl
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.message?.let { msg.postValue(it) }
+            }
+
+        })
     }
 
     private fun getIpInfo() {

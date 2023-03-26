@@ -38,4 +38,7 @@ interface IApiService {
 
     @GET("/bj/api/indexCmsNews?")
     fun getCurrentCityNewsList(@Query("city") city: String): Call<ResponseBody>
+
+    @GET("/q?c=homepage&t=wap_float&l=1&app=314EA67F&nt=4G&os=null&location=100&source=other&usergroup=2&cb=callback_1679819101384")
+    fun getAdInfo(): Call<ResponseBody>
 }

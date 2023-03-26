@@ -11,6 +11,7 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.android.wy.news.R
+import com.android.wy.news.entity.AdEntity
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.entity.VideoEntity
@@ -41,7 +42,7 @@ class CommonTools {
         }
 
         fun <T : BaseViewModel> getViewModel(owner: ViewModelStoreOwner, clazz: Class<T>): T {
-            return ViewModelProvider(owner).get(clazz)
+            return ViewModelProvider(owner)[clazz]
         }
 
         fun getScreenWidth(): Int {
@@ -84,13 +85,24 @@ class CommonTools {
             return dataList
         }
 
+        fun parseAdData(data: String?): AdEntity? {
+            var adEntity: AdEntity? = null
+            if (data != null && !TextUtils.isEmpty(data)) {
+                if (data.contains("(") && data.endsWith(")")) {
+                    val content = data.substring(data.indexOf("(") + 1, data.length - 1)
+                    val gson = Gson()
+                    adEntity = gson.fromJson(content, AdEntity::class.java)
+                }
+            }
+            return adEntity
+        }
+
         fun parseVideoData(data: String?): ArrayList<VideoEntity> {
             var dataList = ArrayList<VideoEntity>()
             if (data != null && !TextUtils.isEmpty(data)) {
                 if (data.startsWith("{") && data.endsWith("}")) {
                     if (data.contains("[{")) {
-                        val realContent =
-                            data.substring(data.indexOf("[{"), data.length - 1)
+                        val realContent = data.substring(data.indexOf("[{"), data.length - 1)
                         val gson = Gson()
                         dataList = gson.fromJson(
                             realContent, object : TypeToken<ArrayList<VideoEntity>>() {}.type
@@ -137,9 +149,7 @@ class CommonTools {
         }
 
         fun loadImage(context: Context, imgSrc: String, ivCover: ImageView) {
-            Glide.with(context)
-                .asBitmap()
-                .load(imgSrc)
+            Glide.with(context).asBitmap().load(imgSrc)
                 //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                     //关键代码，加载原始大小
@@ -147,16 +157,13 @@ class CommonTools {
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                 )
                 //设置为这种格式去掉透明度通道，可以减少内存占有
-                .format(DecodeFormat.PREFER_RGB_565)
-                .placeholder(R.mipmap.img_default)
-                .error(R.mipmap.img_error)
-                .into(object : SimpleTarget<Bitmap>(
+                .format(DecodeFormat.PREFER_RGB_565).placeholder(R.mipmap.img_default)
+                .error(R.mipmap.img_error).into(object : SimpleTarget<Bitmap>(
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                 ) {
                     override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap?>?
+                        resource: Bitmap, transition: Transition<in Bitmap?>?
                     ) {
                         ivCover.setImageBitmap(resource)
                     }
