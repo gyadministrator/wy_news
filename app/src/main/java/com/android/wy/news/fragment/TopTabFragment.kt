@@ -115,6 +115,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
+                refreshLayout.setEnableLoadMore(true)
             }
             if (isLoading) {
                 refreshLayout.finishLoadMore()
@@ -138,6 +139,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()

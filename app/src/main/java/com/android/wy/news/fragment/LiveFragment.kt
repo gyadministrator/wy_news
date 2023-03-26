@@ -80,6 +80,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
+                refreshLayout.setEnableLoadMore(true)
             }
             if (isLoading) {
                 refreshLayout.finishLoadMore()
@@ -102,6 +103,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
 
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()

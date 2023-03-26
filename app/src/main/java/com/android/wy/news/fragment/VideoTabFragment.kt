@@ -75,6 +75,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
+                refreshLayout.setEnableLoadMore(true)
             }
             if (isLoading) {
                 refreshLayout.finishLoadMore()
@@ -97,6 +98,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()

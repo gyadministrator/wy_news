@@ -89,6 +89,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
+                refreshLayout.setEnableLoadMore(true)
             }
             if (isLoading) {
                 refreshLayout.finishLoadMore()
@@ -111,6 +112,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(),
 
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
