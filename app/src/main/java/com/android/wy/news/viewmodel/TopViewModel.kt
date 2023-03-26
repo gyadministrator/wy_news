@@ -44,7 +44,8 @@ class TopViewModel : BaseViewModel() {
                 val s = response.body()?.string()
                 val gson = Gson()
                 val cityNewsEntity = gson.fromJson(s, CityNewsEntity::class.java)
-                cityNewsList.postValue(cityNewsEntity.house)
+                val house = cityNewsEntity.house
+                house.let { cityNewsList.postValue(it) }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

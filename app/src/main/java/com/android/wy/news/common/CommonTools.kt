@@ -18,8 +18,6 @@ import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
@@ -142,7 +140,7 @@ class CommonTools {
             Glide.with(context)
                 .asBitmap()
                 .load(imgSrc)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
+                //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                     //关键代码，加载原始大小
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
@@ -170,7 +168,7 @@ class CommonTools {
             var format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val date = format.parse(time)
             if (date != null) {
-                format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+                format = SimpleDateFormat("yyyy.MM.dd HH:mm")
                 return format.format(date)
             }
             return ""

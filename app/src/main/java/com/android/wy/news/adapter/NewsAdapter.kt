@@ -7,19 +7,18 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.databinding.LayoutNewsItemNormalAdapterBinding
-import com.android.wy.news.databinding.LayoutNewsItemImageAdapterBinding
 import com.android.wy.news.databinding.LayoutItemImageBinding
+import com.android.wy.news.databinding.LayoutNewsItemImageAdapterBinding
+import com.android.wy.news.databinding.LayoutNewsItemNormalAdapterBinding
 import com.android.wy.news.entity.NewsEntity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
@@ -33,6 +32,7 @@ import com.bumptech.glide.request.transition.Transition
 class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<NewsEntity>()
+    private var imgCount: Int = 1
 
     companion object {
         const val ITEM_TYPE_NORMAL = 0
@@ -60,30 +60,25 @@ class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_TYPE_IMAGE -> {
-                val view =
-                    LayoutInflater.from(context)
-                        .inflate(R.layout.layout_news_item_image_adapter, parent, false)
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.layout_news_item_image_adapter, parent, false)
                 ImageViewHolder(view)
             }
             else -> {
-                val view =
-                    LayoutInflater.from(context)
-                        .inflate(R.layout.layout_news_item_normal_adapter, parent, false)
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.layout_news_item_normal_adapter, parent, false)
                 NormalViewHolder(view)
             }
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val newsEntity = mDataList[position]
         when (holder) {
             is ImageViewHolder -> {
                 setNewsContent(
-                    holder.tvTitle,
-                    holder.tvComment,
-                    holder.tvSource,
-                    holder.tvTime,
-                    newsEntity
+                    holder.tvTitle, holder.tvComment, holder.tvSource, holder.tvTime, newsEntity
                 )
                 loadImage(holder, newsEntity)
             }
@@ -150,42 +145,57 @@ class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
 
     private fun loadImage(holder: ImageViewHolder, newsEntity: NewsEntity) {
         if (newsEntity.hasImg == 1) {
-            loadOneImage(newsEntity.imgsrc, holder)
+            loadOneImage(newsEntity.imgsrc, holder, true)
         } else {
             val imgExtra = newsEntity.imgextra
             if (imgExtra != null && imgExtra.isNotEmpty()) {
-                for (i in imgExtra.indices) {
-                    val imgextra = imgExtra[i]
-                    loadOneImage(imgextra.imgsrc, holder)
+                imgCount = if (imgExtra.size > 3) {
+                    3
+                } else {
+                    imgExtra.size
+                }
+                for (i in 0 until imgCount) {
+                    val imageExtra = imgExtra[i]
+                    if (imgCount == 1) {
+                        loadOneImage(imageExtra.imgsrc, holder, true)
+                    } else {
+                        loadOneImage(imageExtra.imgsrc, holder, false)
+                    }
                 }
             }
         }
     }
 
-    private fun loadOneImage(imgSrc: String, holder: ImageViewHolder) {
+    private fun loadOneImage(imgSrc: String, holder: ImageViewHolder, isHasOne: Boolean) {
         holder.llContent.removeAllViews()
-        Glide.with(context)
-            .asBitmap()
-            .load(imgSrc)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
+        Glide.with(context).asBitmap().load(imgSrc)
+            //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
             .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                 //关键代码，加载原始大小
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
             )
             //设置为这种格式去掉透明度通道，可以减少内存占有
-            .format(DecodeFormat.PREFER_RGB_565)
-            .placeholder(R.mipmap.img_default)
-            .error(R.mipmap.img_error)
-            .into(object : SimpleTarget<Bitmap>(
+            .format(DecodeFormat.PREFER_RGB_565).placeholder(R.mipmap.img_default)
+            .error(R.mipmap.img_error).into(object : SimpleTarget<Bitmap>(
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
             ) {
                 override fun onResourceReady(
-                    resource: Bitmap,
-                    transition: Transition<in Bitmap?>?
+                    resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
                     val mBinding = LayoutItemImageBinding.inflate(LayoutInflater.from(context))
+                    val layoutParams = mBinding.ivCover.layoutParams as RelativeLayout.LayoutParams
+                    val screenHeight = CommonTools.getScreenHeight()
+                    val screenWidth = CommonTools.getScreenWidth()
+                    if (isHasOne) {
+                        layoutParams.width = screenWidth
+                        layoutParams.height = screenHeight / 5
+                    } else {
+                        layoutParams.width = screenWidth / imgCount
+                        layoutParams.height = screenHeight / 5
+                    }
+                    mBinding.ivCover.layoutParams = layoutParams
                     mBinding.ivCover.setImageBitmap(resource)
                     val root = mBinding.root
                     if (root.parent != null) {

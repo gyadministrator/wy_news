@@ -1,7 +1,7 @@
 package com.android.wy.news.entity
 
 data class CityNewsEntity(
-    val house: ArrayList<House>,
+    val house: ArrayList<House>?,
     val status: String
 )
 
