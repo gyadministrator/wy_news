@@ -4,10 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
-import android.widget.ImageView
 import android.widget.LinearLayout
 import com.android.wy.news.R
 import com.scwang.smart.refresh.layout.api.RefreshFooter
@@ -15,11 +11,11 @@ import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
 import com.scwang.smart.refresh.layout.constant.SpinnerStyle
+import com.wang.avi.AVLoadingIndicatorView
 
 
 class CustomRefreshFooter : LinearLayout, RefreshFooter {
-    private var mImage: ImageView? = null
-    private var mAnim: Animation? = null
+    private var mImage: AVLoadingIndicatorView? = null
 
 
     constructor(context: Context?) : this(context, null)
@@ -29,9 +25,6 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
     ) {
         val view = inflate(context, R.layout.layout_custom_refresh_footer, this)
         mImage = view.findViewById(R.id.iv_refresh_footer)
-        mAnim = AnimationUtils.loadAnimation(getContext(), R.anim.anim_round_rotate)
-        val linearInterpolator = LinearInterpolator()
-        mAnim?.interpolator = linearInterpolator
     }
 
     @SuppressLint("RestrictedApi")
@@ -39,8 +32,8 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
         refreshLayout: RefreshLayout, oldState: RefreshState, newState: RefreshState
     ) {
         when (newState) {
-            RefreshState.None, RefreshState.PullUpToLoad -> if (mAnim != null) {
-                mImage!!.startAnimation(mAnim)
+            RefreshState.None, RefreshState.PullUpToLoad -> {
+                mImage!!.show()
             }
             RefreshState.Loading, RefreshState.LoadReleased -> {}
             RefreshState.ReleaseToLoad -> {}
@@ -82,10 +75,7 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
 
     @SuppressLint("RestrictedApi")
     override fun onFinish(refreshLayout: RefreshLayout, success: Boolean): Int {
-        if (mAnim != null && mAnim!!.hasStarted() && !mAnim!!.hasEnded()) {
-            mAnim?.cancel()
-            mImage?.clearAnimation()
-        }
+        mImage?.hide()
         return 0
     }
 

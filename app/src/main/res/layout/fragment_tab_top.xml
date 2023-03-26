@@ -48,14 +48,13 @@
         </androidx.core.widget.NestedScrollView>
 
 
-        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
-            android:id="@+id/shimmer_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:shimmer_demo_child_count="10"
-            app:shimmer_demo_grid_child_count="2"
-            app:shimmer_demo_layout="@layout/layout_news_shimmer_item"
-            app:shimmer_demo_layout_manager_type="linear_vertical" />
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/av_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:indicatorColor="@color/status_bar_color"
+            app:indicatorName="LineSpinFadeLoaderIndicator" />
 
     </FrameLayout>
 

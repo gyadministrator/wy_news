@@ -26,6 +26,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.wang.avi.AVLoadingIndicatorView
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.holder.BannerImageHolder
@@ -36,20 +37,20 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     OnLoadMoreListener, TopAdapter.OnTopListener {
     private var pageStart = 0
     private lateinit var rvContent: RecyclerView
-    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var isRefresh = false
     private var isLoading = false
     private lateinit var topAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var llContent: LinearLayout
+    private lateinit var avLoading: AVLoadingIndicatorView
 
     companion object {
         fun newInstance() = TopTabFragment()
     }
 
     override fun initView() {
-        shimmerRecyclerView = mBinding.shimmerRecyclerView
-        shimmerRecyclerView.showShimmerAdapter()
+        avLoading = mBinding.avLoading
+        avLoading.show()
         rvContent = mBinding.rvContent
         llContent = mBinding.llContent
         refreshLayout = mBinding.refreshLayout
@@ -70,8 +71,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
+        requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     topAdapter.onBackPressed()
@@ -86,7 +86,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        if (hidden){
+        if (hidden) {
             JCVideoPlayer.releaseAllVideos()
         }
     }
@@ -133,7 +133,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 }
                 addBannerHeader(it[0])
             }
-            shimmerRecyclerView.hideShimmerAdapter()
+            avLoading.hide()
             isRefresh = false
             isLoading = false
         }
