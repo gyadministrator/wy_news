@@ -43,7 +43,7 @@ class CustomLoadingView : View {
         setMeasuredDimension(bounds.width(), bounds.height())
     }
 
-    fun init() {
+    private fun init() {
         paint = Paint()
         paint?.color = Color.parseColor("#999999")
         loadingSize?.let { paint?.textSize = it }
