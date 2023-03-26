@@ -8,8 +8,8 @@ import android.text.TextUtils
 import android.widget.ImageView
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySplashBinding
-import com.android.wy.news.view.LoadingView
 import com.android.wy.news.viewmodel.SplashViewModel
 import com.wang.avi.AVLoadingIndicatorView
 
@@ -17,6 +17,7 @@ import com.wang.avi.AVLoadingIndicatorView
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     private lateinit var avLoading: AVLoadingIndicatorView
     private lateinit var ivAd: ImageView
+    private var splashAD: String? = null
 
     override fun initView() {
         avLoading = mBinding.avLoading
@@ -28,8 +29,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initEvent() {
-        if (!TextUtils.isEmpty(Constants.splash_ad_url)) {
-            Constants.splash_ad_url?.let { CommonTools.loadImage(mActivity, it, ivAd) }
+        splashAD = SpTools.get(Constants.SPLASH_AD)
+        if (!TextUtils.isEmpty(splashAD)) {
+            splashAD?.let { CommonTools.loadImage(mActivity, it, ivAd) }
         } else {
             avLoading.show()
         }
@@ -50,7 +52,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         mViewModel.isReadFinish.observe(this) {
             if (it) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (TextUtils.isEmpty(Constants.splash_ad_url)) {
+                    if (TextUtils.isEmpty(splashAD)) {
                         avLoading.hide()
                     }
                     val intent = Intent(mActivity, HomeActivity::class.java)

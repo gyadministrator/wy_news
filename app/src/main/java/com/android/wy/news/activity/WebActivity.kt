@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityWebBinding
-import com.android.wy.news.view.LoadingView
+import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.WebViewModel
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.WebChromeClient
@@ -22,7 +22,7 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     private lateinit var tvTitle: TextView
     private lateinit var rlBack: RelativeLayout
     private lateinit var agentWeb: AgentWeb
-    private lateinit var loadingView: LoadingView
+    private lateinit var loadingView: CustomLoadingView
 
     companion object {
         private const val WEB_URL = "web_url"
@@ -38,7 +38,6 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         tvTitle = mBinding.tvTitle
         rlBack = mBinding.rlBack
         loadingView = mBinding.loadingView
-        loadingView.startLoadingAnim()
     }
 
     override fun initData() {
@@ -47,12 +46,9 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             url = intent.getStringExtra(WEB_URL).toString()
         }
         llContent.visibility = View.GONE
-        agentWeb = AgentWeb.with(this)
-            .setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
-            .closeIndicator()
-            .createAgentWeb()
-            .ready()
-            .go(url)
+        agentWeb =
+            AgentWeb.with(this).setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
+                .closeIndicator().createAgentWeb().ready().go(url)
         val webCreator = agentWeb.webCreator
         webCreator.webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
@@ -69,43 +65,37 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     }
 
     private fun hideDocument(view: WebView?) {
-        val headJs = "javascript:function hideHeadJS() {" +
-                "document.getElementsByClassName('header')[0].style.display='none';" +
-                "}"
+        val headJs =
+            "javascript:function hideHeadJS() {" + "document.getElementsByClassName('header')[0].style.display='none';" + "}"
         view?.loadUrl(headJs)
         view?.loadUrl("javascript:hideHeadJS();")
 
-        val mainOpenAppJs = "javascript:function hideMainOpenAppJS() {" +
-                "document.getElementsByClassName('main-openApp js-open-app')[0].style.display='none';" +
-                "}"
+        val mainOpenAppJs =
+            "javascript:function hideMainOpenAppJS() {" + "document.getElementsByClassName('main-openApp js-open-app')[0].style.display='none';" + "}"
         view?.loadUrl(mainOpenAppJs)
         view?.loadUrl("javascript:hideMainOpenAppJS();")
 
-        val floatingOpenAppJs = "javascript:function hideFloatingOpenAppJS() {" +
-                "document.getElementsByClassName('backflow-floating js-open-app')[0].style.display='none';" +
-                "}"
+        val floatingOpenAppJs =
+            "javascript:function hideFloatingOpenAppJS() {" + "document.getElementsByClassName('backflow-floating js-open-app')[0].style.display='none';" + "}"
         view?.loadUrl(floatingOpenAppJs)
         view?.loadUrl("javascript:hideFloatingOpenAppJS();")
 
-        val imageOpenAppJs = "javascript:function hideImageOpenAppJS() {" +
-                "document.getElementsByClassName('s-tip js-open-app')[0].style.display='none';" +
-                "}"
+        val imageOpenAppJs =
+            "javascript:function hideImageOpenAppJS() {" + "document.getElementsByClassName('s-tip js-open-app')[0].style.display='none';" + "}"
         view?.loadUrl(imageOpenAppJs)
         view?.loadUrl("javascript:hideImageOpenAppJS();")
 
-        val commentJs = "javascript:function hideCommentJS() {" +
-                "document.getElementsByClassName('comment-link')[0].style.display='none';" +
-                "}"
+        val commentJs =
+            "javascript:function hideCommentJS() {" + "document.getElementsByClassName('comment-link')[0].style.display='none';" + "}"
         view?.loadUrl(commentJs)
         view?.loadUrl("javascript:hideCommentJS();")
 
-        val sOpenAppJs = "javascript:function hideSOpenAppJS() {" +
-                "document.getElementsByClassName('s-openApp js-open-app')[0].style.display='none';" +
-                "}"
+        val sOpenAppJs =
+            "javascript:function hideSOpenAppJS() {" + "document.getElementsByClassName('s-openApp js-open-app')[0].style.display='none';" + "}"
         view?.loadUrl(sOpenAppJs)
         view?.loadUrl("javascript:hideSOpenAppJS();")
 
-        loadingView.stopLoadingAnim()
+        loadingView.visibility = View.GONE
         llContent.visibility = View.VISIBLE
     }
 
@@ -124,7 +114,6 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     }
 
     override fun onClear() {
-        loadingView.stopLoadingAnim()
         agentWeb.clearWebCache()
     }
 

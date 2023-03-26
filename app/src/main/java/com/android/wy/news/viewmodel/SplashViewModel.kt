@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.IpEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
@@ -53,7 +54,7 @@ class SplashViewModel : BaseViewModel() {
                                     val urls = resource.urls
                                     if (urls != null && urls.isNotEmpty()) {
                                         val adUrl = urls[0]
-                                        Constants.splash_ad_url = adUrl
+                                        adUrl?.let { SpTools.put(Constants.SPLASH_AD, it) }
                                     }
                                 }
                             }

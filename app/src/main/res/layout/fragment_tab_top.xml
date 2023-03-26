@@ -48,13 +48,13 @@
         </androidx.core.widget.NestedScrollView>
 
 
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/av_loading"
+        <com.android.wy.news.view.CustomLoadingView
+            android:id="@+id/loading_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:indicatorColor="@color/status_bar_color"
-            app:indicatorName="LineSpinFadeLoaderIndicator" />
+            app:loadingSize="16sp"
+            app:loadingText="@string/loading_more" />
 
     </FrameLayout>
 

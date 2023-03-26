@@ -7,4 +7,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">3dp</item>
     </style>
+
+    <declare-styleable name="CustomLoadingView">
+        <attr name="loadingText" format="string" />
+        <attr name="loadingSize" format="dimension" />
+    </declare-styleable>
 </resources>

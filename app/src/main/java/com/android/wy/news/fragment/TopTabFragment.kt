@@ -19,14 +19,13 @@ import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.Ad
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
+import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.TopViewModel
 import com.bumptech.glide.Glide
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import com.wang.avi.AVLoadingIndicatorView
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.holder.BannerImageHolder
@@ -42,15 +41,14 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private lateinit var topAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var llContent: LinearLayout
-    private lateinit var avLoading: AVLoadingIndicatorView
+    private lateinit var loadingView: CustomLoadingView
 
     companion object {
         fun newInstance() = TopTabFragment()
     }
 
     override fun initView() {
-        avLoading = mBinding.avLoading
-        avLoading.show()
+        loadingView = mBinding.loadingView
         rvContent = mBinding.rvContent
         llContent = mBinding.llContent
         refreshLayout = mBinding.refreshLayout
@@ -71,7 +69,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(this,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     topAdapter.onBackPressed()
@@ -133,7 +132,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 }
                 addBannerHeader(it[0])
             }
-            avLoading.hide()
+            loadingView.visibility = View.GONE
             isRefresh = false
             isLoading = false
         }

@@ -28,8 +28,8 @@ class Constants {
         const val CITY_URL = "https://xf.house.163.com"
         const val VIDEO_URL = "http://c.m.163.com"
         const val AD_URL = "https://nex.163.com"
+        const val SPLASH_AD = "splash_ad"
         var currentCity: String = ""
-        var splash_ad_url: String? = ""
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
     }

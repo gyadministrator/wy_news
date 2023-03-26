@@ -1,6 +1,7 @@
 package com.android.wy.news.app
 
 import android.app.Application
+import com.android.wy.news.common.SpTools
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -12,5 +13,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        SpTools.init(this)
     }
 }
