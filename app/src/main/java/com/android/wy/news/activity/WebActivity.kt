@@ -95,6 +95,12 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         view?.loadUrl(sOpenAppJs)
         view?.loadUrl("javascript:hideSOpenAppJS();")
 
+        //直播底栏悬浮
+        val liveOpenAppJs =
+            "javascript:function hideLiveOpenAppJs() {" + "document.getElementsByClassName('widget-slider-article-simple js-open-newsapp')[0].style.display='none';" + "}"
+        view?.loadUrl(liveOpenAppJs)
+        view?.loadUrl("javascript:hideLiveOpenAppJs();")
+
         loadingView.visibility = View.GONE
         llContent.visibility = View.VISIBLE
     }

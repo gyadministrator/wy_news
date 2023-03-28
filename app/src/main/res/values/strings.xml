@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">趣闻多多</string>
+    <string name="app_name">新闻早报</string>
     <string name="loading_now">正在刷新中...</string>
     <string name="loading_more">获取更多中...</string>
     <string name="click_reload">点击重新加载...</string>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color"
     tools:context=".activity.SplashActivity">
 
     <ImageView
@@ -12,14 +11,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         tools:ignore="ContentDescription" />
-
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        app:indicatorColor="@color/status_bar_color"
-        app:indicatorName="LineSpinFadeLoaderIndicator" />
 </FrameLayout>

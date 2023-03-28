@@ -19,7 +19,7 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
-    OnRefreshListener, OnLoadMoreListener, LiveAdapter.OnNewsListener {
+    OnRefreshListener, OnLoadMoreListener, LiveAdapter.OnLiveListener {
     private var pageStart = 1
     private var liveId: Int = 0
     private lateinit var rvContent: RecyclerView
@@ -114,7 +114,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
         }
     }
 
-    override fun onNewsItemClickListener(view: View, liveReview: LiveReview) {
+    override fun onLiveItemClickListener(view: View, liveReview: LiveReview) {
         val url = Constants.LIVE_WEB_URL + liveReview.roomId + ".html"
         WebActivity.startActivity(mActivity, url)
     }

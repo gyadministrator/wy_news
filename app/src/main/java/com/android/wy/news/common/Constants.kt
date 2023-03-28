@@ -27,6 +27,7 @@ class Constants {
         const val IP_INFO_URL = "https://ipservice.ws.126.net"
         const val CITY_URL = "https://xf.house.163.com"
         const val VIDEO_URL = "http://c.m.163.com"
+        const val BANNER_URL = "http://news.163.com"
         const val AD_URL = "https://nex.163.com"
         const val SPLASH_AD = "splash_ad"
         var currentCity: String = ""

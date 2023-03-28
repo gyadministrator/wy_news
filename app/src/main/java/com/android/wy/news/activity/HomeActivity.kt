@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.android.bottombar.activity.GYBottomActivity
@@ -11,10 +12,12 @@ import com.android.bottombar.model.GYBarItem
 import com.android.bottombar.view.GYBottomBarView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Constants
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
+import com.android.wy.news.utils.ThreadExecutorManager
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
@@ -24,6 +27,7 @@ import java.util.*
 
 class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener {
     private lateinit var bottomView: GYBottomBarView
+    private lateinit var tvCity: TextView
     private var firstTime: Long = 0
     private lateinit var mViewModel: NewsMainViewModel
     private lateinit var marqueeTextView: MarqueeTextView
@@ -49,7 +53,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         mViewModel = CommonTools.getViewModel(this, NewsMainViewModel::class.java)
 
         mViewModel.dataList.observe(this) {
-            if (it != null) {
+            if (it != null && it.size > 0) {
                 list.clear()
                 marqueeTextView.stopScroll()
                 for (i in 0 until it.size) {
@@ -61,7 +65,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             marqueeTextView.setList(list)
             marqueeTextView.startScroll()
         }
-        mViewModel.getHotWord()
+        ThreadExecutorManager.mInstance.startExecute {
+            mViewModel.getHotWord()
+        }
     }
 
     override fun initSelectIcons() {
@@ -93,6 +99,10 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
             .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
         bottomView = findViewById(R.id.bottomView)
+
+        tvCity = findViewById(R.id.tv_city)
+        tvCity.text = Constants.currentCity
+
         marqueeTextView = findViewById(R.id.marqueeTextView)
         list.add("热词加载中...")
         marqueeTextView.setList(list)

@@ -3,7 +3,6 @@ package com.android.wy.news.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutLiveItemBinding
 import com.android.wy.news.entity.LiveReview
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /*
@@ -23,7 +20,7 @@ import kotlin.collections.ArrayList
   * @Version:        1.0
   * @Description:    
  */
-class LiveAdapter(var context: Context, var newsListener: OnNewsListener) :
+class LiveAdapter(var context: Context, private var liveListener: OnLiveListener) :
     RecyclerView.Adapter<LiveAdapter.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<LiveReview>()
 
@@ -95,15 +92,15 @@ class LiveAdapter(var context: Context, var newsListener: OnNewsListener) :
         notifyItemRangeInserted(originSize + 1, dataList.size)
     }
 
-    interface OnNewsListener {
-        fun onNewsItemClickListener(view: View, liveReview: LiveReview)
+    interface OnLiveListener {
+        fun onLiveItemClickListener(view: View, liveReview: LiveReview)
     }
 
     override fun onClick(p0: View?) {
         if (p0 != null) {
             val tag = p0.tag as Int
             val liveReview = mDataList[tag]
-            newsListener.onNewsItemClickListener(p0, liveReview)
+            liveListener.onLiveItemClickListener(p0, liveReview)
         }
     }
 }

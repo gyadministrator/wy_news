@@ -29,7 +29,7 @@ import com.bumptech.glide.request.transition.Transition
   * @Version:        1.0
   * @Description:    
  */
-class NewsAdapter(var context: Context, var newsListener: OnNewsListener) :
+class NewsAdapter(var context: Context, private var newsListener: OnNewsListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<NewsEntity>()
     private var imgCount: Int = 1

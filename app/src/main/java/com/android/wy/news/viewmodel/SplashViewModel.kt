@@ -18,7 +18,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-/*     
+
+/*
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/3/16 19:31
   * @Version:        1.0
@@ -81,6 +82,7 @@ class SplashViewModel : BaseViewModel() {
                 val ipEntity = gson.fromJson(s, IpEntity::class.java)
                 val result = ipEntity.result
                 Constants.currentCity = result.city
+                CommonTools.getAddress(result.areaLat.toDouble(), result.areaLng.toDouble())
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -89,6 +91,7 @@ class SplashViewModel : BaseViewModel() {
 
         })
     }
+
 
     private fun getLiveClassify() {
         val apiService =

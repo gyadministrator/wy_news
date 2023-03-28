@@ -11,16 +11,15 @@ import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.viewmodel.SplashViewModel
-import com.wang.avi.AVLoadingIndicatorView
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
-    private lateinit var avLoading: AVLoadingIndicatorView
     private lateinit var ivAd: ImageView
     private var splashAD: String? = null
+    private var isShowAD = false
+    private var delayTime = 0L
 
     override fun initView() {
-        avLoading = mBinding.avLoading
         ivAd = mBinding.ivAd
     }
 
@@ -31,9 +30,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     override fun initEvent() {
         splashAD = SpTools.get(Constants.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
+            isShowAD = true
             splashAD?.let { CommonTools.loadImage(mActivity, it, ivAd) }
-        } else {
-            avLoading.show()
         }
     }
 
@@ -51,14 +49,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     override fun onNotifyDataChanged() {
         mViewModel.isReadFinish.observe(this) {
             if (it) {
+                if (isShowAD) {
+                    delayTime = 3000
+                }
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (TextUtils.isEmpty(splashAD)) {
-                        avLoading.hide()
-                    }
                     val intent = Intent(mActivity, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
-                }, 1500)
+                }, delayTime)
             }
         }
     }

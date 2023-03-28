@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
+import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutTopNormalItemBinding
 import com.android.wy.news.databinding.LayoutTopVideoItemBinding
@@ -22,7 +23,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
   * @Version:        1.0
   * @Description:    
  */
-class TopAdapter(var context: Context, var topListener: OnTopListener) :
+class TopAdapter(var context: Context, private var topListener: OnTopListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
     private var mDataList = ArrayList<TopEntity>()
 
@@ -112,8 +113,11 @@ class TopAdapter(var context: Context, var topListener: OnTopListener) :
             val videoInfo = topEntity.videoinfo
             if (videoInfo != null) {
                 val cover = videoInfo.cover
+
                 val mp4Url = videoInfo.mp4_url
-                val setUp = holder.playVideo.setUp(mp4Url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+                val proxyUrl = VideoCacheManager.getProxyUrl(context, mp4Url)
+
+                val setUp = holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
                 if (setUp) {
                     val thumbImageView = holder.playVideo.thumbImageView
                     thumbImageView.adjustViewBounds = true

@@ -2,6 +2,7 @@ package com.android.wy.news.fragment
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -11,25 +12,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
+import com.android.wy.news.adapter.BannerImgAdapter
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.databinding.LayoutTopCityItemBinding
-import com.android.wy.news.entity.Ad
+import com.android.wy.news.entity.BannerEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.TopViewModel
-import com.bumptech.glide.Glide
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.config.IndicatorConfig.Direction
-import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
+import com.youth.banner.listener.OnBannerListener
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
@@ -92,6 +92,11 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     override fun initEvent() {
         getTopData()
         getCityData()
+        getBannerData()
+    }
+
+    private fun getBannerData() {
+        mViewModel.getBannerData()
     }
 
     private fun getCityData() {
@@ -131,7 +136,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 } else {
                     topAdapter.loadMoreData(it)
                 }
-                addBannerHeader(it[0])
             }
             isRefresh = false
             isLoading = false
@@ -152,6 +156,12 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         mViewModel.cityNewsList.observe(this) {
             loadingView.visibility = View.GONE
             addCityNewsHeader(it)
+        }
+
+        mViewModel.bannerList.observe(this) {
+            if (it.size > 0) {
+                addBannerHeader(it)
+            }
         }
     }
 
@@ -197,33 +207,31 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     }
 
-    private fun addBannerHeader(topEntity: TopEntity) {
+    private fun addBannerHeader(bannerList: ArrayList<BannerEntity>) {
         val banner = mBinding.banner
         val titleList = ArrayList<String>()
-        val ads = topEntity.ads
-        if (ads != null && ads.isNotEmpty()) {
-            for (i in ads.indices) {
-                val ad = ads[i]
-                titleList.add(ad.title)
-            }
-            banner.setAdapter(object : BannerImageAdapter<Ad?>(ads) {
 
-                override fun onBindView(
-                    holder: BannerImageHolder?, data: Ad?, position: Int, size: Int
-                ) {
-                    if (holder != null && data != null) {
-                        //图片加载自己实现
-                        Glide.with(holder.itemView).load(data.imgsrc).into(holder.imageView)
-                    }
-                }
-            }).addBannerLifecycleObserver(this) //添加生命周期观察者
-                .setIndicator(CircleIndicator(mActivity)).setBannerGalleryEffect(10, 10)
-                .setIndicatorHeight(20).setIndicatorHeight(20).setBannerRound(10f)
-                .setBannerRound2(10f).setIndicatorNormalColorRes(R.color.text_normal_color)
-                .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
-                .setIndicatorGravity(Direction.CENTER)
+        for (i in bannerList.indices) {
+            val bannerEntity = bannerList[i]
+            titleList.add(bannerEntity.title)
         }
+        banner.setAdapter(BannerImgAdapter(bannerList))
+            .addBannerLifecycleObserver(this) //添加生命周期观察者
+            //.setIndicator(CircleIndicator(mActivity))
+            .setBannerGalleryEffect(10, 10)
+            .setIndicatorHeight(20)
+            .setIndicatorHeight(20)
+            .setIndicatorNormalColorRes(R.color.text_normal_color)
+            .setIndicatorSelectedColorRes(R.color.text_select_color)
+            .setIndicatorSpace(15)
+            .setIndicatorGravity(Direction.CENTER)
+            .setOnBannerListener(bannerItemListener)
     }
+
+    private val bannerItemListener =
+        OnBannerListener<BannerEntity> { data, _ ->
+            WebActivity.startActivity(mActivity, data.link)
+        }
 
 
     private fun getTopData() {
@@ -235,6 +243,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         pageStart = 0
         getTopData()
         getCityData()
+        getBannerData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

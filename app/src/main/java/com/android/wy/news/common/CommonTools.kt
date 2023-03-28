@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
@@ -11,6 +13,7 @@ import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.android.wy.news.R
+import com.android.wy.news.app.App
 import com.android.wy.news.entity.AdEntity
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.entity.TopEntity
@@ -24,6 +27,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
@@ -37,6 +41,7 @@ import java.text.SimpleDateFormat
  */
 class CommonTools {
     companion object {
+
         fun <T : View> fd(@IdRes id: Int, view: View): T {
             return view.findViewById(id)
         }
@@ -179,6 +184,20 @@ class CommonTools {
                 return format.format(date)
             }
             return ""
+        }
+
+        fun getAddress(latitude: Double, longitude: Double) {
+            var addressList: List<Address?>? = null
+            val geocoder = Geocoder(App.app.applicationContext)
+            try {
+                addressList = geocoder.getFromLocation(latitude, longitude, 1)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            if (addressList != null) {
+                for (address in addressList) {
+                }
+            }
         }
     }
 }

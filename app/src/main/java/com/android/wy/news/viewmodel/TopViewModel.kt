@@ -3,11 +3,14 @@ package com.android.wy.news.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.entity.BannerEntity
 import com.android.wy.news.entity.CityNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
+import com.android.wy.news.jsoup.JsoupManager
+import com.android.wy.news.utils.ThreadExecutorManager
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,6 +20,8 @@ import retrofit2.Response
 class TopViewModel : BaseViewModel() {
     var topNewsList = MutableLiveData<ArrayList<TopEntity>>()
     var cityNewsList = MutableLiveData<ArrayList<House>>()
+    var bannerList = MutableLiveData<ArrayList<BannerEntity>>()
+
     fun getTopNews(pageStart: Int) {
         val apiService =
             HttpManager.mInstance.getApiService(Constants.BASE_HEAD_URL, IApiService::class.java)
@@ -53,6 +58,13 @@ class TopViewModel : BaseViewModel() {
             }
 
         })
+    }
+
+    fun getBannerData() {
+        ThreadExecutorManager.mInstance.startExecute {
+            val banner = JsoupManager.getBanner(Constants.BANNER_URL)
+            bannerList.postValue(banner)
+        }
     }
 
     override fun clear() {

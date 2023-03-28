@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
+import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutVideoItemBinding
 import com.android.wy.news.entity.VideoEntity
@@ -21,7 +22,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
   * @Version:        1.0
   * @Description:    
  */
-class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
+class VideoAdapter(var context: Context, private var videoListener: OnVideoListener) :
     RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener,
     SeekBar.OnSeekBarChangeListener {
     private var mDataList = ArrayList<VideoEntity>()
@@ -65,8 +66,11 @@ class VideoAdapter(var context: Context, var videoListener: OnVideoListener) :
             holder.tvTime.text = time
         }
 
+        val mp4Url = videoEntity.mp4_url
+        val proxyUrl = VideoCacheManager.getProxyUrl(context, mp4Url)
         val setUp =
-            holder.playVideo.setUp(videoEntity.mp4_url, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+            holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+
         holder.playVideo.progressBar.setOnSeekBarChangeListener(this)
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
