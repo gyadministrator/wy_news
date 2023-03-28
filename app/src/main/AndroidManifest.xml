@@ -31,19 +31,22 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.LaunchActivity"
             android:exported="true" />
         <activity
             android:name=".activity.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:launchMode="singleTop" />
-
-        <!-- 适配华为（huawei）刘海屏 -->
+            android:launchMode="singleTop" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.4" />
-        <!-- 适配小米（xiaomi）刘海屏 -->
+            android:value="2.4" /> <!-- 适配小米（xiaomi）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
             android:value="true" />

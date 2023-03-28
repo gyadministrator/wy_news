@@ -3,7 +3,7 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.view.View
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -17,7 +17,7 @@ import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
-import com.android.wy.news.utils.ThreadExecutorManager
+import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
@@ -154,12 +154,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     private fun hideSearch() {
-        val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
+        val rlSearch = findViewById<LinearLayout>(R.id.rl_search)
         rlSearch.visibility = View.GONE
     }
 
     private fun showSearch() {
-        val rlSearch = findViewById<RelativeLayout>(R.id.rl_search)
+        val rlSearch = findViewById<LinearLayout>(R.id.rl_search)
         rlSearch.visibility = View.VISIBLE
     }
 }

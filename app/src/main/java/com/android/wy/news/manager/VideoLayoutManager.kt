@@ -1,4 +1,4 @@
-package com.android.wy.news.layoutmanager
+package com.android.wy.news.manager
 
 import android.content.Context
 import android.util.AttributeSet

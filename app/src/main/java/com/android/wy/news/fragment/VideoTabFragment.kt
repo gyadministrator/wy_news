@@ -12,7 +12,7 @@ import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabVideoBinding
 import com.android.wy.news.entity.VideoEntity
-import com.android.wy.news.layoutmanager.VideoLayoutManager
+import com.android.wy.news.manager.VideoLayoutManager
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.viewmodel.VideoTabViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView

@@ -9,8 +9,8 @@ import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
-import com.android.wy.news.jsoup.JsoupManager
-import com.android.wy.news.utils.ThreadExecutorManager
+import com.android.wy.news.manager.JsoupManager
+import com.android.wy.news.manager.ThreadExecutorManager
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import retrofit2.Call

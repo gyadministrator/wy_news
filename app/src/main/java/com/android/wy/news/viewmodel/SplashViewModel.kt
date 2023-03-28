@@ -10,7 +10,7 @@ import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
-import com.android.wy.news.utils.ThreadExecutorManager
+import com.android.wy.news.manager.ThreadExecutorManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody

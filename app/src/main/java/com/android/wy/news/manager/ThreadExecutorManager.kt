@@ -1,4 +1,4 @@
-package com.android.wy.news.utils
+package com.android.wy.news.manager
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.LinkedBlockingQueue

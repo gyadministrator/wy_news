@@ -1,4 +1,4 @@
-package com.android.wy.news.jsoup
+package com.android.wy.news.manager
 
 import android.util.Log
 import com.android.wy.news.entity.BannerEntity
