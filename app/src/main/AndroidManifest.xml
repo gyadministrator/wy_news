@@ -31,10 +31,10 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".SettingActivity"
+            android:name=".activity.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".activity.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".activity.LaunchActivity"
