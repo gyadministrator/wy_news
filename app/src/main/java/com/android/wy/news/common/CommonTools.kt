@@ -153,8 +153,8 @@ class CommonTools {
             return stringBuilder.toString()
         }
 
-        fun loadImage(context: Context, imgSrc: String, ivCover: ImageView) {
-            Glide.with(context).asBitmap().load(imgSrc)
+        fun loadImage(imgSrc: String, ivCover: ImageView) {
+            Glide.with(ivCover.context).asBitmap().load(imgSrc)
                 //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                     //关键代码，加载原始大小

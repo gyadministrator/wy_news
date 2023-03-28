@@ -45,7 +45,7 @@ class BannerImgAdapter(dataList: ArrayList<BannerEntity>) :
         size: Int
     ) {
         if (holder != null) {
-            data?.let { CommonTools.loadImage(holder.itemView.context, it.imgsrc, holder.ivCover) }
+            data?.let { CommonTools.loadImage(it.imgsrc, holder.ivCover) }
             if (data != null) {
                 holder.tvTitle.text = data.title
             }

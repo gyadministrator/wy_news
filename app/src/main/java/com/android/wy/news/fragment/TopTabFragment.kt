@@ -2,7 +2,6 @@ package com.android.wy.news.fragment
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BannerImgAdapter
+import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -28,12 +28,11 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.config.IndicatorConfig.Direction
-import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.listener.OnBannerListener
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
-    OnLoadMoreListener, TopAdapter.OnTopListener {
+    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<TopEntity> {
     private var pageStart = 0
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
@@ -62,14 +61,15 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun initData() {
-        topAdapter = TopAdapter(mActivity, this)
+        topAdapter = TopAdapter(this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = topAdapter
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(this,
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     topAdapter.onBackPressed()
@@ -215,23 +215,17 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             val bannerEntity = bannerList[i]
             titleList.add(bannerEntity.title)
         }
-        banner.setAdapter(BannerImgAdapter(bannerList))
-            .addBannerLifecycleObserver(this) //添加生命周期观察者
+        banner.setAdapter(BannerImgAdapter(bannerList)).addBannerLifecycleObserver(this) //添加生命周期观察者
             //.setIndicator(CircleIndicator(mActivity))
-            .setBannerGalleryEffect(10, 10)
-            .setIndicatorHeight(20)
-            .setIndicatorHeight(20)
+            .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
             .setIndicatorNormalColorRes(R.color.text_normal_color)
-            .setIndicatorSelectedColorRes(R.color.text_select_color)
-            .setIndicatorSpace(15)
-            .setIndicatorGravity(Direction.CENTER)
-            .setOnBannerListener(bannerItemListener)
+            .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
+            .setIndicatorGravity(Direction.CENTER).setOnBannerListener(bannerItemListener)
     }
 
-    private val bannerItemListener =
-        OnBannerListener<BannerEntity> { data, _ ->
-            WebActivity.startActivity(mActivity, data.link)
-        }
+    private val bannerItemListener = OnBannerListener<BannerEntity> { data, _ ->
+        WebActivity.startActivity(mActivity, data.link)
+    }
 
 
     private fun getTopData() {
@@ -252,8 +246,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         getTopData()
     }
 
-    override fun onTopItemClickListener(view: View, topEntity: TopEntity) {
-        val url = Constants.WEB_URL + topEntity.docid + ".html"
+    override fun onItemClickListener(view: View, data: TopEntity) {
+        val url = Constants.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
     }
 

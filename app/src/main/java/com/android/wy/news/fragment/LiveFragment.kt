@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.wy.news.activity.WebActivity
+import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.LiveAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -18,8 +19,8 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
-class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
-    OnRefreshListener, OnLoadMoreListener, LiveAdapter.OnLiveListener {
+class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefreshListener,
+    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<LiveReview> {
     private var pageStart = 1
     private var liveId: Int = 0
     private lateinit var rvContent: RecyclerView
@@ -50,7 +51,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
     }
 
     override fun initData() {
-        liveAdapter = LiveAdapter(mActivity, this)
+        liveAdapter = LiveAdapter(this)
         rvContent.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rvContent.adapter = liveAdapter
     }
@@ -114,11 +115,6 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
         }
     }
 
-    override fun onLiveItemClickListener(view: View, liveReview: LiveReview) {
-        val url = Constants.LIVE_WEB_URL + liveReview.roomId + ".html"
-        WebActivity.startActivity(mActivity, url)
-    }
-
     override fun onRefresh(refreshLayout: RefreshLayout) {
         isRefresh = true
         pageStart = 1
@@ -133,6 +129,11 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(),
 
     override fun onClear() {
 
+    }
+
+    override fun onItemClickListener(view: View, data: LiveReview) {
+        val url = Constants.LIVE_WEB_URL + data.roomId + ".html"
+        WebActivity.startActivity(mActivity, url)
     }
 
 }

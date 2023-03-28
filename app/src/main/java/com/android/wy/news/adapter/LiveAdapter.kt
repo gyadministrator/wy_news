@@ -1,9 +1,7 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -20,10 +18,9 @@ import java.util.*
   * @Version:        1.0
   * @Description:    
  */
-class LiveAdapter(var context: Context, private var liveListener: OnLiveListener) :
-    RecyclerView.Adapter<LiveAdapter.ViewHolder>(), View.OnClickListener {
-    private var mDataList = ArrayList<LiveReview>()
-
+class LiveAdapter(
+    itemAdapterListener: OnItemAdapterListener<LiveReview>
+) : BaseNewsAdapter<LiveAdapter.ViewHolder, LiveReview>(itemAdapterListener) {
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutLiveItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
@@ -33,16 +30,15 @@ class LiveAdapter(var context: Context, private var liveListener: OnLiveListener
         var ivCover = mBinding.ivCover
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.layout_live_item, parent, false)
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = getView(parent, R.layout.layout_live_item)
         return ViewHolder(view)
     }
 
-    @SuppressLint("SimpleDateFormat")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val liveReview = mDataList[position]
-        holder.tvTitle.text = liveReview.roomName
-        val playCount = liveReview.userCount
+    @SuppressLint("SetTextI18n")
+    override fun onBindData(holder: ViewHolder, data: LiveReview) {
+        holder.tvTitle.text = data.roomName
+        val playCount = data.userCount
         if (playCount > 0) {
             if (playCount > 10000) {
                 val fl = playCount / 10000f
@@ -51,16 +47,16 @@ class LiveAdapter(var context: Context, private var liveListener: OnLiveListener
                 holder.tvRead.text = playCount.toString() + "人已看"
             }
         }
-        holder.tvSource.text = liveReview.source
+        holder.tvSource.text = data.source
 
-        val time = CommonTools.parseTime(liveReview.startTime)
+        val time = CommonTools.parseTime(data.startTime)
         if (!TextUtils.isEmpty(time)) {
             holder.tvTime.text = "直播时间: $time"
         } else {
-            holder.tvTime.text = "直播时间: " + liveReview.startTime
+            holder.tvTime.text = "直播时间: " + data.startTime
         }
 
-        val pcImage = liveReview.pcImage
+        val pcImage = data.pcImage
         var url: String = pcImage
         if (!TextUtils.isEmpty(pcImage)) {
             if (pcImage.contains("\"")) {
@@ -68,39 +64,7 @@ class LiveAdapter(var context: Context, private var liveListener: OnLiveListener
             }
         }
         if (!TextUtils.isEmpty(url)) {
-            CommonTools.loadImage(context, url, holder.ivCover)
-        }
-
-        holder.itemView.tag = position
-        holder.itemView.setOnClickListener(this)
-    }
-
-    override fun getItemCount(): Int {
-        return mDataList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshData(dataList: ArrayList<LiveReview>) {
-        mDataList.clear()
-        mDataList.addAll(dataList)
-        notifyDataSetChanged()
-    }
-
-    fun loadMoreData(dataList: ArrayList<LiveReview>) {
-        val originSize = mDataList.size
-        mDataList.addAll(dataList)
-        notifyItemRangeInserted(originSize + 1, dataList.size)
-    }
-
-    interface OnLiveListener {
-        fun onLiveItemClickListener(view: View, liveReview: LiveReview)
-    }
-
-    override fun onClick(p0: View?) {
-        if (p0 != null) {
-            val tag = p0.tag as Int
-            val liveReview = mDataList[tag]
-            liveListener.onLiveItemClickListener(p0, liveReview)
+            CommonTools.loadImage(url, holder.ivCover)
         }
     }
 }

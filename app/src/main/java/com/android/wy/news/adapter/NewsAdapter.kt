@@ -1,7 +1,6 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Bitmap
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -9,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutItemImageBinding
@@ -29,67 +28,39 @@ import com.bumptech.glide.request.transition.Transition
   * @Version:        1.0
   * @Description:    
  */
-class NewsAdapter(var context: Context, private var newsListener: OnNewsListener) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
-    private var mDataList = ArrayList<NewsEntity>()
-    private var imgCount: Int = 1
-
-    companion object {
-        const val ITEM_TYPE_NORMAL = 0
-        const val ITEM_TYPE_IMAGE = 1
-    }
-
-    class NormalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val mBinding = LayoutNewsItemNormalAdapterBinding.bind(itemView)
-        var tvTitle = mBinding.tvTitle
-        var tvComment = mBinding.tvComment
-        var tvDesc = mBinding.tvDesc
-        var tvTime = mBinding.tvTime
-        var tvSource = mBinding.tvSource
-    }
-
-    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val mBinding = LayoutNewsItemImageAdapterBinding.bind(itemView)
-        var tvTitle = mBinding.tvTitle
-        var tvComment = mBinding.tvComment
-        var llContent = mBinding.llContent
-        var tvTime = mBinding.tvTime
-        var tvSource = mBinding.tvSource
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+class NewsAdapter(
+    itemAdapterListener: OnItemAdapterListener<NewsEntity>
+) : BaseNewsAdapter<ViewHolder, NewsEntity>(itemAdapterListener) {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             ITEM_TYPE_IMAGE -> {
-                val view = LayoutInflater.from(context)
-                    .inflate(R.layout.layout_news_item_image_adapter, parent, false)
+                val view = getView(parent, R.layout.layout_news_item_image_adapter)
                 ImageViewHolder(view)
             }
             else -> {
-                val view = LayoutInflater.from(context)
-                    .inflate(R.layout.layout_news_item_normal_adapter, parent, false)
+                val view = getView(parent, R.layout.layout_news_item_normal_adapter)
                 NormalViewHolder(view)
             }
         }
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val newsEntity = mDataList[position]
+    override fun onBindData(holder: ViewHolder, data: NewsEntity) {
         when (holder) {
             is ImageViewHolder -> {
                 setNewsContent(
-                    holder.tvTitle, holder.tvComment, holder.tvSource, holder.tvTime, newsEntity
+                    holder.tvTitle, holder.tvComment, holder.tvSource, holder.tvTime, data
                 )
-                loadImage(holder, newsEntity)
+                loadImage(holder, data)
             }
             is NormalViewHolder -> {
-                holder.tvTitle.text = newsEntity.title
-                if (TextUtils.isEmpty(newsEntity.digest)) {
+                holder.tvTitle.text = data.title
+                if (TextUtils.isEmpty(data.digest)) {
                     holder.tvDesc.visibility = View.GONE
                 } else {
-                    holder.tvDesc.text = newsEntity.digest
+                    holder.tvDesc.text = data.digest
                 }
-                val commentCount = newsEntity.commentCount
+                val commentCount = data.commentCount
                 if (commentCount > 0) {
                     if (commentCount > 10000) {
                         val fl = commentCount / 10000f
@@ -100,19 +71,41 @@ class NewsAdapter(var context: Context, private var newsListener: OnNewsListener
                 } else {
                     holder.tvComment.visibility = View.GONE
                 }
-                holder.tvSource.text = newsEntity.source
+                holder.tvSource.text = data.source
 
-                val time = CommonTools.parseTime(newsEntity.ptime)
+                val time = CommonTools.parseTime(data.ptime)
                 if (!TextUtils.isEmpty(time)) {
                     holder.tvTime.text = time
                 } else {
-                    holder.tvTime.text = newsEntity.ptime
+                    holder.tvTime.text = data.ptime
                 }
             }
         }
+    }
 
-        holder.itemView.tag = position
-        holder.itemView.setOnClickListener(this)
+    private var imgCount: Int = 1
+
+    companion object {
+        const val ITEM_TYPE_NORMAL = 0
+        const val ITEM_TYPE_IMAGE = 1
+    }
+
+    class NormalViewHolder(itemView: View) : ViewHolder(itemView) {
+        private val mBinding = LayoutNewsItemNormalAdapterBinding.bind(itemView)
+        var tvTitle = mBinding.tvTitle
+        var tvComment = mBinding.tvComment
+        var tvDesc = mBinding.tvDesc
+        var tvTime = mBinding.tvTime
+        var tvSource = mBinding.tvSource
+    }
+
+    class ImageViewHolder(itemView: View) : ViewHolder(itemView) {
+        private val mBinding = LayoutNewsItemImageAdapterBinding.bind(itemView)
+        var tvTitle = mBinding.tvTitle
+        var tvComment = mBinding.tvComment
+        var llContent = mBinding.llContent
+        var tvTime = mBinding.tvTime
+        var tvSource = mBinding.tvSource
     }
 
     @SuppressLint("SetTextI18n")
@@ -168,7 +161,7 @@ class NewsAdapter(var context: Context, private var newsListener: OnNewsListener
 
     private fun loadOneImage(imgSrc: String, holder: ImageViewHolder, isHasOne: Boolean) {
         holder.llContent.removeAllViews()
-        Glide.with(context).asBitmap().load(imgSrc)
+        Glide.with(holder.llContent.context).asBitmap().load(imgSrc)
             //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
             .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                 //关键代码，加载原始大小
@@ -184,7 +177,8 @@ class NewsAdapter(var context: Context, private var newsListener: OnNewsListener
                 override fun onResourceReady(
                     resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
-                    val mBinding = LayoutItemImageBinding.inflate(LayoutInflater.from(context))
+                    val mBinding =
+                        LayoutItemImageBinding.inflate(LayoutInflater.from(holder.llContent.context))
                     val layoutParams = mBinding.ivCover.layoutParams as RelativeLayout.LayoutParams
                     val screenHeight = CommonTools.getScreenHeight()
                     val screenWidth = CommonTools.getScreenWidth()
@@ -206,36 +200,6 @@ class NewsAdapter(var context: Context, private var newsListener: OnNewsListener
                 }
             })
     }
-
-    override fun getItemCount(): Int {
-        return mDataList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshData(dataList: ArrayList<NewsEntity>) {
-        mDataList.clear()
-        mDataList.addAll(dataList)
-        notifyDataSetChanged()
-    }
-
-    fun loadMoreData(dataList: ArrayList<NewsEntity>) {
-        val originSize = mDataList.size
-        mDataList.addAll(dataList)
-        notifyItemRangeInserted(originSize + 1, dataList.size)
-    }
-
-    interface OnNewsListener {
-        fun onNewsItemClickListener(view: View, newsEntity: NewsEntity)
-    }
-
-    override fun onClick(p0: View?) {
-        if (p0 != null) {
-            val tag = p0.tag as Int
-            val newsEntity = mDataList[tag]
-            newsListener.onNewsItemClickListener(p0, newsEntity)
-        }
-    }
-
 
     override fun getItemViewType(position: Int): Int {
         val newsEntity = mDataList[position]

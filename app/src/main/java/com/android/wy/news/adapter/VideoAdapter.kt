@@ -1,9 +1,7 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -22,10 +20,12 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
   * @Version:        1.0
   * @Description:    
  */
-class VideoAdapter(var context: Context, private var videoListener: OnVideoListener) :
-    RecyclerView.Adapter<VideoAdapter.ViewHolder>(), View.OnClickListener,
+class VideoAdapter(
+    itemAdapterListener: OnItemAdapterListener<VideoEntity>,
+    private var videoListener: OnVideoListener
+) :
+    BaseNewsAdapter<VideoAdapter.ViewHolder, VideoEntity>(itemAdapterListener),
     SeekBar.OnSeekBarChangeListener {
-    private var mDataList = ArrayList<VideoEntity>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutVideoItemBinding.bind(itemView)
@@ -39,16 +39,15 @@ class VideoAdapter(var context: Context, private var videoListener: OnVideoListe
         var tvUserSource = mBinding.tvUserSource
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.layout_video_item, parent, false)
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = getView(parent, R.layout.layout_video_item)
         return ViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val videoEntity = mDataList[position]
-        holder.tvTitle.text = videoEntity.title
-        val playCount = videoEntity.playCount
+    override fun onBindData(holder: ViewHolder, data: VideoEntity) {
+        holder.tvTitle.text = data.title
+        val playCount = data.playCount
         if (playCount > 0) {
             if (playCount > 10000) {
                 val fl = playCount / 10000f
@@ -57,64 +56,30 @@ class VideoAdapter(var context: Context, private var videoListener: OnVideoListe
                 holder.tvPlay.text = playCount.toString() + "次播放"
             }
         }
-        holder.tvSource.text = videoEntity.topicName
+        holder.tvSource.text = data.topicName
 
-        val time = CommonTools.parseTime(videoEntity.ptime)
+        val time = CommonTools.parseTime(data.ptime)
         if (TextUtils.isEmpty(time)) {
-            holder.tvTime.text = videoEntity.ptime
+            holder.tvTime.text = data.ptime
         } else {
             holder.tvTime.text = time
         }
 
-        val mp4Url = videoEntity.mp4_url
-        val proxyUrl = VideoCacheManager.getProxyUrl(context, mp4Url)
-        val setUp =
-            holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+        val mp4Url = data.mp4_url
+        val proxyUrl = VideoCacheManager.getProxyUrl(holder.playVideo.context, mp4Url)
+        val setUp = holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
 
         holder.playVideo.progressBar.setOnSeekBarChangeListener(this)
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
-            CommonTools.loadImage(context, videoEntity.fullSizeImg, thumbImageView)
+            CommonTools.loadImage(data.fullSizeImg, thumbImageView)
         }
 
-        val videoTopic = videoEntity.videoTopic
+        val videoTopic = data.videoTopic
         if (videoTopic != null) {
             holder.tvUser.text = videoTopic.tname
             holder.tvUserSource.text = videoTopic.alias
-            CommonTools.loadImage(context, videoTopic.topic_icons, holder.ivUser)
-        }
-
-        holder.itemView.tag = position
-        holder.itemView.setOnClickListener(this)
-    }
-
-    override fun getItemCount(): Int {
-        return mDataList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshData(dataList: ArrayList<VideoEntity>) {
-        mDataList.clear()
-        mDataList.addAll(dataList)
-        notifyDataSetChanged()
-    }
-
-    fun loadMoreData(dataList: ArrayList<VideoEntity>) {
-        val originSize = mDataList.size
-        mDataList.addAll(dataList)
-        notifyItemRangeInserted(originSize + 1, dataList.size)
-    }
-
-    interface OnVideoListener {
-        fun onVideoItemClickListener(view: View, videoEntity: VideoEntity)
-        fun onVideoFinish()
-    }
-
-    override fun onClick(p0: View?) {
-        if (p0 != null) {
-            val tag = p0.tag as Int
-            val videoEntity = mDataList[tag]
-            videoListener.onVideoItemClickListener(p0, videoEntity)
+            CommonTools.loadImage(videoTopic.topic_icons, holder.ivUser)
         }
     }
 
@@ -130,5 +95,9 @@ class VideoAdapter(var context: Context, private var videoListener: OnVideoListe
 
     override fun onStopTrackingTouch(p0: SeekBar?) {
 
+    }
+
+    interface OnVideoListener {
+        fun onVideoFinish()
     }
 }

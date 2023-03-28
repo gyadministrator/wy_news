@@ -31,7 +31,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         splashAD = SpTools.get(Constants.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
             isShowAD = true
-            splashAD?.let { CommonTools.loadImage(mActivity, it, ivAd) }
+            splashAD?.let { CommonTools.loadImage(it, ivAd) }
         }
     }
 

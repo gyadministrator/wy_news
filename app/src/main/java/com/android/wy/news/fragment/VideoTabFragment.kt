@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabVideoBinding
@@ -23,7 +24,8 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
-    OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener {
+    OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener,
+    BaseNewsAdapter.OnItemAdapterListener<VideoEntity> {
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
@@ -47,7 +49,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     override fun initData() {
-        videoAdapter = VideoAdapter(mActivity, this)
+        videoAdapter = VideoAdapter(this, this)
         layoutManager = VideoLayoutManager(mActivity, OrientationHelper.VERTICAL, false)
         rvContent.layoutManager = layoutManager
         rvContent.adapter = videoAdapter
@@ -111,10 +113,6 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     private fun getVideoData() {
         mViewModel.getVideoList()
-    }
-
-    override fun onVideoItemClickListener(view: View, videoEntity: VideoEntity) {
-
     }
 
     override fun onVideoFinish() {
@@ -190,5 +188,9 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     override fun handleBackPressed(): Boolean {
         JCVideoPlayer.backPress()
         return true
+    }
+
+    override fun onItemClickListener(view: View, data: VideoEntity) {
+
     }
 }

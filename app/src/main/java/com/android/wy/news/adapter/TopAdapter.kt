@@ -1,13 +1,11 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
@@ -23,16 +21,16 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
   * @Version:        1.0
   * @Description:    
  */
-class TopAdapter(var context: Context, private var topListener: OnTopListener) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
-    private var mDataList = ArrayList<TopEntity>()
+class TopAdapter(
+    itemAdapterListener: OnItemAdapterListener<TopEntity>
+) : BaseNewsAdapter<ViewHolder, TopEntity>(itemAdapterListener) {
 
     companion object {
         const val ITEM_TYPE_NORMAL = 0
         const val ITEM_TYPE_VIDEO = 1
     }
 
-    class NormalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NormalViewHolder(itemView: View) : ViewHolder(itemView) {
         private val mBinding = LayoutTopNormalItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
         var tvRead = mBinding.tvRead
@@ -41,7 +39,7 @@ class TopAdapter(var context: Context, private var topListener: OnTopListener) :
         var ivCover = mBinding.ivCover
     }
 
-    class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class VideoViewHolder(itemView: View) : ViewHolder(itemView) {
         private val mBinding = LayoutTopVideoItemBinding.bind(itemView)
         var ivUser = mBinding.ivUser
         var tvUser = mBinding.tvUser
@@ -53,34 +51,31 @@ class TopAdapter(var context: Context, private var topListener: OnTopListener) :
         var tvSource = mBinding.tvSource
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View
         return if (viewType == ITEM_TYPE_VIDEO) {
-            view =
-                LayoutInflater.from(context).inflate(R.layout.layout_top_video_item, parent, false)
+            view = getView(parent, R.layout.layout_top_video_item)
             VideoViewHolder(view)
         } else {
-            view =
-                LayoutInflater.from(context).inflate(R.layout.layout_top_normal_item, parent, false)
+            view = getView(parent, R.layout.layout_top_normal_item)
             NormalViewHolder(view)
         }
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val topEntity = mDataList[position]
+    override fun onBindData(holder: ViewHolder, data: TopEntity) {
         if (holder is NormalViewHolder) {
-            holder.tvTitle.text = topEntity.title
-            holder.tvSource.text = topEntity.source
+            holder.tvTitle.text = data.title
+            holder.tvSource.text = data.source
 
-            val time = CommonTools.parseTime(topEntity.ptime)
+            val time = CommonTools.parseTime(data.ptime)
             if (!TextUtils.isEmpty(time)) {
                 holder.tvTime.text = time
             } else {
-                holder.tvTime.text = topEntity.ptime
+                holder.tvTime.text = data.ptime
             }
 
-            val replyCount = topEntity.replyCount
+            val replyCount = data.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
                     val fl = replyCount / 10000f
@@ -89,19 +84,19 @@ class TopAdapter(var context: Context, private var topListener: OnTopListener) :
                     holder.tvRead.text = replyCount.toString() + "评论"
                 }
             }
-            CommonTools.loadImage(context, topEntity.imgsrc, holder.ivCover)
+            CommonTools.loadImage(data.imgsrc, holder.ivCover)
         } else if (holder is VideoViewHolder) {
-            holder.tvTitle.text = topEntity.title
-            holder.tvSource.text = topEntity.source
+            holder.tvTitle.text = data.title
+            holder.tvSource.text = data.source
 
-            val time = CommonTools.parseTime(topEntity.ptime)
+            val time = CommonTools.parseTime(data.ptime)
             if (!TextUtils.isEmpty(time)) {
                 holder.tvTime.text = time
             } else {
-                holder.tvTime.text = topEntity.ptime
+                holder.tvTime.text = data.ptime
             }
 
-            val replyCount = topEntity.replyCount
+            val replyCount = data.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
                     val fl = replyCount / 10000f
@@ -110,22 +105,22 @@ class TopAdapter(var context: Context, private var topListener: OnTopListener) :
                     holder.tvComment.text = replyCount.toString() + "评论"
                 }
             }
-            val videoInfo = topEntity.videoinfo
+            val videoInfo = data.videoinfo
             if (videoInfo != null) {
                 val cover = videoInfo.cover
 
                 val mp4Url = videoInfo.mp4_url
-                val proxyUrl = VideoCacheManager.getProxyUrl(context, mp4Url)
+                val proxyUrl = VideoCacheManager.getProxyUrl(holder.playVideo.context, mp4Url)
 
                 val setUp = holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
                 if (setUp) {
                     val thumbImageView = holder.playVideo.thumbImageView
                     thumbImageView.adjustViewBounds = true
                     thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                    CommonTools.loadImage(context, cover, thumbImageView)
+                    CommonTools.loadImage(cover, thumbImageView)
                 }
             }
-            val videoTopic = topEntity.videoTopic
+            val videoTopic = data.videoTopic
             if (videoTopic != null) {
                 holder.tvUser.text = videoTopic.ename
                 val certificationText = videoTopic.certificationText
@@ -134,39 +129,8 @@ class TopAdapter(var context: Context, private var topListener: OnTopListener) :
                 } else {
                     holder.tvUserSource.text = certificationText
                 }
-                CommonTools.loadImage(context, videoTopic.topic_icons, holder.ivUser)
+                CommonTools.loadImage(videoTopic.topic_icons, holder.ivUser)
             }
-        }
-        holder.itemView.tag = position
-        holder.itemView.setOnClickListener(this)
-    }
-
-    override fun getItemCount(): Int {
-        return mDataList.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun refreshData(dataList: ArrayList<TopEntity>) {
-        mDataList.clear()
-        mDataList.addAll(dataList)
-        notifyDataSetChanged()
-    }
-
-    fun loadMoreData(dataList: ArrayList<TopEntity>) {
-        val originSize = mDataList.size
-        mDataList.addAll(dataList)
-        notifyItemRangeInserted(originSize + 1, dataList.size)
-    }
-
-    interface OnTopListener {
-        fun onTopItemClickListener(view: View, topEntity: TopEntity)
-    }
-
-    override fun onClick(p0: View?) {
-        if (p0 != null) {
-            val tag = p0.tag as Int
-            val topEntity = mDataList[tag]
-            topListener.onTopItemClickListener(p0, topEntity)
         }
     }
 
