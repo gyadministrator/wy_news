@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
@@ -58,7 +59,7 @@ class VideoAdapter(
         }
         holder.tvSource.text = data.topicName
 
-        val time = CommonTools.parseTime(data.ptime)
+        val time = CommonTools.getTimeDiff(data.ptime)
         if (TextUtils.isEmpty(time)) {
             holder.tvTime.text = data.ptime
         } else {
@@ -72,6 +73,7 @@ class VideoAdapter(
         holder.playVideo.progressBar.setOnSeekBarChangeListener(this)
         if (setUp) {
             val thumbImageView = holder.playVideo.thumbImageView
+            thumbImageView.scaleType=ImageView.ScaleType.CENTER_CROP
             CommonTools.loadImage(data.fullSizeImg, thumbImageView)
         }
 

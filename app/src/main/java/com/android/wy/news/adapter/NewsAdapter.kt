@@ -73,7 +73,7 @@ class NewsAdapter(
                 }
                 holder.tvSource.text = data.source
 
-                val time = CommonTools.parseTime(data.ptime)
+                val time = CommonTools.getTimeDiff(data.ptime)
                 if (!TextUtils.isEmpty(time)) {
                     holder.tvTime.text = time
                 } else {
@@ -128,7 +128,7 @@ class NewsAdapter(
         }
         tvSource.text = newsEntity.source
 
-        val time = CommonTools.parseTime(newsEntity.ptime)
+        val time = CommonTools.getTimeDiff(newsEntity.ptime)
         if (!TextUtils.isEmpty(time)) {
             tvTime.text = time
         } else {
@@ -180,14 +180,24 @@ class NewsAdapter(
                     val mBinding =
                         LayoutItemImageBinding.inflate(LayoutInflater.from(holder.llContent.context))
                     val layoutParams = mBinding.ivCover.layoutParams as RelativeLayout.LayoutParams
+                    val height = resource.height
                     val screenHeight = CommonTools.getScreenHeight()
                     val screenWidth = CommonTools.getScreenWidth()
+                    val i = screenHeight / 5
                     if (isHasOne) {
                         layoutParams.width = screenWidth
-                        layoutParams.height = screenHeight / 5
+                        if (height > i) {
+                            layoutParams.height = height
+                        } else {
+                            layoutParams.height = i
+                        }
                     } else {
                         layoutParams.width = screenWidth / imgCount
-                        layoutParams.height = screenHeight / 5
+                        if (height > i) {
+                            layoutParams.height = height
+                        } else {
+                            layoutParams.height = i
+                        }
                     }
                     mBinding.ivCover.layoutParams = layoutParams
                     mBinding.ivCover.setImageBitmap(resource)

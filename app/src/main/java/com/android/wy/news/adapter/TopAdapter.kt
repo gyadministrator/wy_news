@@ -68,7 +68,7 @@ class TopAdapter(
             holder.tvTitle.text = data.title
             holder.tvSource.text = data.source
 
-            val time = CommonTools.parseTime(data.ptime)
+            val time = CommonTools.getTimeDiff(data.ptime)
             if (!TextUtils.isEmpty(time)) {
                 holder.tvTime.text = time
             } else {
@@ -89,7 +89,7 @@ class TopAdapter(
             holder.tvTitle.text = data.title
             holder.tvSource.text = data.source
 
-            val time = CommonTools.parseTime(data.ptime)
+            val time = CommonTools.getTimeDiff(data.ptime)
             if (!TextUtils.isEmpty(time)) {
                 holder.tvTime.text = time
             } else {
@@ -115,7 +115,6 @@ class TopAdapter(
                 val setUp = holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
                 if (setUp) {
                     val thumbImageView = holder.playVideo.thumbImageView
-                    thumbImageView.adjustViewBounds = true
                     thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
                     CommonTools.loadImage(cover, thumbImageView)
                 }

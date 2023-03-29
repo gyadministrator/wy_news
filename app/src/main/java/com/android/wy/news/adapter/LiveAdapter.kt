@@ -49,7 +49,7 @@ class LiveAdapter(
         }
         holder.tvSource.text = data.source
 
-        val time = CommonTools.parseTime(data.startTime)
+        val time = CommonTools.getTimeDiff(data.startTime)
         if (!TextUtils.isEmpty(time)) {
             holder.tvTime.text = "直播时间: $time"
         } else {

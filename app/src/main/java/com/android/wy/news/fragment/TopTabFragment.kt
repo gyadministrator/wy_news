@@ -176,7 +176,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
                 val house = it[i]
                 tvTitle.text = house.title
-                val time = CommonTools.parseTime(house.ptime)
+                val time = CommonTools.getTimeDiff(house.ptime)
                 if (TextUtils.isEmpty(time)) {
                     tvTime.text = house.ptime
                 } else {
