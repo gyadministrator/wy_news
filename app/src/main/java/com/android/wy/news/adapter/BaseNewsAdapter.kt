@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
     private var itemAdapterListener: OnItemAdapterListener<V>
 ) : RecyclerView.Adapter<H>(), View.OnClickListener {
+    protected var currentPage = 0
 
     protected var mDataList = ArrayList<V>()
 
@@ -45,12 +46,16 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshData(dataList: ArrayList<V>) {
+        currentPage = 1
         mDataList.clear()
         mDataList.addAll(dataList)
         notifyDataSetChanged()
     }
 
     fun loadMoreData(dataList: ArrayList<V>) {
+        if (dataList.size > 0) {
+            currentPage++
+        }
         val originSize = mDataList.size
         mDataList.addAll(dataList)
         notifyItemRangeInserted(originSize + 1, dataList.size)

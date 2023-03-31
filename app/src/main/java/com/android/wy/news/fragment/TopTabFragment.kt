@@ -1,12 +1,10 @@
 package com.android.wy.news.fragment
 
-import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
@@ -18,7 +16,6 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.databinding.LayoutTopCityItemBinding
-import com.android.wy.news.entity.BannerEntity
 import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
@@ -30,7 +27,6 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.listener.OnBannerListener
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<TopEntity> {
@@ -56,38 +52,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         refreshLayout.setOnLoadMoreListener(this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        topAdapter.onPause()
-    }
-
     override fun initData() {
         topAdapter = TopAdapter(this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = topAdapter
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    topAdapter.onBackPressed()
-                }
-            })
-    }
-
-    override fun handleBackPressed(): Boolean {
-        topAdapter.onBackPressed()
-        return true
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (hidden) {
-            JCVideoPlayer.releaseAllVideos()
-        }
     }
 
     override fun initEvent() {
@@ -254,8 +222,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun onItemClickListener(view: View, data: TopEntity) {
-        val url = Constants.WEB_URL + data.docid + ".html"
-        WebActivity.startActivity(mActivity, url)
+        if (data.videoinfo == null) {
+            val url = Constants.WEB_URL + data.docid + ".html"
+            WebActivity.startActivity(mActivity, url)
+        }
     }
 
 }

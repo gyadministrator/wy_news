@@ -246,5 +246,22 @@ class CommonTools {
             }
             return result
         }
+
+        fun second2Time(second: Long?): String {
+            if (second == null || second < 0) {
+                return "00:00"
+            }
+            val h = second / 3600
+            val m = second % 3600 / 60
+            val s = second % 60
+            var str = ""
+            if (h > 0) {
+                str = (if (h < 10) "0$h" else h).toString() + ":"
+            }
+            str += (if (m < 10) "0$m" else m).toString() + ":"
+            str += if (s < 10) "0$s" else s
+            return str
+        }
+
     }
 }

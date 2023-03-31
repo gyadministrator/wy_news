@@ -4,15 +4,14 @@ import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
-import com.android.wy.news.cache.VideoCacheManager
+import com.android.wy.news.activity.VideoFullActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutTopNormalItemBinding
 import com.android.wy.news.databinding.LayoutTopVideoItemBinding
+import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.entity.TopEntity
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 
 /*
@@ -24,6 +23,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 class TopAdapter(
     itemAdapterListener: OnItemAdapterListener<TopEntity>
 ) : BaseNewsAdapter<ViewHolder, TopEntity>(itemAdapterListener) {
+    private val videoList = ArrayList<ScreenVideoEntity>()
 
     companion object {
         const val ITEM_TYPE_NORMAL = 0
@@ -45,10 +45,11 @@ class TopAdapter(
         var tvUser = mBinding.tvUser
         var tvUserSource = mBinding.tvUserSource
         var tvTitle = mBinding.tvTitle
-        var playVideo = mBinding.playVideo
+        var ivVideoCover = mBinding.ivVideoCover
         var tvComment = mBinding.tvComment
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
+        var tvDuration = mBinding.tvDuration
     }
 
     override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -108,16 +109,11 @@ class TopAdapter(
             val videoInfo = data.videoinfo
             if (videoInfo != null) {
                 val cover = videoInfo.cover
-
-                val mp4Url = videoInfo.mp4_url
-                val proxyUrl = VideoCacheManager.getProxyUrl(holder.playVideo.context, mp4Url)
-
-                val setUp = holder.playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
-                if (setUp) {
-                    val thumbImageView = holder.playVideo.thumbImageView
-                    thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                    CommonTools.loadImage(cover, thumbImageView)
-                }
+                CommonTools.loadImage(cover, holder.ivVideoCover)
+                holder.tvDuration.text =
+                    CommonTools.second2Time(videoInfo.video_data.duration.toLong())
+                holder.ivVideoCover.tag = holder.adapterPosition
+                holder.ivVideoCover.setOnClickListener(coverClickListener)
             }
             val videoTopic = data.videoTopic
             if (videoTopic != null) {
@@ -133,6 +129,44 @@ class TopAdapter(
         }
     }
 
+    private val coverClickListener = View.OnClickListener { p0 ->
+        if (p0 != null) {
+            videoList.clear()
+            val position = p0.tag as Int
+            for (i in position until mDataList.size) {
+                val topEntity = mDataList[i]
+                val videoInfo = topEntity.videoinfo
+                val videoTopic = topEntity.videoTopic
+                if (videoInfo != null) {
+                    var userSource = ""
+                    if (videoTopic != null) {
+                        val certificationText = videoTopic.certificationText
+                        userSource = if (TextUtils.isEmpty(certificationText)) {
+                            videoTopic.alias
+                        } else {
+                            certificationText
+                        }
+                    }
+                    videoTopic?.let {
+                        val screenVideoEntity = ScreenVideoEntity(
+                            topEntity.title,
+                            topEntity.replyCount.toLong(),
+                            topEntity.source,
+                            videoInfo.ptime,
+                            videoInfo.mp4_url,
+                            videoInfo.cover,
+                            videoTopic.ename,
+                            userSource,
+                            it.topic_icons
+                        )
+                        videoList.add(screenVideoEntity)
+                    }
+                }
+            }
+            VideoFullActivity.startFullScreen(currentPage, videoList, p0.context)
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
         if (mDataList.size > 0) {
             val topEntity = mDataList[position]
@@ -144,15 +178,5 @@ class TopAdapter(
             }
         }
         return super.getItemViewType(position)
-    }
-
-    fun onBackPressed() {
-        if (JCVideoPlayer.backPress()) {
-            return
-        }
-    }
-
-    fun onPause() {
-        JCVideoPlayer.releaseAllVideos()
     }
 }

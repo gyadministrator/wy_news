@@ -69,13 +69,51 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="21211212" />
 
-        <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
-            android:id="@+id/play_video"
+        <FrameLayout
+            android:id="@+id/fl_video"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="3dp"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_video_cover"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="3dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title"
+                app:riv_corner_radius="4dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="00:00" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/play"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_comment"
@@ -89,7 +127,7 @@
             android:textColor="@color/second_title"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/play_video"
+            app:layout_constraintTop_toBottomOf="@id/fl_video"
             tools:text="1000评论" />
 
         <TextView
@@ -104,7 +142,7 @@
             android:textColor="@color/second_title"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/tv_comment"
-            app:layout_constraintTop_toBottomOf="@id/play_video"
+            app:layout_constraintTop_toBottomOf="@id/fl_video"
             tools:text="1221" />
 
         <TextView

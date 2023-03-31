@@ -31,6 +31,10 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.VideoFullActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+        <activity
             android:name=".activity.SettingActivity"
             android:exported="false" />
         <activity
@@ -41,7 +45,6 @@
             android:exported="true" />
         <activity
             android:name=".activity.HomeActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:launchMode="singleTop" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
