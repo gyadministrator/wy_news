@@ -19,6 +19,7 @@ import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.BannerEntity
+import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.view.CustomLoadingView
@@ -96,7 +97,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     private fun getBannerData() {
-        mViewModel.getBannerData()
+        mViewModel.getTopNewsData()
     }
 
     private fun getCityData() {
@@ -153,44 +154,47 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             }
         }
 
+
         mViewModel.cityNewsList.observe(this) {
+            loadingView.visibility = View.GONE
+            addBannerHeader(it)
+        }
+
+        mViewModel.hotNewsList.observe(this) {
             loadingView.visibility = View.GONE
             addCityNewsHeader(it)
         }
-
-        mViewModel.bannerList.observe(this) {
-            if (it.size > 0) {
-                addBannerHeader(it)
-            }
-        }
     }
 
-    private fun addCityNewsHeader(it: ArrayList<House>?) {
+    private fun addCityNewsHeader(it: ArrayList<HotNewsEntity>?) {
         if (it != null && it.size > 0) {
             llContent.removeAllViews()
             for (i in 0 until it.size) {
                 val cityItemBinding = LayoutTopCityItemBinding.inflate(layoutInflater)
                 val tvTitle = cityItemBinding.tvTitle
                 val tvSource = cityItemBinding.tvSource
-                val tvTime = cityItemBinding.tvTime
+                val tvComment = cityItemBinding.tvComment
 
-                val house = it[i]
-                tvTitle.text = house.title
-                val time = CommonTools.getTimeDiff(house.ptime)
-                if (TextUtils.isEmpty(time)) {
-                    tvTime.text = house.ptime
+                val hotNewsEntity = it[i]
+                tvTitle.text = hotNewsEntity.title
+                val comment = hotNewsEntity.comment
+                if (!TextUtils.isEmpty(comment)) {
+                    if (comment.contains("跟贴")) {
+                        val s = comment.replace("跟贴", "评论")
+                        tvComment.text = s
+                    }
                 } else {
-                    tvTime.text = time
+                    tvComment.text = comment
                 }
-                tvSource.text = house.source
+                tvSource.text = hotNewsEntity.source
 
                 val root = cityItemBinding.root
                 val parent = root.parent
                 if (parent != null && parent is ViewGroup) {
                     parent.removeView(root)
                 }
-                llContent.tag = house
-                llContent.setOnClickListener(CityNewsClickListener())
+                root.tag = hotNewsEntity
+                root.setOnClickListener(CityNewsClickListener())
                 llContent.addView(root)
             }
         }
@@ -199,31 +203,34 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private class CityNewsClickListener : View.OnClickListener {
         override fun onClick(p0: View?) {
             if (p0 != null) {
-                val house = p0.tag as House
-                val url = Constants.WEB_URL + house.docid + ".html"
-                WebActivity.startActivity(p0.context, url)
+                val hotNewsEntity = p0.tag as HotNewsEntity
+                WebActivity.startActivity(p0.context, hotNewsEntity.link)
             }
         }
 
     }
 
-    private fun addBannerHeader(bannerList: ArrayList<BannerEntity>) {
+
+    private fun addBannerHeader(it: ArrayList<House>?) {
         val banner = mBinding.banner
         val titleList = ArrayList<String>()
 
-        for (i in bannerList.indices) {
-            val bannerEntity = bannerList[i]
-            titleList.add(bannerEntity.title)
+        if (it != null && it.size > 0) {
+            for (i in it.indices) {
+                val house = it[i]
+                titleList.add(house.title)
+            }
+            banner.setAdapter(BannerImgAdapter(it))
+                .addBannerLifecycleObserver(this) //添加生命周期观察者
+                //.setIndicator(CircleIndicator(mActivity))
+                .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
+                .setIndicatorNormalColorRes(R.color.text_normal_color)
+                .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
+                .setIndicatorGravity(Direction.CENTER).setOnBannerListener(bannerItemListener)
         }
-        banner.setAdapter(BannerImgAdapter(bannerList)).addBannerLifecycleObserver(this) //添加生命周期观察者
-            //.setIndicator(CircleIndicator(mActivity))
-            .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
-            .setIndicatorNormalColorRes(R.color.text_normal_color)
-            .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
-            .setIndicatorGravity(Direction.CENTER).setOnBannerListener(bannerItemListener)
     }
 
-    private val bannerItemListener = OnBannerListener<BannerEntity> { data, _ ->
+    private val bannerItemListener = OnBannerListener<House> { data, _ ->
         WebActivity.startActivity(mActivity, data.link)
     }
 

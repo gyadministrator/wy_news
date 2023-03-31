@@ -3,8 +3,8 @@ package com.android.wy.news.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
-import com.android.wy.news.entity.BannerEntity
 import com.android.wy.news.entity.CityNewsEntity
+import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.http.HttpManager
@@ -20,7 +20,7 @@ import retrofit2.Response
 class TopViewModel : BaseViewModel() {
     var topNewsList = MutableLiveData<ArrayList<TopEntity>>()
     var cityNewsList = MutableLiveData<ArrayList<House>>()
-    var bannerList = MutableLiveData<ArrayList<BannerEntity>>()
+    var hotNewsList = MutableLiveData<ArrayList<HotNewsEntity>>()
 
     fun getTopNews(pageStart: Int) {
         val apiService =
@@ -60,10 +60,10 @@ class TopViewModel : BaseViewModel() {
         })
     }
 
-    fun getBannerData() {
+    fun getTopNewsData() {
         ThreadExecutorManager.mInstance.startExecute {
-            val banner = JsoupManager.getBanner(Constants.BANNER_URL)
-            bannerList.postValue(banner)
+            val list = JsoupManager.getTopNews(Constants.HOT_NEWS_URL)
+            hotNewsList.postValue(list)
         }
     }
 
