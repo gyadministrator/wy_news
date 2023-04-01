@@ -159,7 +159,9 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             //加载更多
             getVideoData()
         } else {
-            playVideo(currentPosition + 1)
+            currentPosition += 1
+            layoutManager.scrollToPosition(currentPosition)
+            playVideo(currentPosition)
         }
     }
 }
