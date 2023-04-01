@@ -136,8 +136,8 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private fun playVideo(position: Int) {
         Handler(Looper.getMainLooper()).post {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
-            if (holder is VideoAdapter.ViewHolder) {
-                holder.playVideo.startButton.performClick()
+            if (holder is VideoAdapter.VideoViewHolder) {
+                holder.playVideo.getPlayVideo().startPlayLogic()
             }
         }
     }

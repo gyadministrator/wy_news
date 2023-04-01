@@ -32,7 +32,7 @@ class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoE
             .setUser(data.user)
             .setUserSource(data.userSource)
             .setUserCover(data.userCover)
-            .setUp(data.url, data.videoCover, true)
+            .setUp(data.url, data.videoCover, false)
             .addOnScreenVideoListener(this)
 
     }
