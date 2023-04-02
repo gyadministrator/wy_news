@@ -7,6 +7,15 @@ android {
     namespace 'com.android.wy.news'
     compileSdk 33
 
+    signingConfigs {
+        config {
+            storeFile file('../wy_news.jks')
+            storePassword 'gy123456'
+            keyAlias = 'wy_android'
+            keyPassword 'gy123456'
+        }
+    }
+
     defaultConfig {
         applicationId "com.android.wy.news"
         minSdk 24
@@ -15,12 +24,33 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //必须要保证所有的flavor 都属于同一个维度
+        //flavorDimensions "default"
+        buildConfigField "boolean", "isShowLog", "false"
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
+                }
+            }
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
+                }
+            }
         }
     }
     compileOptions {
@@ -33,6 +63,20 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    /*productFlavors {
+        //根据渠道配置
+        wy_news_debug {
+            buildConfigField "String", "CHANNEL", "\"_debug\""
+        }
+        wy_news_release {
+            buildConfigField "String", "CHANNEL", "\"_release\""
+        }
+    }*/
+}
+
+static def releaseTime() {
+    return new Date().format("yyyy.MM.dd", TimeZone.getTimeZone("GMT+8"))
 }
 
 dependencies {

@@ -50,6 +50,7 @@ class TopAdapter(
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
         var tvDuration = mBinding.tvDuration
+        var tvCategory = mBinding.tvCategory
     }
 
     override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -96,7 +97,7 @@ class TopAdapter(
             } else {
                 holder.tvTime.text = data.ptime
             }
-
+            holder.tvCategory.text = data.category
             val replyCount = data.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
@@ -133,8 +134,7 @@ class TopAdapter(
         if (p0 != null) {
             videoList.clear()
             val position = p0.tag as Int
-            val list =
-                CommonTools.topEntity2ScreenVideoEntity(position, mDataList)
+            val list = CommonTools.topEntity2ScreenVideoEntity(position, mDataList)
             videoList.addAll(list)
             VideoFullActivity.startFullScreen(currentPage, videoList, p0.context)
         }
