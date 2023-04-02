@@ -1,15 +1,16 @@
 package com.android.wy.news.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
+import com.android.wy.news.R
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
-import tv.danmaku.ijk.media.player.IMediaPlayer
 
-class NewsVideoPlayer : JCVideoPlayerStandard {
+class CustomVideoPlayer : JCVideoPlayerStandard {
     private var onVideoListener: OnVideoListener? = null
 
     constructor(context: Context?) : this(context, null)
@@ -17,6 +18,10 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     fun addVideoListener(onVideoListener: OnVideoListener) {
         this.onVideoListener = onVideoListener
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.layout_video_player
     }
 
     override fun setUiWitStateAndScreen(state: Int) {
@@ -37,7 +42,6 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     override fun onBufferingUpdate(percent: Int) {
         super.onBufferingUpdate(percent)
-        onVideoListener?.onPercent(percent)
     }
 
     override fun onSeekComplete() {
@@ -50,11 +54,6 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     override fun onInfo(what: Int, extra: Int) {
         super.onInfo(what, extra)
-        if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START) {
-            onVideoListener?.onBuffStart()
-        } else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
-            onVideoListener?.onBuffEnd()
-        }
     }
 
     override fun onVideoSizeChanged() {
@@ -193,6 +192,7 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
         return true
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         //拦截触摸事件
         return true
@@ -200,8 +200,5 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     interface OnVideoListener {
         fun onVideoFinish()
-        fun onBuffStart()
-        fun onBuffEnd()
-        fun onPercent(percent: Int)
     }
 }

@@ -24,7 +24,7 @@ class LoadingView : AppCompatImageView {
 
     init {
         this.mContext = context
-        setImageResource(R.mipmap.loading)
+        setImageResource(R.drawable.loading)
     }
 
     fun startLoadingAnim() {

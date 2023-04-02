@@ -31,10 +31,19 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.TestActivity"
+            android:exported="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity
             android:name=".activity.VideoFullActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTop"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.SettingActivity"
             android:exported="false" />

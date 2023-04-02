@@ -14,25 +14,21 @@ import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
-import com.wang.avi.AVLoadingIndicatorView
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PAUSE
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING
 
-class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVideoListener {
+class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnVideoListener {
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
     private lateinit var tvSource: TextView
-    private lateinit var videoPlayer: NewsVideoPlayer
+    private lateinit var videoPlayer: CustomVideoPlayer
     private lateinit var ivUser: ImageView
     private lateinit var tvUser: TextView
     private lateinit var tvUserSource: TextView
     private lateinit var ivPlay: ImageView
     private lateinit var rlContent: RelativeLayout
-    private lateinit var ivLoading: AVLoadingIndicatorView
-    private lateinit var tvPercent: TextView
-    private lateinit var rlLoading: RelativeLayout
     private var screenVideoListener: OnScreenVideoListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -74,9 +70,6 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
         tvUserSource = binding.tvUserSource
         ivPlay = binding.ivPlay
         rlContent = binding.rlContent
-        ivLoading = binding.ivLoading
-        rlLoading = binding.rlLoading
-        tvPercent = binding.tvPercent
         rlContent.setOnClickListener(this)
         videoPlayer.addVideoListener(this)
     }
@@ -165,22 +158,5 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
 
     override fun onVideoFinish() {
         screenVideoListener?.onVideoFinish()
-    }
-
-    override fun onBuffStart() {
-        rlLoading.visibility = View.VISIBLE
-        ivLoading.show()
-    }
-
-    override fun onBuffEnd() {
-        rlLoading.visibility = View.GONE
-        ivLoading.hide()
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onPercent(percent: Int) {
-        if (percent > 0) {
-            tvPercent.text = "$percent%"
-        }
     }
 }
