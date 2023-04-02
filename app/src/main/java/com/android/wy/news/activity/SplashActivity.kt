@@ -64,4 +64,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     override fun setDefaultImmersionBar(): Boolean {
         return true
     }
+
+    override fun hideStatusBar(): Boolean {
+        return true
+    }
+
+    override fun hideNavigationBar(): Boolean {
+        return true
+    }
 }

@@ -9,6 +9,14 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
         return true
     }
 
+    override fun hideStatusBar(): Boolean {
+        return false
+    }
+
+    override fun hideNavigationBar(): Boolean {
+        return false
+    }
+
     override fun initView() {
 
     }

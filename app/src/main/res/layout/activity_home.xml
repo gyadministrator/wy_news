@@ -76,7 +76,7 @@
         android:id="@+id/bottomView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_bg_color"
+        android:background="@color/white"
         app:fixed="true"
         app:isPageRepeatLoading="false"
         app:normalTextColor="@color/text_normal_color"

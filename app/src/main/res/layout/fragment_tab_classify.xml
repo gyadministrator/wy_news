@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -11,6 +10,10 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/bg_item_top"
+        android:paddingBottom="6dp"
         app:normalTextColor="@color/text_normal_color"
         app:normalTextSize="9sp"
         app:selectTextColor="@color/text_select_color"
@@ -24,6 +27,5 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />
+        android:layout_height="match_parent" />
 </LinearLayout>

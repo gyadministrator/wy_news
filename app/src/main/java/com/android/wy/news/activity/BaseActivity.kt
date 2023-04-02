@@ -9,6 +9,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.IBaseCommon
 import com.android.wy.news.listener.IBackPressedListener
 import com.android.wy.news.viewmodel.BaseViewModel
+import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
@@ -26,17 +27,14 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     abstract fun setDefaultImmersionBar(): Boolean
 
+    abstract fun hideStatusBar(): Boolean
+    abstract fun hideNavigationBar(): Boolean
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
-        if (setDefaultImmersionBar()) {
-            ImmersionBar.with(this).statusBarColor(R.color.main_bg_color)
-                .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(true).init()
-        } else {
-            ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-                .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
-        }
+        setBarState()
         mActivity = this
         mBinding = getViewBinding()
         setContentView(mBinding.root)
@@ -45,6 +43,26 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         mViewModel = getViewModel()
         initData()
         onNotifyDataChanged()
+    }
+
+    private fun setBarState() {
+        val mImmersionBar = ImmersionBar.with(this)
+        if (hideStatusBar()) {
+            mImmersionBar.hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
+        } else {
+            mImmersionBar.statusBarColor(R.color.white)
+            if (setDefaultImmersionBar()) {
+                mImmersionBar.statusBarDarkFont(true)
+            } else {
+                mImmersionBar.statusBarDarkFont(false)
+            }
+        }
+        if (hideNavigationBar()) {
+            mImmersionBar.hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
+        } else {
+            mImmersionBar.navigationBarColor(R.color.white)
+        }
+        mImmersionBar.init()
     }
 
     override fun onDestroy() {

@@ -34,6 +34,14 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         return true
     }
 
+    override fun hideStatusBar(): Boolean {
+        return false
+    }
+
+    override fun hideNavigationBar(): Boolean {
+        return false
+    }
+
     override fun initView() {
         rlBack = mBinding.rlBack
     }

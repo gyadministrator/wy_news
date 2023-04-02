@@ -66,6 +66,14 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
         return true
     }
 
+    override fun hideStatusBar(): Boolean {
+        return false
+    }
+
+    override fun hideNavigationBar(): Boolean {
+        return false
+    }
+
     override fun initView() {
         ImmersionBar.with(this).statusBarColor(R.color.black)
             .navigationBarColor(R.color.black)

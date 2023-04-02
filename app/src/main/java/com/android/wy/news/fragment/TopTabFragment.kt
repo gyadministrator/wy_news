@@ -99,6 +99,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                     refreshLayout.setNoMoreData(true)
                 }
             } else {
+                rvContent.visibility = View.VISIBLE
                 loadingView.visibility = View.GONE
                 if (isRefresh) {
                     topAdapter.refreshData(it)
@@ -129,8 +130,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         }
 
         mViewModel.hotNewsList.observe(this) {
-            loadingView.visibility = View.GONE
-            addCityNewsHeader(it)
+            if (it.size > 0) {
+                loadingView.visibility = View.GONE
+                addCityNewsHeader(it)
+            }
         }
     }
 
@@ -181,6 +184,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     private fun addBannerHeader(it: ArrayList<House>?) {
         val banner = mBinding.banner
+        banner.visibility = View.VISIBLE
         val titleList = ArrayList<String>()
 
         if (it != null && it.size > 0) {

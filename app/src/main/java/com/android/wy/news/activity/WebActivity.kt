@@ -142,4 +142,12 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         return true
     }
 
+    override fun hideStatusBar(): Boolean {
+        return false
+    }
+
+    override fun hideNavigationBar(): Boolean {
+        return false
+    }
+
 }

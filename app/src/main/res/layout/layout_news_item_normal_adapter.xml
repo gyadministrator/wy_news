@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/bg_item"
+    android:layout_marginTop="6dp"
     android:padding="6dp">
 
     <TextView
@@ -67,11 +69,4 @@
             android:textSize="12sp"
             tools:text="2023-03-21" />
     </LinearLayout>
-
-    <View
-        style="@style/dividerItemStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_time" />
 </LinearLayout>

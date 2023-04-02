@@ -4,23 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/black"
     tools:ignore="MissingDefaultResource">
 
     <View
         android:id="@+id/play_video"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/demo_light_transparent" />
+        android:layout_height="match_parent" />
 
     <View
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@color/demo_light_transparent" />
+        android:background="@color/second_title" />
 
 
     <LinearLayout
@@ -38,30 +37,31 @@
             <View
                 android:id="@+id/iv_user"
                 android:layout_width="35dp"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/demo_light_transparent"
+                android:background="@color/second_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/tv_user"
                 android:layout_width="120dp"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="10dp"
-                android:background="@color/demo_light_transparent"
+                android:background="@color/second_title"
                 app:layout_constraintStart_toEndOf="@id/iv_user"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:id="@+id/tv_user_source"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="3dp"
-                android:background="@color/demo_light_transparent"
+                android:layout_marginEnd="10dp"
+                android:background="@color/second_title"
                 app:layout_constraintStart_toEndOf="@id/iv_user"
                 app:layout_constraintTop_toBottomOf="@id/tv_user" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -69,36 +69,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <View
                 android:id="@+id/tv_play"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
-                android:background="@color/demo_light_transparent" />
+                android:background="@color/second_title" />
 
             <View
                 android:id="@+id/tv_source"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
-                android:background="@color/demo_light_transparent" />
+                android:background="@color/second_title" />
 
             <View
                 android:id="@+id/tv_time"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="1"
-                android:background="@color/demo_light_transparent" />
+                android:background="@color/second_title" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

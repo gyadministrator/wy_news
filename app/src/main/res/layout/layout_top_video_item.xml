@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:background="@drawable/bg_item">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_user"
@@ -158,10 +160,4 @@
             app:layout_constraintTop_toBottomOf="@id/tv_source"
             tools:text="2023-03-21" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        style="@style/dividerItemStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>

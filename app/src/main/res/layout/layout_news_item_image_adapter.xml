@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:background="@drawable/bg_item"
     android:padding="6dp">
 
     <TextView
@@ -64,11 +66,4 @@
         app:layout_constraintStart_toEndOf="@id/tv_source"
         app:layout_constraintTop_toBottomOf="@id/ll_content"
         tools:text="2023-03-21" />
-
-    <View
-        style="@style/dividerItemStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_time" />
 </androidx.constraintlayout.widget.ConstraintLayout>
