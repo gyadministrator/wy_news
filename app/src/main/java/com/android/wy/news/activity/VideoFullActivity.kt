@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.OrientationHelper
@@ -43,9 +42,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
         const val VIDEO_LIST = "video_list"
 
         fun startFullScreen(
-            page: Int,
-            videoInfoList: ArrayList<ScreenVideoEntity>,
-            context: Context
+            page: Int, videoInfoList: ArrayList<ScreenVideoEntity>, context: Context
         ) {
             val intent = Intent(context, VideoFullActivity::class.java)
             intent.putExtra(PAGE, page)
@@ -55,11 +52,6 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             val activity = context as Activity
             activity.overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
         }
-    }
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
     }
 
     override fun setDefaultImmersionBar(): Boolean {
@@ -75,8 +67,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun initView() {
-        ImmersionBar.with(this).statusBarColor(R.color.black)
-            .navigationBarColor(R.color.black)
+        ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
             .statusBarDarkFont(false).init()
         rvContent = mBinding.rvContent
         rlBack = mBinding.rlBack
@@ -100,6 +91,20 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
         )
         screenVideoAdapter.refreshData(dataList)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) {
+            val gson = Gson()
+            currentPage = intent.getIntExtra(PAGE, -1)
+            val videoListJson = intent.getStringExtra(VIDEO_LIST)
+            val dataList = gson.fromJson<ArrayList<ScreenVideoEntity>>(
+                videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
+            )
+            screenVideoAdapter.refreshData(dataList)
+        }
+
     }
 
     override fun initEvent() {

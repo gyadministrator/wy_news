@@ -67,6 +67,7 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     override fun onDestroy() {
         super.onDestroy()
+        JCVideoPlayer.releaseAllVideos()
         onClear()
     }
 
