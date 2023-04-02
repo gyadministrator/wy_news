@@ -16,6 +16,7 @@ import com.android.wy.news.R
 import com.android.wy.news.app.App
 import com.android.wy.news.entity.AdEntity
 import com.android.wy.news.entity.NewsEntity
+import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.viewmodel.BaseViewModel
@@ -261,6 +262,44 @@ class CommonTools {
             str += (if (m < 10) "0$m" else m).toString() + ":"
             str += if (s < 10) "0$s" else s
             return str
+        }
+
+        fun topEntity2ScreenVideoEntity(
+            position: Int,
+            mDataList: ArrayList<TopEntity>
+        ): ArrayList<ScreenVideoEntity> {
+            val videoList = ArrayList<ScreenVideoEntity>()
+            for (i in position until mDataList.size) {
+                val topEntity = mDataList[i]
+                val videoInfo = topEntity.videoinfo
+                val videoTopic = topEntity.videoTopic
+                if (videoInfo != null) {
+                    var userSource = ""
+                    if (videoTopic != null) {
+                        val certificationText = videoTopic.certificationText
+                        userSource = if (TextUtils.isEmpty(certificationText)) {
+                            videoTopic.alias
+                        } else {
+                            certificationText
+                        }
+                    }
+                    videoTopic?.let {
+                        val screenVideoEntity = ScreenVideoEntity(
+                            topEntity.title,
+                            topEntity.replyCount.toLong(),
+                            topEntity.source,
+                            videoInfo.ptime,
+                            videoInfo.mp4_url,
+                            videoInfo.cover,
+                            videoTopic.ename,
+                            userSource,
+                            it.topic_icons
+                        )
+                        videoList.add(screenVideoEntity)
+                    }
+                }
+            }
+            return videoList
         }
 
     }

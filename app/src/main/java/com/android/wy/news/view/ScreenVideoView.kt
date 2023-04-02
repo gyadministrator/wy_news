@@ -14,22 +14,25 @@ import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
+import com.wang.avi.AVLoadingIndicatorView
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PAUSE
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
 
 class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVideoListener {
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
     private lateinit var tvSource: TextView
-    private lateinit var playVideo: NewsVideoPlayer
+    private lateinit var videoPlayer: NewsVideoPlayer
     private lateinit var ivUser: ImageView
     private lateinit var tvUser: TextView
     private lateinit var tvUserSource: TextView
     private lateinit var ivPlay: ImageView
     private lateinit var rlContent: RelativeLayout
+    private lateinit var ivLoading: AVLoadingIndicatorView
+    private lateinit var tvPercent: TextView
+    private lateinit var rlLoading: RelativeLayout
     private var screenVideoListener: OnScreenVideoListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -43,12 +46,12 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
         initUiState()
     }
 
-    fun getPlayVideo(): JCVideoPlayerStandard {
-        return playVideo
+    fun play() {
+        videoPlayer.startPlayLogic()
     }
 
     private fun initUiState() {
-        playVideo.setAllControlsVisible(
+        videoPlayer.setAllControlsVisible(
             View.GONE,
             View.GONE,
             View.GONE,
@@ -65,14 +68,17 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
         tvPlay = binding.tvPlay
         tvTime = binding.tvTime
         tvSource = binding.tvSource
-        playVideo = binding.playVideo
+        videoPlayer = binding.videoPlayer
         ivUser = binding.ivUser
         tvUser = binding.tvUser
         tvUserSource = binding.tvUserSource
         ivPlay = binding.ivPlay
         rlContent = binding.rlContent
+        ivLoading = binding.ivLoading
+        rlLoading = binding.rlLoading
+        tvPercent = binding.tvPercent
         rlContent.setOnClickListener(this)
-        playVideo.addVideoListener(this)
+        videoPlayer.addVideoListener(this)
     }
 
     fun setTitle(title: String): ScreenVideoView {
@@ -125,9 +131,9 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
 
     fun setUp(url: String, videoCover: String, isShowCover: Boolean): ScreenVideoView {
         val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
-        val setUp = playVideo.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+        val setUp = videoPlayer.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
         if (setUp && isShowCover) {
-            val thumbImageView = playVideo.thumbImageView
+            val thumbImageView = videoPlayer.thumbImageView
             thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
             CommonTools.loadImage(videoCover, thumbImageView)
         }
@@ -143,20 +149,38 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, NewsVideoPlayer.OnVid
     }
 
     override fun onClick(p0: View?) {
-        playVideo.startButton.performClick()
-        playVideo.changeUiToPlayingClear()
+        videoPlayer.startButton.performClick()
+        //清除界面UI
+        videoPlayer.changeUiToPlayingClear()
         checkPlayState()
     }
 
     private fun checkPlayState() {
-        if (playVideo.currentState == CURRENT_STATE_PLAYING) {
+        if (videoPlayer.currentState == CURRENT_STATE_PLAYING) {
             ivPlay.visibility = View.GONE
-        } else if (playVideo.currentState == CURRENT_STATE_PAUSE) {
+        } else if (videoPlayer.currentState == CURRENT_STATE_PAUSE) {
             ivPlay.visibility = View.VISIBLE
         }
     }
 
     override fun onVideoFinish() {
         screenVideoListener?.onVideoFinish()
+    }
+
+    override fun onBuffStart() {
+        rlLoading.visibility = View.VISIBLE
+        ivLoading.show()
+    }
+
+    override fun onBuffEnd() {
+        rlLoading.visibility = View.GONE
+        ivLoading.hide()
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onPercent(percent: Int) {
+        if (percent > 0) {
+            tvPercent.text = "$percent%"
+        }
     }
 }

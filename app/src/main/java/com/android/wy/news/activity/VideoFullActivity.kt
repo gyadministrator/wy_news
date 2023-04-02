@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.OrientationHelper
@@ -35,7 +36,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var layoutManager: VideoLayoutManager
     private lateinit var screenVideoAdapter: ScreenVideoAdapter
-    private var currentPosition = -1
+    private var currentPosition = 0
 
     companion object {
         const val PAGE = "video_page"
@@ -112,7 +113,19 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun onNotifyDataChanged() {
-
+        mViewModel.topNewsList.observe(this) {
+            if (isLoading) {
+                refreshLayout.finishLoadMore()
+            }
+            if (it.size == 0) {
+                if (isLoading) {
+                    getVideoData()
+                }
+            } else {
+                screenVideoAdapter.loadMoreData(it)
+            }
+            isLoading = false
+        }
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -121,7 +134,8 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     private fun getVideoData() {
-
+        currentPage++
+        mViewModel.getTopNews(currentPage)
     }
 
     override fun onItemClickListener(view: View, data: ScreenVideoEntity) {
@@ -141,15 +155,21 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun onPageSelected(position: Int, isBottom: Boolean) {
+        currentPosition = position
+        val canScrollVertically = rvContent.canScrollVertically(-1)
+        if (!canScrollVertically) {
+            //滑动到顶部
+            finish()
+            return
+        }
         playVideo(position)
     }
 
     private fun playVideo(position: Int) {
-        currentPosition = position
         Handler(Looper.getMainLooper()).post {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
             if (holder is ScreenVideoAdapter.ScreenViewHolder) {
-                holder.playVideo.getPlayVideo().startPlayLogic()
+                holder.playVideo.play()
             }
         }
     }

@@ -3,8 +3,11 @@ package com.android.wy.news.view
 import android.content.Context
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
 import android.widget.SeekBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+import tv.danmaku.ijk.media.player.IMediaPlayer
 
 class NewsVideoPlayer : JCVideoPlayerStandard {
     private var onVideoListener: OnVideoListener? = null
@@ -14,6 +17,13 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     fun addVideoListener(onVideoListener: OnVideoListener) {
         this.onVideoListener = onVideoListener
+    }
+
+    override fun setUiWitStateAndScreen(state: Int) {
+        super.setUiWitStateAndScreen(state)
+        if (currentState == CURRENT_STATE_NORMAL) {
+            startButton.visibility = View.GONE
+        }
     }
 
     override fun onCompletion() {
@@ -27,6 +37,7 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     override fun onBufferingUpdate(percent: Int) {
         super.onBufferingUpdate(percent)
+        onVideoListener?.onPercent(percent)
     }
 
     override fun onSeekComplete() {
@@ -39,6 +50,11 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     override fun onInfo(what: Int, extra: Int) {
         super.onInfo(what, extra)
+        if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_START) {
+            onVideoListener?.onBuffStart()
+        } else if (what == IMediaPlayer.MEDIA_INFO_BUFFERING_END) {
+            onVideoListener?.onBuffEnd()
+        }
     }
 
     override fun onVideoSizeChanged() {
@@ -108,6 +124,8 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
 
     override fun prepareVideo() {
         super.prepareVideo()
+        //清除界面UI
+        changeUiToPlayingClear()
     }
 
     override fun addTextureView() {
@@ -170,7 +188,20 @@ class NewsVideoPlayer : JCVideoPlayerStandard {
         super.clearCacheImage()
     }
 
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        //拦截触摸事件
+        return true
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        //拦截触摸事件
+        return true
+    }
+
     interface OnVideoListener {
         fun onVideoFinish()
+        fun onBuffStart()
+        fun onBuffEnd()
+        fun onPercent(percent: Int)
     }
 }

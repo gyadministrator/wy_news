@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.android.wy.news.view.NewsVideoPlayer
-        android:id="@+id/play_video"
+        android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -15,14 +15,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/iv_loading"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:indicatorColor="@color/status_bar_color"
+                app:indicatorName="LineSpinFadeLoaderIndicator" />
+
+            <TextView
+                android:id="@+id/tv_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="6dp"
+                android:layout_toEndOf="@id/iv_loading"
+                android:textColor="@color/status_bar_color"
+                android:textSize="12sp"
+                tools:text="10%" />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/iv_play"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/play"
-            app:tint="#73000000"
             android:visibility="gone"
+            app:tint="#73000000"
             tools:ignore="ContentDescription" />
 
         <LinearLayout

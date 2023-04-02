@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="dividerItemStyle">
+        <item name="android:background">@color/divider_bg_color</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">3dp</item>
+    </style>
+
+    <declare-styleable name="CustomLoadingView">
+        <attr name="loadingText" format="string" />
+        <attr name="loadingSize" format="dimension" />
+    </declare-styleable>
+
+    <style name="Theme.Launch" parent="Theme.Design.Light.NoActionBar">
+        <!--    设置背景，解决白屏的关键    -->
+        <item name="android:windowBackground">@drawable/bg_launch</item>
+        <!-- 设置状态栏为白色的，状态栏文字为黑的 -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+</resources>

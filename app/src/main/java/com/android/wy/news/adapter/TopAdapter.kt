@@ -133,36 +133,9 @@ class TopAdapter(
         if (p0 != null) {
             videoList.clear()
             val position = p0.tag as Int
-            for (i in position until mDataList.size) {
-                val topEntity = mDataList[i]
-                val videoInfo = topEntity.videoinfo
-                val videoTopic = topEntity.videoTopic
-                if (videoInfo != null) {
-                    var userSource = ""
-                    if (videoTopic != null) {
-                        val certificationText = videoTopic.certificationText
-                        userSource = if (TextUtils.isEmpty(certificationText)) {
-                            videoTopic.alias
-                        } else {
-                            certificationText
-                        }
-                    }
-                    videoTopic?.let {
-                        val screenVideoEntity = ScreenVideoEntity(
-                            topEntity.title,
-                            topEntity.replyCount.toLong(),
-                            topEntity.source,
-                            videoInfo.ptime,
-                            videoInfo.mp4_url,
-                            videoInfo.cover,
-                            videoTopic.ename,
-                            userSource,
-                            it.topic_icons
-                        )
-                        videoList.add(screenVideoEntity)
-                    }
-                }
-            }
+            val list =
+                CommonTools.topEntity2ScreenVideoEntity(position, mDataList)
+            videoList.addAll(list)
             VideoFullActivity.startFullScreen(currentPage, videoList, p0.context)
         }
     }

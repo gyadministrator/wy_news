@@ -3,6 +3,7 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -31,6 +32,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private var firstTime: Long = 0
     private lateinit var mViewModel: NewsMainViewModel
     private lateinit var marqueeTextView: MarqueeTextView
+    private lateinit var ivSetting: ImageView
     private val list = ArrayList<String>()
 
     override fun initBarItems() {
@@ -107,16 +109,24 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         list.add("热词加载中...")
         marqueeTextView.setList(list)
         marqueeTextView.startScroll()
+
+        ivSetting = findViewById(R.id.iv_setting)
+        ivSetting.setOnClickListener {
+            SettingActivity.startSettingActivity(this)
+        }
     }
 
     override fun onSelected(position: Int) {
         if (position == 2) {
             hideSearch()
-            ImmersionBar.with(this).statusBarColor(R.color.black).statusBarDarkFont(false).init()
+            ImmersionBar.with(this).statusBarColor(R.color.black)
+                .navigationBarColor(R.color.black).statusBarDarkFont(false).init()
+            bottomView.setBackgroundResource(R.color.black)
         } else {
             showSearch()
             ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
                 .navigationBarColor(R.color.main_bg_color).statusBarDarkFont(false).init()
+            bottomView.setBackgroundResource(R.color.main_bg_color)
         }
     }
 
