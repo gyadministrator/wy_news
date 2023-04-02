@@ -49,6 +49,7 @@ abstract class BaseFragment<V : ViewBinding, M : BaseViewModel> : Fragment(), IB
     * 该方法是第一个回调，可以将数据放在这里处理（viewpager默认会预加载一个页面）
     * 只在fragment可见时加载数据，加快响应速度
     * */
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (userVisibleHint) {
