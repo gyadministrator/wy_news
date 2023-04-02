@@ -3,10 +3,7 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
@@ -33,6 +30,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private lateinit var mViewModel: NewsMainViewModel
     private lateinit var marqueeTextView: MarqueeTextView
     private lateinit var ivSetting: ImageView
+    private lateinit var rlSearch: RelativeLayout
     private val list = ArrayList<String>()
 
     override fun initBarItems() {
@@ -113,6 +111,11 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         ivSetting = findViewById(R.id.iv_setting)
         ivSetting.setOnClickListener {
             SettingActivity.startSettingActivity(this)
+        }
+
+        rlSearch = findViewById(R.id.rl_search_top)
+        rlSearch.setOnClickListener{
+            SearchActivity.startSearch(this,marqueeTextView.getShowText())
         }
     }
 

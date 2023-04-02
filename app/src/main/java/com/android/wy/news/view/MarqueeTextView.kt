@@ -76,6 +76,10 @@ class MarqueeTextView : LinearLayout {
         }
     }
 
+    fun getShowText(): String {
+        return list[position]
+    }
+
     fun startScroll() {
         mBannerTV1.text = list[0]
         if (list.size > 1) {

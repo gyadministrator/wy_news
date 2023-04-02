@@ -52,6 +52,12 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun clearData() {
+        mDataList.clear()
+        notifyDataSetChanged()
+    }
+
     fun loadMoreData(dataList: ArrayList<V>) {
         if (dataList.size > 0) {
             currentPage++

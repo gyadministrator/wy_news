@@ -8,17 +8,14 @@ import android.location.Address
 import android.location.Geocoder
 import android.text.TextUtils
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.android.wy.news.R
 import com.android.wy.news.app.App
-import com.android.wy.news.entity.AdEntity
-import com.android.wy.news.entity.NewsEntity
-import com.android.wy.news.entity.ScreenVideoEntity
-import com.android.wy.news.entity.TopEntity
-import com.android.wy.news.entity.VideoEntity
+import com.android.wy.news.entity.*
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -302,5 +299,18 @@ class CommonTools {
             return videoList
         }
 
+        /** 改变键盘输入法的状态，如果已经弹出就关闭，如果关闭了就强制弹出  */
+        fun changeInputState(context: Context) {
+            val imm: InputMethodManager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+
+        /** 强制关闭软键盘  */
+        fun closeKeyboard(context: Context, view: View) {
+            val imm: InputMethodManager =
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }

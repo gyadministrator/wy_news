@@ -4,4 +4,6 @@
     <string name="loading_more">获取更多中...</string>
     <string name="click_reload">点击重新加载...</string>
     <string name="review">回顾</string>
+    <string name="search_hint">搜索想要看的新闻</string>
+    <string name="search_news">搜索</string>
 </resources>

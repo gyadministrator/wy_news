@@ -50,10 +50,11 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         if (hideStatusBar()) {
             mImmersionBar.hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
         } else {
-            mImmersionBar.statusBarColor(R.color.white)
             if (setDefaultImmersionBar()) {
+                mImmersionBar.statusBarColor(R.color.white)
                 mImmersionBar.statusBarDarkFont(true)
             } else {
+                mImmersionBar.statusBarColor(R.color.status_bar_color)
                 mImmersionBar.statusBarDarkFont(false)
             }
         }
