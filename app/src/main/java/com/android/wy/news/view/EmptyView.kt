@@ -33,7 +33,7 @@ class EmptyView : ConstraintLayout, View.OnClickListener {
         onEmptyListener?.onReloadListener()
     }
 
-    fun setListener(emptyListener: OnEmptyListener) {
+    fun addListener(emptyListener: OnEmptyListener) {
         onEmptyListener = emptyListener
     }
 

@@ -2,6 +2,10 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.Constants
+import com.android.wy.news.entity.HotEntity
+import com.android.wy.news.entity.HotWord
+import com.android.wy.news.entity.RollHotWord
+import com.android.wy.news.entity.RollingWordEntity
 import com.android.wy.news.entity.SearchEntity
 import com.android.wy.news.entity.SearchResult
 import com.android.wy.news.http.HttpManager
@@ -15,6 +19,7 @@ import retrofit2.Response
 class SearchViewModel : BaseViewModel() {
 
     val dataList = MutableLiveData<ArrayList<SearchResult>>()
+    val hotList = MutableLiveData<ArrayList<HotWord>>()
 
     fun getSearchPageList(query: String, pageStart: Int) {
         val apiService =
@@ -56,6 +61,33 @@ class SearchViewModel : BaseViewModel() {
                         val result = data.result
                         dataList.postValue(result)
                     }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.message?.let { msg.postValue(it) }
+            }
+
+        })
+    }
+
+    fun getHot() {
+        val apiService =
+            HttpManager.mInstance.getApiService(Constants.HOT_WORD_URL, IApiService::class.java)
+        val observable = apiService.getHot()
+        observable.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val s = response.body()?.string()
+                try {
+                    val gson = Gson()
+                    val hotEntity = gson.fromJson(s, HotEntity::class.java)
+                    if (hotEntity != null) {
+                        val data = hotEntity.data
+                        val hotWordList = data.hotWordList
+                        hotList.postValue(hotWordList)
+                    }
+                } catch (e: Exception) {
+                    msg.postValue(e.message)
                 }
             }
 

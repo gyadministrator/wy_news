@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import android.view.View
-import android.widget.EditText
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
@@ -17,7 +19,14 @@ import com.android.wy.news.adapter.SearchAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.ActivitySearchBinding
+import com.android.wy.news.databinding.LayoutHistoryItemBinding
+import com.android.wy.news.databinding.LayoutHotItemBinding
+import com.android.wy.news.entity.HotWord
 import com.android.wy.news.entity.SearchResult
+import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.sql.SearchHistoryEntity
+import com.android.wy.news.sql.SearchHistoryRepository
+import com.android.wy.news.view.ClearEditText
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.SearchViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -28,18 +37,27 @@ import kotlin.math.roundToInt
 
 
 class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), OnRefreshListener,
-    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<SearchResult> {
+    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<SearchResult>,
+    ClearEditText.OnEditTextListener {
     private var query: String = ""
     private var page = 0
     private lateinit var rlBack: RelativeLayout
-    private lateinit var etSearch: EditText
+    private lateinit var etSearch: ClearEditText
     private lateinit var tvSearch: TextView
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var loadingView: CustomLoadingView
+    private lateinit var llHot: LinearLayout
+    private lateinit var llContent: LinearLayout
+    private lateinit var llHistoryList: LinearLayout
+    private lateinit var llHistory: LinearLayout
+    private lateinit var tvClear: TextView
+    private lateinit var scrollView: NestedScrollView
     private lateinit var searchAdapter: SearchAdapter
+    private var searchHistoryRepository: SearchHistoryRepository? = null
+    private var historyList: ArrayList<SearchHistoryEntity>? = null
 
     companion object {
         private const val QUERY = "news_query"
@@ -70,16 +88,25 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         loadingView = mBinding.loadingView
         rvContent = mBinding.rvContent
         refreshLayout = mBinding.refreshLayout
+        llHot = mBinding.llHot
+        llContent = mBinding.llContent
+        llHistoryList = mBinding.llHistoryList
+        llHistory = mBinding.llHistory
+        tvClear = mBinding.tvClear
+        scrollView = mBinding.scrollContent
 
         val density = resources.displayMetrics.density
         val drawable = resources.getDrawable(R.mipmap.search)
-        val width = (20 * density).roundToInt()
-        val height = (20 * density).roundToInt()
+        val width = (15 * density).roundToInt()
+        val height = (15 * density).roundToInt()
         drawable.setBounds(0, 0, width, height)
         etSearch.setCompoundDrawables(drawable, null, null, null)
+        etSearch.addListener(this)
 
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
+
         rlBack.setOnClickListener {
             finish()
         }
@@ -94,6 +121,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun goSearch() {
+        //添加关键词到数据库
+        ThreadExecutorManager.mInstance.startExecute {
+            addHistory()
+        }
+        llContent.visibility = View.GONE
         if (!isRefresh && !isLoading && page == 0) {
             loadingView.visibility = View.VISIBLE
         }
@@ -105,7 +137,78 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         }
     }
 
+    private fun getHistoryList() {
+        historyList = searchHistoryRepository?.getSearchHistoryList()
+        if (historyList != null && historyList!!.size > 0) {
+            llHistory.visibility = View.VISIBLE
+            tvClear.setOnClickListener(clearClickListener)
+            llHistoryList.removeAllViews()
+            for (i in 0 until historyList!!.size step 2) {
+                val historyItemBinding = LayoutHistoryItemBinding.inflate(layoutInflater)
+                val tvOne = historyItemBinding.tvOne
+                val tvTwo = historyItemBinding.tvTwo
+                val viewLine = historyItemBinding.viewLine
+
+                val searchOneHistoryEntity = historyList!![i]
+                tvOne.text = searchOneHistoryEntity.title
+                tvOne.setOnClickListener(oneClickListener)
+
+                if (i + 1 < historyList!!.size) {
+                    val searchTwoHistoryEntity = historyList!![i + 1]
+                    tvTwo.text = searchTwoHistoryEntity.title
+                    tvTwo.setOnClickListener(twoClickListener)
+                } else {
+                    viewLine.visibility = View.GONE
+                }
+
+                val root = historyItemBinding.root
+                val parent = root.parent
+                if (parent != null && parent is ViewGroup) {
+                    parent.removeView(root)
+                }
+                llHistoryList.addView(root)
+            }
+        }
+    }
+
+    private val oneClickListener = View.OnClickListener { p0 ->
+        if (p0 != null) {
+            val textView = p0 as TextView
+            query = textView.text.toString()
+            page = 0
+            setEditTextContent()
+            goSearch()
+        }
+    }
+
+    private val twoClickListener = View.OnClickListener { p0 ->
+        if (p0 != null) {
+            val textView = p0 as TextView
+            query = textView.text.toString()
+            page = 0
+            setEditTextContent()
+            goSearch()
+        }
+    }
+
+    private val clearClickListener = View.OnClickListener { p0 ->
+        if (p0 != null) {
+            ThreadExecutorManager.mInstance.startExecute {
+                historyList?.let { searchHistoryRepository?.deleteAllSearchHistory(it) }
+            }
+            llHistory.visibility = View.GONE
+        }
+    }
+
+    private fun addHistory() {
+        val searchHistoryEntity = searchHistoryRepository?.getSearchHistoryByTitle(query)
+        if (searchHistoryEntity == null || TextUtils.isEmpty(searchHistoryEntity.title)) {
+            searchHistoryRepository?.addSearchHistory(SearchHistoryEntity(0, query))
+        }
+    }
+
     override fun initData() {
+        searchHistoryRepository = SearchHistoryRepository(this.applicationContext)
         val intent = intent
         query = intent.getStringExtra(QUERY).toString()
         setSearchHint(query)
@@ -114,7 +217,14 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = searchAdapter
 
-        goSearch()
+        ThreadExecutorManager.mInstance.startExecute {
+            getHistoryList()
+        }
+        getHot()
+    }
+
+    private fun getHot() {
+        mViewModel.getHot()
     }
 
     private fun setSearchHint(hint: String) {
@@ -156,6 +266,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     override fun onNotifyDataChanged() {
         mViewModel.dataList.observe(this) {
             if (it != null) {
+                refreshLayout.visibility = View.VISIBLE
+                scrollView.visibility = View.GONE
                 CommonTools.closeKeyboard(this, etSearch)
                 if (isRefresh) {
                     refreshLayout.setNoMoreData(false)
@@ -186,14 +298,63 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         mViewModel.msg.observe(this) {
             CommonTools.closeKeyboard(this, etSearch)
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
-            refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
-                refreshLayout.finishRefresh()
+                refreshLayout.finishRefresh(false)
             }
             if (isLoading) {
-                refreshLayout.finishLoadMore()
+                refreshLayout.finishLoadMore(false)
+                refreshLayout.setNoMoreData(true)
             }
+        }
+
+        mViewModel.hotList.observe(this) {
+            addHot(it)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun addHot(it: ArrayList<HotWord>?) {
+        if (it != null && it.size > 0) {
+            llHot.removeAllViews()
+            for (i in 0 until it.size) {
+                val hotBinding = LayoutHotItemBinding.inflate(layoutInflater)
+                val tvTitle = hotBinding.tvTitle
+                val tvIndex = hotBinding.tvIndex
+                val tvNum = hotBinding.tvNum
+
+                val hotWord = it[i]
+                tvTitle.text = hotWord.hotWord
+                tvIndex.text = (i + 1).toString()
+
+                val exp = hotWord.exp
+                var num: String = exp
+                val l = exp.toLong()
+                if (l > 10000) {
+                    val fl = l / 10000f
+                    num = "%.1f".format(fl) + "w"
+                }
+                tvNum.text = num
+
+                val root = hotBinding.root
+                val parent = root.parent
+                if (parent != null && parent is ViewGroup) {
+                    parent.removeView(root)
+                }
+                root.tag = hotWord
+                root.setOnClickListener(hotClickListener)
+                llHot.addView(root)
+            }
+        }
+    }
+
+    private val hotClickListener = View.OnClickListener { p0 ->
+        if (p0 != null) {
+            val hotWord = p0.tag as HotWord
+            query = hotWord.hotWord
+            setEditTextContent()
+            page = 0
+            goSearch()
         }
     }
 
@@ -209,8 +370,18 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         goSearch()
     }
 
+    private fun setEditTextContent() {
+        etSearch.setText(query)
+        etSearch.setSelection(query.length)
+    }
+
     override fun onItemClickListener(view: View, data: SearchResult) {
         val url = Constants.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
+    }
+
+    override fun onEditTextClear() {
+        refreshLayout.visibility = View.GONE
+        llContent.visibility = View.VISIBLE
     }
 }

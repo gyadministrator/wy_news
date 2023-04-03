@@ -1,5 +1,7 @@
 package com.android.wy.news.viewmodel
 
+import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.Constants
 import com.android.wy.news.entity.LiveEntity
@@ -22,6 +24,9 @@ class LiveViewModel : BaseViewModel() {
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
+                if (TextUtils.isEmpty(s)){
+                    dataList.postValue(ArrayList())
+                }
                 val gson = Gson()
                 val liveEntity = gson.fromJson(s, LiveEntity::class.java)
                 if (liveEntity != null) {

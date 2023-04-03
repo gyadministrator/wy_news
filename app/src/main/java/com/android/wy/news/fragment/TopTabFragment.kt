@@ -50,6 +50,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
     }
 
     override fun initData() {

@@ -31,7 +31,7 @@ interface IApiService {
     fun getLiveList(@Path("liveId") liveId: Int, @Path("pageNum") pageNum: Int): Call<ResponseBody>
 
     @GET("api/v1/pc-wap/rolling-word")
-    fun getHotWord(): Call<ResponseBody>
+    fun getRollingWord(): Call<ResponseBody>
 
     @GET("/locate/api/getLocByIp")
     fun getCityByIp(): Call<ResponseBody>
@@ -47,4 +47,7 @@ interface IApiService {
 
     @GET("/nc/api/v1/pc-wap/search?queryId=7285539010898925&size=20&from=wap&needPcUrl=true")
     fun getPageSearch(@Query("query") query: String, @Query("page") page: Int): Call<ResponseBody>
+
+    @GET("api/v1/pc-wap/hot-word")
+    fun getHot(): Call<ResponseBody>
 }

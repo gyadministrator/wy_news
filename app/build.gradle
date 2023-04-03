@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -112,6 +113,12 @@ dependencies {
     implementation 'com.danikula:videocache:2.7.1'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.github.xuexiangjys:XUpdate:2.1.4'
+
+    //Room数据库
+    implementation("androidx.room:room-runtime:2.4.2")
+    annotationProcessor("androidx.room:room-compiler:2.4.2")
+    kapt("androidx.room:room-compiler:2.4.2")
+    implementation("androidx.room:room-ktx:2.4.2")
 
     //刷新
     implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖

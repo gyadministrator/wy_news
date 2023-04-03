@@ -48,6 +48,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefre
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
     }
 
     override fun initData() {
@@ -107,10 +108,10 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefre
             refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
-                refreshLayout.finishRefresh()
+                refreshLayout.finishRefresh(false)
             }
             if (isLoading) {
-                refreshLayout.finishLoadMore()
+                refreshLayout.finishLoadMore(false)
             }
         }
     }

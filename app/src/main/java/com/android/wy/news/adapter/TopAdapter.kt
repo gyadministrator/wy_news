@@ -46,7 +46,7 @@ class TopAdapter(
         var tvUserSource = mBinding.tvUserSource
         var tvTitle = mBinding.tvTitle
         var ivVideoCover = mBinding.ivVideoCover
-        var tvComment = mBinding.tvComment
+        var tvPlay = mBinding.tvPlay
         var tvTime = mBinding.tvTime
         var tvSource = mBinding.tvSource
         var tvDuration = mBinding.tvDuration
@@ -98,13 +98,14 @@ class TopAdapter(
                 holder.tvTime.text = data.ptime
             }
             holder.tvCategory.text = data.category
+
             val replyCount = data.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
                     val fl = replyCount / 10000f
-                    holder.tvComment.text = "%.1f".format(fl) + "w评论"
+                    holder.tvPlay.text = "%.1f".format(fl) + "w次播放"
                 } else {
-                    holder.tvComment.text = replyCount.toString() + "评论"
+                    holder.tvPlay.text = replyCount.toString() + "次播放"
                 }
             }
             val videoInfo = data.videoinfo

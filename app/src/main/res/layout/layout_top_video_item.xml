@@ -93,7 +93,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/tv_category"
+                    android:id="@+id/tv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -102,7 +102,7 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:text="要闻/国内" />
+                    tools:text="1000次播放" />
 
                 <TextView
                     android:id="@+id/tv_duration"
@@ -130,7 +130,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/tv_comment"
+            android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -142,7 +142,7 @@
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fl_video"
-            tools:text="1000评论" />
+            tools:text="要闻/国内" />
 
         <TextView
             android:id="@+id/tv_source"
@@ -155,7 +155,7 @@
             android:maxLines="1"
             android:textColor="@color/second_title"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_comment"
+            app:layout_constraintStart_toEndOf="@+id/tv_category"
             app:layout_constraintTop_toBottomOf="@id/fl_video"
             tools:text="1221" />
 

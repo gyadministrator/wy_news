@@ -46,6 +46,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
+        refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
     }
 
     override fun initData() {

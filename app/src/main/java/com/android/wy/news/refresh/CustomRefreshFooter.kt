@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.android.wy.news.R
 import com.scwang.smart.refresh.layout.api.RefreshFooter
 import com.scwang.smart.refresh.layout.api.RefreshKernel
@@ -16,6 +17,8 @@ import com.wang.avi.AVLoadingIndicatorView
 
 class CustomRefreshFooter : LinearLayout, RefreshFooter {
     private var mImage: AVLoadingIndicatorView? = null
+    private var tvTip: TextView? = null
+    private var llLoading: LinearLayout? = null
 
 
     constructor(context: Context?) : this(context, null)
@@ -25,6 +28,8 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
     ) {
         val view = inflate(context, R.layout.layout_custom_refresh_footer, this)
         mImage = view.findViewById(R.id.iv_refresh_footer)
+        tvTip = view.findViewById(R.id.tv_tip)
+        llLoading = view.findViewById(R.id.ll_loading)
     }
 
     @SuppressLint("RestrictedApi")
@@ -33,8 +38,9 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
     ) {
         when (newState) {
             RefreshState.None, RefreshState.PullUpToLoad -> {
-                mImage!!.show()
+                mImage?.show()
             }
+
             RefreshState.Loading, RefreshState.LoadReleased -> {}
             RefreshState.ReleaseToLoad -> {}
             else -> {}
@@ -89,6 +95,16 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
 
     @SuppressLint("RestrictedApi")
     override fun setNoMoreData(noMoreData: Boolean): Boolean {
-        return false
+        if (noMoreData) {
+            tvTip?.text = "哎呀，到底了呀"
+            tvTip?.visibility = View.VISIBLE
+            mImage?.hide()
+            llLoading?.visibility = View.GONE
+        } else {
+            tvTip?.visibility = View.GONE
+            mImage?.show()
+            llLoading?.visibility = View.VISIBLE
+        }
+        return true
     }
 }

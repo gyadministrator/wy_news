@@ -13,6 +13,11 @@
         <attr name="loadingSize" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="FlowLayout">
+        <attr name="lineNum" format="integer" />
+        <attr name="dividerMargin" format="dimension" />
+    </declare-styleable>
+
     <style name="Theme.Launch" parent="Theme.Design.Light.NoActionBar">
         <!--    设置背景，解决白屏的关键    -->
         <item name="android:windowBackground">@drawable/bg_launch</item>

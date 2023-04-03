@@ -6,13 +6,13 @@ package com.android.wy.news.entity
   * @Version:        1.0
   * @Description:    
  */
-data class HotWordEntity(
+data class RollingWordEntity(
     val code: Int,
-    val `data`: Data,
+    val `data`: RollingData,
     val message: String
 )
 
-data class Data(
+data class RollingData(
     val requestId: String,
     val rollHotWordList: ArrayList<RollHotWord>
 )

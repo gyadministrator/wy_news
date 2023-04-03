@@ -2,8 +2,13 @@ package com.android.wy.news.activity
 
 import android.content.Context
 import android.content.Intent
+import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
@@ -47,8 +52,12 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         }
         llContent.visibility = View.GONE
         agentWeb =
-            AgentWeb.with(this).setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
-                .closeIndicator().createAgentWeb().ready().go(url)
+            AgentWeb.with(this)
+                .setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
+                .closeIndicator()
+                .createAgentWeb()
+                .ready()
+                .go(url)
         val webCreator = agentWeb.webCreator
         webCreator.webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
@@ -60,6 +69,19 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 hideDocument(view)
                 super.onPageFinished(view, url)
+            }
+
+            @Deprecated("Deprecated in Java", ReplaceWith(
+                "super.shouldInterceptRequest(view, url)",
+                "android.webkit.WebViewClient"
+            )
+            )
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                url: String?
+            ): WebResourceResponse? {
+                Log.e("gy", "shouldInterceptRequest: $url")
+                return super.shouldInterceptRequest(view, url)
             }
         }
     }
@@ -102,7 +124,16 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         view?.loadUrl("javascript:hideLiveOpenAppJs();")
 
         loadingView.visibility = View.GONE
-        llContent.visibility = View.VISIBLE
+        val text = tvTitle.text
+        if (!TextUtils.isEmpty(text)) {
+            if (text != null) {
+                if (text.contains("404")) {
+                    llContent.visibility = View.GONE
+                } else {
+                    llContent.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     override fun initEvent() {

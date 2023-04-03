@@ -30,10 +30,10 @@
         </RelativeLayout>
 
 
-        <EditText
+        <com.android.wy.news.view.ClearEditText
             android:id="@+id/et_search"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_search"
@@ -47,7 +47,8 @@
             android:paddingStart="10dp"
             android:textColor="@color/main_title"
             android:textColorHint="@color/second_title"
-            android:textSize="16sp"
+            android:textCursorDrawable="@drawable/bg_edit_cursor"
+            android:textSize="14sp"
             tools:ignore="Autofill,RtlSymmetry" />
 
         <TextView
@@ -62,46 +63,117 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srlEnablePreviewInEditMode="true"
-        app:srlPrimaryColor="@color/main_bg_color">
-        <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
-        <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
-        <com.android.wy.news.refresh.CustomRefreshHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:srlEnablePreviewInEditMode="true"
+            app:srlPrimaryColor="@color/main_bg_color">
+            <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+            <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+            <com.android.wy.news.refresh.CustomRefreshHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.android.wy.news.view.NewsRecyclerView
+                    android:id="@+id/rv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="6dp"
+                    android:visibility="gone" />
+
+
+                <com.android.wy.news.view.CustomLoadingView
+                    android:id="@+id/loading_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:loadingSize="16sp"
+                    app:loadingText="@string/loading_more" />
+
+            </FrameLayout>
+
+            <com.android.wy.news.refresh.CustomRefreshFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlPrimaryColor="@color/main_bg_color" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.android.wy.news.view.NewsRecyclerView
-                android:id="@+id/rv_content"
+            <LinearLayout
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="6dp"
-                android:visibility="gone" />
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/ll_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_item_top"
+                    android:orientation="vertical"
+                    android:padding="6dp"
+                    android:visibility="gone">
 
-            <com.android.wy.news.view.CustomLoadingView
-                android:id="@+id/loading_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:loadingSize="16sp"
-                app:loadingText="@string/loading_more" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
-        </FrameLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="搜索历史"
+                            android:textColor="@color/main_title"
+                            android:textSize="16sp" />
 
-        <com.android.wy.news.refresh.CustomRefreshFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srlPrimaryColor="@color/main_bg_color" />
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+                        <TextView
+                            android:id="@+id/tv_clear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"
+                            android:text="全部清除"
+                            android:textColor="@color/status_bar_color"
+                            android:textSize="16sp" />
+                    </RelativeLayout>
+
+                    <View style="@style/dividerItemStyle" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_history_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_hot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_item"
+                    android:orientation="vertical"
+                    android:padding="6dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 </LinearLayout>
