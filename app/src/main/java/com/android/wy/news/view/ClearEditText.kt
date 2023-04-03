@@ -1,5 +1,6 @@
 package com.android.wy.news.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -8,8 +9,10 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import com.android.wy.news.R
+import kotlin.math.roundToInt
 
-/*     
+
+/*
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/4/3 16:55
   * @Version:        1.0
@@ -60,17 +63,42 @@ class ClearEditText @JvmOverloads constructor(
                 }
             }
         }
+
+        showStartIcon()
     }
 
     /**
      * 显示清除图标
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun showClearIcon(context: Context) {
-        val end = ResourcesCompat.getDrawable(resources, R.mipmap.et_clear, null)
+        /*val end = ResourcesCompat.getDrawable(resources, R.mipmap.clear, null)
         end?.setBounds(0, 0, px2dip(context, 20.0f), px2dip(context, 20.0f))
         setCompoundDrawables(null, null, end, null)
         // 使用原来的内边距
-        setPadding(paddingLeft, 0, px2dip(context, 10.0f), 0);
+        setPadding(paddingLeft, 0, px2dip(context, 10.0f), 0)*/
+
+        val density = resources.displayMetrics.density
+        val drawableStart = resources.getDrawable(R.mipmap.search)
+        val width = (20 * density).roundToInt()
+        val height = (20 * density).roundToInt()
+        drawableStart.setBounds(0, 0, width, height)
+
+        val drawableEnd = resources.getDrawable(R.mipmap.clear, null)
+        drawableEnd.setBounds(0, 0, width, height)
+        //drawable.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+
+        setCompoundDrawables(drawableStart, null, drawableEnd, null)
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    fun showStartIcon() {
+        val density = resources.displayMetrics.density
+        val drawableStart = resources.getDrawable(R.mipmap.search)
+        val width = (20 * density).roundToInt()
+        val height = (20 * density).roundToInt()
+        drawableStart.setBounds(0, 0, width, height)
+        setCompoundDrawables(drawableStart, null, null, null)
     }
 
     /**
@@ -87,6 +115,7 @@ class ClearEditText @JvmOverloads constructor(
      */
     private fun hideClearIcon() {
         setCompoundDrawables(null, null, null, null)
+        showStartIcon()
     }
 
     private var editTextListener: OnEditTextListener? = null

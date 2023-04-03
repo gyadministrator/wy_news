@@ -6,4 +6,6 @@
     <string name="review">回顾</string>
     <string name="search_hint">搜索想要看的新闻</string>
     <string name="search_news">搜索</string>
+    <string name="clear_all">全部清除</string>
+    <string name="search_history">搜索历史</string>
 </resources>

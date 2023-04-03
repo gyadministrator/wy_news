@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.R
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.SearchAdapter
 import com.android.wy.news.common.CommonTools
@@ -33,7 +32,6 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import kotlin.math.roundToInt
 
 
 class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), OnRefreshListener,
@@ -53,7 +51,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     private lateinit var llContent: LinearLayout
     private lateinit var llHistoryList: LinearLayout
     private lateinit var llHistory: LinearLayout
-    private lateinit var tvClear: TextView
+    private lateinit var rlClear: RelativeLayout
     private lateinit var scrollView: NestedScrollView
     private lateinit var searchAdapter: SearchAdapter
     private var searchHistoryRepository: SearchHistoryRepository? = null
@@ -92,15 +90,9 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         llContent = mBinding.llContent
         llHistoryList = mBinding.llHistoryList
         llHistory = mBinding.llHistory
-        tvClear = mBinding.tvClear
+        rlClear = mBinding.rlClear
         scrollView = mBinding.scrollContent
 
-        val density = resources.displayMetrics.density
-        val drawable = resources.getDrawable(R.mipmap.search)
-        val width = (15 * density).roundToInt()
-        val height = (15 * density).roundToInt()
-        drawable.setBounds(0, 0, width, height)
-        etSearch.setCompoundDrawables(drawable, null, null, null)
         etSearch.addListener(this)
 
         refreshLayout.setOnRefreshListener(this)
@@ -141,7 +133,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         historyList = searchHistoryRepository?.getSearchHistoryList()
         if (historyList != null && historyList!!.size > 0) {
             llHistory.visibility = View.VISIBLE
-            tvClear.setOnClickListener(clearClickListener)
+            rlClear.setOnClickListener(clearClickListener)
             llHistoryList.removeAllViews()
             for (i in 0 until historyList!!.size step 2) {
                 val historyItemBinding = LayoutHistoryItemBinding.inflate(layoutInflater)
@@ -166,7 +158,9 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
                 if (parent != null && parent is ViewGroup) {
                     parent.removeView(root)
                 }
-                llHistoryList.addView(root)
+                runOnUiThread {
+                    llHistoryList.addView(root)
+                }
             }
         }
     }
@@ -382,6 +376,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
 
     override fun onEditTextClear() {
         refreshLayout.visibility = View.GONE
+        scrollView.visibility = View.VISIBLE
         llContent.visibility = View.VISIBLE
     }
 }

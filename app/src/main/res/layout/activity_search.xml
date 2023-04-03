@@ -140,22 +140,41 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:text="搜索历史"
+                            android:text="@string/search_history"
                             android:textColor="@color/main_title"
                             android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/tv_clear"
+                        <RelativeLayout
+                            android:id="@+id/rl_clear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="10dp"
-                            android:text="全部清除"
-                            android:textColor="@color/status_bar_color"
-                            android:textSize="16sp" />
+                            tools:ignore="RelativeOverlap">
+
+                            <TextView
+                                android:id="@+id/tv_clear"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="3dp"
+                                android:text="@string/clear_all"
+                                android:textColor="@color/status_bar_color"
+                                android:textSize="16sp"
+                                tools:ignore="RelativeOverlap" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="6dp"
+                                android:layout_toEndOf="@+id/tv_clear"
+                                android:src="@mipmap/delete"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
                     </RelativeLayout>
 
-                    <View style="@style/dividerItemStyle" />
+                    <View
+                        style="@style/dividerItemStyle"
+                        android:layout_marginTop="6dp" />
 
                     <LinearLayout
                         android:id="@+id/ll_history_list"
