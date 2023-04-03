@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
@@ -15,12 +17,14 @@ import com.android.wy.news.viewmodel.SplashViewModel
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     private lateinit var ivAd: ImageView
+    private lateinit var rlContent: RelativeLayout
     private var splashAD: String? = null
     private var isShowAD = false
-    private var delayTime = 0L
+    private var delayTime = 500L
 
     override fun initView() {
         ivAd = mBinding.ivAd
+        rlContent = mBinding.rlContent
     }
 
     override fun initData() {
@@ -31,6 +35,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         splashAD = SpTools.get(Constants.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
             isShowAD = true
+            rlContent.visibility = View.VISIBLE
             splashAD?.let { CommonTools.loadImage(it, ivAd) }
         }
     }
@@ -50,7 +55,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         mViewModel.isReadFinish.observe(this) {
             if (it) {
                 if (isShowAD) {
-                    delayTime = 3000
+                    delayTime = 3000L
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(mActivity, HomeActivity::class.java)

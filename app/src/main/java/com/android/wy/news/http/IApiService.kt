@@ -50,4 +50,7 @@ interface IApiService {
 
     @GET("api/v1/pc-wap/hot-word")
     fun getHot(): Call<ResponseBody>
+
+    @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
+    fun getSplash(): Call<ResponseBody>
 }

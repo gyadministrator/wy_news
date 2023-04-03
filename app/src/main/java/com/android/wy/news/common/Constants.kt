@@ -30,6 +30,7 @@ class Constants {
         const val HOT_NEWS_URL = "https://m.163.com"
         const val AD_URL = "https://nex.163.com"
         const val SEARCH_URL = "https://gw.m.163.com"
+        const val SPLASH_URL = "http://www.bing.com"
         const val SPLASH_AD = "splash_ad"
         var currentCity: String = ""
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()

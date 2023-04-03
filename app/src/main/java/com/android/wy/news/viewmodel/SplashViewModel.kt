@@ -1,6 +1,7 @@
 package com.android.wy.news.viewmodel
 
 import android.content.Context
+import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -8,6 +9,7 @@ import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.IpEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
+import com.android.wy.news.entity.SplashEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.ThreadExecutorManager
@@ -32,7 +34,33 @@ class SplashViewModel : BaseViewModel() {
         ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
         ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
         ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
-        ThreadExecutorManager.mInstance.startExecute { getAdInfo() }
+        ThreadExecutorManager.mInstance.startExecute { getSplash() }
+    }
+
+    private fun getSplash() {
+        val apiService =
+            HttpManager.mInstance.getApiService(Constants.SPLASH_URL, IApiService::class.java)
+        val observable = apiService.getSplash()
+        observable.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val s = response.body()?.string()
+                if (!TextUtils.isEmpty(s)) {
+                    val gson = Gson()
+                    val splashEntity = gson.fromJson(s, SplashEntity::class.java)
+                    val data = splashEntity.images
+                    if (data != null && data.isNotEmpty()) {
+                        val image = data[0]
+                        val url = Constants.SPLASH_URL + image.url
+                        SpTools.put(Constants.SPLASH_AD, url)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.message?.let { msg.postValue(it) }
+            }
+
+        })
     }
 
     private fun getAdInfo() {

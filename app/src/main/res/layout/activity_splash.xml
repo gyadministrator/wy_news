@@ -6,10 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".activity.SplashActivity">
 
-    <ImageView
-        android:id="@+id/iv_ad"
+    <RelativeLayout
+        android:id="@+id/rl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        tools:ignore="ContentDescription" />
+        android:visibility="gone"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/iv_ad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="30dp"
+            android:text="@string/splash_ad"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
 </FrameLayout>

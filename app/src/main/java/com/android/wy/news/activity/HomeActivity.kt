@@ -148,11 +148,11 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (JCVideoPlayer.backPress()) {
-            return
-        }
         val secondTime = System.currentTimeMillis()
         if (secondTime - firstTime > 2000) {
+            if (JCVideoPlayer.backPress()) {
+                return
+            }
             Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
             firstTime = secondTime
         } else {

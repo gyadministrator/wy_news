@@ -95,7 +95,8 @@ class MarqueeTextView : LinearLayout {
     }
 
     fun stopScroll() {
-        handler.removeCallbacks(runnable)
+        val handler: Handler? = handler
+        handler?.removeCallbacks(runnable)
         hasPostRunnable = false
     }
 }
