@@ -31,4 +31,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
+
+    <declare-styleable name="TitleBarView">
+        <attr name="title" format="string" />
+    </declare-styleable>
 </resources>

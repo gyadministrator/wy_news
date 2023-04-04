@@ -7,10 +7,7 @@ import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.SkinType
@@ -20,7 +17,6 @@ import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.viewmodel.SkinViewModel
 
 class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.OnClickListener {
-    private lateinit var rlBack: RelativeLayout
     private lateinit var scSkin: SwitchCompat
     private lateinit var rlLight: RelativeLayout
     private lateinit var ivLight: ImageView
@@ -48,7 +44,6 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
     }
 
     override fun initView() {
-        rlBack = mBinding.rlBack
         scSkin = mBinding.scSkin
         rlLight = mBinding.rlLight
         ivLight = mBinding.ivLight
@@ -104,9 +99,6 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
     }
 
     override fun initEvent() {
-        rlBack.setOnClickListener {
-            finish()
-        }
     }
 
     override fun getViewBinding(): ActivitySkinBinding {

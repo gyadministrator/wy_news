@@ -3,18 +3,16 @@ package com.android.wy.news.activity
 import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityWebBinding
 import com.android.wy.news.view.CustomLoadingView
+import com.android.wy.news.view.TitleBarView
 import com.android.wy.news.viewmodel.WebViewModel
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.WebChromeClient
@@ -22,8 +20,7 @@ import com.just.agentweb.WebChromeClient
 class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     private lateinit var url: String
     private lateinit var llContent: LinearLayout
-    private lateinit var tvTitle: TextView
-    private lateinit var rlBack: RelativeLayout
+    private lateinit var titleBar: TitleBarView
     private lateinit var agentWeb: AgentWeb
     private lateinit var loadingView: CustomLoadingView
 
@@ -38,8 +35,7 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
 
     override fun initView() {
         llContent = mBinding.llContent
-        tvTitle = mBinding.tvTitle
-        rlBack = mBinding.rlBack
+        titleBar = mBinding.titleBar
         loadingView = mBinding.loadingView
     }
 
@@ -60,7 +56,7 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         webCreator.webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
                 super.onReceivedTitle(view, title)
-                tvTitle.text = title
+                title?.let { titleBar.setTitle(it) }
             }
         }
         webCreator.webView.webViewClient = object : WebViewClient() {
@@ -69,16 +65,16 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
                 super.onPageFinished(view, url)
             }
 
-            @Deprecated("Deprecated in Java", ReplaceWith(
-                "super.shouldInterceptRequest(view, url)",
-                "android.webkit.WebViewClient"
-            )
+            @Deprecated(
+                "Deprecated in Java", ReplaceWith(
+                    "super.shouldInterceptRequest(view, url)",
+                    "android.webkit.WebViewClient"
+                )
             )
             override fun shouldInterceptRequest(
                 view: WebView?,
                 url: String?
             ): WebResourceResponse? {
-                Log.e("gy", "shouldInterceptRequest: $url")
                 return super.shouldInterceptRequest(view, url)
             }
         }
@@ -122,22 +118,17 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         view?.loadUrl("javascript:hideLiveOpenAppJs();")
 
         loadingView.visibility = View.GONE
-        val text = tvTitle.text
+        val text = titleBar.getTitle()
         if (!TextUtils.isEmpty(text)) {
-            if (text != null) {
-                if (text.contains("404")) {
-                    llContent.visibility = View.GONE
-                } else {
-                    llContent.visibility = View.VISIBLE
-                }
+            if (text.contains("404")) {
+                llContent.visibility = View.GONE
+            } else {
+                llContent.visibility = View.VISIBLE
             }
         }
     }
 
     override fun initEvent() {
-        rlBack.setOnClickListener {
-            finish()
-        }
     }
 
     override fun getViewBinding(): ActivityWebBinding {

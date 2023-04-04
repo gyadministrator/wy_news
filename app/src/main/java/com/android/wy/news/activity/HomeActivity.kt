@@ -97,7 +97,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun initView() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
         ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-            .navigationBarColor(R.color.white).statusBarDarkFont(false).init()
+            .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(false).init()
         bottomView = findViewById(R.id.bottomView)
 
         tvCity = findViewById(R.id.tv_city)
@@ -128,8 +128,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         } else {
             showSearch()
             ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-                .navigationBarColor(R.color.white).statusBarDarkFont(false).init()
-            bottomView.setBackgroundResource(R.color.white)
+                .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(false).init()
+            bottomView.setBackgroundResource(R.color.default_status_bar_color)
         }
     }
 

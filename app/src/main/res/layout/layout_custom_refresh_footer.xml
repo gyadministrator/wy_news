@@ -18,7 +18,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center"
-            app:indicatorColor="@color/status_bar_color"
+            app:indicatorColor="@color/main_title"
             app:indicatorName="LineSpinFadeLoaderIndicator" />
 
         <TextView

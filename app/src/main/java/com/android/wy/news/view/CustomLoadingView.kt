@@ -45,12 +45,12 @@ class CustomLoadingView : View {
 
     private fun init() {
         paint = Paint()
-        paint?.color = Color.parseColor("#999999")
+        paint?.color = resources.getColor(R.color.main_title)
         loadingSize?.let { paint?.textSize = it }
 
         loadPaint = Paint()
         loadPaint?.style = Paint.Style.FILL
-        loadPaint?.color = 0x70ffffff
+        loadPaint?.color = resources.getColor(R.color.load_color)
     }
 
     override fun onDraw(canvas: Canvas?) {

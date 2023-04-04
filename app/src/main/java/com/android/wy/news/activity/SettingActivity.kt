@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Environment
-import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
@@ -14,12 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.cache.CacheUtils
-import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
-import com.android.wy.news.common.CustomUpdateParser
-import com.android.wy.news.common.CustomUpdatePrompter
-import com.android.wy.news.common.SkinType
-import com.android.wy.news.common.SpTools
+import com.android.wy.news.common.*
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.viewmodel.SettingViewModel
 import com.xuexiang.xupdate.XUpdate
@@ -35,7 +28,6 @@ import java.io.File
 
 class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>(),
     View.OnClickListener {
-    private lateinit var rlBack: RelativeLayout
     private lateinit var tvVersion: TextView
     private lateinit var tvCache: TextView
     private lateinit var tvSkin: TextView
@@ -63,7 +55,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     override fun initView() {
-        rlBack = mBinding.rlBack
         tvVersion = mBinding.tvVersion
         tvCache = mBinding.tvCache
         tvSkin = mBinding.tvSkin
@@ -243,9 +234,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     override fun initEvent() {
-        rlBack.setOnClickListener {
-            finish()
-        }
         rlSkin.setOnClickListener {
             SkinActivity.startSkinActivity(this)
         }

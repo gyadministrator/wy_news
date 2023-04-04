@@ -51,7 +51,7 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
             mImmersionBar.hideBar(BarHide.FLAG_HIDE_STATUS_BAR)
         } else {
             if (setDefaultImmersionBar()) {
-                mImmersionBar.statusBarColor(R.color.white)
+                mImmersionBar.statusBarColor(R.color.default_status_bar_color)
                 mImmersionBar.statusBarDarkFont(true)
             } else {
                 mImmersionBar.statusBarColor(R.color.status_bar_color)
@@ -61,7 +61,7 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         if (hideNavigationBar()) {
             mImmersionBar.hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
         } else {
-            mImmersionBar.navigationBarColor(R.color.white)
+            mImmersionBar.navigationBarColor(R.color.default_status_bar_color)
         }
         mImmersionBar.init()
     }

@@ -4,45 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.SkinActivity">
 
-    <RelativeLayout
+    <com.android.wy.news.view.TitleBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
-                android:src="@mipmap/back"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="15dp"
-            android:gravity="center"
-            android:text="@string/light_type"
-            android:textColor="@color/main_title"
-            android:textSize="16sp" />
-    </RelativeLayout>
+        app:title="@string/light_type" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_margin="10dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_item"
         android:gravity="center_vertical">
@@ -90,6 +65,7 @@
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <TextView
