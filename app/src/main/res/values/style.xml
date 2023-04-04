@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="switchText" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="dividerItemStyle">
         <item name="android:background">@color/divider_bg_color</item>
         <item name="android:layout_height">0.5dp</item>

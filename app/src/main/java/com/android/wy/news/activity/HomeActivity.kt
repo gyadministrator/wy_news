@@ -114,8 +114,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
 
         rlSearch = findViewById(R.id.rl_search_top)
-        rlSearch.setOnClickListener{
-            SearchActivity.startSearch(this,marqueeTextView.getShowText())
+        rlSearch.setOnClickListener {
+            SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
     }
 
@@ -148,17 +148,17 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return
+        }
         val secondTime = System.currentTimeMillis()
         if (secondTime - firstTime > 2000) {
-            if (JCVideoPlayer.backPress()) {
-                return
-            }
             Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
             firstTime = secondTime
         } else {
             finish()
         }
-        super.onBackPressed()
+        //super.onBackPressed()
     }
 
     override fun onPause() {

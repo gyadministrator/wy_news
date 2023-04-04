@@ -32,7 +32,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initEvent() {
-        splashAD = SpTools.get(Constants.SPLASH_AD)
+        splashAD = SpTools.getString(Constants.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
             isShowAD = true
             rlContent.visibility = View.VISIBLE

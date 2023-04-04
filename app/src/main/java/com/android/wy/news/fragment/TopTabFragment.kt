@@ -204,7 +204,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     private val bannerItemListener = OnBannerListener<House> { data, _ ->
-        WebActivity.startActivity(mActivity, data.link)
+        val url = Constants.WEB_URL + data.docid + ".html"
+        WebActivity.startActivity(mActivity, url)
     }
 
 

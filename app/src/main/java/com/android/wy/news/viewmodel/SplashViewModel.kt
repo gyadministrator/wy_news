@@ -51,7 +51,7 @@ class SplashViewModel : BaseViewModel() {
                     if (data != null && data.isNotEmpty()) {
                         val image = data[0]
                         val url = Constants.SPLASH_URL + image.url
-                        SpTools.put(Constants.SPLASH_AD, url)
+                        SpTools.putString(Constants.SPLASH_AD, url)
                     }
                 }
             }
@@ -83,7 +83,7 @@ class SplashViewModel : BaseViewModel() {
                                     val urls = resource.urls
                                     if (urls != null && urls.isNotEmpty()) {
                                         val adUrl = urls[0]
-                                        adUrl?.let { SpTools.put(Constants.SPLASH_AD, it) }
+                                        adUrl?.let { SpTools.putString(Constants.SPLASH_AD, it) }
                                     }
                                 }
                             }

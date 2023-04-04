@@ -31,13 +31,20 @@
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.SkinActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.TestActivity"
+            android:configChanges="uiMode"
             android:exported="true">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".activity.VideoFullActivity"
@@ -57,10 +64,12 @@
         <activity
             android:name=".activity.HomeActivity"
             android:exported="true"
-            android:launchMode="singleTop" /> <!-- 适配华为（huawei）刘海屏 -->
+            android:launchMode="singleTop" />
+        <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.4" /> <!-- 适配小米（xiaomi）刘海屏 -->
+            android:value="2.4" />
+        <!-- 适配小米（xiaomi）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
             android:value="true" />

@@ -9,4 +9,13 @@
     <string name="clear_all">全部清除</string>
     <string name="search_history">搜索历史</string>
     <string name="splash_ad">封面广告</string>
+    <string name="dark_type">深色模式</string>
+    <string name="light_type">浅色模式</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="follow_system_tip">开启后，应用内夜间模式状态和系统保持一致</string>
+    <string name="manual_choose">手动选择</string>
+    <string name="check_update">检查更新</string>
+    <string name="setting">设置</string>
+    <string name="play_and_download">边下边播</string>
+    <string name="clean_cache">清除缓存</string>
 </resources>

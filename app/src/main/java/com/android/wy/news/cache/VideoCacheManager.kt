@@ -2,6 +2,8 @@ package com.android.wy.news.cache
 
 import android.content.Context
 import android.text.TextUtils
+import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
 import com.danikula.videocache.HttpProxyCacheServer
 
 /*     
@@ -15,10 +17,13 @@ class VideoCacheManager {
         private var proxy: HttpProxyCacheServer? = null
 
         fun getProxyUrl(context: Context, videoNetUrl: String?): String? {
-            var proxyUrl: String? = null
-            getProxy(context)
-            if (!TextUtils.isEmpty(videoNetUrl)) {
-                proxyUrl = proxy?.getProxyUrl(videoNetUrl)
+            var proxyUrl: String? = videoNetUrl
+            val play = SpTools.getBoolean(Constants.PLAY_DOWNLOAD)
+            if (play != null && play) {
+                getProxy(context)
+                if (!TextUtils.isEmpty(videoNetUrl)) {
+                    proxyUrl = proxy?.getProxyUrl(videoNetUrl)
+                }
             }
             return proxyUrl
         }
