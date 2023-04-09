@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/cl_content"
     tools:context=".LaunchActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="热点头条新闻抢先看"
+        android:text="@string/news_tip"
         android:textColor="@color/status_bar_color"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -2,4 +2,5 @@
 <resources>
     <string name="about_software">关于软件</string>
     <string name="album">态度封面</string>
+    <string name="news_tip">热点头条新闻抢先看</string>
 </resources>

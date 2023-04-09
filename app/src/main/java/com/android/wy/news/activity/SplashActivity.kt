@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
@@ -18,13 +20,19 @@ import com.android.wy.news.viewmodel.SplashViewModel
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     private lateinit var ivAd: ImageView
     private lateinit var rlContent: RelativeLayout
+    private lateinit var tvDown: TextView
     private var splashAD: String? = null
     private var isShowAD = false
     private var delayTime = 500L
+    private var handlerNum = 3
 
     override fun initView() {
         ivAd = mBinding.ivAd
         rlContent = mBinding.rlContent
+        tvDown = mBinding.tvDown
+        tvDown.setOnClickListener {
+            stopCountDownHandler()
+        }
     }
 
     override fun initData() {
@@ -51,19 +59,58 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     override fun onClear() {
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onNotifyDataChanged() {
         mViewModel.isReadFinish.observe(this) {
             if (it) {
                 if (isShowAD) {
-                    delayTime = 3000L
+                    tvDown.text = handlerNum.toString() + "s"
+                    countDownHandler()
+                } else {
+                    mHandler.postDelayed({
+                        jump()
+                    }, delayTime)
                 }
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val intent = Intent(mActivity, HomeActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }, delayTime)
             }
         }
+    }
+
+    private val mHandler = object : Handler(Looper.getMainLooper()) {
+        @SuppressLint("SetTextI18n")
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                1 -> {
+                    if (handlerNum > 0) {
+                        handlerNum--
+                        tvDown.text = handlerNum.toString() + "s"
+                        countDownHandler()
+                    } else {
+                        stopCountDownHandler()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun jump() {
+        val intent = Intent(mActivity, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    fun countDownHandler() {
+        mHandler.sendEmptyMessageDelayed(1, 1000)
+    }
+
+    fun stopCountDownHandler() {
+        mHandler.removeCallbacksAndMessages(null)
+        jump()
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopCountDownHandler()
     }
 
     override fun setDefaultImmersionBar(): Boolean {
