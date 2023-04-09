@@ -18,4 +18,6 @@
     <string name="setting">设置</string>
     <string name="play_and_download">边下边播</string>
     <string name="clean_cache">清除缓存</string>
+    <string name="about_software">关于软件</string>
+    <string name="album">态度封面</string>
 </resources>

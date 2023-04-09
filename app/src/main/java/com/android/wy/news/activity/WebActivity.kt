@@ -11,6 +11,7 @@ import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityWebBinding
+import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.view.TitleBarView
 import com.android.wy.news.viewmodel.WebViewModel
@@ -116,6 +117,14 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             "javascript:function hideLiveOpenAppJs() {" + "document.getElementsByClassName('widget-slider-article-simple js-open-newsapp')[0].style.display='none';" + "}"
         view?.loadUrl(liveOpenAppJs)
         view?.loadUrl("javascript:hideLiveOpenAppJs();")
+
+        if (UiModeManager.isNightMode(this)) {
+            //深色模式
+            val darkJs =
+                "javascript:function showDarkJs() {" + "document.body.style.backgroundColor='#111111';" + "}"
+            view?.loadUrl(darkJs)
+            view?.loadUrl("javascript:showDarkJs();")
+        }
 
         loadingView.visibility = View.GONE
         val text = titleBar.getTitle()
