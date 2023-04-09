@@ -3,6 +3,8 @@ package com.android.wy.news.skin
 import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import com.android.wy.news.common.SkinType
+import com.android.wy.news.common.SpTools
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatDelegate
 class UiModeManager {
     companion object {
         /**
+         * 判断当前深色模式场景
          * 1. MODE_NIGHT_AUTO_BATTERY 低电量模式自动开启深色模式。
          *
          * 2. MODE_NIGHT_FOLLOW_SYSTEM 跟随系统开启和关闭深色模式（默认）。
@@ -23,7 +26,7 @@ class UiModeManager {
          *
          * 5. MODE_NIGHT_UNSPECIFIED 配合 setLocalNightMode(int)) 使用，表示由Activity通过AppCompactActivity.getDelegate()来单独设置页面的深色模式，不设置全局模式。
          */
-        fun getNightMode(): Int {
+        private fun getNightMode(): Int {
             return AppCompatDelegate.getDefaultNightMode()
         }
 
@@ -31,7 +34,7 @@ class UiModeManager {
          * 深色模式设置可以从三个层级设置，分别是系统层、Application层以及Activity层。底层的设置会覆盖上层的设置，例如系统设置了深色模式，但是Application设置了浅色模式，那么应用会显示浅色主题
          * 当深色模式改变时，Activity会重建，如果不希望Activity重建，可以在AndroidManifest.xml中对对应的Activity设置android:configChanges="uiMode"，不过设置之后页面的颜色改变需要Activity在中通过监听onConfigurationChanged来动态改变
          */
-        fun setDefaultNightMode(@AppCompatDelegate.NightMode mode: Int) {
+        private fun setDefaultNightMode(@AppCompatDelegate.NightMode mode: Int) {
             AppCompatDelegate.setDefaultNightMode(mode)
         }
 
@@ -51,6 +54,28 @@ class UiModeManager {
                 Configuration.UI_MODE_NIGHT_YES -> true
                 else -> false
             }
+        }
+
+        fun setCurrentUiMode(skinType: Int) {
+            when (skinType) {
+                //跟随系统
+                SkinType.SKIN_TYPE_SYSTEM -> {
+                    setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                //浅色
+                SkinType.SKIN_TYPE_LIGHT -> {
+                    setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                //深色
+                SkinType.SKIN_TYPE_DARK -> {
+                    setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                //默认
+                else -> {
+                    setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
+            SpTools.putInt(SkinType.SKIN_TYPE, skinType)
         }
     }
 }

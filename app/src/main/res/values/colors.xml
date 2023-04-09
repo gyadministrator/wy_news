@@ -20,4 +20,5 @@
     <color name="tint_color">#73000000</color>
     <color name="load_color">#70ffffff</color>
     <color name="title_bar_color">#ffffff</color>
+    <color name="bg_search_color">#ffffff</color>
 </resources>

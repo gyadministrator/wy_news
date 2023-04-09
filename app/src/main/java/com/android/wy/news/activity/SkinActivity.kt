@@ -3,11 +3,9 @@ package com.android.wy.news.activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
-import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.SkinType
@@ -51,27 +49,24 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
         ivDark = mBinding.ivDark
         llContent = mBinding.llContent
 
-        scSkin.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
-                if (p0 != null) {
-                    if (!p0.isPressed) {
-                        return
-                    }
-                    if (p1) {
-                        ivLight.visibility = View.GONE
-                        ivDark.visibility = View.GONE
-                        llContent.visibility = View.GONE
-                        SpTools.putInt(SkinType.SKIN_TYPE, SkinType.SKIN_TYPE_SYSTEM)
+        scSkin.setOnCheckedChangeListener { p0, p1 ->
+            if (p0 != null) {
+                if (p1) {
+                    ivLight.visibility = View.GONE
+                    ivDark.visibility = View.GONE
+                    llContent.visibility = View.GONE
 
-                        UiModeManager.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                    } else {
-                        rlLight.visibility = View.VISIBLE
-                        rlDark.visibility = View.VISIBLE
-                        llContent.visibility = View.VISIBLE
-                    }
+                    UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_SYSTEM)
+                } else {
+                    rlLight.visibility = View.VISIBLE
+                    rlDark.visibility = View.VISIBLE
+                    llContent.visibility = View.VISIBLE
+
+                    UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_LIGHT)
+                    initData()
                 }
             }
-        })
+        }
 
         rlLight.setOnClickListener(this)
         rlDark.setOnClickListener(this)
@@ -122,17 +117,15 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
             if (p0 == rlLight) {
                 ivLight.visibility = View.VISIBLE
                 ivDark.visibility = View.GONE
-                SpTools.putInt(SkinType.SKIN_TYPE, SkinType.SKIN_TYPE_LIGHT)
                 scSkin.isChecked = false
 
-                UiModeManager.setDefaultNightMode(MODE_NIGHT_NO)
+                UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_LIGHT)
             } else if (p0 == rlDark) {
                 ivLight.visibility = View.GONE
                 ivDark.visibility = View.VISIBLE
-                SpTools.putInt(SkinType.SKIN_TYPE, SkinType.SKIN_TYPE_DARK)
                 scSkin.isChecked = false
 
-                UiModeManager.setDefaultNightMode(MODE_NIGHT_YES)
+                UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_DARK)
             }
         }
     }
