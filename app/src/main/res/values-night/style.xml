@@ -35,4 +35,9 @@
     <declare-styleable name="TitleBarView">
         <attr name="title" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="SwitchButton">
+        <attr name="switch_bg_color" format="color" />
+        <attr name="switch_ball_color" format="color" />
+    </declare-styleable>
 </resources>
