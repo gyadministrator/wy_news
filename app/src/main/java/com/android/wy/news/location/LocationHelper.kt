@@ -149,9 +149,9 @@ class LocationHelper {
             MapsInitializer.updatePrivacyShow(activity, true, true)
             val s = activity.getString(R.string.app_name)
             val spannable =
-                SpannableStringBuilder("\"亲，感谢您对${s}一直以来的信任！我们依据最新的监管要求更新了${s}《隐私权政策》，特向您说明如下\n1.为向您提供相关基本功能，我们会收集、使用必要的信息；\n2.基于您的明示授权，我们可能会获取您的位置（为您提供附近城市的新闻、视频及资讯等）等信息，您有权拒绝或取消授权；\n3.我们会采取业界先进的安全措施保护您的信息安全；\n4.未经您同意，我们不会从第三方处获取、共享或向提供您的信息；\n")
+                SpannableStringBuilder("亲，感谢您对\"${s}\"一直以来的信任！我们依据最新的监管要求更新了\"${s}\"软件\n《隐私权政策》，特向广大用户说明如下信息\n1.为向您提供相关基本功能，我们会收集、使用必要的信息；\n2.基于您的明示授权，我们可能会获取您的位置（为您提供附近城市的新闻、视频及资讯等）等信息，您有权拒绝或取消授权；\n3.我们会采取业界先进的安全措施保护您的信息安全；\n4.未经您同意，我们不会从第三方处获取、共享或向提供您的信息；\n")
             spannable.setSpan(
-                ForegroundColorSpan(Color.BLUE), 37, 44, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                ForegroundColorSpan(Color.BLUE), 42, 50, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             val colorDialog = ColorDialog(activity)
             colorDialog.setTitle("温馨提示")
