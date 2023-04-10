@@ -16,14 +16,16 @@ import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import java.util.*
+import kotlin.system.exitProcess
 
 
-class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener {
+class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener{
     private lateinit var bottomView: GYBottomBarView
     private lateinit var tvCity: TextView
     private var firstTime: Long = 0
@@ -95,7 +97,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
+        PermissionHelper.initPermission(this)
+        //竖屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
             .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(false).init()
         bottomView = findViewById(R.id.bottomView)
@@ -128,7 +132,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         } else {
             showSearch()
             ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-                .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(false).init()
+                .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(false)
+                .init()
             bottomView.setBackgroundResource(R.color.default_status_bar_color)
         }
     }
@@ -157,6 +162,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             firstTime = secondTime
         } else {
             finish()
+            exitProcess(0)
         }
         //super.onBackPressed()
     }

@@ -15,6 +15,9 @@ import com.android.wy.news.entity.NewsClassifyEntity
     "title": "新闻",
     "tid": "BBM54PGAwangning"
   }
+  * 高德定位信息
+  * key:7f0d79866211bd1622b599d4ffae5a73
+  * sha1:1A:6B:A9:8E:FE:F1:B6:38:B9:35:BF:AD:C6:4A:04:CC:69:FA:12:D4
  */
 class Constants {
     companion object {
@@ -33,6 +36,10 @@ class Constants {
         const val SPLASH_URL = "http://www.bing.com"
         const val SPLASH_AD = "splash_ad"
         const val PLAY_DOWNLOAD = "play_download"
+        const val PRIVACY_STATUS = "privacy_status"
+        const val PRIVACY_STATUS_AGREE = 1
+        const val PRIVACY_STATUS_CANCEL = 2
+        const val LOCATION_KEY = "7f0d79866211bd1622b599d4ffae5a73"
         var currentCity: String = ""
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()

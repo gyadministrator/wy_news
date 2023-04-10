@@ -2,17 +2,40 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--安装应用权限-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--发送通知权限-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--读取图片权限-->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!--读取视频权限-->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!--读取音频权限-->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!--读取外部存储-->
+    <!--Android 13 target 32 以上不需要手动授权-->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!--写入外部存储-->
+    <!--Android 13 target 32 以上不需要手动授权-->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" /> <!-- 开启网络访问权限 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许访问网络状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许访问wifi状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许修改网络状态的权限 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 允许修改wifi状态的权限 -->
+    <!--获取精确位置-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--获取粗略位置-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 开启网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允许访问网络状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 允许访问wifi状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 允许修改网络状态的权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- 允许修改wifi状态的权限 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
@@ -30,6 +53,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:targetApi="tiramisu">
+        <!-- 当前项目已经适配了分区存储特性 -->
+        <meta-data
+            android:name="ScopedStorage"
+            android:value="true" />
+
         <activity
             android:name=".activity.SkinActivity"
             android:exported="false" />

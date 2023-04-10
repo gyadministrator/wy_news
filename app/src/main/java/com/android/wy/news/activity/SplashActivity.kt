@@ -10,14 +10,17 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySplashBinding
+import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.viewmodel.SplashViewModel
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
+class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
+    LocationHelper.OnPrivacyListener {
     private lateinit var ivAd: ImageView
     private lateinit var rlContent: RelativeLayout
     private lateinit var tvDown: TextView
@@ -36,10 +39,22 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initData() {
+        val i = SpTools.getInt(Constants.PRIVACY_STATUS)
+        if (i == Constants.PRIVACY_STATUS_AGREE) {
+            loadAD()
+            MapsInitializer.updatePrivacyShow(this, true, true)
+            MapsInitializer.updatePrivacyAgree(this, true)
+            LocationHelper.initLocation(this)
+        } else {
+            LocationHelper.privacyCompliance(this, this)
+        }
         mViewModel.init(this)
     }
 
     override fun initEvent() {
+    }
+
+    private fun loadAD() {
         splashAD = SpTools.getString(Constants.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
             isShowAD = true
@@ -62,15 +77,23 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     @SuppressLint("SetTextI18n")
     override fun onNotifyDataChanged() {
         mViewModel.isReadFinish.observe(this) {
-            if (it) {
-                if (isShowAD) {
-                    tvDown.text = handlerNum.toString() + "s"
-                    countDownHandler()
-                } else {
-                    mHandler.postDelayed({
-                        jump()
-                    }, delayTime)
-                }
+            val i = SpTools.getInt(Constants.PRIVACY_STATUS)
+            if (i == Constants.PRIVACY_STATUS_AGREE) {
+                handlerRead(it)
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun handlerRead(it: Boolean?) {
+        if (it == true) {
+            if (isShowAD) {
+                tvDown.text = handlerNum.toString() + "s"
+                countDownHandler()
+            } else {
+                mHandler.postDelayed({
+                    jump()
+                }, delayTime)
             }
         }
     }
@@ -123,5 +146,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
 
     override fun hideNavigationBar(): Boolean {
         return true
+    }
+
+    override fun onClickAgree() {
+        handlerRead(true)
     }
 }

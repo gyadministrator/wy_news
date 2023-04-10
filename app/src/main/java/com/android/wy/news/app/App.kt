@@ -2,11 +2,14 @@ package com.android.wy.news.app
 
 import android.app.Application
 import android.widget.Toast
+import com.amap.api.location.AMapLocationClient
 import com.android.wy.news.BuildConfig
+import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.http.NewsHttpService
+import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
 import com.xuexiang.xupdate.XUpdate
 import com.xuexiang.xupdate.entity.UpdateError.ERROR.CHECK_NO_NEW_VERSION
@@ -31,6 +34,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AMapLocationClient.setApiKey(Constants.LOCATION_KEY);
         if (BuildConfig.isShowLog) {
             CrashHandler.mInstance.init(this)
             Logger.setDebug(true)

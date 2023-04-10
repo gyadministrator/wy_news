@@ -21,6 +21,7 @@ import retrofit2.Response
 class NewsMainViewModel : BaseViewModel() {
 
     val dataList = MutableLiveData<ArrayList<RollHotWord>>()
+    val city = MutableLiveData<String>()
 
     fun getHotWord() {
         val apiService =
@@ -45,7 +46,6 @@ class NewsMainViewModel : BaseViewModel() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.message?.let { msg.postValue(it) }
             }
-
         })
     }
 

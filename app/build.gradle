@@ -8,6 +8,12 @@ android {
     namespace 'com.android.wy.news'
     compileSdk 33
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
     signingConfigs {
         config {
             storeFile file('../wy_news.jks')
@@ -27,7 +33,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //必须要保证所有的flavor 都属于同一个维度
         //flavorDimensions "default"
-        buildConfigField "boolean", "isShowLog", "false"
+        buildConfigField "boolean", "isShowLog", "true"
     }
 
     buildTypes {
@@ -81,7 +87,7 @@ static def releaseTime() {
 }
 
 dependencies {
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -113,6 +119,8 @@ dependencies {
     implementation 'com.danikula:videocache:2.7.1'
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.github.xuexiangjys:XUpdate:2.1.4'
+    implementation 'com.github.getActivity:XXPermissions:18.0'
+    implementation 'com.github.andyxialm:ColorDialog:1.0.0'
 
     //Room数据库
     implementation("androidx.room:room-runtime:2.4.2")

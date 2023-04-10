@@ -62,7 +62,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_item"
                 android:gravity="center_vertical">
 
@@ -145,13 +145,22 @@
                     android:id="@+id/tv_skin"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@id/iv_arrow"
                     android:gravity="center_vertical"
                     android:textColor="@color/second_title"
                     android:textSize="14sp"
                     tools:ignore="RelativeOverlap"
                     tools:text="已关闭" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -189,7 +198,7 @@
                 android:id="@+id/rl_about"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_item"
                 android:gravity="center_vertical">
 
@@ -202,6 +211,13 @@
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -221,6 +237,117 @@
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_permission"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_permission"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_help"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/reply_and_help"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_third"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/third_data_list"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/tint_color" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

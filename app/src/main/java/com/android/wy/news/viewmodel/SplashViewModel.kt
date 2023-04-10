@@ -12,6 +12,7 @@ import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.SplashEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
+import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -33,7 +34,7 @@ class SplashViewModel : BaseViewModel() {
     fun init(context: Context) {
         ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
         ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
-        ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
+        //ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
         ThreadExecutorManager.mInstance.startExecute { getSplash() }
     }
 
@@ -155,6 +156,6 @@ class SplashViewModel : BaseViewModel() {
     }
 
     override fun clear() {
-
+        LocationHelper.destroyLocation()
     }
 }
