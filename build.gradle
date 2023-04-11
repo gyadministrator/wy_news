@@ -4,3 +4,65 @@ plugins {
     id 'com.android.library' version '7.4.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
 }
+
+/*
+buildscript {
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_google/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_aliyun/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_jpack/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/third-party/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/snapshot/'
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.17'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_google/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_aliyun/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/android_jpack/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/third-party/'
+        }
+        maven {
+            allowInsecureProtocol = true
+            url 'http://10.1.12.10:8081/repository/snapshot/'
+        }
+    }
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}*/

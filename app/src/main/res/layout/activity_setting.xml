@@ -160,7 +160,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -217,7 +217,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -243,7 +243,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -269,7 +269,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -295,7 +295,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -321,7 +321,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -329,7 +329,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="40dp"
                 android:background="@drawable/bg_item"
                 android:gravity="center_vertical">
 
@@ -348,7 +347,34 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
-                    app:tint="@color/tint_color" />
+                    app:tint="@color/main_title" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_user"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/user_policy"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

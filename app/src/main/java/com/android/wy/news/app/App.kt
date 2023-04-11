@@ -1,19 +1,13 @@
 package com.android.wy.news.app
 
 import android.app.Application
-import android.widget.Toast
 import com.amap.api.location.AMapLocationClient
 import com.android.wy.news.BuildConfig
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
-import com.android.wy.news.http.NewsHttpService
-import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
-import com.xuexiang.xupdate.XUpdate
-import com.xuexiang.xupdate.entity.UpdateError.ERROR.CHECK_NO_NEW_VERSION
-import com.xuexiang.xupdate.utils.UpdateUtils
 
 
 /*
@@ -39,7 +33,6 @@ class App : Application() {
             CrashHandler.mInstance.init(this)
             Logger.setDebug(true)
         }
-        initUpdate()
         initSkin()
     }
 
@@ -50,15 +43,5 @@ class App : Application() {
         } else {
             UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_LIGHT)
         }
-    }
-
-    private fun initUpdate() {
-        XUpdate.get().debug(true).isWifiOnly(true).isGet(true).isAutoMode(false).param(
-            "versionCode", UpdateUtils.getVersionCode(this)
-        ).param("appKey", packageName).setOnUpdateFailureListener { error ->
-            if (error.code != CHECK_NO_NEW_VERSION) {
-                Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
-            }
-        }.supportSilentInstall(true).setIUpdateHttpService(NewsHttpService()).init(this)
     }
 }

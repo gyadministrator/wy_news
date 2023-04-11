@@ -16,7 +16,6 @@ import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.manager.ThreadExecutorManager
-import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
@@ -97,7 +96,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
-        PermissionHelper.initPermission(this)
         //竖屏
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)

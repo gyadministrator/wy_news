@@ -17,7 +17,7 @@ class PermissionHelper {
     companion object {
         private val permissionList = arrayOf(
             //Permission.REQUEST_INSTALL_PACKAGES,
-            Permission.NOTIFICATION_SERVICE,
+            //Permission.NOTIFICATION_SERVICE,
             Permission.READ_MEDIA_IMAGES,
             Permission.READ_MEDIA_VIDEO,
             Permission.READ_MEDIA_AUDIO,

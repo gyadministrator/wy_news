@@ -16,6 +16,7 @@ import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.location.LocationHelper
+import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.viewmodel.SplashViewModel
 
 @SuppressLint("CustomSplashScreen")
@@ -39,16 +40,23 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     }
 
     override fun initData() {
+        PermissionHelper.initPermission(this)
         val i = SpTools.getInt(Constants.PRIVACY_STATUS)
         if (i == Constants.PRIVACY_STATUS_AGREE) {
-            loadAD()
-            MapsInitializer.updatePrivacyShow(this, true, true)
-            MapsInitializer.updatePrivacyAgree(this, true)
-            LocationHelper.initLocation(this)
+            handlerAgree()
         } else {
             LocationHelper.privacyCompliance(this, this)
         }
         mViewModel.init(this)
+    }
+
+    private fun handlerAgree() {
+        loadAD()
+        MapsInitializer.updatePrivacyShow(this, true, true)
+        MapsInitializer.updatePrivacyAgree(this, true)
+        Handler(Looper.getMainLooper()).postDelayed({
+            LocationHelper.initLocation(this)
+        }, 500)
     }
 
     override fun initEvent() {
@@ -149,6 +157,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     }
 
     override fun onClickAgree() {
+        handlerAgree()
         handlerRead(true)
     }
 }

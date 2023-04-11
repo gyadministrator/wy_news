@@ -1,22 +1,17 @@
 package com.android.wy.news.location
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.graphics.Color
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
-import cn.refactor.lib.colordialog.ColorDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationClientOption.*
 import com.amap.api.location.AMapLocationQualityReport
 import com.amap.api.maps.MapsInitializer
-import com.android.wy.news.R
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.dialog.PrivacyDialogFragment
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -99,7 +94,6 @@ class LocationHelper {
         /**
          * 获取GPS状态的字符串
          * @param statusCode GPS状态码
-         * @return
          */
         private fun getGPSStatusString(statusCode: Int): String {
             var str = ""
@@ -121,8 +115,6 @@ class LocationHelper {
 
         /**
          * 默认的定位参数
-         * @since 2.8.0
-         * @author hongming.wang
          */
         private fun getDefaultOption(): AMapLocationClientOption {
             val mOption = AMapLocationClientOption()
@@ -140,40 +132,29 @@ class LocationHelper {
             mOption.isWifiScan =
                 true //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
             mOption.isLocationCacheEnable = true //可选，设置是否使用缓存定位，默认为true
-            mOption.geoLanguage =
-                GeoLanguage.DEFAULT //可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
+            mOption.geoLanguage = GeoLanguage.DEFAULT //可选，设置逆地理信息的语言，默认值为默认语言（根据所在地区选择语言）
             return mOption
         }
 
-        fun privacyCompliance(activity: Activity, privacyListener: OnPrivacyListener) {
+        fun privacyCompliance(activity: AppCompatActivity, privacyListener: OnPrivacyListener) {
             MapsInitializer.updatePrivacyShow(activity, true, true)
-            val s = activity.getString(R.string.app_name)
-            val spannable =
-                SpannableStringBuilder("亲，感谢您对\"${s}\"一直以来的信任！我们依据最新的监管要求更新了\"${s}\"软件\n《隐私权政策》，特向广大用户说明如下信息\n1.为向您提供相关基本功能，我们会收集、使用必要的信息；\n2.基于您的明示授权，我们可能会获取您的位置（为您提供附近城市的新闻、视频及资讯等）等信息，您有权拒绝或取消授权；\n3.我们会采取业界先进的安全措施保护您的信息安全；\n4.未经您同意，我们不会从第三方处获取、共享或向提供您的信息；\n")
-            spannable.setSpan(
-                ForegroundColorSpan(Color.BLUE), 42, 50, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            val colorDialog = ColorDialog(activity)
-            colorDialog.setTitle("温馨提示")
-            colorDialog.setColor(activity.getColor(R.color.white))
-            colorDialog.setContentTextColor(activity.getColor(R.color.black))
-            colorDialog.setTitleTextColor(activity.getColor(R.color.black))
-            colorDialog.contentText = spannable
-            colorDialog.setPositiveListener("同意") { dialog ->
-                dialog?.dismiss()
-                MapsInitializer.updatePrivacyAgree(activity, true)
-                SpTools.putInt(Constants.PRIVACY_STATUS, Constants.PRIVACY_STATUS_AGREE)
-                privacyListener.onClickAgree()
-            }
-            colorDialog.setNegativeListener("不同意") { dialog ->
-                dialog?.dismiss()
-                MapsInitializer.updatePrivacyAgree(activity, false)
-                SpTools.putInt(Constants.PRIVACY_STATUS, Constants.PRIVACY_STATUS_CANCEL)
-                activity.finish()
-                exitProcess(0)
-            }
-            colorDialog.setCanceledOnTouchOutside(false)
-            colorDialog.show()
+
+            val fragment = PrivacyDialogFragment.newInstance()
+            fragment.addListener(object : PrivacyDialogFragment.OnDialogFragmentListener {
+                override fun onClickSure() {
+                    MapsInitializer.updatePrivacyAgree(activity, true)
+                    SpTools.putInt(Constants.PRIVACY_STATUS, Constants.PRIVACY_STATUS_AGREE)
+                    privacyListener.onClickAgree()
+                }
+
+                override fun onClickCancel() {
+                    MapsInitializer.updatePrivacyAgree(activity, false)
+                    SpTools.putInt(Constants.PRIVACY_STATUS, Constants.PRIVACY_STATUS_CANCEL)
+                    activity.finish()
+                    exitProcess(0)
+                }
+            })
+            fragment.show(activity.supportFragmentManager, "news_dialog")
         }
 
 
