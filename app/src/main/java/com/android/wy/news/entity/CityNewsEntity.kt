@@ -16,7 +16,7 @@ data class House(
     val isTop: Any,
     val link: String,
     val liveInfo: Any,
-    val picInfo: List<PicInfo>,
+    val picInfo: List<PicInfo?>?,
     val ptime: String,
     val source: String,
     val tag: Any,

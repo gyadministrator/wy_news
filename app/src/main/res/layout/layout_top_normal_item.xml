@@ -76,7 +76,6 @@
         android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@mipmap/img_default"
         app:riv_corner_radius="4dp"
         tools:ignore="ContentDescription" />
 </LinearLayout>

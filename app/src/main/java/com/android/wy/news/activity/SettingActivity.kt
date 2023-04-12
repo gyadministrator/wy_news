@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.cache.CacheUtils
 import com.android.wy.news.common.*
+import com.android.wy.news.compose.ThirdLibActivity
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.viewmodel.SettingViewModel
 
@@ -25,6 +26,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlSkin: RelativeLayout
     private lateinit var rlPrivacy: RelativeLayout
     private lateinit var rlUser: RelativeLayout
+    private lateinit var rlThird: RelativeLayout
     private lateinit var scPlay: SwitchCompat
 
     companion object {
@@ -55,6 +57,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         scPlay = mBinding.scPlay
         rlPrivacy = mBinding.rlPrivacy
         rlUser = mBinding.rlUser
+        rlThird = mBinding.rlThird
     }
 
     override fun onRestart() {
@@ -119,6 +122,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     override fun initEvent() {
+        rlThird.setOnClickListener {
+            ThirdLibActivity.startThirdLibActivity(this)
+        }
         rlSkin.setOnClickListener {
             SkinActivity.startSkinActivity(this)
         }

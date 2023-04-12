@@ -96,7 +96,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     private fun handlerRead(it: Boolean?) {
         if (it == true) {
             if (isShowAD) {
-                tvDown.text = handlerNum.toString() + "s"
+                tvDown.text = "跳过 " + handlerNum.toString() + "s"
                 countDownHandler()
             } else {
                 mHandler.postDelayed({
@@ -113,7 +113,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
                 1 -> {
                     if (handlerNum > 0) {
                         handlerNum--
-                        tvDown.text = handlerNum.toString() + "s"
+                        tvDown.text = "跳过 " + handlerNum.toString() + "s"
                         countDownHandler()
                     } else {
                         stopCountDownHandler()

@@ -1,7 +1,9 @@
 package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -16,15 +18,15 @@ import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.service.NewsService
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import java.util.*
-import kotlin.system.exitProcess
 
 
-class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener{
+class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener {
     private lateinit var bottomView: GYBottomBarView
     private lateinit var tvCity: TextView
     private var firstTime: Long = 0
@@ -68,6 +70,16 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
         ThreadExecutorManager.mInstance.startExecute {
             mViewModel.getHotWord()
+        }
+        //testNotify()
+    }
+
+    private fun testNotify() {
+        val intent = Intent(this, NewsService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
         }
     }
 
@@ -124,8 +136,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onSelected(position: Int) {
         if (position == 2) {
             hideSearch()
-            ImmersionBar.with(this).statusBarColor(R.color.black)
-                .navigationBarColor(R.color.black).statusBarDarkFont(false).init()
+            ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
+                .statusBarDarkFont(false).init()
             bottomView.setBackgroundResource(R.color.black)
         } else {
             showSearch()
@@ -160,7 +172,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             firstTime = secondTime
         } else {
             finish()
-            exitProcess(0)
+            //exitProcess(0)
         }
         //super.onBackPressed()
     }

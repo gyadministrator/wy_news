@@ -14,7 +14,6 @@ import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.android.wy.news.R
 import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
 import com.android.wy.news.viewmodel.BaseViewModel
@@ -162,8 +161,10 @@ class CommonTools {
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                 )
                 //设置为这种格式去掉透明度通道，可以减少内存占有
-                .format(DecodeFormat.PREFER_RGB_565).placeholder(R.mipmap.img_default)
-                .error(R.mipmap.img_error).into(object : SimpleTarget<Bitmap>(
+                .format(DecodeFormat.PREFER_RGB_565)
+                //.placeholder(R.mipmap.img_default)
+                //.error(R.mipmap.img_error)
+                .into(object : SimpleTarget<Bitmap>(
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                 ) {

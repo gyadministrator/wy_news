@@ -26,4 +26,5 @@
     <string name="third_data_list">第三方数据清单</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="user_policy">用户协议</string>
+    <string name="title_activity_third_lib">ThirdLibActivity</string>
 </resources>

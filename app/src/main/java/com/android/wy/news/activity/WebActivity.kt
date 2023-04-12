@@ -19,14 +19,14 @@ import com.just.agentweb.AgentWeb
 import com.just.agentweb.WebChromeClient
 
 class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
-    private lateinit var url: String
+    private var url: String? = null
     private lateinit var llContent: LinearLayout
     private lateinit var titleBar: TitleBarView
     private lateinit var agentWeb: AgentWeb
     private lateinit var loadingView: CustomLoadingView
 
     companion object {
-        private const val WEB_URL = "web_url"
+        const val WEB_URL = "web_url"
         fun startActivity(context: Context, url: String) {
             val intent = Intent(context, WebActivity::class.java)
             intent.putExtra(WEB_URL, url)

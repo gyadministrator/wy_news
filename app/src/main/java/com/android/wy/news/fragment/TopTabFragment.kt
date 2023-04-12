@@ -19,6 +19,8 @@ import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
+import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.TopViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -34,6 +36,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
+    private var isNotify = false
     private lateinit var topAdapter: TopAdapter
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var llContent: LinearLayout
@@ -128,12 +131,30 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         mViewModel.cityNewsList.observe(this) {
             loadingView.visibility = View.GONE
             addBannerHeader(it)
+            ThreadExecutorManager.mInstance.startExecute {
+                if (!isNotify) {
+                    sendNotify(it)
+                    isNotify = true
+                }
+            }
         }
 
         mViewModel.hotNewsList.observe(this) {
             if (it.size > 0) {
                 loadingView.visibility = View.GONE
                 addCityNewsHeader(it)
+            }
+        }
+    }
+
+    private fun sendNotify(it: ArrayList<House>?) {
+        if (it != null && it.size > 0) {
+            NotificationHelper.cancelAll(mActivity)
+            for (i in it.indices) {
+                val house = it[i]
+                if (!mActivity.isFinishing) {
+                    NotificationHelper.sendCustomNotification(mActivity, house)
+                }
             }
         }
     }
@@ -193,8 +214,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 val house = it[i]
                 titleList.add(house.title)
             }
-            banner.setAdapter(BannerImgAdapter(it))
-                .addBannerLifecycleObserver(this) //添加生命周期观察者
+            banner.setAdapter(BannerImgAdapter(it)).addBannerLifecycleObserver(this) //添加生命周期观察者
                 //.setIndicator(CircleIndicator(mActivity))
                 .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
                 .setIndicatorNormalColorRes(R.color.text_normal_color)

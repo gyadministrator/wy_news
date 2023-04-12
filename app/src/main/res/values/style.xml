@@ -23,7 +23,7 @@
         <attr name="dividerMargin" format="dimension" />
     </declare-styleable>
 
-    <style name="Theme.Launch" parent="Theme.Design.Light.NoActionBar">
+    <style name="Theme.Launch" parent="Theme.AppCompat.Light.NoActionBar">
         <!--    设置背景，解决白屏的关键    -->
         <item name="android:windowBackground">@drawable/bg_launch</item>
         <!-- 设置状态栏为白色的，状态栏文字为黑的 -->

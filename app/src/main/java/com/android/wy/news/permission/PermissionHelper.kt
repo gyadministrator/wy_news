@@ -16,8 +16,6 @@ import com.hjq.permissions.XXPermissions
 class PermissionHelper {
     companion object {
         private val permissionList = arrayOf(
-            //Permission.REQUEST_INSTALL_PACKAGES,
-            //Permission.NOTIFICATION_SERVICE,
             Permission.READ_MEDIA_IMAGES,
             Permission.READ_MEDIA_VIDEO,
             Permission.READ_MEDIA_AUDIO,
@@ -25,7 +23,10 @@ class PermissionHelper {
             /*Permission.READ_EXTERNAL_STORAGE,
             Permission.WRITE_EXTERNAL_STORAGE,*/
             Permission.ACCESS_FINE_LOCATION,
-            Permission.ACCESS_COARSE_LOCATION
+            Permission.ACCESS_COARSE_LOCATION,
+            Permission.NOTIFICATION_SERVICE,
+            Permission.BIND_NOTIFICATION_LISTENER_SERVICE,
+            Permission.POST_NOTIFICATIONS
         )
 
         fun initPermission(activity: Activity) {

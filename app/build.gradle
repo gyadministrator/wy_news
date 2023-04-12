@@ -1,3 +1,5 @@
+//file:noinspection DependencyNotationArgument
+//file:noinspection GroovyImplicitNullArgumentCall
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -6,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.android.wy.news'
-    compileSdk 33
+    compileSdk rootProject.ext.android.compileSdkVersion
 
     sourceSets {
         main {
@@ -25,15 +27,18 @@ android {
 
     defaultConfig {
         applicationId "com.android.wy.news"
-        minSdk 24
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk rootProject.ext.android.minSdkVersion
+        targetSdk rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //必须要保证所有的flavor 都属于同一个维度
         //flavorDimensions "default"
         buildConfigField "boolean", "isShowLog", "true"
+        vectorDrawables {
+            useSupportLibrary true
+        }
     }
 
     buildTypes {
@@ -69,6 +74,15 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 
     /*productFlavors {
@@ -88,44 +102,56 @@ static def releaseTime() {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.github.gyadministrator:CustomTabLayout:1.1'
+    //rootProject.ext.dependencies
+    implementation rootProject.ext.dependencies.coreKtx
+    implementation rootProject.ext.dependencies.appcompat
+    implementation rootProject.ext.dependencies.material
+    implementation rootProject.ext.dependencies.constraintlayout
+    implementation rootProject.ext.dependencies.supportV4
+    implementation rootProject.ext.dependencies.livedataKtx
+    implementation rootProject.ext.dependencies.viewmodelKtx
+    implementation rootProject.ext.dependencies.lifecycleRuntimeKtx
+    testImplementation rootProject.ext.dependencies.junit
+    androidTestImplementation rootProject.ext.dependencies.junitExt
+    androidTestImplementation rootProject.ext.dependencies.espressoCore
+    implementation rootProject.ext.dependencies.customTabLayout
+    implementation rootProject.ext.dependencies.gYBottomBar
     // Retrofit库
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.2'
+    implementation rootProject.ext.dependencies.retrofit
+    implementation rootProject.ext.dependencies.rxjava2
     // json解析，可以自行替换
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation rootProject.ext.dependencies.gson
+    implementation rootProject.ext.dependencies.glide
     // (必选)使用这个基础的webView实现
-    implementation 'com.just.agentweb:agentweb:4.1.3'
+    implementation rootProject.ext.dependencies.agentweb
     // 基础依赖包，必须要依赖
-    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
-    implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
+    implementation rootProject.ext.dependencies.immersionbar
+    implementation rootProject.ext.dependencies.shimmerRecyclerView
     //轮播图
-    implementation 'io.github.youth5201314:banner:2.2.2'
-    implementation 'fm.jiecao:jiecaovideoplayer:4.8.3'
-    implementation 'com.github.gyadministrator:GYBottomBar:4.0'
-    implementation 'com.makeramen:roundedimageview:2.2.1'
-    implementation 'com.wang.avi:library:2.1.3'
-    implementation 'com.danikula:videocache:2.7.1'
-    implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'com.github.getActivity:XXPermissions:18.0'
-
+    implementation rootProject.ext.dependencies.banner
+    implementation rootProject.ext.dependencies.jiecaovideoplayer
+    implementation rootProject.ext.dependencies.roundedimageview
+    implementation rootProject.ext.dependencies.avi
+    implementation rootProject.ext.dependencies.videocache
+    implementation rootProject.ext.dependencies.jsoup
+    implementation rootProject.ext.dependencies.permission
     //Room数据库
-    implementation("androidx.room:room-runtime:2.4.2")
-    annotationProcessor("androidx.room:room-compiler:2.4.2")
-    kapt("androidx.room:room-compiler:2.4.2")
-    implementation("androidx.room:room-ktx:2.4.2")
-
+    implementation rootProject.ext.dependencies.roomRuntime
+    annotationProcessor rootProject.ext.dependencies.roomCompiler
+    kapt rootProject.ext.dependencies.roomCompiler
+    implementation rootProject.ext.dependencies.roomKtx
     //刷新
-    implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'
+    implementation rootProject.ext.dependencies.refresh
+    //compose 核心
+    implementation rootProject.ext.dependencies.composeUi
+    implementation rootProject.ext.dependencies.composeMaterial
+    implementation rootProject.ext.dependencies.composePreview
+    androidTestImplementation platform(rootProject.ext.dependencies.composeBom)
+    androidTestImplementation rootProject.ext.dependencies.composeUiTestJunit4
+    debugImplementation rootProject.ext.dependencies.composeUiTooling
+    debugImplementation rootProject.ext.dependencies.composeUiTestManifest
+    implementation rootProject.ext.dependencies.activityCompose
+    implementation platform(rootProject.ext.dependencies.composeBom)
+    implementation rootProject.ext.dependencies.composeUiGraphics
+    implementation rootProject.ext.dependencies.composematerial3
 }

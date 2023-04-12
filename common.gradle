@@ -1,0 +1,133 @@
+ext {
+    // Android编译版本
+    android = [
+            //编译版本号
+            compileSdkVersion: 33,
+            //最小支持版本号
+            minSdkVersion    : 24,
+            //目标版本号
+            targetSdkVersion : 33,
+            //编译打包全局versionCode
+            versionCode      : 1,
+            //编译打包全局versionName
+            versionName      : '1.0']
+
+    // 定义依赖库的版本号
+    versions = [
+            // android依赖
+            'androidx.core:core-ktx'                    : '1.7.0',
+            'androidx.appcompat:appcompat'              : '1.4.1',
+            'com.google.android.material:material'      : '1.5.0',
+            'androidx.constraintlayout:constraintlayout': '2.1.3',
+            'androidx.legacy:legacy-support-v4'         : '1.0.0',
+            'androidx.lifecycle:lifecycle-livedata-ktx' : '2.4.1',
+            'androidx.lifecycle:lifecycle-viewmodel-ktx': '2.5.1',
+            'junit:junit'                               : '4.13.2',
+            'androidx.test.ext:junit'                   : '1.1.3',
+            'androidx.test.espresso:espresso-core'      : '3.4.0',
+            //compose 核心
+            'androidx.compose.ui:ui'                    : '1.0.1',
+            'androidx.compose.material:material'        : '1.0.1',
+            'androidx.compose.ui:ui-tooling-preview'    : '1.0.1',
+
+            // 作者的库
+            'com.github.gyadministrator:CustomTabLayout': '1.1',
+            'com.github.gyadministrator:GYBottomBar'    : '4.0',
+
+            // 三方框架
+            //网络
+            'com.squareup.retrofit2:retrofit'           : '2.9.0',
+            'com.squareup.retrofit2:adapter-rxjava2'    : '2.6.2',
+            'com.squareup.retrofit2:converter-gson'     : '2.9.0',
+            //图片加载
+            'com.github.bumptech.glide:glide'           : '4.11.0',
+            //webView
+            'com.just.agentweb:agentweb'                : '4.1.3',
+            //状态栏
+            'com.geyifeng.immersionbar:immersionbar'    : '3.2.2',
+            //列表加载前loading
+            'com.github.sharish:ShimmerRecyclerView'    : 'v1.3',
+            //轮播图
+            'io.github.youth5201314:banner'             : '2.2.2',
+            //视频
+            'fm.jiecao:jiecaovideoplayer'               : '4.8.3',
+            //圆角
+            'com.makeramen:roundedimageview'            : '2.2.1',
+            //动画加载
+            'com.wang.avi:library'                      : '2.1.3',
+            //视频缓存
+            'com.danikula:videocache'                   : '2.7.1',
+            //网络爬虫
+            'org.jsoup:jsoup'                           : '1.13.1',
+            //权限
+            'com.github.getActivity:XXPermissions'      : '18.0',
+            //room数据库
+            'androidx.room:room-runtime'                : '2.4.2',
+            'androidx.room:room-compiler'               : '2.4.2',
+            'androidx.room:room-ktx'                    : '2.4.2',
+            //刷新
+            'io.github.scwang90:refresh-layout-kernel'  : '2.0.5',
+            //compose框架
+            'androidx.lifecycle:lifecycle-runtime-ktx'  : '2.5.1',
+            'androidx.activity:activity-compose'        : '1.5.1',
+            'androidx.compose:compose-bom'              : '2022.10.00',
+            'androidx.compose.ui:ui-graphics'           : '',
+            'androidx.compose.material3:material3'      : '',
+            'androidx.compose.ui:ui-test-junit4'        : '',
+            'androidx.compose.ui:ui-tooling'            : '',
+            'androidx.compose.ui:ui-test-manifest'      : ''
+
+    ]
+
+    // 完整依赖包名+版本号，方便使用
+    dependencies = [
+
+            // android依赖
+            coreKtx              : "androidx.core:core-ktx:${versions['androidx.core:core-ktx']}",
+            appcompat            : "androidx.appcompat:appcompat:${versions['androidx.appcompat:appcompat']}",
+            material             : "com.google.android.material:material:${versions['com.google.android.material:material']}",
+            constraintlayout     : "androidx.constraintlayout:constraintlayout:${versions['androidx.constraintlayout:constraintlayout']}",
+            supportV4            : "androidx.legacy:legacy-support-v4:${versions['androidx.legacy:legacy-support-v4']}",
+            livedataKtx          : "androidx.lifecycle:lifecycle-livedata-ktx:${versions['androidx.lifecycle:lifecycle-livedata-ktx']}",
+            viewmodelKtx         : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions['androidx.lifecycle:lifecycle-viewmodel-ktx']}",
+            junit                : "junit:junit:${versions['junit:junit']}",
+            junitExt             : "androidx.test.ext:junit:${versions['androidx.test.ext:junit']}",
+            espressoCore         : "androidx.test.espresso:espresso-core:${versions['androidx.test.espresso:espresso-core']}",
+
+            // 作者的库
+            customTabLayout      : "com.github.gyadministrator:CustomTabLayout:${versions['com.github.gyadministrator:CustomTabLayout']}",
+            gYBottomBar          : "com.github.gyadministrator:GYBottomBar:${versions['com.github.gyadministrator:GYBottomBar']}",
+
+            // 三方框架
+            retrofit             : "com.squareup.retrofit2:retrofit:${versions['com.squareup.retrofit2:retrofit']}",
+            rxjava2              : "com.squareup.retrofit2:adapter-rxjava2:${versions['com.squareup.retrofit2:adapter-rxjava2']}",
+            gson                 : "com.squareup.retrofit2:converter-gson:${versions['com.squareup.retrofit2:converter-gson']}",
+            glide                : "com.github.bumptech.glide:glide:${versions['com.github.bumptech.glide:glide']}",
+            agentweb             : "com.just.agentweb:agentweb:${versions['com.just.agentweb:agentweb']}",
+            immersionbar         : "com.geyifeng.immersionbar:immersionbar:${versions["com.geyifeng.immersionbar:immersionbar"]}",
+            shimmerRecyclerView  : "com.github.sharish:ShimmerRecyclerView:${versions["com.github.sharish:ShimmerRecyclerView"]}",
+            banner               : "io.github.youth5201314:banner:${versions['io.github.youth5201314:banner']}",
+            jiecaovideoplayer    : "fm.jiecao:jiecaovideoplayer:${versions['fm.jiecao:jiecaovideoplayer']}",
+            roundedimageview     : "com.makeramen:roundedimageview:${versions['com.makeramen:roundedimageview']}",
+            videocache           : "com.danikula:videocache:${versions['com.danikula:videocache']}",
+            jsoup                : "org.jsoup:jsoup:${versions['org.jsoup:jsoup']}",
+            permission           : "com.github.getActivity:XXPermissions:${versions['com.github.getActivity:XXPermissions']}",
+            roomRuntime          : "androidx.room:room-runtime:${versions['androidx.room:room-runtime']}",
+            roomCompiler         : "androidx.room:room-compiler:${versions['androidx.room:room-compiler']}",
+            roomKtx              : "androidx.room:room-ktx:${versions['androidx.room:room-ktx']}",
+            refresh              : "io.github.scwang90:refresh-layout-kernel:${versions['io.github.scwang90:refresh-layout-kernel']}",
+            avi                  : "com.wang.avi:library:${versions['com.wang.avi:library']}",
+
+            //compose框架
+            composeUi            : "androidx.compose.ui:ui:${versions['androidx.compose.ui:ui']}",
+            composeMaterial      : "androidx.compose.material:material:${versions['androidx.compose.material:material']}",
+            composePreview       : "androidx.compose.ui:ui-tooling-preview:${versions['androidx.compose.ui:ui-tooling-preview']}",
+            lifecycleRuntimeKtx  : "androidx.lifecycle:lifecycle-runtime-ktx:${versions['androidx.lifecycle:lifecycle-runtime-ktx']}",
+            activityCompose      : "androidx.activity:activity-compose:${versions['androidx.activity:activity-compose']}",
+            composeBom           : "androidx.compose:compose-bom:${versions['androidx.compose:compose-bom']}",
+            composeUiGraphics    : "androidx.compose.ui:ui-graphics",
+            composematerial3     : "androidx.compose.material3:material3",
+            composeUiTestJunit4  : "androidx.compose.ui:ui-test-junit4",
+            composeUiTooling     : "androidx.compose.ui:ui-tooling",
+            composeUiTestManifest: "androidx.compose.ui:ui-test-manifest"]
+}
