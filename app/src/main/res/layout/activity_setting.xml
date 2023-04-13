@@ -51,6 +51,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_version_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -60,10 +61,10 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_update"
+                android:id="@+id/rl_about"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_item"
                 android:gravity="center_vertical">
 
@@ -72,27 +73,75 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
-                    android:text="@string/check_update"
+                    android:text="@string/about_software"
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
                 <TextView
-                    android:id="@+id/tv_version"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/second_title"
-                    android:textSize="14sp"
-                    tools:ignore="RelativeOverlap"
-                    tools:text="1.0.1" />
+                    android:text="@string/privacy_policy"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_user"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/bg_item"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/user_policy"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_item"
                 android:gravity="center_vertical">
 
@@ -196,33 +245,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_about"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/about_software"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_album"
+                android:id="@+id/rl_third"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="6dp"
@@ -234,33 +257,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
-                    android:text="@string/album"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_permission"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/app_permission"
+                    android:text="@string/third_data_list"
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
@@ -300,7 +297,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_third"
+                android:id="@+id/rl_permission"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="6dp"
@@ -312,7 +309,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
-                    android:text="@string/third_data_list"
+                    android:text="@string/app_permission"
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
@@ -326,33 +323,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_privacy"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/privacy_policy"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_user"
+                android:id="@+id/rl_update"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="6dp"
@@ -365,17 +336,21 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
-                    android:text="@string/user_policy"
+                    android:text="@string/check_update"
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
 
-                <ImageView
+                <TextView
+                    android:id="@+id/tv_version"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/second_title"
+                    android:textSize="14sp"
+                    tools:ignore="RelativeOverlap"
+                    tools:text="1.0.1" />
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

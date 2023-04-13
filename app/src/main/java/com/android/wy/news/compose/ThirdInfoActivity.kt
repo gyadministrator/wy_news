@@ -36,11 +36,11 @@ import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-class ThirdLibActivity : ComponentActivity() {
+class ThirdInfoActivity : ComponentActivity() {
 
     companion object {
         fun startThirdLibActivity(context: Context) {
-            val intent = Intent(context, ThirdLibActivity::class.java)
+            val intent = Intent(context, ThirdInfoActivity::class.java)
             context.startActivity(intent)
         }
     }
@@ -226,7 +226,7 @@ class ThirdLibActivity : ComponentActivity() {
                         .padding(Dp(6f))
                         .clickable(onClick = {
                             WebActivity.startActivity(
-                                this@ThirdLibActivity, "https://lbs.amap.com/pages/privacy/"
+                                this@ThirdInfoActivity, "https://lbs.amap.com/pages/privacy/"
                             )
                         },
                             // 去除点击效果

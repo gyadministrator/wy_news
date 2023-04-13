@@ -10,8 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.cache.DataCleanManager
 import com.android.wy.news.common.*
-import com.android.wy.news.compose.AlbumActivity
-import com.android.wy.news.compose.ThirdLibActivity
+import com.android.wy.news.compose.ThirdInfoActivity
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.dialog.UpdateDialogFragment
@@ -28,6 +27,7 @@ import java.net.URL
 
 class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>() {
     private lateinit var tvVersion: TextView
+    private lateinit var tvVersionInfo: TextView
     private lateinit var tvCache: TextView
     private lateinit var tvSkin: TextView
     private lateinit var rlCache: RelativeLayout
@@ -35,7 +35,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlPrivacy: RelativeLayout
     private lateinit var rlUser: RelativeLayout
     private lateinit var rlThird: RelativeLayout
-    private lateinit var rlAlbum: RelativeLayout
     private lateinit var rlPermission: RelativeLayout
     private lateinit var rlUpdate: RelativeLayout
     private lateinit var rlHelp: RelativeLayout
@@ -62,6 +61,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
     override fun initView() {
         tvVersion = mBinding.tvVersion
+        tvVersionInfo = mBinding.tvVersionInfo
         tvCache = mBinding.tvCache
         tvSkin = mBinding.tvSkin
         rlCache = mBinding.rlCache
@@ -70,7 +70,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         rlPrivacy = mBinding.rlPrivacy
         rlUser = mBinding.rlUser
         rlThird = mBinding.rlThird
-        rlAlbum = mBinding.rlAlbum
         rlPermission = mBinding.rlPermission
         rlUpdate = mBinding.rlUpdate
         rlHelp = mBinding.rlHelp
@@ -112,7 +111,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     @SuppressLint("SetTextI18n")
     private fun getVersion() {
         val versionName = CommonTools.getVersionName(this)
+        val versionCode = CommonTools.getVersionCode(this)
         tvVersion.text = "V$versionName"
+        tvVersionInfo.text = "Build $versionCode" + "_V$versionName"
     }
 
     override fun initEvent() {
@@ -125,11 +126,8 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         rlPermission.setOnClickListener {
 
         }
-        rlAlbum.setOnClickListener {
-            AlbumActivity.startAlbumActivity(this)
-        }
         rlThird.setOnClickListener {
-            ThirdLibActivity.startThirdLibActivity(this)
+            ThirdInfoActivity.startThirdLibActivity(this)
         }
         rlSkin.setOnClickListener {
             SkinActivity.startSkinActivity(this)

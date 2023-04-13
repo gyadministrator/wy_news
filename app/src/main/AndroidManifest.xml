@@ -105,7 +105,7 @@
             android:name=".activity.WebActivity"
             android:exported="true" />
         <activity
-            android:name=".compose.ThirdLibActivity"
+            android:name=".compose.ThirdInfoActivity"
             android:exported="false" />
 
         <activity
