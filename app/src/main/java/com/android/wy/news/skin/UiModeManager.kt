@@ -1,10 +1,13 @@
 package com.android.wy.news.skin
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import com.android.wy.news.R
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
+import com.gyf.immersionbar.ImmersionBar
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -76,6 +79,18 @@ class UiModeManager {
                 }
             }
             SpTools.putInt(SkinType.SKIN_TYPE, skinType)
+        }
+
+        fun onUiModeChange(activity: Activity) {
+            val nightMode = isNightMode(activity)
+            val immersionBar = ImmersionBar.with(activity).statusBarColor(R.color.status_bar_color)
+                .navigationBarColor(R.color.default_status_bar_color)
+            if (nightMode) {
+                immersionBar.statusBarDarkFont(false)
+            } else {
+                immersionBar.statusBarDarkFont(true)
+            }
+            immersionBar.init()
         }
     }
 }

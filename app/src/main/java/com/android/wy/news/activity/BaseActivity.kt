@@ -2,12 +2,14 @@ package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.android.wy.news.R
 import com.android.wy.news.common.IBaseCommon
 import com.android.wy.news.listener.IBackPressedListener
+import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
@@ -35,6 +37,7 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
         setBarState()
+        UiModeManager.onUiModeChange(this)
         mActivity = this
         mBinding = getViewBinding()
         setContentView(mBinding.root)
@@ -43,6 +46,12 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         mViewModel = getViewModel()
         initData()
         onNotifyDataChanged()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val uiMode = newConfig.uiMode
+        UiModeManager.onUiModeChange(this)
     }
 
     private fun setBarState() {

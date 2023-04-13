@@ -3,6 +3,7 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Build
 import android.view.View
 import android.widget.*
@@ -19,9 +20,9 @@ import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.service.NewsService
+import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
-import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import java.util.*
 
@@ -46,6 +47,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onDestroy() {
         super.onDestroy()
         marqueeTextView.stopScroll()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val uiMode = newConfig.uiMode
+        UiModeManager.onUiModeChange(this)
     }
 
     override fun initFragment() {
@@ -108,10 +115,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
+        UiModeManager.onUiModeChange(this)
         //竖屏
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-            .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(true).init()
         bottomView = findViewById(R.id.bottomView)
 
         tvCity = findViewById(R.id.tv_city)
@@ -136,16 +142,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onSelected(position: Int) {
         if (position == 2) {
             hideSearch()
-            ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
-                .statusBarDarkFont(false).init()
             bottomView.setBackgroundResource(R.color.black)
         } else {
             showSearch()
-            ImmersionBar.with(this).statusBarColor(R.color.status_bar_color)
-                .navigationBarColor(R.color.default_status_bar_color).statusBarDarkFont(true)
-                .init()
             bottomView.setBackgroundResource(R.color.default_status_bar_color)
         }
+        UiModeManager.onUiModeChange(this)
     }
 
     @SuppressLint("RestrictedApi")
