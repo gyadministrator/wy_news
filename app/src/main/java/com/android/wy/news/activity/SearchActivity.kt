@@ -67,7 +67,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     override fun setDefaultImmersionBar(): Boolean {
-        return false
+        return true
     }
 
     override fun hideStatusBar(): Boolean {

@@ -41,9 +41,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="tiramisu">
-        <activity
-            android:name=".compose.ThirdLibActivity"
-            android:exported="false" />
         <!-- 当前项目已经适配了分区存储特性 -->
         <meta-data
             android:name="ScopedStorage"
@@ -107,6 +104,13 @@
         <activity
             android:name=".activity.WebActivity"
             android:exported="true" />
+        <activity
+            android:name=".compose.ThirdLibActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".compose.AlbumActivity"
+            android:exported="false" />
 
         <service
             android:name=".service.NewsService"

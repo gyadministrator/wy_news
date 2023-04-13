@@ -14,11 +14,12 @@
     <color name="main_title">#242424</color>
     <color name="second_title">#949494</color>
     <color name="default_status_bar_color">#FFFFFF</color>
-    <color name="status_bar_color">#ff5757</color>
+    <!--<color name="status_bar_color">#ff5757</color>-->
+    <color name="status_bar_color">#FFFFFF</color>
     <color name="text_normal_color">#222222</color>
     <color name="text_select_color">#ff5757</color>
     <color name="tint_color">#73000000</color>
     <color name="load_color">#70ffffff</color>
     <color name="title_bar_color">#ffffff</color>
-    <color name="bg_search_color">#ffffff</color>
+    <color name="bg_search_color">#EDF1F4</color>
 </resources>

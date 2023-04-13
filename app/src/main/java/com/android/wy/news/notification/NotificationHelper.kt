@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.StrictMode
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
@@ -97,8 +98,7 @@ class NotificationHelper {
                 //设置通知类别
                 //.setCategory()
                 //设置弹窗显示
-                .setFullScreenIntent(pendingIntent, true)
-                .build()
+                .setFullScreenIntent(pendingIntent, true).build()
         }
 
         //初始化NotificationManager
@@ -199,15 +199,16 @@ class NotificationHelper {
             initNotificationManager(context)
             val remoteViews = RemoteViews(context.packageName, R.layout.layout_remote_view)
             remoteViews.setTextViewText(R.id.tv_title, house?.title)
-            remoteViews.setTextViewText(R.id.tv_time,
+            remoteViews.setTextViewText(
+                R.id.tv_time,
                 house?.ptime?.let { CommonTools.getTimeDiff(it) })
 
-            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setOngoing(true)
                 //普通视图，高度限制为64dp
                 //.setContent(remoteViews)
                 //普通视图，高度限制为64dp
-                .setCustomContentView(remoteViews)
+                //.setCustomContentView(remoteViews)
                 //扩展视图，高度可以扩展为256dp
                 //.setCustomBigContentView(remoteViews)
                 //悬浮通知视图
@@ -218,7 +219,14 @@ class NotificationHelper {
                 .setWhen(System.currentTimeMillis())
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-                .setSmallIcon(R.mipmap.notify_icon)
+                .setSmallIcon(R.mipmap.icon)
+                //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
+                .setContentTitle(house?.source)
+                .setContentText(house?.title)
+                //内容下面的一小段文字
+                //.setSubText(house?.title)
+                //收到信息后状态栏显示的文字信息
+                //.setTicker("收到信息后状态栏显示的文字信息~")
                 //设置通知的大图标
                 //下拉系统状态栏时就能看见
                 //.setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.icon))
@@ -257,45 +265,71 @@ class NotificationHelper {
                 //<uses-permission android:name="android.permission.VIBRATE"/>
                 //.setVibrate()
                 //设置通知栏颜色
-                //.setColor(context.getColor(R.color.white))
-                //设置通知类别
-                //.setCategory()
-                //设置弹窗显示
-                //.setFullScreenIntent()
-                .build()
+                .setColor(context.getColor(R.color.white))
+            //设置通知类别
+            //.setCategory()
+            //设置弹窗显示
+            //.setFullScreenIntent()
+            //.build()
 
             val id = getNotifyId()
 
             if (house != null) {
                 val picInfo = house.picInfo
-                if (picInfo != null && picInfo.isNotEmpty()) {
+                if (!picInfo.isNullOrEmpty()) {
                     val info = picInfo[0]
                     info.let {
                         Glide.with(context).asBitmap().load(info?.url)
-                            .apply(RequestOptions.bitmapTransform(RoundedCorners(60)))
+                            //.apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
                             .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                                 //关键代码，加载原始大小
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                             )
                             //设置为这种格式去掉透明度通道，可以减少内存占有
-                            .format(DecodeFormat.PREFER_RGB_565)
-                            .into(object : SimpleTarget<Bitmap>(
+                            .format(DecodeFormat.PREFER_RGB_565).into(object : SimpleTarget<Bitmap>(
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                             ) {
                                 override fun onResourceReady(
                                     resource: Bitmap, transition: Transition<in Bitmap?>?
                                 ) {
-                                    remoteViews.setImageViewBitmap(R.id.iv_cover, resource)
-                                    notificationManager?.notify(id, notification)
+                                    //remoteViews.setImageViewBitmap(R.id.iv_cover, resource)
+                                    builder.setLargeIcon(resource)
+                                    notificationManager?.notify(id, builder.build())
                                 }
                             })
                     }
                 } else {
-                    remoteViews.setImageViewResource(R.id.iv_cover, R.mipmap.notify_icon)
-                    notificationManager?.notify(id, notification)
+                    //remoteViews.setImageViewResource(R.id.iv_cover, R.mipmap.icon)
+                    builder.setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.mipmap.icon
+                        )
+                    )
+                    notificationManager?.notify(id, builder.build())
                 }
+            }
+        }
+
+        fun sendProgressNotification(context: Context, progress: Int, isFinish: Boolean) {
+            initNotificationManager(context)
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID).setOngoing(true)
+                .setSmallIcon(R.mipmap.icon) //小图标
+                .setContentTitle("正在下载...")  //通知标题
+                //.setContentIntent(pendingIntent) //点击通知栏跳转到指定页面
+                .setAutoCancel(true)    //点击通知后关闭通知
+                .setOnlyAlertOnce(true); //设置提示音只响一次
+
+            val id = getNotifyId()
+            if (isFinish) {
+                builder.setContentText("下载完成")
+                notificationManager?.notify(id, builder.build())
+            } else {
+                builder.setProgress(100, progress, false)
+                builder.setContentText("下载$progress%")
+                notificationManager?.notify(id, builder.build())
             }
         }
     }

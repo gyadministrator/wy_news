@@ -154,4 +154,5 @@ dependencies {
     implementation platform(rootProject.ext.dependencies.composeBom)
     implementation rootProject.ext.dependencies.composeUiGraphics
     implementation rootProject.ext.dependencies.composematerial3
+    implementation rootProject.ext.dependencies.accompanistSystemUiController
 }
