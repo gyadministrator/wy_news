@@ -54,10 +54,10 @@ class NotificationHelper {
                 .setWhen(System.currentTimeMillis())
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-                .setSmallIcon(R.mipmap.notify_icon)
+                .setSmallIcon(R.mipmap.notice)
                 //设置通知的大图标
                 //下拉系统状态栏时就能看见
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.notify_icon))
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.icon))
                 //设置点击通知后的跳转意图
                 .setContentIntent(pendingIntent)
                 //设置自定义通知
@@ -242,7 +242,7 @@ class NotificationHelper {
                 .setWhen(System.currentTimeMillis())
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-                .setSmallIcon(R.mipmap.icon)
+                .setSmallIcon(R.mipmap.notice)
                 //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
                 .setContentTitle(house?.source)
                 .setContentText(house?.title)

@@ -91,7 +91,7 @@ class JsoupManager {
                 Logger.i("行政区划代码: $provinceList")
                 val path: String =
                     FileUtils.getProjectDir() + "/2019年11月中华人民共和国县以上行政区划代码" + ".json"
-                JSONFormatUtils.jsonWriter(provinceList, path)
+                //JSONFormatUtils.jsonWriter(provinceList, path)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

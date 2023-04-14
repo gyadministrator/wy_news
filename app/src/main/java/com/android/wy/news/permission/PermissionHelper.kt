@@ -23,10 +23,7 @@ class PermissionHelper {
             /*Permission.READ_EXTERNAL_STORAGE,
             Permission.WRITE_EXTERNAL_STORAGE,*/
             Permission.ACCESS_FINE_LOCATION,
-            Permission.ACCESS_COARSE_LOCATION,
-            Permission.NOTIFICATION_SERVICE,
-            Permission.BIND_NOTIFICATION_LISTENER_SERVICE,
-            Permission.POST_NOTIFICATIONS
+            Permission.ACCESS_COARSE_LOCATION
         )
 
         fun initPermission(activity: Activity) {
