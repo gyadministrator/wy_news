@@ -27,6 +27,7 @@ import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.service.NewsService
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
@@ -165,6 +166,22 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
         initCityData()
         jumpUrl()
+        Handler(Looper.getMainLooper()).postDelayed({
+            checkNotification()
+        }, 1000)
+    }
+
+    private fun checkNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //判断是否需要开启通知栏功能
+            NotificationUtil.openNotificationSetting(
+                this,
+                object : NotificationUtil.Companion.OnNextListener {
+                    override fun onNext() {
+                        //Toast.makeText(this@HomeActivity, "已开启通知权限", Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
     }
 
     private fun initCityData() {
