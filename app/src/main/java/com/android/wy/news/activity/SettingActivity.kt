@@ -59,6 +59,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         return false
     }
 
+    override fun isFollowNightMode(): Boolean {
+        return true
+    }
+
     override fun initView() {
         tvVersion = mBinding.tvVersion
         tvVersionInfo = mBinding.tvVersionInfo

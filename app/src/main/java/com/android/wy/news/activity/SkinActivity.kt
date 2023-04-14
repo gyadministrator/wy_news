@@ -41,6 +41,10 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
         return false
     }
 
+    override fun isFollowNightMode(): Boolean {
+        return true
+    }
+
     override fun initView() {
         scSkin = mBinding.scSkin
         rlLight = mBinding.rlLight

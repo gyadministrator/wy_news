@@ -149,7 +149,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     private fun sendNotify(it: ArrayList<House>?) {
         if (it != null && it.size > 0) {
-            NotificationHelper.cancelAll(mActivity)
+            NotificationHelper.cancelAll()
             for (i in it.indices) {
                 val house = it[i]
                 if (!mActivity.isFinishing) {

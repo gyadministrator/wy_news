@@ -66,6 +66,10 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
         return false
     }
 
+    override fun isFollowNightMode(): Boolean {
+        return false
+    }
+
     override fun initView() {
         ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
             .statusBarDarkFont(false).init()

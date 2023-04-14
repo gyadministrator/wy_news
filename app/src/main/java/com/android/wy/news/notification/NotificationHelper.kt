@@ -9,10 +9,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.StrictMode
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
+import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.SplashActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -20,8 +21,6 @@ import com.android.wy.news.entity.House
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 
@@ -154,13 +153,11 @@ class NotificationHelper {
             return notifyId++
         }
 
-        fun cancelNotification(context: Context, notifyId: Int) {
-            initNotificationManager(context)
+        fun cancelNotification(notifyId: Int) {
             notificationManager?.cancel(notifyId)
         }
 
-        fun cancelAll(context: Context) {
-            initNotificationManager(context)
+        fun cancelAll() {
             notificationManager?.cancelAll()
         }
 
@@ -179,15 +176,41 @@ class NotificationHelper {
         }
 
         fun sendCustomNotification(context: Context, house: House) {
-            val intent = Intent(context, WebActivity::class.java)
+            // 直接要打开的Intent放到最后，其余的依次倒序放置，先打开先被覆盖。
+            val intents: Array<Intent> = arrayOf(
+                Intent(context, SplashActivity::class.java),
+                Intent(context, HomeActivity::class.java)
+            )
+            //当 Activity 的启动模式是 singleTask 或者 singleInstance 的时候。
+            //如果使用了 intent 传值，则可能出现 intent 的值无法更新的问题。
+            //也就是说每次 intent 接收到的值都是第一次接到的值。因为 intent 没有被更新。
+            //注意： 接收方 Activity，加上一个函数，调用方法 setIntent
+            val intent = Intent(context, SplashActivity::class.java)
             val url = Constants.WEB_URL + house.docid + ".html"
             intent.putExtra(WebActivity.WEB_URL, url)
+            //其中FLAG_UPDATE_CURRENT是最常用的 描述的Intent有更新的时候需要用到这个flag去更新你的描述，
+            //否则组件在下次事件发生或时间到达的时候extras永远是第一次Intent的extras。
+            //使用FLAG_CANCEL_CURRENT也能做到更新extras，只不过是先把前面的extras清除，
+            //FLAG_CANCEL_CURRENT和FLAG_UPDATE_CURRENT的区别在于能否新new一个Intent，
+            //FLAG_UPDATE_CURRENT能够新new一个Intent，而FLAG_CANCEL_CURRENT则不能，只能使用第一次的Intent。
             val pendingIntent = PendingIntent.getActivity(
                 context,
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
+            /*intent = Intent(NotificationReceiver.ACTION)
+            //Android8.0新的更改，导致api26以上PendingIntent不能正常发送广播
+            //为其指明广播接收器，已成为发送显式广播
+            intent?.setClass(context, NotificationReceiver::class.java)
+            val url = Constants.WEB_URL + house.docid + ".html"
+            intent?.putExtra(WebActivity.WEB_URL, url)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )*/
             sendNewsNotification(
                 context, pendingIntent = pendingIntent, house
             )
@@ -274,6 +297,14 @@ class NotificationHelper {
 
             val id = getNotifyId()
 
+            builder.setLargeIcon(
+                BitmapFactory.decodeResource(
+                    context.resources,
+                    R.mipmap.icon
+                )
+            )
+            notificationManager?.notify(id, builder.build())
+
             if (house != null) {
                 val picInfo = house.picInfo
                 if (!picInfo.isNullOrEmpty()) {
@@ -300,15 +331,6 @@ class NotificationHelper {
                                 }
                             })
                     }
-                } else {
-                    //remoteViews.setImageViewResource(R.id.iv_cover, R.mipmap.icon)
-                    builder.setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            context.resources,
-                            R.mipmap.icon
-                        )
-                    )
-                    notificationManager?.notify(id, builder.build())
                 }
             }
         }

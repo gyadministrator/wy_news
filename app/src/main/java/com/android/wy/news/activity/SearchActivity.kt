@@ -78,6 +78,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         return false
     }
 
+    override fun isFollowNightMode(): Boolean {
+        return true
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun initView() {
         rlBack = mBinding.rlBack

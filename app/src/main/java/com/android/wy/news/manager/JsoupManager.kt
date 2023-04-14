@@ -1,11 +1,16 @@
 package com.android.wy.news.manager
 
+import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.common.Logger
+import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.entity.HotNewsEntity
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import java.io.IOException
+
 
 /*
   * @Author:         gao_yun@leapmotor.com
@@ -54,6 +59,42 @@ class JsoupManager {
                 e.printStackTrace()
             }
             return dataList
+        }
+
+        fun getCityInfo() {
+            try {
+                //2019年11月中华人民共和国县以上行政区划代码网页
+                val doc =
+                    Jsoup.connect("http://www.mca.gov.cn/article/sj/xzqh/2019/2019/201912251506.html")
+                        .maxBodySize(0).get()
+                val elements = doc.getElementsByClass("xl7128029")
+                //省和市
+                val elementsProAndCity = doc.getElementsByClass("xl7028029")
+                val stringListProAndCity = elementsProAndCity.eachText()
+                val stringList = elements.eachText()
+                val stringName: MutableList<String> = ArrayList()
+                val stringCode: MutableList<String> = ArrayList()
+                stringListProAndCity.addAll(stringList)
+                for (i in stringListProAndCity.indices) {
+                    if (i % 2 == 0) {
+                        //地区代码
+                        stringCode.add(stringListProAndCity[i])
+                    } else {
+                        //地区名字
+                        stringName.add(stringListProAndCity[i])
+                    }
+                }
+                if (stringName.size != stringCode.size) {
+                    throw RuntimeException("数据错误")
+                }
+                val provinceList: List<CityInfo> = CommonTools.processData(stringName, stringCode)
+                Logger.i("行政区划代码: $provinceList")
+                val path: String =
+                    FileUtils.getProjectDir() + "/2019年11月中华人民共和国县以上行政区划代码" + ".json"
+                JSONFormatUtils.jsonWriter(provinceList, path)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 }

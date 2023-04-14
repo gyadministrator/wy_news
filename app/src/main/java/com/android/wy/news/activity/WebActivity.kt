@@ -32,6 +32,22 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             intent.putExtra(WEB_URL, url)
             context.startActivity(intent)
         }
+
+        fun startActivityForTask(context: Context, url: String) {
+            val intent = Intent(context, WebActivity::class.java)
+            intent.putExtra(WEB_URL, url)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+        val mInstance = SplashActivity.mInstance
+        if (mInstance != null) {
+            val splashActivity = mInstance.get()
+            splashActivity?.finish()
+        }
     }
 
     override fun initView() {
@@ -47,12 +63,8 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         }
         llContent.visibility = View.GONE
         agentWeb =
-            AgentWeb.with(this)
-                .setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
-                .closeIndicator()
-                .createAgentWeb()
-                .ready()
-                .go(url)
+            AgentWeb.with(this).setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
+                .closeIndicator().createAgentWeb().ready().go(url)
         val webCreator = agentWeb.webCreator
         webCreator.webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
@@ -68,13 +80,11 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
 
             @Deprecated(
                 "Deprecated in Java", ReplaceWith(
-                    "super.shouldInterceptRequest(view, url)",
-                    "android.webkit.WebViewClient"
+                    "super.shouldInterceptRequest(view, url)", "android.webkit.WebViewClient"
                 )
             )
             override fun shouldInterceptRequest(
-                view: WebView?,
-                url: String?
+                view: WebView?, url: String?
             ): WebResourceResponse? {
                 return super.shouldInterceptRequest(view, url)
             }
@@ -177,6 +187,10 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
 
     override fun hideNavigationBar(): Boolean {
         return false
+    }
+
+    override fun isFollowNightMode(): Boolean {
+        return true
     }
 
 }

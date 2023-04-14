@@ -14,6 +14,7 @@ import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.amap.api.maps.offlinemap.Province
 import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
 import com.android.wy.news.viewmodel.BaseViewModel
@@ -264,8 +265,7 @@ class CommonTools {
         }
 
         fun topEntity2ScreenVideoEntity(
-            position: Int,
-            mDataList: ArrayList<TopEntity>
+            position: Int, mDataList: ArrayList<TopEntity>
         ): ArrayList<ScreenVideoEntity> {
             val videoList = ArrayList<ScreenVideoEntity>()
             for (i in position until mDataList.size) {
@@ -329,6 +329,122 @@ class CommonTools {
             } else {
                 packageInfo.versionCode.toLong()
             }
+        }
+
+        fun processData(
+            stringName: List<String>, stringCode: List<String>
+        ): List<CityInfo> {
+            val provinceList: MutableList<CityInfo> = ArrayList()
+
+
+            //获取省
+            for (i in stringCode.indices) {
+                val provinceName = stringName[i]
+                val provinceCode = stringCode[i]
+                if (provinceCode.endsWith("0000")) {
+                    val cities = ArrayList<City>()
+                    val cityInfo = CityInfo(cities, provinceCode, provinceName)
+                    provinceList.add(cityInfo)
+                }
+            }
+
+
+            //获取市
+            for (i in provinceList.indices) {
+                val provinceName: String = provinceList[i].name
+                val provinceCode: String = provinceList[i].code
+                //直辖市 城市和省份名称一样
+                if (provinceName.contains("北京") || provinceName.contains("上海") || provinceName.contains(
+                        "天津"
+                    ) || provinceName.contains("重庆")
+                ) {
+                    val areas = ArrayList<Area>()
+                    val city = City(areas, provinceCode, provinceName)
+                    provinceList[i].cityList.add(city)
+                } else {
+                    for (j in stringCode.indices) {
+                        val cityName = stringName[j]
+                        val cityCode = stringCode[j]
+                        if (cityCode != provinceCode) {
+                            if (cityCode.startsWith(provinceCode.substring(0, 2))) {
+                                if (cityCode.endsWith("00")) {
+                                    val areas = ArrayList<Area>()
+                                    val city = City(areas, cityCode, cityName)
+                                    provinceList[i].cityList.add(city)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //获取区县
+            for (province in provinceList) {
+                val cities: List<City> = province.cityList
+                for (city in cities) {
+                    //遍历获取县区
+                    val cityCode: String = city.code
+                    val cityName: String = city.name
+                    for (k in stringCode.indices) {
+                        val areaName = stringName[k]
+                        val areaCode = stringCode[k]
+                        if (cityName.contains("北京") || cityName.contains("上海") || cityName.contains(
+                                "天津"
+                            ) || cityName.contains("重庆")
+                        ) {
+                            if (province.code != areaCode && areaCode.startsWith(
+                                    province.code.substring(0, 2)
+                                )
+                            ) {
+                                val area = Area(areaCode, areaName)
+                                city.areaList.add(area)
+                            }
+                        } else {
+                            if (areaCode != cityCode && areaCode.startsWith(
+                                    cityCode.substring(
+                                        0, 4
+                                    )
+                                )
+                            ) {
+                                val area = Area(areaCode, areaName)
+                                city.areaList.add(area)
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            //已经处理的数据移除
+            val stringNameList: MutableList<String> = ArrayList(stringName)
+            val stringCodeList: MutableList<String> = ArrayList(stringCode)
+            for (province in provinceList) {
+                stringNameList.remove(province.name)
+                stringCodeList.remove(province.code)
+                val cities: List<City> = province.cityList
+                for (city in cities) {
+                    stringNameList.remove(city.name)
+                    stringCodeList.remove(city.code)
+                    val listArea: List<Area> = city.areaList
+                    for (area in listArea) {
+                        stringNameList.remove(area.name)
+                        stringCodeList.remove(area.code)
+                    }
+                }
+            }
+
+            //处理石河子 特殊 市，City Code 不以00结尾
+            for (province in provinceList) {
+                for (k in stringCodeList.indices) {
+                    if (stringCodeList[k].startsWith(province.code.substring(0, 2))) {
+                        val areas = ArrayList<Area>()
+                        val city = City(areas, stringNameList[k], stringCodeList[k])
+                        province.cityList.add(city)
+                    }
+                }
+            }
+            return provinceList
         }
     }
 }

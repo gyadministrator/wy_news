@@ -31,13 +31,16 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     abstract fun hideStatusBar(): Boolean
     abstract fun hideNavigationBar(): Boolean
+    abstract fun isFollowNightMode(): Boolean
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT//竖屏
         setBarState()
-        UiModeManager.onUiModeChange(this)
+        if (isFollowNightMode()) {
+            UiModeManager.onUiModeChange(this)
+        }
         mActivity = this
         mBinding = getViewBinding()
         setContentView(mBinding.root)
@@ -51,7 +54,9 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         val uiMode = newConfig.uiMode
-        UiModeManager.onUiModeChange(this)
+        if (isFollowNightMode()) {
+            UiModeManager.onUiModeChange(this)
+        }
     }
 
     private fun setBarState() {
