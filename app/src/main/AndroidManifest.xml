@@ -2,18 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 安装应用权限 -->
-    <!--argeting Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission-->
+    <!-- argeting Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!-- 读取图片权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- 读取视频权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <!-- 读取音频权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <!-- 前台服务 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- 读取外部存储 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 读取图片权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- 读取视频权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 读取音频权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- 前台服务 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 读取外部存储 -->
     <!-- Android 13 target 32 以上不需要手动授权 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -23,18 +18,12 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" /> <!-- 获取精确位置 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 获取粗略位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 开启网络访问权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 允许访问网络状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 允许访问wifi状态的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 允许修改网络状态的权限 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!-- 允许修改wifi状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 获取粗略位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 开启网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许访问网络状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许访问wifi状态的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许修改网络状态的权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 允许修改wifi状态的权限 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
@@ -52,6 +41,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="tiramisu">
+        <activity
+            android:name=".activity.LocationActivity"
+            android:exported="false" />
         <!-- 当前项目已经适配了分区存储特性 -->
         <meta-data
             android:name="ScopedStorage"

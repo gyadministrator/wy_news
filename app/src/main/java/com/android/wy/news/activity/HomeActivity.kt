@@ -164,7 +164,10 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         rlSearch.setOnClickListener {
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
-        initCityData()
+        tvCity.setOnClickListener {
+            LocationActivity.startLocationActivity(this)
+        }
+        //initCityData()
         jumpUrl()
         Handler(Looper.getMainLooper()).postDelayed({
             checkNotification()
