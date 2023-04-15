@@ -158,4 +158,6 @@ dependencies {
     implementation rootProject.ext.dependencies.composeUiGraphics
     implementation rootProject.ext.dependencies.composematerial3
     implementation rootProject.ext.dependencies.accompanistSystemUiController
+    implementation rootProject.ext.dependencies.eventbus
+    implementation project(':locationselect')
 }

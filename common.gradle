@@ -77,7 +77,8 @@ ext {
             'androidx.compose.ui:ui-test-junit4'                   : '',
             'androidx.compose.ui:ui-tooling'                       : '',
             'androidx.compose.ui:ui-test-manifest'                 : '',
-            'com.google.accompanist:accompanist-systemuicontroller': '0.17.0'
+            'com.google.accompanist:accompanist-systemuicontroller': '0.17.0',
+            'org.greenrobot:eventbus'                              : '3.1.1',
 
     ]
 
@@ -133,6 +134,7 @@ ext {
             composeUiTooling             : "androidx.compose.ui:ui-tooling",
             composeUiTestManifest        : "androidx.compose.ui:ui-test-manifest",
             accompanistSystemUiController: "com.google.accompanist:accompanist-systemuicontroller:${versions['com.google.accompanist:accompanist-systemuicontroller']}",
-            customAddressSelect: "com.github.gyadministrator:CustomAddressSelect:${versions['com.github.gyadministrator:CustomAddressSelect']}"
+            customAddressSelect          : "com.github.gyadministrator:CustomAddressSelect:${versions['com.github.gyadministrator:CustomAddressSelect']}",
+            eventbus                     : "org.greenrobot:eventbus:${versions["org.greenrobot:eventbus"]}"
     ]
 }

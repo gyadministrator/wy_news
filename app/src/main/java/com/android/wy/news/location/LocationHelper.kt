@@ -3,6 +3,7 @@ package com.android.wy.news.location
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationClientOption.*
@@ -30,7 +31,7 @@ class LocationHelper {
         private var clientOption: AMapLocationClientOption? = null
 
         @SuppressLint("SimpleDateFormat")
-        fun initLocation(context: Context) {
+        fun startLocation(context: Context, onLocationListener: OnLocationListener) {
             val locationClient = AMapLocationClient(context)
             client = WeakReference(locationClient)
             clientOption = getDefaultOption()
@@ -80,36 +81,16 @@ class LocationHelper {
                         mapLocation.cityCode
                         //地区编码
                         mapLocation.adCode
+                        onLocationListener.success(mapLocation)
                         Logger.e("当前定位城市: ${mapLocation.city}")
-                        Constants.currentCity = mapLocation.city
                         stopLocation()
                     } else {
+                        onLocationListener.error("location Error, ErrCode:" + mapLocation.errorCode + ", errInfo:" + mapLocation.errorInfo)
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                         Logger.e("location Error, ErrCode:" + mapLocation.errorCode + ", errInfo:" + mapLocation.errorInfo)
                     }
                 }
             }
-        }
-
-        /**
-         * 获取GPS状态的字符串
-         * @param statusCode GPS状态码
-         */
-        private fun getGPSStatusString(statusCode: Int): String {
-            var str = ""
-            when (statusCode) {
-                AMapLocationQualityReport.GPS_STATUS_OK -> str = "GPS状态正常"
-                AMapLocationQualityReport.GPS_STATUS_NOGPSPROVIDER -> str =
-                    "手机中没有GPS Provider，无法进行GPS定位"
-
-                AMapLocationQualityReport.GPS_STATUS_OFF -> str = "GPS关闭，建议开启GPS，提高定位质量"
-                AMapLocationQualityReport.GPS_STATUS_MODE_SAVING -> str =
-                    "选择的定位模式中不包含GPS定位，建议选择包含GPS定位的模式，提高定位质量"
-
-                AMapLocationQualityReport.GPS_STATUS_NOGPSPERMISSION -> str =
-                    "没有GPS定位权限，建议开启gps定位权限"
-            }
-            return str
         }
 
 
@@ -187,5 +168,10 @@ class LocationHelper {
 
     interface OnPrivacyListener {
         fun onClickAgree()
+    }
+
+    interface OnLocationListener {
+        fun success(aMapLocation: AMapLocation)
+        fun error(msg: String)
     }
 }

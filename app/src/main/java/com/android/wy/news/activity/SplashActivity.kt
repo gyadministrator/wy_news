@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
@@ -72,11 +71,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
 
     private fun handlerAgree() {
         loadAD()
-        MapsInitializer.updatePrivacyShow(this, true, true)
-        MapsInitializer.updatePrivacyAgree(this, true)
-        Handler(Looper.getMainLooper()).postDelayed({
-            LocationHelper.initLocation(this)
-        }, 500)
     }
 
     override fun initEvent() {

@@ -12,6 +12,8 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.amap.api.location.AMapLocation
+import com.amap.api.maps.MapsInitializer
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
 import com.android.bottombar.view.GYBottomBarView
@@ -21,11 +23,19 @@ import com.android.custom.pickview.view.CustomPickerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
+import com.android.wy.news.location.LocationHelper
+import com.android.wy.news.locationselect.CityPicker
+import com.android.wy.news.locationselect.adapter.OnPickListener
+import com.android.wy.news.locationselect.model.City
+import com.android.wy.news.locationselect.model.HotCity
+import com.android.wy.news.locationselect.model.LocateState
+import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.service.NewsService
@@ -36,6 +46,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
+import org.greenrobot.eventbus.EventBus
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.system.exitProcess
@@ -47,7 +58,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private var firstTime: Long = 0
     private lateinit var mViewModel: NewsMainViewModel
     private lateinit var marqueeTextView: MarqueeTextView
-    private lateinit var ivSetting: ImageView
+    private lateinit var rlSetting: RelativeLayout
     private lateinit var rlSearch: RelativeLayout
     private val list = ArrayList<String>()
 
@@ -70,8 +81,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val uiMode = newConfig.uiMode
-        /*UiModeManager.onUiModeChange(this)
+        val uiMode = newConfig.uiMode/*UiModeManager.onUiModeChange(this)
         val i = SpTools.getInt(SkinType.SKIN_TYPE)
         i?.let { UiModeManager.setCurrentUiMode(it) }*/
     }
@@ -148,15 +158,14 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         bottomView = findViewById(R.id.bottomView)
 
         tvCity = findViewById(R.id.tv_city)
-        tvCity.text = Constants.currentCity
 
         marqueeTextView = findViewById(R.id.marqueeTextView)
         list.add("热词加载中...")
         marqueeTextView.setList(list)
         marqueeTextView.startScroll()
 
-        ivSetting = findViewById(R.id.iv_setting)
-        ivSetting.setOnClickListener {
+        rlSetting = findViewById(R.id.rl_setting)
+        rlSetting.setOnClickListener {
             SettingActivity.startSettingActivity(this)
         }
 
@@ -165,7 +174,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
         tvCity.setOnClickListener {
-            LocationActivity.startLocationActivity(this)
+            goLocationPage()
         }
         //initCityData()
         jumpUrl()
@@ -174,11 +183,78 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }, 1000)
     }
 
+    fun updateCity(city: String) {
+        tvCity.text = city
+    }
+
+    private fun goLocationPage() {
+        //LocationActivity.startLocationActivity(this)
+        val hotCities: ArrayList<HotCity> = ArrayList<HotCity>()
+        //code为城市代码
+        hotCities.add(HotCity("北京", "北京", "101010100"))
+        hotCities.add(HotCity("上海", "上海", "101020100"))
+        hotCities.add(HotCity("广州", "广东", "101280101"))
+        hotCities.add(HotCity("深圳", "广东", "101280601"))
+        hotCities.add(HotCity("杭州", "浙江", "101210101"))
+        hotCities.add(HotCity("贵阳", "贵州", "101210101"))
+        hotCities.add(HotCity("六盘水", "贵州", "101210101"))
+        //activity或者fragment
+        val cityPicker = CityPicker.from(this)
+        //启用动画效果，默认无
+        cityPicker.enableAnimation(true)
+            //自定义动画
+            //.setAnimationStyle(anim)
+            //APP自身已定位的城市，传null会自动定位（默认）
+            .setLocatedCity(null)
+            //指定热门城市
+            .setHotCities(hotCities).setOnPickListener(object : OnPickListener {
+
+                override fun onPick(position: Int, data: City?) {
+                    tvCity.text = data?.name
+                    EventBus.getDefault().post(data?.name)
+                    Logger.i("选中的城市: " + data?.name)
+                }
+
+                /**
+                 * 定位接口
+                 */
+                override fun onLocate() {
+                    MapsInitializer.updatePrivacyShow(this@HomeActivity, true, true)
+                    MapsInitializer.updatePrivacyAgree(this@HomeActivity, true)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        LocationHelper.startLocation(
+                            this@HomeActivity,
+                            object : LocationHelper.OnLocationListener {
+                                override fun success(aMapLocation: AMapLocation) {
+                                    //定位完成之后更新数据
+                                    cityPicker.locateComplete(
+                                        LocatedCity(
+                                            aMapLocation.city,
+                                            aMapLocation.province,
+                                            aMapLocation.cityCode
+                                        ), LocateState.SUCCESS
+                                    )
+                                }
+
+                                override fun error(msg: String) {
+                                    Toast.makeText(this@HomeActivity, msg, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+
+                            })
+                    }, 500)
+                }
+
+                override fun onCancel() {
+                    //Toast.makeText(applicationContext, "取消选择", Toast.LENGTH_SHORT).show()
+                }
+            }).show();
+    }
+
     private fun checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //判断是否需要开启通知栏功能
-            NotificationUtil.openNotificationSetting(
-                this,
+            NotificationUtil.openNotificationSetting(this,
                 object : NotificationUtil.Companion.OnNextListener {
                     override fun onNext() {
                         //Toast.makeText(this@HomeActivity, "已开启通知权限", Toast.LENGTH_SHORT).show()
@@ -190,17 +266,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private fun initCityData() {
         val pickerData: PickerData = readJson()
         val pickerView = CustomPickerView(this, pickerData)
-        pickerView.setScreenH(3)
-            .setDiscolourHook(true)
-            .setRadius(0)
-            .setContentLine(true)
-            .setContentText(16, Color.RED)
-            .setListText(16, Color.RED)
-            .setTitle("请选择地址")
-            .setBtnText("确定")
-            .setBtnColor(Color.RED)
-            .setRadius(0)
-            .build()
+        pickerView.setScreenH(3).setDiscolourHook(true).setRadius(0).setContentLine(true)
+            .setContentText(16, Color.RED).setListText(16, Color.RED).setTitle("请选择地址")
+            .setBtnText("确定").setBtnColor(Color.RED).setRadius(0).build()
 
         tvCity.setOnClickListener {
             //显示选择器
@@ -307,6 +375,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
             firstTime = secondTime
         } else {
+            LocationHelper.destroyLocation()
             finish()
             exitProcess(0)
         }

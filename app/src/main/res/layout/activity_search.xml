@@ -21,11 +21,14 @@
         <RelativeLayout
             android:id="@+id/rl_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
 
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_centerInParent="true"
                 android:src="@mipmap/back"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
@@ -36,7 +39,6 @@
             android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_search"
             android:drawableStart="@mipmap/search"
@@ -57,9 +59,9 @@
             android:id="@+id/tv_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/search_news"
             android:textColor="@color/main_title"
             android:textSize="16sp" />
@@ -128,6 +130,7 @@
                     android:id="@+id/ll_history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
                     android:background="@drawable/bg_item_top"
                     android:orientation="vertical"
                     android:padding="6dp"
@@ -182,7 +185,7 @@
                         android:id="@+id/ll_history_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="vertical" />
                 </LinearLayout>
 
@@ -190,7 +193,6 @@
                     android:id="@+id/ll_hot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:background="@drawable/bg_item"
                     android:orientation="vertical"
                     android:padding="6dp" />

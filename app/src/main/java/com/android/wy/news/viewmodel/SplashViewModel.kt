@@ -51,7 +51,7 @@ class SplashViewModel : BaseViewModel() {
                     val gson = Gson()
                     val splashEntity = gson.fromJson(s, SplashEntity::class.java)
                     val data = splashEntity.images
-                    if (data != null && data.isNotEmpty()) {
+                    if (!data.isNullOrEmpty()) {
                         val image = data[0]
                         val url = Constants.SPLASH_URL + image.url
                         SpTools.putString(Constants.SPLASH_AD, url)
@@ -112,7 +112,6 @@ class SplashViewModel : BaseViewModel() {
                 val gson = Gson()
                 val ipEntity = gson.fromJson(s, IpEntity::class.java)
                 val result = ipEntity.result
-                Constants.currentCity = result.city
                 CommonTools.getAddress(result.areaLat.toDouble(), result.areaLng.toDouble())
             }
 
@@ -158,6 +157,6 @@ class SplashViewModel : BaseViewModel() {
     }
 
     override fun clear() {
-        LocationHelper.destroyLocation()
+
     }
 }

@@ -17,21 +17,21 @@
         <TextView
             android:id="@+id/tv_city"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
             android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@string/location_now"
             android:textColor="@color/main_title"
             android:textSize="14sp"
-            tools:text="杭州" />
+            tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
             android:id="@+id/rl_search_top"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_search">
@@ -51,21 +51,25 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_toEndOf="@id/iv_search"
                 android:gravity="center_vertical" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/iv_setting"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="10dp"
-            android:src="@mipmap/setting"
-            app:tint="@color/main_title"
-            tools:ignore="ContentDescription" />
+        <RelativeLayout
+            android:id="@+id/rl_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/setting"
+                app:tint="@color/main_title"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
     </LinearLayout>
 
     <FrameLayout

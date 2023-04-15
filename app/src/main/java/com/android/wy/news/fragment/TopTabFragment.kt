@@ -1,5 +1,7 @@
 package com.android.wy.news.fragment
 
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +9,10 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amap.api.location.AMapLocation
+import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
+import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BannerImgAdapter
 import com.android.wy.news.adapter.BaseNewsAdapter
@@ -19,6 +24,7 @@ import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
+import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.view.CustomLoadingView
@@ -29,6 +35,9 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.listener.OnBannerListener
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<TopEntity> {
@@ -41,6 +50,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var llContent: LinearLayout
     private lateinit var loadingView: CustomLoadingView
+    private var currentCity: String = ""
 
     companion object {
         fun newInstance() = TopTabFragment()
@@ -63,9 +73,33 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun initEvent() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+        initLocation()
         getTopData()
-        getCityData()
         getBannerData()
+    }
+
+    private fun initLocation() {
+        MapsInitializer.updatePrivacyShow(mActivity, true, true)
+        MapsInitializer.updatePrivacyAgree(mActivity, true)
+        Handler(Looper.getMainLooper()).postDelayed({
+            LocationHelper.startLocation(mActivity, object : LocationHelper.OnLocationListener {
+                override fun success(aMapLocation: AMapLocation) {
+                    currentCity = aMapLocation.city
+                    if (mActivity is HomeActivity) {
+                        (mActivity as HomeActivity).updateCity(currentCity)
+                    }
+                    getCityData()
+                }
+
+                override fun error(msg: String) {
+                    Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show()
+                }
+
+            })
+        }, 500)
     }
 
     private fun getBannerData() {
@@ -73,7 +107,15 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     private fun getCityData() {
-        mViewModel.getCityNews(Constants.currentCity)
+        mViewModel.getCityNews(currentCity)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(o: Any) {
+        if (o is String) {
+            currentCity = o
+            getCityData()
+        }
     }
 
     override fun getViewBinding(): FragmentTabTopBinding {
@@ -85,7 +127,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun onClear() {
-
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onNotifyDataChanged() {

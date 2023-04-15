@@ -83,7 +83,8 @@
         <activity
             android:name=".activity.HomeActivity"
             android:exported="true"
-            android:launchMode="singleTop" /> <!-- 适配华为（huawei）刘海屏 -->
+            android:launchMode="singleTop"
+            android:theme="@style/DefaultCityPickerTheme" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 适配小米（xiaomi）刘海屏 -->
