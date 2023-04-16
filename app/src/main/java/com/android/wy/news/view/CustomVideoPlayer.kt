@@ -143,6 +143,15 @@ class CustomVideoPlayer : JCVideoPlayerStandard {
         super.prepareVideo()
         //清除界面UI
         changeUiToPlayingClear()
+        setAllControlsVisible(
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.VISIBLE,
+            View.GONE,
+            View.GONE
+        )
     }
 
     override fun addTextureView() {

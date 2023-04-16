@@ -30,7 +30,7 @@ class App : Application() {
         super.onCreate()
         AMapLocationClient.setApiKey(Constants.LOCATION_KEY);
         if (BuildConfig.isShowLog) {
-            CrashHandler.mInstance.init(this)
+            //CrashHandler.mInstance.init(this)
             Logger.setDebug(true)
         }
         initSkin()

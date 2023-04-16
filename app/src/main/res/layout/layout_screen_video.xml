@@ -29,8 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:paddingBottom="20dp">
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_user"
@@ -143,11 +142,11 @@
                 android:layout_marginTop="6dp"
                 android:background="@null"
                 android:max="100"
-                android:maxHeight="4dp"
-                android:minHeight="4dp"
+                android:maxHeight="1.5dp"
+                android:minHeight="1.5dp"
                 android:progressDrawable="@drawable/bg_seek_progress"
                 android:splitTrack="false"
-                android:thumb="@drawable/bg_seek_thumb" />
+                android:thumb="@null" />
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

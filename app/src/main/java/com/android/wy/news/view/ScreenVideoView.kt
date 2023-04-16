@@ -2,6 +2,7 @@ package com.android.wy.news.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -11,11 +12,11 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PAUSE
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING
@@ -151,7 +152,21 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
     private fun checkPlayState() {
         if (videoPlayer.currentState == CURRENT_STATE_PLAYING) {
             ivPlay.visibility = View.GONE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                sbVideo.maxHeight = 4
+                sbVideo.minHeight = 4
+            } else {
+                sbVideo.minimumHeight = 4
+            }
+            sbVideo.thumb = null
         } else if (videoPlayer.currentState == CURRENT_STATE_PAUSE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                sbVideo.maxHeight = 8
+                sbVideo.minHeight = 8
+            } else {
+                sbVideo.minimumHeight = 8
+            }
+            sbVideo.thumb = AppCompatResources.getDrawable(context, R.drawable.bg_seek_thumb)
             ivPlay.visibility = View.VISIBLE
         }
     }
