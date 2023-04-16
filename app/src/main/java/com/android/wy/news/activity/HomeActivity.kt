@@ -69,7 +69,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     override fun initBarItems() {
         barItems.add(GYBarItem("头条", R.mipmap.top))
-        barItems.add(GYBarItem("频道", R.mipmap.classify))
+        barItems.add(GYBarItem("精选", R.mipmap.classify))
         barItems.add(GYBarItem("视频", R.mipmap.video))
         barItems.add(GYBarItem("直播", R.mipmap.live))
     }
