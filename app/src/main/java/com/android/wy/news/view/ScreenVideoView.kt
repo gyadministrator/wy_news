@@ -9,16 +9,19 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PAUSE
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING
 
-class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnVideoListener {
+class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnVideoListener,
+    SeekBar.OnSeekBarChangeListener {
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
@@ -29,6 +32,7 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
     private lateinit var tvUserSource: TextView
     private lateinit var ivPlay: ImageView
     private lateinit var rlContent: RelativeLayout
+    private lateinit var sbVideo: SeekBar
     private var screenVideoListener: OnScreenVideoListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -48,13 +52,7 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
 
     private fun initUiState() {
         videoPlayer.setAllControlsVisible(
-            View.GONE,
-            View.GONE,
-            View.GONE,
-            View.GONE,
-            View.GONE,
-            View.GONE,
-            View.GONE
+            View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.GONE
         )
         checkPlayState()
     }
@@ -70,6 +68,8 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
         tvUserSource = binding.tvUserSource
         ivPlay = binding.ivPlay
         rlContent = binding.rlContent
+        sbVideo = binding.sbVideo
+        sbVideo.setOnSeekBarChangeListener(this)
         rlContent.setOnClickListener(this)
         videoPlayer.addVideoListener(this)
     }
@@ -124,7 +124,7 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
 
     fun setUp(url: String, videoCover: String, isShowCover: Boolean): ScreenVideoView {
         val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
-        val setUp = videoPlayer.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_LIST, "")
+        val setUp = videoPlayer.setUp(proxyUrl, JCVideoPlayer.SCREEN_LAYOUT_NORMAL, "")
         if (setUp && isShowCover) {
             val thumbImageView = videoPlayer.thumbImageView
             thumbImageView.scaleType = ImageView.ScaleType.CENTER_CROP
@@ -158,5 +158,26 @@ class ScreenVideoView : FrameLayout, View.OnClickListener, CustomVideoPlayer.OnV
 
     override fun onVideoFinish() {
         screenVideoListener?.onVideoFinish()
+    }
+
+    override fun onProgress(progress: Int) {
+        sbVideo.progress = progress
+    }
+
+    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+    }
+
+    override fun onStartTrackingTouch(p0: SeekBar?) {
+
+    }
+
+    override fun onStopTrackingTouch(p0: SeekBar?) {
+        if (p0 != null) {
+            val progress = p0.progress
+            //JCMediaManager.instance().mediaPlayer.seekTo(i.toLong())
+            //val duration: Int = videoPlayer.duration
+            //val progress: Int = i * 100 / if (duration == 0) 1 else duration
+            sbVideo.progress = progress
+        }
     }
 }

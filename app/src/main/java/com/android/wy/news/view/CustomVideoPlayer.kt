@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
@@ -33,10 +34,30 @@ class CustomVideoPlayer : JCVideoPlayerStandard {
 
     override fun onCompletion() {
         super.onCompletion()
+        setAllControlsVisible(
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.VISIBLE,
+            View.GONE,
+            View.GONE
+        )
     }
 
     override fun onAutoCompletion() {
         super.onAutoCompletion()
+        //清除界面UI
+        changeUiToPlayingClear()
+        setAllControlsVisible(
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.GONE,
+            View.VISIBLE,
+            View.GONE,
+            View.GONE
+        )
         onVideoListener?.onVideoFinish()
     }
 
@@ -113,10 +134,7 @@ class CustomVideoPlayer : JCVideoPlayerStandard {
     }
 
     override fun setUp(
-        url: String?,
-        screen: Int,
-        mapHeadData: MutableMap<String, String>?,
-        vararg objects: Any?
+        url: String?, screen: Int, mapHeadData: MutableMap<String, String>?, vararg objects: Any?
     ): Boolean {
         return super.setUp(url, screen, mapHeadData, *objects)
     }
@@ -160,7 +178,11 @@ class CustomVideoPlayer : JCVideoPlayerStandard {
     }
 
     override fun setTextAndProgress(secProgress: Int) {
-        super.setTextAndProgress(secProgress)
+        //super.setTextAndProgress(secProgress)
+        val position = currentPositionWhenPlaying
+        val duration = duration
+        val progress = position * 100 / if (duration == 0) 1 else duration
+        onVideoListener?.onProgress(progress = progress)
     }
 
     override fun release() {
@@ -200,5 +222,6 @@ class CustomVideoPlayer : JCVideoPlayerStandard {
 
     interface OnVideoListener {
         fun onVideoFinish()
+        fun onProgress(progress: Int)
     }
 }

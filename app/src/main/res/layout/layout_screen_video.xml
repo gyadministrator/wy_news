@@ -135,6 +135,19 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="今日说法今日说法今日说法今日说法今日说法今日说法今日说法今日说法" />
+
+            <SeekBar
+                android:id="@+id/sb_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@null"
+                android:max="100"
+                android:maxHeight="4dp"
+                android:minHeight="4dp"
+                android:progressDrawable="@drawable/bg_seek_progress"
+                android:splitTrack="false"
+                android:thumb="@drawable/bg_seek_thumb" />
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>
