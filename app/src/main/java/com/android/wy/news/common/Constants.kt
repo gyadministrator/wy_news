@@ -42,6 +42,7 @@ class Constants {
         const val LOCATION_KEY = "7f0d79866211bd1622b599d4ffae5a73"
         const val privacyUrl = "file:///android_asset/privacy_policy.html"
         const val userUrl = "file:///android_asset/user_agreement.html"
+        const val NOTICE_STATUS = "notice_status"
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
     }

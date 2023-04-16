@@ -19,6 +19,7 @@ import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.databinding.LayoutTopCityItemBinding
 import com.android.wy.news.entity.HotNewsEntity
@@ -174,7 +175,9 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             loadingView.visibility = View.GONE
             addBannerHeader(it)
             ThreadExecutorManager.mInstance.startExecute {
-                if (!isNotify) {
+                var noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
+                if (noticeStatus == null) noticeStatus = false
+                if (!isNotify && !noticeStatus) {
                     sendNotify(it)
                     isNotify = true
                 }

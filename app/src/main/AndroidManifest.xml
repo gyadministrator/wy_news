@@ -76,14 +76,14 @@
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.LaunchActivity"
             android:exported="true" />
         <activity
             android:name=".activity.HomeActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/DefaultCityPickerTheme" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.max_aspect"
@@ -107,7 +107,8 @@
         </activity>
         <activity
             android:name=".activity.WebActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity
             android:name=".compose.ThirdInfoActivity"
             android:exported="false" />

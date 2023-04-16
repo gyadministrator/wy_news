@@ -11,6 +11,7 @@ import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.MapsInitializer
@@ -24,7 +25,9 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.CityInfo
+import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
 import com.android.wy.news.fragment.TopTabFragment
@@ -47,6 +50,8 @@ import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.system.exitProcess
@@ -62,10 +67,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private lateinit var rlSearch: RelativeLayout
     private val list = ArrayList<String>()
 
-    companion object {
-        var mInstance: WeakReference<HomeActivity>? = null
-    }
-
     override fun initBarItems() {
         barItems.add(GYBarItem("头条", R.mipmap.top))
         barItems.add(GYBarItem("频道", R.mipmap.classify))
@@ -76,7 +77,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun onDestroy() {
         super.onDestroy()
         marqueeTextView.stopScroll()
-        mInstance = null
+        EventBus.getDefault().unregister(this)
+        SpTools.putBoolean(Constants.NOTICE_STATUS, false)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -151,7 +153,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
-        mInstance = WeakReference(this)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
         UiModeManager.onUiModeChange(this)
         //竖屏
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -181,6 +185,21 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         Handler(Looper.getMainLooper()).postDelayed({
             checkNotification()
         }, 1000)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onEvent(o: Any) {
+        if (o is NoticeEvent) {
+            val url = o.url
+            val noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
+            if (noticeStatus == true) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    WebActivity.startActivity(this, url = url)
+                }, 500)
+            } else {
+                WebActivity.startActivity(this, url = url)
+            }
+        }
     }
 
     fun updateCity(city: String) {
@@ -222,8 +241,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                     MapsInitializer.updatePrivacyShow(this@HomeActivity, true, true)
                     MapsInitializer.updatePrivacyAgree(this@HomeActivity, true)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        LocationHelper.startLocation(
-                            this@HomeActivity,
+                        LocationHelper.startLocation(this@HomeActivity,
                             object : LocationHelper.OnLocationListener {
                                 override fun success(aMapLocation: AMapLocation) {
                                     //定位完成之后更新数据
@@ -254,7 +272,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private fun checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //判断是否需要开启通知栏功能
-            NotificationUtil.openNotificationSetting(this,
+            NotificationUtil.openNotificationSetting(
+                this,
                 object : NotificationUtil.Companion.OnNextListener {
                     override fun onNext() {
                         //Toast.makeText(this@HomeActivity, "已开启通知权限", Toast.LENGTH_SHORT).show()
@@ -377,7 +396,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         } else {
             LocationHelper.destroyLocation()
             finish()
-            exitProcess(0)
+            //exitProcess(0)
         }
         //super.onBackPressed()
     }

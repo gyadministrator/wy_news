@@ -3,8 +3,12 @@ package com.android.wy.news.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.activity.WebActivity
+import com.android.wy.news.common.AppUtil
+import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
+import com.android.wy.news.event.NoticeEvent
+import org.greenrobot.eventbus.EventBus
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -25,12 +29,17 @@ class NotificationReceiver : BroadcastReceiver() {
                 if (p1.hasExtra(WebActivity.WEB_URL)) {
                     url = p1.getStringExtra(WebActivity.WEB_URL).toString()
                 }
-                val mInstance = HomeActivity.mInstance
-                if (mInstance == null) {
-                    //启动启动页
-                } else {
-                    //启动Web页面
-                    WebActivity.startActivityForTask(p0, url = url)
+                EventBus.getDefault().postSticky(NoticeEvent(url))
+                val packageName = p0.packageName
+                val uid: Int = AppUtil.getPackageUid(p0, packageName)
+                if (uid > 0) {
+                    val rstA = AppUtil.isAppRunning(p0, packageName)
+                    val rstB = AppUtil.isProcessRunning(p0, uid)
+                    if (!(rstA || rstB)) {
+                        //指定包名的程序未在运行中
+                        SpTools.putBoolean(Constants.NOTICE_STATUS, true)
+                        AppUtil.startApp(p0)
+                    }
                 }
             }
         }

@@ -18,6 +18,7 @@ import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.entity.House
+import com.android.wy.news.receiver.NotificationReceiver
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -185,7 +186,7 @@ class NotificationHelper {
             //如果使用了 intent 传值，则可能出现 intent 的值无法更新的问题。
             //也就是说每次 intent 接收到的值都是第一次接到的值。因为 intent 没有被更新。
             //注意： 接收方 Activity，加上一个函数，调用方法 setIntent
-            val intent = Intent(context, SplashActivity::class.java)
+            /*val intent = Intent(context, SplashActivity::class.java)
             val url = Constants.WEB_URL + house.docid + ".html"
             intent.putExtra(WebActivity.WEB_URL, url)
             //其中FLAG_UPDATE_CURRENT是最常用的 描述的Intent有更新的时候需要用到这个flag去更新你的描述，
@@ -198,19 +199,19 @@ class NotificationHelper {
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            /*intent = Intent(NotificationReceiver.ACTION)
+            )*/
+            val intent = Intent(NotificationReceiver.ACTION)
             //Android8.0新的更改，导致api26以上PendingIntent不能正常发送广播
             //为其指明广播接收器，已成为发送显式广播
-            intent?.setClass(context, NotificationReceiver::class.java)
+            intent.setClass(context, NotificationReceiver::class.java)
             val url = Constants.WEB_URL + house.docid + ".html"
-            intent?.putExtra(WebActivity.WEB_URL, url)
+            intent.putExtra(WebActivity.WEB_URL, url)
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
-                0,
+                getNotifyId(),
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )*/
+            )
             sendNewsNotification(
                 context, pendingIntent = pendingIntent, house
             )

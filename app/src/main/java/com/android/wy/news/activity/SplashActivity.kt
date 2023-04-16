@@ -17,7 +17,6 @@ import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.viewmodel.SplashViewModel
-import java.lang.ref.WeakReference
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
@@ -30,10 +29,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     private var delayTime = 500L
     private var handlerNum = 3
     private var url: String = ""
-
-    companion object {
-        var mInstance: WeakReference<SplashActivity>? = null
-    }
 
     override fun initView() {
         ivAd = mBinding.ivAd
@@ -51,14 +46,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
      }*/
 
     override fun initData() {
-        mInstance = WeakReference(this)
-        if (intent.hasExtra(WebActivity.WEB_URL)) {
-            url = intent.getStringExtra(WebActivity.WEB_URL).toString()
-            if (!TextUtils.isEmpty(url) && HomeActivity.mInstance != null) {
-                WebActivity.startActivity(this, url = url)
-                return
-            }
-        }
         PermissionHelper.initPermission(this)
         val i = SpTools.getInt(Constants.PRIVACY_STATUS)
         if (i == Constants.PRIVACY_STATUS_AGREE) {
@@ -157,7 +144,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     override fun onDestroy() {
         super.onDestroy()
         stopCountDownHandler()
-        mInstance = null
     }
 
     override fun setDefaultImmersionBar(): Boolean {

@@ -32,28 +32,18 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             intent.putExtra(WEB_URL, url)
             context.startActivity(intent)
         }
-
-        fun startActivityForTask(context: Context, url: String) {
-            val intent = Intent(context, WebActivity::class.java)
-            intent.putExtra(WEB_URL, url)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(intent)
-        }
-    }
-
-    override fun finish() {
-        super.finish()
-        val mInstance = SplashActivity.mInstance
-        if (mInstance != null) {
-            val splashActivity = mInstance.get()
-            splashActivity?.finish()
-        }
     }
 
     override fun initView() {
         llContent = mBinding.llContent
         titleBar = mBinding.titleBar
         loadingView = mBinding.loadingView
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        initData()
     }
 
     override fun initData() {
@@ -66,6 +56,8 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
             AgentWeb.with(this).setAgentWebParent(llContent, LinearLayout.LayoutParams(-1, -1))
                 .closeIndicator().createAgentWeb().ready().go(url)
         val webCreator = agentWeb.webCreator
+        webCreator.webView.isVerticalScrollBarEnabled = false
+        webCreator.webView.isHorizontalScrollBarEnabled = false
         webCreator.webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
                 super.onReceivedTitle(view, title)
