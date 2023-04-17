@@ -5,16 +5,18 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import android.widget.TextView
+import cn.jzvd.Jzvd
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
 
-class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener {
+class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnClickListener {
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
@@ -23,7 +25,8 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener {
     private lateinit var ivUser: ImageView
     private lateinit var tvUser: TextView
     private lateinit var tvUserSource: TextView
-    private lateinit var rlContent: RelativeLayout
+    private lateinit var llContent: LinearLayout
+    private lateinit var ivPlay: ImageView
     private var screenVideoListener: OnScreenVideoListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -49,7 +52,9 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener {
         ivUser = binding.ivUser
         tvUser = binding.tvUser
         tvUserSource = binding.tvUserSource
-        rlContent = binding.rlContent
+        llContent = binding.llContent
+        ivPlay = binding.ivPlay
+        llContent.setOnClickListener(this)
         videoPlayer.addVideoListener(this)
     }
 
@@ -122,5 +127,21 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener {
 
     override fun onVideoFinish() {
         screenVideoListener?.onVideoFinish()
+    }
+
+    override fun onPlayState() {
+        val state = videoPlayer.state
+        if (state == Jzvd.STATE_PLAYING) {
+            ivPlay.visibility = GONE
+        } else if (state == Jzvd.STATE_PAUSE) {
+            ivPlay.visibility = VISIBLE
+        }
+    }
+
+    override fun onClick(p0: View?) {
+        videoPlayer.startButton.performClick()
+        //清除界面UI
+        //videoPlayer.changeUiToPlayingClear()
+        onPlayState()
     }
 }

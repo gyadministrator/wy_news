@@ -1,7 +1,9 @@
 package com.android.wy.news.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import cn.jzvd.JzvdStd
@@ -25,8 +27,8 @@ class CustomVideoPlayer : JzvdStd {
         //super.updateStartImage()
         when (state) {
             STATE_PLAYING -> {
-                startButton.visibility = VISIBLE
-                startButton.setImageResource(R.drawable.jz_click_pause_selector)
+                //startButton.visibility = VISIBLE
+                //startButton.setImageResource(R.drawable.jz_click_pause_selector)
                 replayTextView.visibility = GONE
             }
 
@@ -42,10 +44,32 @@ class CustomVideoPlayer : JzvdStd {
             }
 
             else -> {
-                startButton.setImageResource(R.drawable.jz_click_play_selector)
+                //startButton.setImageResource(R.drawable.jz_click_play_selector)
+                //startButton.visibility = VISIBLE
                 replayTextView.visibility = GONE
             }
         }
+    }
+
+    override fun setAllControlsVisiblity(
+        topCon: Int,
+        bottomCon: Int,
+        startBtn: Int,
+        loadingPro: Int,
+        posterImg: Int,
+        bottomPro: Int,
+        retryLayout: Int
+    ) {
+        super.setAllControlsVisiblity(
+            topCon,
+            bottomCon,
+            startBtn,
+            loadingPro,
+            posterImg,
+            bottomPro,
+            retryLayout
+        )
+        startButton.visibility = GONE
     }
 
     fun play() {
@@ -71,17 +95,22 @@ class CustomVideoPlayer : JzvdStd {
         }
     }
 
-    override fun touchActionUp() {
-        super.touchActionUp()
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return true
     }
 
-    override fun touchActionDown(x: Float, y: Float) {
-        super.touchActionDown(x, y)
-
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        val id = v!!.id
+        if (id == R.id.surface_container) {
+            onVideoListener?.onPlayState()
+        }
+        return true
     }
 
     interface OnVideoListener {
         fun onVideoFinish()
+        fun onPlayState()
     }
 
     override fun getLayoutId(): Int {
