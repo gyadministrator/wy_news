@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
   * @Version:        1.0
   * @Description:    
  */
-class NewsRecyclerView : RecyclerView {
+class CustomRecyclerView : RecyclerView {
     private var mContext: Context?
 
     constructor(context: Context) : this(context, null)

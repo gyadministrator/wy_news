@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import cn.jzvd.Jzvd
 import com.android.wy.news.R
 import com.android.wy.news.common.IBaseCommon
 import com.android.wy.news.listener.IBackPressedListener
@@ -13,7 +14,6 @@ import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -82,13 +82,13 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     override fun onDestroy() {
         super.onDestroy()
-        JCVideoPlayer.releaseAllVideos()
+        Jzvd.releaseAllVideos()
         onClear()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (JCVideoPlayer.backPress()) {
+        if (Jzvd.backPress()) {
             return
         }
         if (!interceptBackPressed()) {
@@ -112,6 +112,6 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     override fun onPause() {
         super.onPause()
-        JCVideoPlayer.releaseAllVideos()
+        Jzvd.releaseAllVideos()
     }
 }

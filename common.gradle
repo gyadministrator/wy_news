@@ -51,7 +51,7 @@ ext {
             //轮播图
             'io.github.youth5201314:banner'                        : '2.2.2',
             //视频
-            'fm.jiecao:jiecaovideoplayer'                          : '4.8.3',
+            'cn.jzvd:jiaozivideoplayer'                            : '7.7.0',
             //圆角
             'com.makeramen:roundedimageview'                       : '2.2.1',
             //动画加载
@@ -110,7 +110,7 @@ ext {
             immersionbar                 : "com.geyifeng.immersionbar:immersionbar:${versions["com.geyifeng.immersionbar:immersionbar"]}",
             shimmerRecyclerView          : "com.github.sharish:ShimmerRecyclerView:${versions["com.github.sharish:ShimmerRecyclerView"]}",
             banner                       : "io.github.youth5201314:banner:${versions['io.github.youth5201314:banner']}",
-            jiecaovideoplayer            : "fm.jiecao:jiecaovideoplayer:${versions['fm.jiecao:jiecaovideoplayer']}",
+            jiaozivideoplayer            : "cn.jzvd:jiaozivideoplayer:${versions['cn.jzvd:jiaozivideoplayer']}",
             roundedimageview             : "com.makeramen:roundedimageview:${versions['com.makeramen:roundedimageview']}",
             videocache                   : "com.danikula:videocache:${versions['com.danikula:videocache']}",
             jsoup                        : "org.jsoup:jsoup:${versions['org.jsoup:jsoup']}",

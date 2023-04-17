@@ -44,7 +44,7 @@ class VideoAdapter(
                 .setUser(it.ename)
                 .setUserSource(data.videoTopic.alias)
                 .setUserCover(data.videoTopic.topic_icons)
-                .setUp(data.mp4_url, data.fullSizeImg, false)
+                .setUp(data.mp4_url, data.fullSizeImg, true)
                 .addOnScreenVideoListener(this)
         }
     }

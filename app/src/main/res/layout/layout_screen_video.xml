@@ -15,20 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/play"
-            android:visibility="gone"
-            app:tint="@color/tint_color"
-            tools:ignore="ContentDescription" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="3dp"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@color/white"
@@ -118,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="3dp"
+                    android:layout_marginEnd="20dp"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     tools:text="2023-03-21" />
@@ -134,20 +127,6 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="今日说法今日说法今日说法今日说法今日说法今日说法今日说法今日说法" />
-
-            <SeekBar
-                android:id="@+id/sb_video"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="10dp"
-                android:background="@null"
-                android:max="100"
-                android:maxHeight="1.5dp"
-                android:minHeight="1.5dp"
-                android:progressDrawable="@drawable/bg_seek_progress"
-                android:splitTrack="false"
-                android:thumb="@null" />
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

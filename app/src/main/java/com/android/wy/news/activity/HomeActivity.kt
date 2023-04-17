@@ -11,8 +11,8 @@ import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
-import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
+import cn.jzvd.Jzvd
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.MapsInitializer
 import com.android.bottombar.activity.GYBottomActivity
@@ -48,13 +48,10 @@ import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.ref.WeakReference
 import java.util.*
-import kotlin.system.exitProcess
 
 
 class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener {
@@ -386,7 +383,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (JCVideoPlayer.backPress()) {
+        if (Jzvd.backPress()) {
             return
         }
         val secondTime = System.currentTimeMillis()
@@ -403,7 +400,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     override fun onPause() {
         super.onPause()
-        JCVideoPlayer.releaseAllVideos()
+        Jzvd.releaseAllVideos()
     }
 
     private fun hideSearch() {

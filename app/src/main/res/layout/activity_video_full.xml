@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <com.android.wy.news.view.NewsRecyclerView
+        <com.android.wy.news.view.CustomRecyclerView
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

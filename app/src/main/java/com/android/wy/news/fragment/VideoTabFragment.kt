@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
+import cn.jzvd.Jzvd
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
@@ -21,7 +22,6 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
     OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener,
@@ -158,13 +158,13 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     override fun onPause() {
         super.onPause()
-        JCVideoPlayer.releaseAllVideos()
+        Jzvd.releaseAllVideos()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (hidden) {
-            JCVideoPlayer.releaseAllVideos()
+            Jzvd.releaseAllVideos()
         } else {
             playVideo(currentPosition)
         }
@@ -181,13 +181,13 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    JCVideoPlayer.backPress()
+                    Jzvd.backPress()
                 }
             })
     }
 
     override fun handleBackPressed(): Boolean {
-        JCVideoPlayer.backPress()
+        Jzvd.backPress()
         return true
     }
 
