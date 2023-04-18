@@ -11,6 +11,7 @@ import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import cn.jzvd.Jzvd
 import com.amap.api.location.AMapLocation
@@ -154,7 +155,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun initView() {
         val checkPermission = PermissionHelper.checkPermission(this, Permission.WRITE_SETTINGS)
         if (!checkPermission) {
-            PermissionHelper.requestPermission(this, Permission.WRITE_SETTINGS)
+            Handler(Looper.getMainLooper()).postDelayed({
+                PermissionHelper.requestPermission(this, Permission.WRITE_SETTINGS)
+            }, 500)
         }
 
         if (!EventBus.getDefault().isRegistered(this)) {
