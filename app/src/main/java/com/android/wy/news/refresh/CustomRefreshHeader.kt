@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.android.wy.news.R
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshKernel
@@ -19,6 +20,8 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
     private var mImage: ImageView? = null
     private var mAnimPull: AnimationDrawable? = null
     private var mAnimRefresh: AnimationDrawable? = null
+    private var textHeaderTipColor: Int? = null
+    private var tvTip: TextView? = null
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -27,6 +30,15 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
     ) {
         val view = inflate(context, R.layout.layout_custom_refresh_header, this)
         mImage = view.findViewById(R.id.iv_refresh_header)
+        tvTip = view.findViewById(R.id.tv_tip)
+
+        val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshHeader)
+        textHeaderTipColor = typedArray?.getColor(
+            R.styleable.CustomRefreshHeader_textHeaderTipColor,
+            resources.getColor(R.color.main_title)
+        )
+        textHeaderTipColor?.let { tvTip?.setTextColor(it) }
+        typedArray?.recycle()
     }
 
     /**
@@ -44,11 +56,13 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
                 mAnimPull = mImage?.drawable as AnimationDrawable
                 mAnimPull?.start()
             }
+
             RefreshState.Refreshing -> {
                 mImage?.setImageResource(R.drawable.anim_pull_refreshing)
                 mAnimRefresh = mImage?.drawable as AnimationDrawable
                 mAnimRefresh?.start()
             }
+
             else -> {}
         }
     }

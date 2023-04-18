@@ -12,8 +12,8 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/back"
             app:tint="@color/main_title"
@@ -24,13 +24,13 @@
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@id/rl_back"
         android:ellipsize="end"
         android:gravity="center"
+        android:maxLength="15"
         android:maxLines="1"
         android:paddingEnd="10dp"
         android:textColor="@color/main_title"
         android:textSize="16sp"
         tools:ignore="RtlSymmetry"
-        tools:text="44445" />
+        tools:text="4444544445444454444544445444454444544445" />
 </RelativeLayout>

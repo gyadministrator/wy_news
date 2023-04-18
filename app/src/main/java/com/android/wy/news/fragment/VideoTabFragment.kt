@@ -14,10 +14,9 @@ import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabVideoBinding
 import com.android.wy.news.entity.VideoEntity
-import com.android.wy.news.manager.VideoLayoutManager
 import com.android.wy.news.listener.OnViewPagerListener
+import com.android.wy.news.manager.VideoLayoutManager
 import com.android.wy.news.viewmodel.VideoTabViewModel
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
@@ -30,7 +29,6 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private var isRefresh = false
     private var isLoading = false
     private lateinit var videoAdapter: VideoAdapter
-    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var layoutManager: VideoLayoutManager
     private var currentPosition: Int = 0
@@ -40,8 +38,6 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     override fun initView() {
-        shimmerRecyclerView = mBinding.shimmerRecyclerView
-        shimmerRecyclerView.showShimmerAdapter()
         rvContent = mBinding.rvContent
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
@@ -94,7 +90,6 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
                     videoAdapter.loadMoreData(it)
                 }
             }
-            shimmerRecyclerView.hideShimmerAdapter()
             isRefresh = false
             isLoading = false
         }

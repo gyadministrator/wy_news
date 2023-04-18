@@ -18,8 +18,8 @@ class VideoCacheManager {
 
         fun getProxyUrl(context: Context, videoNetUrl: String?): String? {
             var proxyUrl: String? = videoNetUrl
-            val play = SpTools.getBoolean(Constants.PLAY_DOWNLOAD)
-            if (play != null && play == true) {
+            val isCacheVideo = SpTools.getBoolean(Constants.CACHE_VIDEO)
+            if (isCacheVideo != null && isCacheVideo == true) {
                 getProxy(context)
                 if (!TextUtils.isEmpty(videoNetUrl)) {
                     proxyUrl = proxy?.getProxyUrl(videoNetUrl)

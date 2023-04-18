@@ -16,7 +16,7 @@
     <string name="manual_choose">手动选择</string>
     <string name="check_update">检查更新</string>
     <string name="setting">设置</string>
-    <string name="play_and_download">边下边播</string>
+    <string name="play_and_download">缓存视频</string>
     <string name="clean_cache">清除缓存</string>
     <string name="about_software">关于软件</string>
     <string name="album">态度封面</string>
@@ -27,4 +27,9 @@
     <string name="privacy_policy">隐私政策</string>
     <string name="user_policy">用户协议</string>
     <string name="location_now">定位中...</string>
+    <string name="no_wifi_play">非WiFi环境播放视频</string>
+    <string name="copyright_2023_news_all_rights_reserved">copyright 2023 News All Rights Reserved</string>
+    <string name="function_introduce">功能介绍</string>
+    <string name="complaint_or_reply">投诉与建议</string>
+    <string name="open_source_more">更多开源库</string>
 </resources>

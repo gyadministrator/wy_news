@@ -17,10 +17,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_margin="10dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_item"
-        android:gravity="center_vertical">
+        android:background="@color/bg_item_color"
+        android:gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
 
         <TextView
             android:id="@+id/tv_follow"
@@ -66,7 +67,6 @@
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -82,10 +82,12 @@
         <RelativeLayout
             android:id="@+id/rl_light"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:layout_marginTop="6dp"
-            android:background="@drawable/bg_item"
-            android:gravity="center_vertical">
+            android:background="@color/bg_item_color"
+            android:gravity="center_vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,8 +100,8 @@
 
             <ImageView
                 android:id="@+id/iv_light"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="20dp"
@@ -110,13 +112,16 @@
 
         </RelativeLayout>
 
+        <View style="@style/dividerItemStyle" />
+
         <RelativeLayout
             android:id="@+id/rl_dark"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/bg_item"
-            android:gravity="center_vertical">
+            android:layout_height="55dp"
+            android:background="@color/bg_item_color"
+            android:gravity="center_vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -129,8 +134,8 @@
 
             <ImageView
                 android:id="@+id/iv_dark"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="20dp"

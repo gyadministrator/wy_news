@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.cache.DataCleanManager
 import com.android.wy.news.common.*
-import com.android.wy.news.compose.ThirdInfoActivity
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.dialog.UpdateDialogFragment
@@ -27,7 +26,6 @@ import java.net.URL
 
 class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>() {
     private lateinit var tvVersion: TextView
-    private lateinit var tvVersionInfo: TextView
     private lateinit var tvCache: TextView
     private lateinit var tvSkin: TextView
     private lateinit var rlCache: RelativeLayout
@@ -38,7 +36,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlPermission: RelativeLayout
     private lateinit var rlUpdate: RelativeLayout
     private lateinit var rlHelp: RelativeLayout
+    private lateinit var rlAbout: RelativeLayout
     private lateinit var scPlay: SwitchCompat
+    private lateinit var scWifi: SwitchCompat
 
     companion object {
         fun startSettingActivity(context: Context) {
@@ -65,7 +65,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
     override fun initView() {
         tvVersion = mBinding.tvVersion
-        tvVersionInfo = mBinding.tvVersionInfo
         tvCache = mBinding.tvCache
         tvSkin = mBinding.tvSkin
         rlCache = mBinding.rlCache
@@ -77,6 +76,8 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         rlPermission = mBinding.rlPermission
         rlUpdate = mBinding.rlUpdate
         rlHelp = mBinding.rlHelp
+        scWifi = mBinding.scWifi
+        rlAbout = mBinding.rlAbout
     }
 
     override fun onRestart() {
@@ -91,11 +92,17 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     private fun getSkinState() {
-        val play = SpTools.getBoolean(Constants.PLAY_DOWNLOAD)
-        val skin = SpTools.getInt(SkinType.SKIN_TYPE)
-        if (play != null) {
-            scPlay.isChecked = play
+        val isCacheVideo = SpTools.getBoolean(Constants.CACHE_VIDEO)
+        if (isCacheVideo != null) {
+            scPlay.isChecked = isCacheVideo
         }
+
+        val isNoWifiPlay = SpTools.getBoolean(Constants.NO_WIFI_PLAY)
+        if (isNoWifiPlay != null) {
+            scWifi.isChecked = isNoWifiPlay
+        }
+
+        val skin = SpTools.getInt(SkinType.SKIN_TYPE)
         if (skin != null) {
             if (skin == SkinType.SKIN_TYPE_DARK) {
                 tvSkin.text = "已打开"
@@ -115,12 +122,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     @SuppressLint("SetTextI18n")
     private fun getVersion() {
         val versionName = CommonTools.getVersionName(this)
-        val versionCode = CommonTools.getVersionCode(this)
         tvVersion.text = "V$versionName"
-        tvVersionInfo.text = "Build $versionCode" + "_V$versionName"
     }
 
     override fun initEvent() {
+        rlAbout.setOnClickListener {
+            AboutActivity.startAboutActivity(this)
+        }
         rlHelp.setOnClickListener {
 
         }
@@ -128,10 +136,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             showUpdateDialog()
         }
         rlPermission.setOnClickListener {
-
+            PermissionActivity.startPermissionActivity(this)
         }
         rlThird.setOnClickListener {
-            ThirdInfoActivity.startThirdLibActivity(this)
+            ThirdActivity.startThirdActivity(this)
         }
         rlSkin.setOnClickListener {
             SkinActivity.startSkinActivity(this)
@@ -164,7 +172,17 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
                     if (!p0.isPressed) {
                         return
                     }
-                    SpTools.putBoolean(Constants.PLAY_DOWNLOAD, p1)
+                    SpTools.putBoolean(Constants.CACHE_VIDEO, p1)
+                }
+            }
+        })
+        scWifi.setOnCheckedChangeListener(object : OnCheckedChangeListener {
+            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+                if (p0 != null) {
+                    if (!p0.isPressed) {
+                        return
+                    }
+                    SpTools.putBoolean(Constants.NO_WIFI_PLAY, p1)
                 }
             }
         })

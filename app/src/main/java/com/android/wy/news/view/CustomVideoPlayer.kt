@@ -6,8 +6,12 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import cn.jzvd.JzvdStd
 import cn.jzvd.R
+import com.android.wy.news.common.Constants
+import com.android.wy.news.common.SpTools
+import com.android.wy.news.dialog.ConfirmDialogFragment
 
 class CustomVideoPlayer : JzvdStd {
     private var onVideoListener: OnVideoListener? = null
@@ -87,11 +91,43 @@ class CustomVideoPlayer : JzvdStd {
 
     override fun showWifiDialog() {
         //super.showWifiDialog()
-        Toast.makeText(context, "当前不是WiFi环境下,请注意流量使用", Toast.LENGTH_SHORT).show()
-        if (state == STATE_PAUSE) {
-            startButton.performClick()
+        val isNoWifiPlay = SpTools.getBoolean(Constants.NO_WIFI_PLAY)
+        if (isNoWifiPlay != null && isNoWifiPlay == true) {
+            Toast.makeText(context, "当前不是WiFi环境下,请注意流量使用", Toast.LENGTH_SHORT).show()
+            if (state == STATE_PAUSE) {
+                startButton.performClick()
+            } else {
+                play()
+            }
         } else {
-            play()
+            //弹框提醒
+            val dialogFragment = ConfirmDialogFragment.newInstance(
+                "温馨提示",
+                "当前不是WiFi环境下,已为你暂停播放视频,你是否需要继续播放视频？",
+                "确定",
+                "取消"
+            )
+            val activity = context as AppCompatActivity
+            dialogFragment.show(activity.supportFragmentManager, "wy_no_wifi")
+            dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
+                override fun onClickSure() {
+                    SpTools.putBoolean(Constants.NO_WIFI_PLAY, true)
+                    Toast.makeText(
+                        context,
+                        "当前不是WiFi环境下,请注意流量使用",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    if (state == STATE_PAUSE) {
+                        startButton.performClick()
+                    } else {
+                        play()
+                    }
+                }
+
+                override fun onClickCancel() {
+
+                }
+            })
         }
     }
 

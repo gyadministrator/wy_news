@@ -1,0 +1,57 @@
+[
+  {
+    "title": "发送通知权限(Android 13 or higher 需要添加)",
+    "name": "android.permission.POST_NOTIFICATIONS",
+    "desc": "用于新闻头条推送通知"
+  },
+  {
+    "title": "安装应用权限",
+    "name": "android.permission.REQUEST_INSTALL_PACKAGES",
+    "desc": "用于APP下载更新安装APP"
+  },
+  {
+    "title": "读取图片权限",
+    "name": "android.permission.READ_MEDIA_IMAGES",
+    "desc": "用于访问媒体图片"
+  },
+  {
+    "title": "读取音频权限",
+    "name": "android.permission.READ_MEDIA_VIDEO",
+    "desc": "用于访问媒体音频"
+  },
+  {
+    "title": "前台服务权限",
+    "name": "android.permission.FOREGROUND_SERVICE",
+    "desc": "用于显示前台通知"
+  },
+  {
+    "title": "获取精确位置权限",
+    "name": "android.permission.ACCESS_FINE_LOCATION",
+    "desc": "用于高德定位，获取用户所在位置"
+  },
+  {
+    "title": "获取粗略位置",
+    "name": "android.permission.ACCESS_COARSE_LOCATION",
+    "desc": "用于高德定位，获取用户所在位置"
+  },
+  {
+    "title": "网络访问权限",
+    "name": "android.permission.INTERNET",
+    "desc": "用于访问新闻数据"
+  },
+  {
+    "title": "访问网络状态的权限",
+    "name": "android.permission.ACCESS_NETWORK_STATE",
+    "desc": "用于网络状态的检测"
+  },
+  {
+    "title": "访问wifi状态的权限",
+    "name": "android.permission.ACCESS_WIFI_STATE",
+    "desc": "用于WiFi状态的检测"
+  },
+  {
+    "title": "修改wifi状态的权限",
+    "name": "android.permission.CHANGE_NETWORK_STATE",
+    "desc": "用于WiFi状态的修改"
+  }
+]

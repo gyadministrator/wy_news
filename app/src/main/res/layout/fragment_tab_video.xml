@@ -4,38 +4,24 @@
     android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg_color"
+    android:background="@color/black"
     app:srlEnablePreviewInEditMode="true"
-    app:srlPrimaryColor="@color/main_bg_color">
+    app:srlPrimaryColor="@color/black">
     <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
     <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
     <com.android.wy.news.refresh.CustomRefreshHeader
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    A
+        android:layout_height="wrap_content"
+        app:textHeaderTipColor="@color/white" />
 
-    <FrameLayout
+    <com.android.wy.news.view.CustomRecyclerView
+        android:id="@+id/rv_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.android.wy.news.view.CustomRecyclerView
-            android:id="@+id/rv_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
-            android:id="@+id/shimmer_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:shimmer_demo_child_count="10"
-            app:shimmer_demo_grid_child_count="2"
-            app:shimmer_demo_layout="@layout/layout_video_shimmer_item"
-            app:shimmer_demo_layout_manager_type="linear_vertical" />
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
     <com.android.wy.news.refresh.CustomRefreshFooter
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srlPrimaryColor="@color/main_bg_color" />
+        app:srlPrimaryColor="@color/black"
+        app:textFooterTipColor="@color/white" />
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

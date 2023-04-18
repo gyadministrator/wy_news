@@ -35,7 +35,8 @@ class Constants {
         const val SEARCH_URL = "https://gw.m.163.com"
         const val SPLASH_URL = "http://www.bing.com"
         const val SPLASH_AD = "splash_ad"
-        const val PLAY_DOWNLOAD = "play_download"
+        const val CACHE_VIDEO = "cache_video"
+        const val NO_WIFI_PLAY = "no_wifi_play"
         const val PRIVACY_STATUS = "privacy_status"
         const val PRIVACY_STATUS_AGREE = 1
         const val PRIVACY_STATUS_CANCEL = 2

@@ -22,51 +22,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_top"
-                android:orientation="vertical"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/icon"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/app_name"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_version_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textColor="@color/second_title"
-                    android:textSize="14sp"
-                    tools:text="V1.0.1" />
-            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_about"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,21 +43,24 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_privacy"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -104,21 +72,24 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_user"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -130,8 +101,37 @@
                     android:textSize="16sp" />
 
                 <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
+                android:id="@+id/rl_author"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/open_source_more"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
@@ -140,10 +140,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -174,13 +176,55 @@
                     tools:ignore="HardcodedText" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/no_wifi_play"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_wifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:textOff="off"
+                    android:textOn="on"
+                    android:thumb="@drawable/switch_common_thumb"
+                    app:showText="true"
+                    app:splitTrack="false"
+                    app:switchMinWidth="60dp"
+                    app:switchPadding="6dp"
+                    app:switchTextAppearance="@style/switchText"
+                    app:track="@drawable/switch_common_track"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_skin"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -205,21 +249,24 @@
 
                 <ImageView
                     android:id="@+id/iv_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_cache"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -244,39 +291,17 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_third"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/third_data_list"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
-            </RelativeLayout>
+            <View style="@style/dividerItemStyle" />
 
             <RelativeLayout
                 android:id="@+id/rl_help"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -288,21 +313,53 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
+                android:id="@+id/rl_third"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/third_data_list"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/arrow"
+                    app:tint="@color/main_title" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_permission"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -314,22 +371,25 @@
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
 
+            <View style="@style/dividerItemStyle" />
+
             <RelativeLayout
                 android:id="@+id/rl_update"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="40dp"
-                android:background="@drawable/bg_item"
-                android:gravity="center_vertical">
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:layout_width="wrap_content"

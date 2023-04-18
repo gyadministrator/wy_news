@@ -18,7 +18,9 @@ import com.wang.avi.AVLoadingIndicatorView
 class CustomRefreshFooter : LinearLayout, RefreshFooter {
     private var mImage: AVLoadingIndicatorView? = null
     private var tvTip: TextView? = null
+    private var tvFooterTip: TextView? = null
     private var llLoading: LinearLayout? = null
+    private var textFooterTipColor: Int? = null
 
 
     constructor(context: Context?) : this(context, null)
@@ -30,6 +32,16 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
         mImage = view.findViewById(R.id.iv_refresh_footer)
         tvTip = view.findViewById(R.id.tv_tip)
         llLoading = view.findViewById(R.id.ll_loading)
+        tvFooterTip = view.findViewById(R.id.tv_footer_tip)
+
+        val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshFooter)
+        textFooterTipColor = typedArray?.getColor(
+            R.styleable.CustomRefreshFooter_textFooterTipColor,
+            resources.getColor(R.color.main_title)
+        )
+        textFooterTipColor?.let { tvFooterTip?.setTextColor(it) }
+        textFooterTipColor?.let { mImage?.setIndicatorColor(it) }
+        typedArray?.recycle()
     }
 
     @SuppressLint("RestrictedApi")
