@@ -41,6 +41,7 @@ import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
+import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.service.NewsService
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
@@ -48,6 +49,7 @@ import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
+import com.hjq.permissions.Permission
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -150,6 +152,11 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
+        val checkPermission = PermissionHelper.checkPermission(this, Permission.WRITE_SETTINGS)
+        if (!checkPermission) {
+            PermissionHelper.requestPermission(this, Permission.WRITE_SETTINGS)
+        }
+
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }

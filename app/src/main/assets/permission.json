@@ -53,5 +53,25 @@
     "title": "修改wifi状态的权限",
     "name": "android.permission.CHANGE_NETWORK_STATE",
     "desc": "用于WiFi状态的修改"
+  },
+  {
+    "title": "读取电话的权限",
+    "name": "android.permission.READ_PHONE_STATE",
+    "desc": "允许获取设备和运营商信息，用于问题排查和网络定位（无gps情况下的定位）"
+  },
+  {
+    "title": "后台获取位置的权限",
+    "name": "android.permission.ACCESS_BACKGROUND_LOCATION",
+    "desc": "后台获取位置信息"
+  },
+  {
+    "title": "用于申请调用A-GPS模块,卫星定位加速的权限",
+    "name": "android.permission.ACCESS_LOCATION_EXTRA_COMMANDS",
+    "desc": "用于申请调用A-GPS模块,卫星定位加速"
+  },
+  {
+    "title": "写设备缓存的权限",
+    "name": "android.permission.WRITE_SETTINGS",
+    "desc": "允许写设备缓存，用于问题排查"
   }
 ]

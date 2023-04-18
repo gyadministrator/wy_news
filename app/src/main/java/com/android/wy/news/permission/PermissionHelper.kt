@@ -23,8 +23,21 @@ class PermissionHelper {
             /*Permission.READ_EXTERNAL_STORAGE,
             Permission.WRITE_EXTERNAL_STORAGE,*/
             Permission.ACCESS_FINE_LOCATION,
-            Permission.ACCESS_COARSE_LOCATION
+            Permission.ACCESS_COARSE_LOCATION,
+            Permission.READ_PHONE_STATE
         )
+
+        fun requestPermission(activity: Activity, permission: String) {
+            XXPermissions.with(activity)
+                .permission(permission)
+                .interceptor(object : IPermissionInterceptor {
+                })
+                .request { _, allGranted ->
+                    if (!allGranted) {
+                        Logger.i("获取部分权限成功，但部分权限未正常授予")
+                    }
+                }
+        }
 
         fun initPermission(activity: Activity) {
             XXPermissions.with(activity)
