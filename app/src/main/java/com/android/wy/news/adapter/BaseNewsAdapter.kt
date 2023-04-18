@@ -58,13 +58,14 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         notifyDataSetChanged()
     }
 
-    fun loadMoreData(dataList: ArrayList<V>) {
+    fun loadMoreData(dataList: ArrayList<V>): Int {
         if (dataList.size > 0) {
             currentPage++
         }
         val originSize = mDataList.size
         mDataList.addAll(dataList)
         notifyItemRangeInserted(originSize + 1, dataList.size)
+        return originSize
     }
 
     fun getView(parent: ViewGroup, resId: Int): View {

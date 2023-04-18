@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.ScreenVideoAdapter
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityVideoFullBinding
 import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
@@ -136,10 +139,19 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             }
             if (it.size == 0) {
                 if (isLoading) {
+                    Logger.e("当前[$currentPage]页无数据,为你加载下一页")
+                    Toast.makeText(
+                        this, "当前[$currentPage]页无数据,为你加载下一页", Toast.LENGTH_SHORT
+                    ).show()
                     getVideoData()
                 }
             } else {
-                screenVideoAdapter.loadMoreData(it)
+                val i = screenVideoAdapter.loadMoreData(it)
+                if (isLoading) {
+                    //加载完成，直接滑动到新加载的第一条数据
+                    rvContent.scrollToPosition(i + 1)
+                    playVideo(i + 1)
+                }
             }
             isLoading = false
         }
@@ -196,9 +208,11 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             //加载更多
             getVideoData()
         } else {
-            currentPosition += 1
-            layoutManager.scrollToPosition(currentPosition)
-            playVideo(currentPosition)
+            if (!isLoading) {
+                currentPosition += 1
+                layoutManager.scrollToPosition(currentPosition)
+                playVideo(currentPosition)
+            }
         }
     }
 }

@@ -87,7 +87,12 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
                 if (isRefresh) {
                     videoAdapter.refreshData(it)
                 } else {
-                    videoAdapter.loadMoreData(it)
+                    val i = videoAdapter.loadMoreData(it)
+                    if (isLoading) {
+                        //加载完成，直接滑动到新加载的第一条数据
+                        rvContent.scrollToPosition(i + 1)
+                        playVideo(i+1)
+                    }
                 }
             }
             isRefresh = false

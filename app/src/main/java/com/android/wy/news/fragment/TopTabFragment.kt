@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
+import com.amap.api.location.AMapLocationClient
 import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
@@ -83,6 +84,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     private fun initLocation() {
+        //防止深色模式切换后，activity重启没有设置Key
+        AMapLocationClient.setApiKey(Constants.LOCATION_KEY)
         MapsInitializer.updatePrivacyShow(mActivity, true, true)
         MapsInitializer.updatePrivacyAgree(mActivity, true)
         Handler(Looper.getMainLooper()).postDelayed({

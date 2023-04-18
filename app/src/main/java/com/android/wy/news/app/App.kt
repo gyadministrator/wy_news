@@ -28,9 +28,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AMapLocationClient.setApiKey(Constants.LOCATION_KEY);
+        AMapLocationClient.setApiKey(Constants.LOCATION_KEY)
         if (BuildConfig.isShowLog) {
-            //CrashHandler.mInstance.init(this)
+            CrashHandler.mInstance.init(this)
             Logger.setDebug(true)
         }
         initSkin()
