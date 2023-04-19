@@ -5,6 +5,8 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Streaming
+import retrofit2.http.Url
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -53,4 +55,9 @@ interface IApiService {
 
     @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
     fun getSplash(): Call<ResponseBody>
+
+    //添加这个注解用来下载大文件
+    @Streaming
+    @GET
+    fun downloadVideo(@Url fileUrl: String): Call<ResponseBody>
 }

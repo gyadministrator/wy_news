@@ -24,7 +24,8 @@ class DividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.cpSectionBackground, typedValue, true)
-        mPaint!!.color = context.resources.getColor(typedValue.resourceId)
+        mPaint!!.color =
+            context.resources.getColor(com.android.wy.news.commonui.R.color.divider_bg_color/*typedValue.resourceId*/)
         dividerHeight =
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,

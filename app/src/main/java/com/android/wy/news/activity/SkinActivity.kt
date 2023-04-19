@@ -94,6 +94,11 @@ class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.On
                 ivLight.visibility = View.GONE
                 ivDark.visibility = View.VISIBLE
             }
+
+            else -> {
+                ivLight.visibility = View.VISIBLE
+                ivDark.visibility = View.GONE
+            }
         }
     }
 

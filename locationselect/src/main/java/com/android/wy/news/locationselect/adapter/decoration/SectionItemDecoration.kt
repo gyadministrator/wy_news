@@ -33,13 +33,15 @@ class SectionItemDecoration(context: Context, data: List<City>?) : RecyclerView.
     init {
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.cpSectionBackground, typedValue, true)
-        mBgColor = context.resources.getColor(typedValue.resourceId)
+        mBgColor =
+            context.resources.getColor(com.android.wy.news.commonui.R.color.bg_search_color/*typedValue.resourceId*/)
         context.theme.resolveAttribute(R.attr.cpSectionHeight, typedValue, true)
         mSectionHeight = context.resources.getDimensionPixelSize(typedValue.resourceId)
         context.theme.resolveAttribute(R.attr.cpSectionTextSize, typedValue, true)
         mTextSize = context.resources.getDimensionPixelSize(typedValue.resourceId)
         context.theme.resolveAttribute(R.attr.cpSectionTextColor, typedValue, true)
-        mTextColor = context.resources.getColor(typedValue.resourceId)
+        mTextColor =
+            context.resources.getColor(com.android.wy.news.commonui.R.color.main_title/*typedValue.resourceId*/)
         mBgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mBgPaint!!.color = mBgColor
         mTextPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)

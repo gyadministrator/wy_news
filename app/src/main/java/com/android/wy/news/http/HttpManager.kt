@@ -39,4 +39,13 @@ class HttpManager {
             .build()
         return retrofit.create(clazz)
     }
+
+    fun <T> getApiService(clazz: Class<T>): T {
+        val retrofit = Retrofit.Builder()
+            .client(httpClient)
+            //.addConverterFactory(GsonConverterFactory.create())
+            //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        return retrofit.create(clazz)
+    }
 }
