@@ -1,2 +1,2 @@
-# wy_news
-新闻快报(Kotlin语言编写)
+# wy_news 1984629668@qq.com
+新闻早报(Kotlin+retrofit+mvvm+compose)
