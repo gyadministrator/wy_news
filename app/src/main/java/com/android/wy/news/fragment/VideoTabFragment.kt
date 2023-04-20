@@ -13,9 +13,13 @@ import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabVideoBinding
+import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
+import com.android.wy.news.manager.JsoupManager
+import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.manager.VideoLayoutManager
+import com.android.wy.news.view.ScreenVideoView
 import com.android.wy.news.viewmodel.VideoTabViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -24,7 +28,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
     OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener,
-    BaseNewsAdapter.OnItemAdapterListener<VideoEntity> {
+    BaseNewsAdapter.OnItemAdapterListener<RecommendVideoEntity> {
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
@@ -32,6 +36,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var layoutManager: VideoLayoutManager
     private var currentPosition: Int = 0
+    private var pageStart = 0
 
     companion object {
         fun newInstance() = VideoTabFragment()
@@ -91,7 +96,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
                     if (isLoading) {
                         //加载完成，直接滑动到新加载的第一条数据
                         rvContent.scrollToPosition(i + 1)
-                        playVideo(i+1)
+                        playVideo(i + 1)
                     }
                 }
             }
@@ -113,19 +118,23 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun getVideoData() {
-        mViewModel.getVideoList()
+        mViewModel.getRecommendVideoList(pageStart)
     }
 
     override fun onVideoFinish() {
+        currentPosition++
+        rvContent.scrollToPosition(currentPosition)
         playVideo(currentPosition)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        pageStart = 0
         isRefresh = true
         getVideoData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
+        pageStart++
         isLoading = true
         getVideoData()
     }
@@ -138,7 +147,20 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         Handler(Looper.getMainLooper()).post {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
             if (holder is VideoAdapter.VideoViewHolder) {
-                holder.playVideo.play()
+                val tag = holder.playVideo.tag
+                if (tag is String) {
+                    getRealUrl(holder.playVideo, tag)
+                }
+            }
+        }
+    }
+
+    private fun getRealUrl(screenVideoView: ScreenVideoView, vid: String) {
+        ThreadExecutorManager.mInstance.startExecute {
+            val videoUrl = JsoupManager.getVideoUrl(vid)
+            Handler(Looper.getMainLooper()).post {
+                screenVideoView.setUp(videoUrl)
+                screenVideoView.play()
             }
         }
     }
@@ -191,7 +213,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         return true
     }
 
-    override fun onItemClickListener(view: View, data: VideoEntity) {
+    override fun onItemClickListener(view: View, data: RecommendVideoEntity) {
 
     }
 }

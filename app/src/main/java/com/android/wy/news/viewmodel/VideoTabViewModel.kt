@@ -3,7 +3,7 @@ package com.android.wy.news.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
-import com.android.wy.news.entity.VideoEntity
+import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import okhttp3.ResponseBody
@@ -12,16 +12,16 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VideoTabViewModel : BaseViewModel() {
-    val dataList = MutableLiveData<ArrayList<VideoEntity>>()
+    val dataList = MutableLiveData<ArrayList<RecommendVideoEntity>>()
 
-    fun getVideoList() {
+    fun getRecommendVideoList(pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.VIDEO_URL, IApiService::class.java)
-        val observable = apiService.getVideoList()
+            HttpManager.mInstance.getApiService(Constants.HOT_NEWS_URL, IApiService::class.java)
+        val observable = apiService.getRecommendVideo(pageStart)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
-                val videoData = CommonTools.parseVideoData(s)
+                val videoData = CommonTools.parseRecommendVideoData(s)
                 dataList.postValue(videoData)
             }
 

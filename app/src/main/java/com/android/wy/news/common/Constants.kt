@@ -37,6 +37,8 @@ class Constants {
         const val SPLASH_AD = "splash_ad"
         const val CACHE_VIDEO = "cache_video"
         const val NO_WIFI_PLAY = "no_wifi_play"
+        const val IS_WIFI_NOTICE = "is_wifi_notice"
+        const val IS_WIFI_NOTICE_DIALOG = "is_wifi_notice_dialog"
         const val PRIVACY_STATUS = "privacy_status"
         const val PRIVACY_STATUS_AGREE = 1
         const val PRIVACY_STATUS_CANCEL = 2

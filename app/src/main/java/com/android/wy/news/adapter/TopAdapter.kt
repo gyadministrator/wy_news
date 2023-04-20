@@ -137,7 +137,7 @@ class TopAdapter(
             val position = p0.tag as Int
             val list = CommonTools.topEntity2ScreenVideoEntity(position, mDataList)
             videoList.addAll(list)
-            VideoFullActivity.startFullScreen(currentPage, videoList, p0.context)
+            VideoFullActivity.startFullScreen(videoList, p0.context)
         }
     }
 

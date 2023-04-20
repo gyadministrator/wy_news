@@ -8,7 +8,7 @@ import com.android.wy.news.databinding.LayoutVideoFullListBinding
 import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.view.ScreenVideoView
 
-class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoEntity>,var screenVideoListener: OnScreenVideoListener) :
+class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoEntity>, private var screenVideoListener: OnScreenVideoListener) :
     BaseNewsAdapter<ScreenVideoAdapter.ScreenViewHolder, ScreenVideoEntity>(
         itemAdapterListener
     ), ScreenVideoView.OnScreenVideoListener {

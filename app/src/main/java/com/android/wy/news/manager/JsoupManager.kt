@@ -96,5 +96,28 @@ class JsoupManager {
                 e.printStackTrace()
             }
         }
+
+        fun getVideoUrl(vid: String): String {
+            var realUrl = ""
+            val url = Constants.HOT_NEWS_URL + "/v/video/" + vid + ".html"
+            try {
+                val document: Document? = Jsoup.connect(url).get()
+                if (document != null) {
+                    val root: Elements? = document.body().getElementsByClass("main_video")
+                    val element = root?.first()
+                    if (element != null) {
+                        if (element.childrenSize() > 0) {
+                            val child = element.child(0)
+                            realUrl = child?.attr("src").toString()
+                            Logger.e("vid=$vid 对应的实际url=$realUrl")
+                            return realUrl
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return realUrl
+        }
     }
 }

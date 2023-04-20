@@ -11,6 +11,8 @@ import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import cn.jzvd.Jzvd
@@ -371,10 +373,52 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
                 .statusBarDarkFont(false).init()
             bottomView.setBackgroundResource(R.color.black)
+
         } else {
             showSearch()
             UiModeManager.onUiModeChange(this)
             bottomView.setBackgroundResource(R.color.default_status_bar_color)
+        }
+        setBottomBarState(position)
+    }
+
+    private fun setBottomBarState(position: Int) {
+        if (position == 2) {
+            for (i in 0 until 4) {
+                val imageView = bottomView.getBottomViewPositionImageView(i) as ImageView
+                val textView = bottomView.getBottomViewPositionTextView(i) as TextView
+                val drawable = imageView.drawable
+                val wrap = DrawableCompat.wrap(drawable)
+                if (i == position) {
+                    DrawableCompat.setTint(
+                        wrap,
+                        ContextCompat.getColor(this, R.color.text_select_color)
+                    )
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.text_select_color))
+                } else {
+                    DrawableCompat.setTint(wrap, ContextCompat.getColor(this, R.color.white))
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.white))
+                }
+                imageView.setImageDrawable(wrap)
+            }
+        } else {
+            for (i in 0 until 4) {
+                val imageView = bottomView.getBottomViewPositionImageView(i) as ImageView
+                val textView = bottomView.getBottomViewPositionTextView(i) as TextView
+                val drawable = imageView.drawable
+                val wrap = DrawableCompat.wrap(drawable)
+                if (i == position) {
+                    DrawableCompat.setTint(
+                        wrap,
+                        ContextCompat.getColor(this, R.color.text_select_color)
+                    )
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.text_select_color))
+                } else {
+                    DrawableCompat.setTint(wrap, ContextCompat.getColor(this, R.color.main_title))
+                    textView.setTextColor(ContextCompat.getColor(this, R.color.main_title))
+                }
+                imageView.setImageDrawable(wrap)
+            }
         }
     }
 

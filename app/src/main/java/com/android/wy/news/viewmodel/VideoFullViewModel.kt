@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.entity.ScreenVideoEntity
+import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import okhttp3.ResponseBody
@@ -12,19 +13,17 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class VideoFullViewModel : BaseViewModel() {
-    var topNewsList = MutableLiveData<ArrayList<ScreenVideoEntity>>()
+    val dataList = MutableLiveData<ArrayList<VideoEntity>>()
 
-    fun getTopNews(pageStart: Int) {
+    fun getVideoList() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.BASE_HEAD_URL, IApiService::class.java)
-        val headerNews = apiService.getTopNews(pageStart)
-        headerNews.enqueue(object : Callback<ResponseBody> {
+            HttpManager.mInstance.getApiService(Constants.VIDEO_URL, IApiService::class.java)
+        val observable = apiService.getVideoList()
+        observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
-                val headerData = CommonTools.parseTopData(s)
-                val list =
-                    CommonTools.topEntity2ScreenVideoEntity(0, headerData)
-                topNewsList.postValue(list)
+                val videoData = CommonTools.parseVideoData(s)
+                dataList.postValue(videoData)
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

@@ -26,8 +26,8 @@
             android:paddingEnd="10dp">
 
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/back"
                 app:tint="@color/main_title"
@@ -84,30 +84,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <FrameLayout
+            <com.android.wy.news.view.CustomRecyclerView
+                android:id="@+id/rv_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.android.wy.news.view.CustomRecyclerView
-                    android:id="@+id/rv_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="6dp"
-                    android:visibility="gone" />
-
-
-                <com.android.wy.news.view.CustomLoadingView
-                    android:id="@+id/loading_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:loadingSize="16sp"
-                    app:loadingText="@string/loading_more" />
-
-            </FrameLayout>
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="6dp"
+                android:visibility="gone" />
 
             <com.android.wy.news.refresh.CustomRefreshFooter
                 android:layout_width="match_parent"
@@ -118,7 +102,8 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/bg_item_color">
 
             <LinearLayout
                 android:id="@+id/ll_content"
@@ -131,7 +116,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
-                    android:background="@drawable/bg_item_top"
                     android:orientation="vertical"
                     android:padding="6dp"
                     android:visibility="gone">
@@ -193,10 +177,19 @@
                     android:id="@+id/ll_hot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_item"
+                    android:layout_marginBottom="30dp"
                     android:orientation="vertical"
                     android:padding="6dp" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <com.android.wy.news.view.CustomLoadingView
+            android:id="@+id/loading_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:loadingSize="16sp"
+            app:loadingText="@string/loading_more" />
     </FrameLayout>
 </LinearLayout>

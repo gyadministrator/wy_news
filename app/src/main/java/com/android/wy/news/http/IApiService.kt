@@ -56,6 +56,9 @@ interface IApiService {
     @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
     fun getSplash(): Call<ResponseBody>
 
+    @GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-20.do?callback=videoList")
+    fun getRecommendVideo(@Path("pageStart") pageStart: Int): Call<ResponseBody>
+
     //添加这个注解用来下载大文件
     @Streaming
     @GET

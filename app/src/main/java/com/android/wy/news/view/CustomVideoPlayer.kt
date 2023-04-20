@@ -92,8 +92,14 @@ class CustomVideoPlayer : JzvdStd {
     override fun showWifiDialog() {
         //super.showWifiDialog()
         val isNoWifiPlay = SpTools.getBoolean(Constants.NO_WIFI_PLAY)
+        val isWifiNotice = SpTools.getBoolean(Constants.IS_WIFI_NOTICE)
+        val isWifiNoticeDialog = SpTools.getBoolean(Constants.IS_WIFI_NOTICE_DIALOG)
         if (isNoWifiPlay != null && isNoWifiPlay == true) {
-            Toast.makeText(context, "当前不是WiFi环境下,请注意流量使用", Toast.LENGTH_SHORT).show()
+            if (isWifiNotice != null && isWifiNotice == false) {
+                Toast.makeText(context, "当前不是WiFi环境下,请注意流量使用", Toast.LENGTH_SHORT)
+                    .show()
+                SpTools.putBoolean(Constants.IS_WIFI_NOTICE, true)
+            }
             if (state == STATE_PAUSE) {
                 startButton.performClick()
             } else {
@@ -101,33 +107,36 @@ class CustomVideoPlayer : JzvdStd {
             }
         } else {
             //弹框提醒
-            val dialogFragment = ConfirmDialogFragment.newInstance(
-                "温馨提示",
-                "当前不是WiFi环境下,已为你暂停播放视频,你是否需要继续播放视频？",
-                "确定",
-                "取消"
-            )
-            val activity = context as AppCompatActivity
-            dialogFragment.show(activity.supportFragmentManager, "wy_no_wifi")
-            dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
-                override fun onClickSure() {
-                    SpTools.putBoolean(Constants.NO_WIFI_PLAY, true)
-                    Toast.makeText(
-                        context,
-                        "当前不是WiFi环境下,请注意流量使用",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    if (state == STATE_PAUSE) {
-                        startButton.performClick()
-                    } else {
-                        play()
+            if (isWifiNoticeDialog != null && isWifiNoticeDialog == false) {
+                val dialogFragment = ConfirmDialogFragment.newInstance(
+                    "温馨提示",
+                    "当前不是WiFi环境下,已为你暂停播放视频,你是否需要继续播放视频？",
+                    "确定",
+                    "取消"
+                )
+                val activity = context as AppCompatActivity
+                dialogFragment.show(activity.supportFragmentManager, "wy_no_wifi")
+                dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
+                    override fun onClickSure() {
+                        SpTools.putBoolean(Constants.NO_WIFI_PLAY, true)
+                        Toast.makeText(
+                            context,
+                            "当前不是WiFi环境下,请注意流量使用",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        SpTools.putBoolean(Constants.IS_WIFI_NOTICE_DIALOG, true)
+                        if (state == STATE_PAUSE) {
+                            startButton.performClick()
+                        } else {
+                            play()
+                        }
                     }
-                }
 
-                override fun onClickCancel() {
+                    override fun onClickCancel() {
 
-                }
-            })
+                    }
+                })
+            }
         }
     }
 

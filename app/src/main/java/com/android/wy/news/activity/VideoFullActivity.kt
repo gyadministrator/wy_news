@@ -31,7 +31,7 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewModel>(),
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<ScreenVideoEntity>,
     OnViewPagerListener, ScreenVideoAdapter.OnScreenVideoListener {
-    private var currentPage = -1
+
     private lateinit var rvContent: RecyclerView
     private lateinit var rlBack: RelativeLayout
     private var isLoading = false
@@ -41,14 +41,12 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     private var currentPosition = 0
 
     companion object {
-        const val PAGE = "video_page"
         const val VIDEO_LIST = "video_list"
 
         fun startFullScreen(
-            page: Int, videoInfoList: ArrayList<ScreenVideoEntity>, context: Context
+            videoInfoList: ArrayList<ScreenVideoEntity>, context: Context
         ) {
             val intent = Intent(context, VideoFullActivity::class.java)
-            intent.putExtra(PAGE, page)
             val gson = Gson()
             intent.putExtra(VIDEO_LIST, gson.toJson(videoInfoList))
             context.startActivity(intent)
@@ -92,7 +90,6 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     override fun initData() {
         val gson = Gson()
         val intent = intent
-        currentPage = intent.getIntExtra(PAGE, -1)
         val videoListJson = intent.getStringExtra(VIDEO_LIST)
         val dataList = gson.fromJson<ArrayList<ScreenVideoEntity>>(
             videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
@@ -104,7 +101,6 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
         super.onNewIntent(intent)
         if (intent != null) {
             val gson = Gson()
-            currentPage = intent.getIntExtra(PAGE, -1)
             val videoListJson = intent.getStringExtra(VIDEO_LIST)
             val dataList = gson.fromJson<ArrayList<ScreenVideoEntity>>(
                 videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
@@ -133,20 +129,14 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun onNotifyDataChanged() {
-        mViewModel.topNewsList.observe(this) {
+        mViewModel.dataList.observe(this) {
             if (isLoading) {
                 refreshLayout.finishLoadMore()
             }
-            if (it.size == 0) {
-                if (isLoading) {
-                    Logger.e("当前[$currentPage]页无数据,为你加载下一页")
-                    Toast.makeText(
-                        this, "当前[$currentPage]页无数据,为你加载下一页", Toast.LENGTH_SHORT
-                    ).show()
-                    getVideoData()
-                }
-            } else {
-                val i = screenVideoAdapter.loadMoreData(it)
+            if (it.size > 0) {
+                val videoList =
+                    CommonTools.parseVideoEntityToScreenVideoEntity(it)
+                val i = screenVideoAdapter.loadMoreData(videoList)
                 if (isLoading) {
                     //加载完成，直接滑动到新加载的第一条数据
                     rvContent.scrollToPosition(i + 1)
@@ -163,8 +153,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     private fun getVideoData() {
-        currentPage++
-        mViewModel.getTopNews(currentPage)
+        mViewModel.getVideoList()
     }
 
     override fun onItemClickListener(view: View, data: ScreenVideoEntity) {

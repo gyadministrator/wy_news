@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import cn.jzvd.Jzvd
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
@@ -27,6 +28,8 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     private lateinit var tvUserSource: TextView
     private lateinit var llContent: LinearLayout
     private lateinit var ivPlay: ImageView
+    private lateinit var clUser: ConstraintLayout
+    private lateinit var tvUserTitle: TextView
     private var screenVideoListener: OnScreenVideoListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -40,7 +43,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     }
 
     fun play() {
-        videoPlayer.play()
+        videoPlayer.startButton.performClick()
     }
 
     private fun initView(binding: LayoutScreenVideoBinding) {
@@ -54,6 +57,8 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
         tvUserSource = binding.tvUserSource
         llContent = binding.llContent
         ivPlay = binding.ivPlay
+        clUser = binding.clUser
+        tvUserTitle = binding.tvUserTitle
         llContent.setOnClickListener(this)
         videoPlayer.addVideoListener(this)
     }
@@ -91,8 +96,10 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
         return this
     }
 
+    @SuppressLint("SetTextI18n")
     fun setUser(tName: String): ScreenVideoView {
         tvUser.text = tName
+        tvUserTitle.text = "@$tName"
         return this
     }
 
@@ -102,7 +109,12 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     }
 
     fun setUserCover(userCover: String): ScreenVideoView {
-        CommonTools.loadImage(userCover, ivUser)
+        if (TextUtils.isEmpty(userCover)) {
+            clUser.visibility = View.GONE
+            tvUserTitle.visibility = View.VISIBLE
+        } else {
+            CommonTools.loadImage(userCover, ivUser)
+        }
         return this
     }
 
@@ -114,6 +126,12 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
             thumbImageView.scaleType = ImageView.ScaleType.FIT_CENTER
             CommonTools.loadImage(videoCover, thumbImageView)
         }
+        return this
+    }
+
+    fun setUp(url: String): ScreenVideoView {
+        val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
+        videoPlayer.setUp(proxyUrl, "")
         return this
     }
 

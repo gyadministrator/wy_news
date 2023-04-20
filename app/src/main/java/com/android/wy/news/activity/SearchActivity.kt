@@ -111,7 +111,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
             if (!TextUtils.isEmpty(s)) {
                 query = s
             }
-            searchAdapter.clearData()
             goSearch()
         }
     }
@@ -122,7 +121,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
             addHistory()
         }
         llContent.visibility = View.GONE
-        if (!isRefresh && !isLoading && page == 0) {
+        if (!isLoading) {
+            searchAdapter.clearData()
             loadingView.visibility = View.VISIBLE
         }
         if (page == 0) {

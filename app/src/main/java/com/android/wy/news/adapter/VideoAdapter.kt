@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.databinding.LayoutVideoFullListBinding
-import com.android.wy.news.entity.VideoEntity
+import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.view.ScreenVideoView
 
 
@@ -17,10 +17,10 @@ import com.android.wy.news.view.ScreenVideoView
   * @Description:    
  */
 class VideoAdapter(
-    itemAdapterListener: OnItemAdapterListener<VideoEntity>,
+    itemAdapterListener: OnItemAdapterListener<RecommendVideoEntity>,
     private var videoListener: OnVideoListener
 ) :
-    BaseNewsAdapter<VideoAdapter.VideoViewHolder, VideoEntity>(itemAdapterListener),
+    BaseNewsAdapter<VideoAdapter.VideoViewHolder, RecommendVideoEntity>(itemAdapterListener),
     ScreenVideoView.OnScreenVideoListener {
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,19 +34,18 @@ class VideoAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: VideoViewHolder, data: VideoEntity) {
-        data.videoTopic?.let {
-            holder.playVideo
-                .setTitle(data.title)
-                .setPlayCount(data.playCount.toLong())
-                .setSource(data.topicName)
-                .setTime(data.ptime)
-                .setUser(it.ename)
-                .setUserSource(data.videoTopic.alias)
-                .setUserCover(data.videoTopic.topic_icons)
-                .setUp(data.mp4_url, data.fullSizeImg, true)
-                .addOnScreenVideoListener(this)
-        }
+    override fun onBindData(holder: VideoViewHolder, data: RecommendVideoEntity) {
+        holder.playVideo.tag = data.vid
+        holder.playVideo
+            .setTitle(data.title)
+            .setPlayCount(data.playCount.toLong())
+            .setSource(data.topicName)
+            .setTime(data.ptime)
+            .setUser(data.topicName)
+            .setUserSource(data.topicDesc)
+            .setUserCover("")
+            .setUp(data.mp4_url, data.cover, true)
+            .addOnScreenVideoListener(this)
     }
 
     interface OnVideoListener {

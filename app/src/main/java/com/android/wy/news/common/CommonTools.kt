@@ -31,6 +31,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /*
@@ -70,6 +71,24 @@ class CommonTools {
             // 获取当前手机的像素密度（1个dp对应几个px）
             val scale = context.resources.displayMetrics.density
             return (pxValue / scale + 0.5f).toInt() // 四舍五入取整
+        }
+
+        fun parseRecommendVideoData(data: String?): ArrayList<RecommendVideoEntity> {
+            var dataList = ArrayList<RecommendVideoEntity>()
+            if (data != null && !TextUtils.isEmpty(data)) {
+                if (data.contains("(") && data.endsWith(")")) {
+                    val content = data.substring(data.indexOf("(") + 1, data.length - 1)
+                    if (content.contains("[") && content.endsWith("]}")) {
+                        val realContent =
+                            content.substring(content.indexOf("["), content.length - 1)
+                        val gson = Gson()
+                        dataList = gson.fromJson(
+                            realContent, object : TypeToken<ArrayList<RecommendVideoEntity>>() {}.type
+                        )
+                    }
+                }
+            }
+            return dataList
         }
 
         fun parseNewsData(data: String?): ArrayList<NewsEntity> {
@@ -445,6 +464,30 @@ class CommonTools {
                 }
             }
             return provinceList
+        }
+
+        fun parseVideoEntityToScreenVideoEntity(it: ArrayList<VideoEntity>?): ArrayList<ScreenVideoEntity> {
+            val videoList = ArrayList<ScreenVideoEntity>()
+            if (it != null && it.size > 0) {
+                for (i in 0 until it.size) {
+                    val videoEntity = it[i]
+                    val screenVideoEntity = videoEntity.videoTopic?.ename?.let { it1 ->
+                        ScreenVideoEntity(
+                            videoEntity.title,
+                            videoEntity.playCount.toLong(),
+                            videoEntity.topicName,
+                            videoEntity.ptime,
+                            videoEntity.mp4_url,
+                            videoEntity.fullSizeImg,
+                            it1,
+                            videoEntity.videoTopic.alias,
+                            videoEntity.videoTopic.topic_icons
+                        )
+                    }
+                    screenVideoEntity?.let { it1 -> videoList.add(it1) }
+                }
+            }
+            return videoList
         }
     }
 }
