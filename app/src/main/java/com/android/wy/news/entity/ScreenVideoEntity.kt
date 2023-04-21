@@ -9,5 +9,6 @@ class ScreenVideoEntity(
     var videoCover: String,
     var user: String,
     var userSource: String,
-    var userCover: String
+    var userCover: String,
+    var isPlaying: Boolean
 )

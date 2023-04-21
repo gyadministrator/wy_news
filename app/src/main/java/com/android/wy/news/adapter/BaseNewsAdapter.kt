@@ -29,6 +29,10 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         }
     }
 
+    fun getDataList(): ArrayList<V> {
+        return mDataList
+    }
+
     override fun onBindViewHolder(holder: H, position: Int) {
         val data = mDataList[position]
         onBindData(holder, data)

@@ -8,7 +8,10 @@ import com.android.wy.news.databinding.LayoutVideoFullListBinding
 import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.view.ScreenVideoView
 
-class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoEntity>, private var screenVideoListener: OnScreenVideoListener) :
+class ScreenVideoAdapter(
+    itemAdapterListener: OnItemAdapterListener<ScreenVideoEntity>,
+    private var screenVideoListener: OnScreenVideoListener
+) :
     BaseNewsAdapter<ScreenVideoAdapter.ScreenViewHolder, ScreenVideoEntity>(
         itemAdapterListener
     ), ScreenVideoView.OnScreenVideoListener {
@@ -24,6 +27,7 @@ class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoE
     }
 
     override fun onBindData(holder: ScreenViewHolder, data: ScreenVideoEntity) {
+        holder.playVideo.setPlayState(data.isPlaying)
         holder.playVideo
             .setTitle(data.title)
             .setPlayCount(data.playCount)
@@ -41,7 +45,7 @@ class ScreenVideoAdapter(itemAdapterListener: OnItemAdapterListener<ScreenVideoE
         screenVideoListener.onPlayFinish()
     }
 
-    interface OnScreenVideoListener{
+    interface OnScreenVideoListener {
         fun onPlayFinish()
     }
 }

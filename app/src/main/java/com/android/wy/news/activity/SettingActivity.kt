@@ -3,24 +3,28 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import com.android.wy.news.cache.DataCleanManager
 import com.android.wy.news.common.*
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.dialog.UpdateDialogFragment
+import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.viewmodel.SettingViewModel
 import java.io.IOException
-
 import java.io.InputStream
-
 import java.net.HttpURLConnection
-
 import java.net.URL
 
 
@@ -40,6 +44,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlAuthor: RelativeLayout
     private lateinit var scPlay: SwitchCompat
     private lateinit var scWifi: SwitchCompat
+    private var intentActivityResultLauncher: ActivityResultLauncher<Intent>? = null
 
     companion object {
         fun startSettingActivity(context: Context) {
@@ -88,6 +93,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     override fun initData() {
+        initActivityResult()
         getCacheSize()
         getVersion()
         getSkinState()
@@ -201,8 +207,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         dialogFragment.show(supportFragmentManager, "update_dialog")
         dialogFragment.addListener(object : UpdateDialogFragment.OnDialogFragmentListener {
             override fun onClickSure() {
-                NotificationHelper.sendProgressNotification(this@SettingActivity, 0, false)
-                goDownload("")
+                //NotificationHelper.sendProgressNotification(this@SettingActivity, 0, false)
+                //goDownload(Constants.TEST_APK_URL)
+                openSetting()
             }
 
             override fun onClickCancel() {
@@ -210,6 +217,54 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             }
         })
     }
+
+    private fun initActivityResult() {
+        intentActivityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                //开始下载安装
+                start()
+            }
+        }
+    }
+
+    fun openSetting() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //Android 8.0以上
+            if (!packageManager.canRequestPackageInstalls()) {
+                //权限没有打开，跳转界面，提示用户去手动打开
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                    Uri.parse("package:$packageName")
+                )
+                intentActivityResultLauncher?.launch(intent)
+            } else {
+                //已经拥有权限，直接执行下载apk操作
+                start()
+            }
+        } else {
+            //开始下载安装
+            start()
+        }
+    }
+
+
+    private fun start() {
+        val downloadUrl = Constants.TEST_APK_URL
+        val titleStr = "新闻早报新版本"
+        val contentStr = "正在下载中，请耐心等待"
+        //初始化版本控制
+        DownloadController.download(this, downloadUrl, titleStr, contentStr)
+        DownloadController.registerReceiver(this)
+    }
+
+    //停止执行版本更新操作
+    private fun stop() {
+        //初始化版本控制
+        DownloadController.unRegisterReceiver(this)
+    }
+
 
     private fun goDownload(apkUrl: String) {
         try {
@@ -263,7 +318,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     override fun onClear() {
-
+        stop()
     }
 
     override fun onNotifyDataChanged() {

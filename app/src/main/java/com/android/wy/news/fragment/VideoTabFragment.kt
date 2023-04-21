@@ -37,6 +37,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private lateinit var layoutManager: VideoLayoutManager
     private var currentPosition: Int = 0
     private var pageStart = 0
+    private var isPause = false
 
     companion object {
         fun newInstance() = VideoTabFragment()
@@ -180,6 +181,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     override fun onPause() {
         super.onPause()
+        isPause = true
         Jzvd.releaseAllVideos()
     }
 
@@ -188,8 +190,25 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         if (hidden) {
             Jzvd.releaseAllVideos()
         } else {
-            playVideo(currentPosition)
+            rePlay()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isPause) {
+            isPause = false
+            rePlay()
+        }
+    }
+
+    private fun rePlay() {
+        val dataList = videoAdapter.getDataList()
+        val recommendVideoEntity = dataList[currentPosition]
+        recommendVideoEntity.isPlaying = true
+        videoAdapter.notifyItemChanged(currentPosition)
+
+        playVideo(currentPosition)
     }
 
     @Deprecated("Deprecated in Java", ReplaceWith("super.setUserVisibleHint(isVisibleToUser)"))

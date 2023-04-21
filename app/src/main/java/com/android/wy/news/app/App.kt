@@ -7,6 +7,7 @@ import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.shortcut.ShortCutHelper
 import com.android.wy.news.skin.UiModeManager
 
 
@@ -34,6 +35,11 @@ class App : Application() {
             Logger.setDebug(true)
         }
         initSkin()
+        initShortCut()
+    }
+
+    private fun initShortCut() {
+        ShortCutHelper.initShortCut(this)
     }
 
     private fun initSkin() {

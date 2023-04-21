@@ -83,7 +83,8 @@ class CommonTools {
                             content.substring(content.indexOf("["), content.length - 1)
                         val gson = Gson()
                         dataList = gson.fromJson(
-                            realContent, object : TypeToken<ArrayList<RecommendVideoEntity>>() {}.type
+                            realContent,
+                            object : TypeToken<ArrayList<RecommendVideoEntity>>() {}.type
                         )
                     }
                 }
@@ -311,7 +312,8 @@ class CommonTools {
                             videoInfo.cover,
                             videoTopic.ename,
                             userSource,
-                            it.topic_icons
+                            it.topic_icons,
+                            false
                         )
                         videoList.add(screenVideoEntity)
                     }
@@ -481,7 +483,8 @@ class CommonTools {
                             videoEntity.fullSizeImg,
                             it1,
                             videoEntity.videoTopic.alias,
-                            videoEntity.videoTopic.topic_icons
+                            videoEntity.videoTopic.topic_icons,
+                            false
                         )
                     }
                     screenVideoEntity?.let { it1 -> videoList.add(it1) }

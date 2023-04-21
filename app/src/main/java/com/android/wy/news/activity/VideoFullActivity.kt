@@ -39,6 +39,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     private lateinit var layoutManager: VideoLayoutManager
     private lateinit var screenVideoAdapter: ScreenVideoAdapter
     private var currentPosition = 0
+    private var isPause = false
 
     companion object {
         const val VIDEO_LIST = "video_list"
@@ -145,6 +146,28 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             }
             isLoading = false
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isPause = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isPause) {
+            isPause = false
+            rePlay()
+        }
+    }
+
+    private fun rePlay() {
+        val dataList = screenVideoAdapter.getDataList()
+        val screenVideoEntity = dataList[currentPosition]
+        screenVideoEntity.isPlaying = true
+        screenVideoAdapter.notifyItemChanged(currentPosition)
+
+        playVideo(currentPosition)
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {

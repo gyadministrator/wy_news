@@ -26,7 +26,7 @@
         tools:ignore="ScopedStorage" />
     <!-- 开启网络访问权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
-     <!-- 允许修改网络状态的权限 -->
+    <!-- 允许修改网络状态的权限 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!--  高德定位所需  -->
     <!--允许获取精确位置，精准定位必选-->
@@ -46,7 +46,8 @@
     <!--用于申请调用A-GPS模块,卫星定位加速-->
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <!--允许写设备缓存，用于问题排查-->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -149,6 +150,17 @@
                 <action android:name="wy_notification_action" />
             </intent-filter>
         </receiver>
+
+        <!--声明provider-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.android.wy.news.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

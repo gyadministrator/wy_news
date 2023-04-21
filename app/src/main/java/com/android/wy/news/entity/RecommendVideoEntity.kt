@@ -31,5 +31,6 @@ data class RecommendVideoEntity(
     val topicSid: String,
     val vid: String,
     val videosource: String,
-    val votecount: Int
+    val votecount: Int,
+    var isPlaying: Boolean
 )

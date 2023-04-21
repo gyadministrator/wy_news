@@ -10,25 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/iv_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/play"
-            android:visibility="gone"
-            app:tint="@color/tint_color"
-            tools:ignore="ContentDescription" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="bottom"
             android:orientation="vertical">
 
@@ -149,5 +140,25 @@
                 android:textSize="16sp"
                 tools:text="今日说法今日说法今日说法今日说法今日说法今日说法今日说法今日说法" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/play"
+            android:visibility="gone"
+            app:tint="@color/tint_color"
+            tools:ignore="ContentDescription" />
     </RelativeLayout>
 </FrameLayout>

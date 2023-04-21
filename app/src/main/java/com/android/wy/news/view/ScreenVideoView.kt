@@ -5,10 +5,12 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import cn.jzvd.Jzvd
@@ -17,7 +19,7 @@ import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
 
-class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnClickListener {
+class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnClickListener{
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
@@ -27,6 +29,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     private lateinit var tvUser: TextView
     private lateinit var tvUserSource: TextView
     private lateinit var llContent: LinearLayout
+    private lateinit var rlBottom: RelativeLayout
     private lateinit var ivPlay: ImageView
     private lateinit var clUser: ConstraintLayout
     private lateinit var tvUserTitle: TextView
@@ -46,6 +49,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
         videoPlayer.startButton.performClick()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initView(binding: LayoutScreenVideoBinding) {
         tvTitle = binding.tvTitle
         tvPlay = binding.tvPlay
@@ -59,6 +63,8 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
         ivPlay = binding.ivPlay
         clUser = binding.clUser
         tvUserTitle = binding.tvUserTitle
+        rlBottom = binding.rlBottom
+        //rlBottom.setOnTouchListener(this)
         llContent.setOnClickListener(this)
         videoPlayer.addVideoListener(this)
     }
@@ -111,6 +117,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     fun setUserCover(userCover: String): ScreenVideoView {
         if (TextUtils.isEmpty(userCover)) {
             clUser.visibility = View.GONE
+            tvSource.visibility = View.GONE
             tvUserTitle.visibility = View.VISIBLE
         } else {
             CommonTools.loadImage(userCover, ivUser)
@@ -153,6 +160,12 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
             ivPlay.visibility = GONE
         } else if (state == Jzvd.STATE_PAUSE) {
             ivPlay.visibility = VISIBLE
+        }
+    }
+
+    fun setPlayState(isPlaying: Boolean) {
+        if (isPlaying) {
+            ivPlay.visibility = GONE
         }
     }
 

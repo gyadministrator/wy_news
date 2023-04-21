@@ -37,7 +37,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<SearchResult>,
     ClearEditText.OnEditTextListener {
-    private var query: String = ""
+    private var query: String? = ""
     private var page = 0
     private lateinit var rlBack: RelativeLayout
     private lateinit var etSearch: ClearEditText
@@ -199,17 +199,19 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun addHistory() {
-        val searchHistoryEntity = searchHistoryRepository?.getSearchHistoryByTitle(query)
+        val searchHistoryEntity =
+            query?.let { searchHistoryRepository?.getSearchHistoryByTitle(it) }
         if (searchHistoryEntity == null || TextUtils.isEmpty(searchHistoryEntity.title)) {
-            searchHistoryRepository?.addSearchHistory(SearchHistoryEntity(0, query))
+            query?.let { SearchHistoryEntity(0, it) }
+                ?.let { searchHistoryRepository?.addSearchHistory(it) }
         }
     }
 
     override fun initData() {
         searchHistoryRepository = SearchHistoryRepository(this.applicationContext)
         val intent = intent
-        query = intent.getStringExtra(QUERY).toString()
-        setSearchHint(query)
+        query = intent.getStringExtra(QUERY)
+        query?.let { setSearchHint(it) }
 
         searchAdapter = SearchAdapter(this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
@@ -226,14 +228,16 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun setSearchHint(hint: String) {
-        etSearch.hint = hint
+        if (!TextUtils.isEmpty(hint)) {
+            etSearch.hint = hint
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent != null) {
-            query = intent.getStringExtra(QUERY).toString()
-            setSearchHint(query)
+            query = intent.getStringExtra(QUERY)
+            query?.let { setSearchHint(it) }
         }
     }
 
@@ -254,11 +258,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun getRefreshData() {
-        mViewModel.getRefreshSearchList(query)
+        query?.let { mViewModel.getRefreshSearchList(it) }
     }
 
     private fun getPageData() {
-        mViewModel.getSearchPageList(query, page)
+        query?.let { mViewModel.getSearchPageList(it, page) }
     }
 
     override fun onNotifyDataChanged() {
@@ -369,8 +373,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun setEditTextContent() {
-        etSearch.setText(query)
-        etSearch.setSelection(query.length)
+        if (!TextUtils.isEmpty(query)) {
+            etSearch.setText(query)
+            query?.length?.let { etSearch.setSelection(it) }
+        }
     }
 
     override fun onItemClickListener(view: View, data: SearchResult) {
