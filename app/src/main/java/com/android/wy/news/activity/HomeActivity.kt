@@ -373,7 +373,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
                 .statusBarDarkFont(false).init()
             bottomView.setBackgroundResource(R.color.black)
-
         } else {
             showSearch()
             UiModeManager.onUiModeChange(this)

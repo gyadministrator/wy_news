@@ -39,7 +39,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlThird: RelativeLayout
     private lateinit var rlPermission: RelativeLayout
     private lateinit var rlUpdate: RelativeLayout
-    private lateinit var rlHelp: RelativeLayout
     private lateinit var rlAbout: RelativeLayout
     private lateinit var rlAuthor: RelativeLayout
     private lateinit var scPlay: SwitchCompat
@@ -81,7 +80,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         rlThird = mBinding.rlThird
         rlPermission = mBinding.rlPermission
         rlUpdate = mBinding.rlUpdate
-        rlHelp = mBinding.rlHelp
         scWifi = mBinding.scWifi
         rlAbout = mBinding.rlAbout
         rlAuthor = mBinding.rlAuthor
@@ -135,13 +133,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
     override fun initEvent() {
         rlAuthor.setOnClickListener {
-            WebActivity.startActivity(this, "https://github.com/gyadministrator")
+            WebActivity.startActivity(this, Constants.AUTHOR_URL)
         }
         rlAbout.setOnClickListener {
             AboutActivity.startAboutActivity(this)
-        }
-        rlHelp.setOnClickListener {
-
         }
         rlUpdate.setOnClickListener {
             showUpdateDialog()

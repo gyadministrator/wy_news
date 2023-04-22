@@ -263,6 +263,7 @@
                 android:id="@+id/rl_cache"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/bg_item_color"
                 android:gravity="center_vertical"
                 android:paddingStart="6dp"
@@ -289,36 +290,6 @@
                     tools:ignore="RelativeOverlap"
                     tools:text="30M" />
 
-            </RelativeLayout>
-
-            <View style="@style/dividerItemStyle" />
-
-            <RelativeLayout
-                android:id="@+id/rl_help"
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/bg_item_color"
-                android:gravity="center_vertical"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/reply_and_help"
-                    android:textColor="@color/main_title"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/arrow"
-                    app:tint="@color/main_title" />
             </RelativeLayout>
 
             <View style="@style/dividerItemStyle" />

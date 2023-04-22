@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">新闻早报</string>
-    <string name="loading_now">正在刷新中...</string>
-    <string name="loading_more">获取更多中...</string>
-    <string name="click_reload">点击重新加载...</string>
+    <string name="loading_now">正在刷新中…</string>
+    <string name="loading_more">获取更多中…</string>
+    <string name="click_reload">点击重新加载…</string>
     <string name="review">回顾</string>
     <string name="search_hint">搜索想要看的新闻</string>
     <string name="search_news">搜索</string>
@@ -26,10 +26,10 @@
     <string name="third_data_list">第三方数据清单</string>
     <string name="privacy_policy">隐私政策</string>
     <string name="user_policy">用户协议</string>
-    <string name="location_now">定位中...</string>
+    <string name="location_now">定位中…</string>
     <string name="no_wifi_play">非WiFi环境播放视频</string>
     <string name="copyright_2023_news_all_rights_reserved">copyright 2023 News All Rights Reserved</string>
     <string name="function_introduce">功能介绍</string>
     <string name="complaint_or_reply">投诉与建议</string>
-    <string name="open_source_more">更多开源库</string>
+    <string name="open_source_more">github链接</string>
 </resources>

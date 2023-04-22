@@ -2,50 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- 安装应用权限 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!-- 读取图片权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <!-- 读取视频权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <!-- 读取音频权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <!-- 前台服务 -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- 读取外部存储 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 安装应用权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 读取图片权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- 读取视频权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 读取音频权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- 前台服务 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 读取外部存储 -->
     <!-- Android 13 target 32 以上不需要手动授权 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <!-- 写入外部存储 -->
+        android:maxSdkVersion="32" /> <!-- 写入外部存储 -->
     <!-- Android 13 target 32 以上不需要手动授权 -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
-    <!-- 开启网络访问权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 允许修改网络状态的权限 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!--  高德定位所需  -->
-    <!--允许获取精确位置，精准定位必选-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--允许获取粗略位置，粗略定位必选-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--允许获取设备和运营商信息，用于问题排查和网络定位（无gps情况下的定位），若需网络定位功能则必选-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--允许获取网络状态，用于网络定位（无gps情况下的定位），若需网络定位功能则必选-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--允许获取wifi网络信息，用于网络定位（无gps情况下的定位），若需网络定位功能则必选-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--允许获取wifi状态改变，用于网络定位（无gps情况下的定位），若需网络定位功能则必选-->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!--后台获取位置信息，若需后台定位则必选-->
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!--用于申请调用A-GPS模块,卫星定位加速-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!--允许写设备缓存，用于问题排查-->
+        tools:ignore="ScopedStorage" /> <!-- 开启网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许修改网络状态的权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 高德定位所需 -->
+    <!-- 允许获取精确位置，精准定位必选 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 允许获取粗略位置，粗略定位必选 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 允许获取设备和运营商信息，用于问题排查和网络定位（无gps情况下的定位），若需网络定位功能则必选 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许获取网络状态，用于网络定位（无gps情况下的定位），若需网络定位功能则必选 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 允许获取wifi网络信息，用于网络定位（无gps情况下的定位），若需网络定位功能则必选 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 允许获取wifi状态改变，用于网络定位（无gps情况下的定位），若需网络定位功能则必选 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 后台获取位置信息，若需后台定位则必选 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 用于申请调用A-GPS模块,卫星定位加速 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 允许写设备缓存，用于问题排查 -->
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -65,8 +47,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="tiramisu">
-
-        <!--高德定位key-->
+        <activity
+            android:name=".activity.IntroduceActivity"
+            android:exported="false" />
+        <!-- 高德定位key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="7f0d79866211bd1622b599d4ffae5a73" />
@@ -149,9 +133,7 @@
             <intent-filter>
                 <action android:name="wy_notification_action" />
             </intent-filter>
-        </receiver>
-
-        <!--声明provider-->
+        </receiver> <!-- 声明provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.android.wy.news.fileprovider"

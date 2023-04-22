@@ -46,7 +46,10 @@ class Constants {
         const val privacyUrl = "file:///android_asset/privacy_policy.html"
         const val userUrl = "file:///android_asset/user_agreement.html"
         const val NOTICE_STATUS = "notice_status"
-        const val TEST_APK_URL = "https://static.ws.126.net/163/apk/newsapp/newsreader_sps_article.apk"
+        const val AUTHOR_URL = "https://github.com/gyadministrator"
+        const val REPOSITORY_URL = "https://github.com/gyadministrator/wy_news"
+        const val TEST_APK_URL =
+            "https://static.ws.126.net/163/apk/newsapp/newsreader_sps_article.apk"
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
     }
