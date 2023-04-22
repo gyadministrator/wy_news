@@ -53,15 +53,13 @@ class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewMo
     }
 
     override fun initData() {
-        localVideoPath =
+        /*localVideoPath =
             Environment.getExternalStorageDirectory().absolutePath + "/DCIM/Camera/wy_news_introduce.mp4"
         //cp video 防止视频被意外删除
-        cpAssertVideoToLocalPath()
+        cpAssertVideoToLocalPath()*/
+        localVideoPath =
+            "https://github.com/gyadministrator/wy_news/blob/master/introduce/wy_news_introduce.mp4"
         jzVideo.setUp(localVideoPath, "")
-        /*jzvdAssertPath.setUp(
-            "local_video.mp4", "Play Assert Video", JzvdStd.SCREEN_NORMAL,
-            JZMediaSystemAssertFolder::class.java
-        )*/
     }
 
     private fun cpAssertVideoToLocalPath() {
