@@ -2,20 +2,12 @@ package com.android.wy.news.activity
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.text.TextUtils
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityPermissionBinding
 import com.android.wy.news.databinding.LayoutPermissionItemBinding
-import com.android.wy.news.databinding.LayoutTopCityItemBinding
-import com.android.wy.news.entity.HotNewsEntity
-import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.PermissionEntity
-import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.viewmodel.PermissionViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

@@ -2,25 +2,19 @@ package com.android.wy.news.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Environment
-import android.widget.RelativeLayout
-import cn.jzvd.JzvdStd
-import com.android.wy.news.R
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityIntroduceBinding
+import com.android.wy.news.databinding.LayoutPermissionItemBinding
+import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.viewmodel.IntroduceViewModel
-import com.gyf.immersionbar.ImmersionBar
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewModel>() {
-    private lateinit var jzVideo: JzvdStd
-    private lateinit var rlBack: RelativeLayout
-    private var localVideoPath: String? = null
+    private lateinit var llContent: LinearLayout
 
     companion object {
         fun startIntroduceActivity(context: Context) {
@@ -46,45 +40,45 @@ class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewMo
     }
 
     override fun initView() {
-        ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
-            .statusBarDarkFont(false).init()
-        jzVideo = mBinding.jzVideo
-        rlBack = mBinding.rlBack
+        llContent = mBinding.llContent
     }
 
     override fun initData() {
-        /*localVideoPath =
-            Environment.getExternalStorageDirectory().absolutePath + "/DCIM/Camera/wy_news_introduce.mp4"
-        //cp video 防止视频被意外删除
-        cpAssertVideoToLocalPath()*/
-        localVideoPath =
-            "https://github.com/gyadministrator/wy_news/blob/master/introduce/wy_news_introduce.mp4"
-        jzVideo.setUp(localVideoPath, "")
+        val updateList = ArrayList<UpdateEntity>()
+        val content = CommonTools.getAssertContent(this, "updateInfo.json")
+        val gson = Gson()
+        val dataList = gson.fromJson<ArrayList<UpdateEntity>>(
+            content, object : TypeToken<ArrayList<UpdateEntity>>() {}.type
+        )
+        updateList.addAll(dataList)
+        addUpdateContent(updateList)
     }
 
-    private fun cpAssertVideoToLocalPath() {
-        if (localVideoPath?.let { File(it).exists() } == true) return
-        try {
-            val myOutput: OutputStream = FileOutputStream(localVideoPath)
-            val myInput: InputStream = this.assets.open("wy_news_introduce.mp4")
-            val buffer = ByteArray(1024)
-            var length = myInput.read(buffer)
-            while (length > 0) {
-                myOutput.write(buffer, 0, length)
-                length = myInput.read(buffer)
+    private fun addUpdateContent(updateList: ArrayList<UpdateEntity>) {
+        if (updateList.size > 0) {
+            llContent.removeAllViews()
+            for (i in 0 until updateList.size) {
+                val permissionItemBinding = LayoutPermissionItemBinding.inflate(layoutInflater)
+                val tvName = permissionItemBinding.tvName
+                val tvPermissionName = permissionItemBinding.tvPermissionName
+                val tvDesc = permissionItemBinding.tvDesc
+
+                val updateEntity = updateList[i]
+                tvName.text = updateEntity.title
+                tvPermissionName.text = updateEntity.content
+                tvDesc.text = updateEntity.time
+
+                val root = permissionItemBinding.root
+                val parent = root.parent
+                if (parent != null && parent is ViewGroup) {
+                    parent.removeView(root)
+                }
+                llContent.addView(root)
             }
-            myOutput.flush()
-            myInput.close()
-            myOutput.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
     }
 
     override fun initEvent() {
-        rlBack.setOnClickListener {
-            finish()
-        }
     }
 
     override fun getViewBinding(): ActivityIntroduceBinding {
