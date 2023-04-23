@@ -77,6 +77,8 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
         } else {
             mImmersionBar.navigationBarColor(R.color.default_status_bar_color)
         }
+        //解决软键盘与底部输入框冲突问题
+        mImmersionBar.keyboardEnable(false)
         mImmersionBar.init()
     }
 

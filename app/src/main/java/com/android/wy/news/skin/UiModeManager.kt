@@ -90,6 +90,7 @@ class UiModeManager {
             } else {
                 immersionBar.statusBarDarkFont(true)
             }
+            immersionBar.keyboardEnable(false)
             immersionBar.init()
         }
     }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -208,6 +209,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     override fun initData() {
+        setEditFocusAndShowSoft()
         searchHistoryRepository = SearchHistoryRepository(this.applicationContext)
         val intent = intent
         query = intent.getStringExtra(QUERY)
@@ -221,6 +223,16 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
             getHistoryList()
         }
         getHot()
+    }
+
+    /**
+     * EditText 获取焦点并弹出软键盘
+     */
+    private fun setEditFocusAndShowSoft() {
+        etSearch.isFocusable = true
+        etSearch.isFocusableInTouchMode = true
+        etSearch.requestFocus()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
     }
 
     private fun getHot() {

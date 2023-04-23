@@ -304,7 +304,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
 
         //选择器点击事件
-        pickerView.setOnPickerClickListener { pickerData ->
+        pickerView.setOnPickerClickListener { _ ->
             Toast.makeText(
                 this,
                 pickerData.firstText + "," + pickerData.secondText + "," + pickerData.thirdText,
@@ -371,7 +371,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         if (position == 2) {
             hideSearch()
             ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
-                .statusBarDarkFont(false).init()
+                .statusBarDarkFont(false).keyboardEnable(false).init()
             bottomView.setBackgroundResource(R.color.black)
         } else {
             showSearch()
