@@ -83,8 +83,8 @@ class SearchViewModel : BaseViewModel() {
                     val hotEntity = gson.fromJson(s, HotEntity::class.java)
                     if (hotEntity != null) {
                         val data = hotEntity.data
-                        val hotWordList = data.hotWordList
-                        hotList.postValue(hotWordList)
+                        val hotWordList = data?.hotWordList
+                        hotWordList.let { hotList.postValue(it) }
                     }
                 } catch (e: Exception) {
                     msg.postValue(e.message)

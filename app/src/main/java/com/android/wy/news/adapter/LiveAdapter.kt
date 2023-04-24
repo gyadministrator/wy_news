@@ -21,6 +21,7 @@ import java.util.*
 class LiveAdapter(
     itemAdapterListener: OnItemAdapterListener<LiveReview>
 ) : BaseNewsAdapter<LiveAdapter.ViewHolder, LiveReview>(itemAdapterListener) {
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutLiveItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle

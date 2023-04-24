@@ -82,13 +82,12 @@ class LocationHelper {
                         //地区编码
                         mapLocation.adCode
                         onLocationListener.success(mapLocation)
-                        Logger.e("当前定位城市: ${mapLocation.city}")
+                        Logger.i("当前定位城市: ${mapLocation.city}")
                         stopLocation()
                     } else {
                         onLocationListener.error(getErrorCodeMsg(errorCode = mapLocation.errorCode))
                         //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Logger.e("location Error, ErrCode:" + mapLocation.errorCode + ", errInfo:" + mapLocation.errorInfo)
-                        Logger.e(getErrorCodeMsg(errorCode = mapLocation.errorCode))
+                        Logger.i(getErrorCodeMsg(errorCode = mapLocation.errorCode))
                     }
                 }
             }

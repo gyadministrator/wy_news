@@ -8,7 +8,7 @@ package com.android.wy.news.entity
  */
 data class HotEntity(
     val code: Int,
-    val `data`: HotData,
+    val `data`: HotData?,
     val message: String
 )
 

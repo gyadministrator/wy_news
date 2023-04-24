@@ -109,7 +109,7 @@ class JsoupManager {
                         if (element.childrenSize() > 0) {
                             val child = element.child(0)
                             realUrl = child?.attr("src").toString()
-                            Logger.e("vid=$vid 对应的实际url=$realUrl")
+                            Logger.i("vid=$vid 对应的实际url=$realUrl")
                             return realUrl
                         }
                     }

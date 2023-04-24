@@ -23,6 +23,7 @@ import com.android.wy.news.databinding.LayoutHistoryItemBinding
 import com.android.wy.news.databinding.LayoutHotItemBinding
 import com.android.wy.news.entity.HotWord
 import com.android.wy.news.entity.SearchResult
+import com.android.wy.news.http.repository.HotRepository
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.sql.SearchHistoryEntity
 import com.android.wy.news.sql.SearchHistoryRepository
@@ -236,7 +237,17 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     private fun getHot() {
-        mViewModel.getHot()
+        //mViewModel.getHot()
+        HotRepository.getHotData().observe(this) {
+            val hotEntity = it.getOrNull()
+            if (hotEntity != null) {
+                val data = hotEntity.data
+                if (data != null) {
+                    val hotWordList = data.hotWordList
+                    addHot(hotWordList)
+                }
+            }
+        }
     }
 
     private fun setSearchHint(hint: String) {

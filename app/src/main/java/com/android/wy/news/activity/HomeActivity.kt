@@ -3,7 +3,6 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Handler
@@ -13,7 +12,6 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import cn.jzvd.Jzvd
 import com.amap.api.location.AMapLocation
@@ -33,6 +31,7 @@ import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
+import com.android.wy.news.fragment.MusicTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.location.LocationHelper
@@ -73,6 +72,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         barItems.add(GYBarItem("头条", R.mipmap.top))
         barItems.add(GYBarItem("精选", R.mipmap.classify))
         barItems.add(GYBarItem("视频", R.mipmap.video))
+        barItems.add(GYBarItem("音乐", R.mipmap.music))
         barItems.add(GYBarItem("直播", R.mipmap.live))
     }
 
@@ -83,23 +83,14 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         SpTools.putBoolean(Constants.NOTICE_STATUS, false)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val uiMode = newConfig.uiMode/*UiModeManager.onUiModeChange(this)
-        val i = SpTools.getInt(SkinType.SKIN_TYPE)
-        i?.let { UiModeManager.setCurrentUiMode(it) }*/
-    }
-
-    /*  override fun onRestart() {
-          super.onRestart()
-          UiModeManager.onUiModeChange(this)
-      }*/
-
     override fun initFragment() {
         fragments.add(TopTabFragment.newInstance())
         fragments.add(ClassifyTabFragment.newInstance())
         fragments.add(VideoTabFragment.newInstance())
+        fragments.add(MusicTabFragment.newInstance())
         fragments.add(LiveTabFragment.newInstance())
+        setBottomBarState(0)
+
         mViewModel = CommonTools.getViewModel(this, NewsMainViewModel::class.java)
 
         mViewModel.dataList.observe(this) {
@@ -134,6 +125,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         icons.add(R.mipmap.top_p)
         icons.add(R.mipmap.classify_p)
         icons.add(R.mipmap.video_p)
+        icons.add(R.mipmap.music_p)
         icons.add(R.mipmap.live_p)
     }
 
@@ -285,7 +277,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 this,
                 object : NotificationUtil.Companion.OnNextListener {
                     override fun onNext() {
-                        //Toast.makeText(this@HomeActivity, "已开启通知权限", Toast.LENGTH_SHORT).show()
+                        Logger.i(resources.getString(R.string.app_name) + "已开启通知权限")
                     }
                 })
         }
@@ -383,7 +375,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     private fun setBottomBarState(position: Int) {
         if (position == 2) {
-            for (i in 0 until 4) {
+            for (i in 0 until 5) {
                 val imageView = bottomView.getBottomViewPositionImageView(i) as ImageView
                 val textView = bottomView.getBottomViewPositionTextView(i) as TextView
                 val drawable = imageView.drawable
@@ -401,7 +393,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 imageView.setImageDrawable(wrap)
             }
         } else {
-            for (i in 0 until 4) {
+            for (i in 0 until 5) {
                 val imageView = bottomView.getBottomViewPositionImageView(i) as ImageView
                 val textView = bottomView.getBottomViewPositionTextView(i) as TextView
                 val drawable = imageView.drawable

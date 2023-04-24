@@ -52,5 +52,11 @@ class Constants {
             "https://static.ws.126.net/163/apk/newsapp/newsreader_sps_article.apk"
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
+
+        /*以下是音乐相关*/
+        const val MUSIC_BASE_URL="https://music.91q.com"
+        const val MUSIC_CATEGORY_URL="/v1/tracklist/category?sign=7e320e72d201147aec2c66b16b7b5553&appid=16073360&timestamp=1682322671"
+        const val MUSIC_LIST_URL="/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&subCateId=2376&pageSize=50&appid=16073360&timestamp=1682322671"
+        const val MUSIC_LINK_URL="/v1/song/tracklink?sign=8843bd01c41f4760b3efeed4c876bf3d&appid=16073360&TSID=T10052868241&timestamp=1682323063"
     }
 }

@@ -1,5 +1,9 @@
 package com.android.wy.news.http
 
+import com.android.wy.news.entity.HotEntity
+import com.android.wy.news.entity.music.MusicCateGoryData
+import com.android.wy.news.entity.music.MusicCategoryEntity
+import com.android.wy.news.entity.music.MusicListEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -8,7 +12,8 @@ import retrofit2.http.Query
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-/*     
+
+/*
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/3/17 9:59
   * @Version:        1.0
@@ -53,6 +58,9 @@ interface IApiService {
     @GET("api/v1/pc-wap/hot-word")
     fun getHot(): Call<ResponseBody>
 
+    @GET("api/v1/pc-wap/hot-word")
+    fun getSuspendHot(): Call<HotEntity>
+
     @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
     fun getSplash(): Call<ResponseBody>
 
@@ -63,4 +71,14 @@ interface IApiService {
     @Streaming
     @GET
     fun downloadVideo(@Url fileUrl: String): Call<ResponseBody>
+
+    /*-------------------------------------------以下是音乐相关---------------------------------------*/
+    @GET("/v1/tracklist/category?sign=7e320e72d201147aec2c66b16b7b5553&appid=16073360&timestamp=1682322671")
+    fun getMusicCateGory():Call<MusicCategoryEntity>
+
+    @GET("/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&pageSize=20&appid=16073360&timestamp=1682322671")
+    fun getMusicList(@Query("subCateId") subCateId: String?):Call<MusicListEntity>
+
+    @GET("/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&subCateId=2376&pageSize=20&appid=16073360&timestamp=1682322671")
+    fun getMusicList1():Call<ResponseBody>
 }
