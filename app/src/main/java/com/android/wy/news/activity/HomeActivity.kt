@@ -42,6 +42,7 @@ import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.service.NewsService

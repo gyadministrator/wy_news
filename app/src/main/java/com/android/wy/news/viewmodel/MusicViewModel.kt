@@ -1,16 +1,9 @@
 package com.android.wy.news.viewmodel
 
-import android.text.TextUtils
-import android.util.Log
-import com.android.wy.news.common.Constants
-import com.android.wy.news.entity.LiveEntity
-import com.android.wy.news.http.HttpManager
-import com.android.wy.news.http.IApiService
-import com.google.gson.Gson
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.MutableLiveData
+import com.android.wy.news.entity.music.MusicResult
+import com.android.wy.news.manager.JsoupManager
+import com.android.wy.news.manager.ThreadExecutorManager
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -19,29 +12,13 @@ import retrofit2.Response
   * @Description:    
  */
 class MusicViewModel : BaseViewModel() {
-    fun getMusicList(categoryId: String) {
-        val apiService =
-            HttpManager.mInstance.getApiService(Constants.MUSIC_BASE_URL, IApiService::class.java)
-        val observable = apiService.getMusicList1()
-        observable.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                val s = response.body()?.string()
-                Log.e("gy", "onResponse: $s")
-                /*if (TextUtils.isEmpty(s)){
-                    dataList.postValue(ArrayList())
-                }
-                val gson = Gson()
-                val liveEntity = gson.fromJson(s, LiveEntity::class.java)
-                if (liveEntity != null) {
-                    dataList.postValue(liveEntity.live_review)
-                }*/
-            }
+    val dataList = MutableLiveData<ArrayList<MusicResult>>()
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                t.message?.let { msg.postValue(it) }
-            }
-
-        })
+    fun getMusicList(categoryId: String, pageNo: Int) {
+        ThreadExecutorManager.mInstance.startExecute {
+            val list = JsoupManager.getMusicList(categoryId, pageNo)
+            dataList.postValue(list)
+        }
     }
 
     override fun clear() {

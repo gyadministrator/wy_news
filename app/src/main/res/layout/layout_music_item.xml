@@ -10,56 +10,53 @@
     android:orientation="vertical"
     android:padding="6dp">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/iv_cover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        app:riv_corner_radius="4dp"
-        tools:ignore="ContentDescription" />
-
-
-    <TextView
-        android:id="@+id/tv_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:textColor="@color/second_title"
-        android:textSize="12sp"
-        tools:text="10次" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="150dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="4dp"
+            tools:ignore="ContentDescription" />
+
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tv_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="6dp"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:textColor="@color/second_title"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:ignore="RelativeOverlap"
-            tools:text="1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前" />
+            tools:text="10次" />
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentEnd="true"
-            android:paddingStart="6dp"
-            android:paddingTop="2dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
             android:src="@mipmap/music_play"
             app:tint="@color/main_title"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/second_title"
+        android:textSize="14sp"
+        tools:text="1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前" />
 </LinearLayout>

@@ -32,7 +32,6 @@ object NetworkRequest {
     /*---------------------------------以下是音乐相关----------------------------------*/
     private val musicService = HttpManager.mInstance.createMusic(IApiService::class.java)
     suspend fun getMusicCateGory() = musicService.getMusicCateGory().await()
-    suspend fun getMusicList(subCateId: String?) = musicService.getMusicList(subCateId).await()
 
     /**
      * Retrofit网络返回处理

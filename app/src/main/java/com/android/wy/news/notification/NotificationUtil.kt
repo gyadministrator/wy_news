@@ -1,5 +1,6 @@
 package com.android.wy.news.notification
 
+import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
@@ -102,5 +104,53 @@ class NotificationUtil {
             this.mOnNextListener = mOnNextListener
         }
 
+        @SuppressLint("WrongConstant")
+        fun openNotification(context: Context) {
+            //展开通知栏
+            val currentApiVersion = Build.VERSION.SDK_INT
+            try {
+                var service: Any? = null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    service = context.getSystemService(Context.STATUS_BAR_SERVICE)
+                }
+                val statusBarManager = Class
+                    .forName("android.app.StatusBarManager")
+                var expand: Method? = null
+                if (service != null) {
+                    expand = if (currentApiVersion <= 16) {
+                        statusBarManager.getMethod("expand")
+                    } else {
+                        statusBarManager
+                            .getMethod("expandNotificationsPanel")
+                    }
+                    expand.isAccessible = true
+                    expand.invoke(service)
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        fun closeNotification(context: Context) {
+            //关闭通知栏
+            var service: Any? = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                service = context.getSystemService(Context.STATUS_BAR_SERVICE)
+            }
+            try {
+                val clazz = Class.forName("android.app.StatusBarManager")
+                val sdkVersion = Build.VERSION.SDK_INT
+                var collapse: Method? = null
+                collapse = if (sdkVersion <= 16) {
+                    clazz.getMethod("collapse")
+                } else {
+                    clazz.getMethod("collapsePanels")
+                }
+                collapse.isAccessible = true
+                collapse.invoke(service)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

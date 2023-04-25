@@ -5,18 +5,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
-import com.android.wy.news.adapter.LiveAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
-import com.android.wy.news.databinding.FragmentLiveBinding
 import com.android.wy.news.databinding.FragmentMusicBinding
-import com.android.wy.news.entity.LiveReview
-import com.android.wy.news.entity.music.MusicListResult
-import com.android.wy.news.http.repository.MusicRepository
-import com.android.wy.news.viewmodel.LiveViewModel
+import com.android.wy.news.entity.music.MusicResult
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -25,8 +18,8 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
-    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicListResult> {
-    private var pageStart = 1
+    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicResult> {
+    private var pageStart = 0
     private var categoryId: String? = ""
     private lateinit var rvContent: RecyclerView
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
@@ -71,34 +64,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     private fun getMusicList() {
-        categoryId?.let { mViewModel.getMusicList(it) }
-        /*MusicRepository.getMusicList(categoryId).observe(this) {
-            if (isRefresh) {
-                refreshLayout.setNoMoreData(false)
-                refreshLayout.finishRefresh()
-                refreshLayout.setEnableLoadMore(true)
-            }
-            if (isLoading) {
-                refreshLayout.finishLoadMore()
-            }
-            val musicListEntity = it.getOrNull()
-            val musicListData = musicListEntity?.data
-            val musicListResult = musicListData?.result
-            if (musicListResult.isNullOrEmpty()) {
-                if (isLoading) {
-                    refreshLayout.setNoMoreData(true)
-                }
-            } else {
-                if (isRefresh) {
-                    musicAdapter.refreshData(musicListResult)
-                } else {
-                    musicAdapter.loadMoreData(musicListResult)
-                }
-            }
-            shimmerRecyclerView.hideShimmerAdapter()
-            isRefresh = false
-            isLoading = false
-        }*/
+        categoryId?.let { mViewModel.getMusicList(it, pageStart) }
     }
 
     override fun getViewBinding(): FragmentMusicBinding {
@@ -110,6 +76,31 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onNotifyDataChanged() {
+        mViewModel.dataList.observe(this) {
+            if (isRefresh) {
+                refreshLayout.setNoMoreData(false)
+                refreshLayout.finishRefresh()
+                refreshLayout.setEnableLoadMore(true)
+            }
+            if (isLoading) {
+                refreshLayout.finishLoadMore()
+            }
+            if (it.size == 0) {
+                if (isLoading) {
+                    refreshLayout.setNoMoreData(true)
+                }
+            } else {
+                if (isRefresh) {
+                    musicAdapter.refreshData(it)
+                } else {
+                    musicAdapter.loadMoreData(it)
+                }
+            }
+            shimmerRecyclerView.hideShimmerAdapter()
+            isRefresh = false
+            isLoading = false
+        }
+
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
             refreshLayout.setEnableLoadMore(false)
@@ -139,7 +130,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     }
 
-    override fun onItemClickListener(view: View, data: MusicListResult) {
+    override fun onItemClickListener(view: View, data: MusicResult) {
 
     }
 

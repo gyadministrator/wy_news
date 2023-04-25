@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.notification.NotificationUtil
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -27,10 +28,12 @@ class NewsService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notification = NotificationHelper.testNotification(this)
+        //val notification = NotificationHelper.testNotification(this)
+        val notification = NotificationHelper.testPlayNotification(this)
         Handler(Looper.getMainLooper()).postDelayed({
             startForeground(notifyID, notification)
-        }, 4 * 1000)
+        }, 1000)
+        NotificationUtil.openNotification(this)
         return super.onStartCommand(intent, flags, startId)
     }
 

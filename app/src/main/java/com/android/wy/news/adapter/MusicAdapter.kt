@@ -1,17 +1,13 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.databinding.LayoutLiveItemBinding
 import com.android.wy.news.databinding.LayoutMusicItemBinding
-import com.android.wy.news.entity.LiveReview
-import com.android.wy.news.entity.music.MusicListData
-import com.android.wy.news.entity.music.MusicListResult
+import com.android.wy.news.entity.music.MusicResult
 import java.util.*
 
 
@@ -22,8 +18,8 @@ import java.util.*
   * @Description:    
  */
 class MusicAdapter(
-    itemAdapterListener: OnItemAdapterListener<MusicListResult>
-) : BaseNewsAdapter<MusicAdapter.ViewHolder, MusicListResult>(itemAdapterListener) {
+    itemAdapterListener: OnItemAdapterListener<MusicResult>
+) : BaseNewsAdapter<MusicAdapter.ViewHolder, MusicResult>(itemAdapterListener) {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutMusicItemBinding.bind(itemView)
@@ -38,15 +34,17 @@ class MusicAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, data: MusicListResult) {
+    override fun onBindData(holder: ViewHolder, data: MusicResult) {
         holder.tvTitle.text = data.title
         val trackCount = data.trackCount
-        if (trackCount > 0) {
-            if (trackCount > 10000) {
-                val fl = trackCount / 10000f
-                holder.tvPlay.text = "%.1f".format(fl) + "w次播放"
-            } else {
-                holder.tvPlay.text = trackCount.toString() + "次播放"
+        if (trackCount is Int) {
+            if (trackCount > 0) {
+                if (trackCount > 10000) {
+                    val fl = trackCount / 10000f
+                    holder.tvPlay.text = "%.1f".format(fl) + "w次播放"
+                } else {
+                    holder.tvPlay.text = trackCount.toString() + "次播放"
+                }
             }
         }
         CommonTools.loadImage(data.pic, holder.ivCover)

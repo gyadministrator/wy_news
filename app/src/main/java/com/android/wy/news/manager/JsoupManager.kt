@@ -1,10 +1,15 @@
 package com.android.wy.news.manager
 
+import android.util.Log
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.entity.HotNewsEntity
+import com.android.wy.news.entity.TopEntity
+import com.android.wy.news.entity.music.MusicResult
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -118,6 +123,41 @@ class JsoupManager {
                 e.printStackTrace()
             }
             return realUrl
+        }
+
+        fun getMusicList(categoryId: String, pageNo: Int): ArrayList<MusicResult> {
+            val dataList = ArrayList<MusicResult>()
+            var url = Constants.MUSIC_BASE_URL + "/songlist?subCateId=$categoryId"
+            if (pageNo > 1) {
+                url += "&pageNo=$pageNo"
+            }
+            try {
+                val document: Document? = Jsoup.connect(url).get()
+                if (document != null) {
+                    val body = document.body().toString()
+                    if (body.contains("result:") && body.contains("noData:")) {
+                        val s =
+                            body.substring(body.indexOf("result:"), body.indexOf("noData:"))
+                        if (s.contains(":[") && s.endsWith("]},")) {
+                            val content = s.substring(s.indexOf(":[")+1, s.indexOf("]},")+1)
+                            Logger.i("getMusicList=$content")
+                            try {
+                                val gson = Gson()
+                                val list = gson.fromJson<ArrayList<MusicResult>>(
+                                    content, object : TypeToken<ArrayList<MusicResult>>() {}.type
+                                )
+                                Logger.i("getMusicList=$list")
+                                dataList.addAll(list)
+                            }catch (e:Exception){
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return dataList
         }
     }
 }

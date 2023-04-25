@@ -44,7 +44,8 @@ class NotificationHelper {
         ): Notification {
             initNotificationManager(context)
             //notificationManager?.notify(getNotifyId(), notification)
-            return NotificationCompat.Builder(context, CHANNEL_ID).setOngoing(true)
+            return NotificationCompat.Builder(context, CHANNEL_ID)
+                .setOngoing(true)
                 //设置点击通知后自动清除通知
                 .setAutoCancel(true)
                 //设置通知的标题内容
@@ -354,6 +355,95 @@ class NotificationHelper {
                 builder.setContentText("下载$progress%")
                 notificationManager?.notify(id, builder.build())
             }
+        }
+
+        fun testPlayNotification(context: Context): Notification {
+            val intent = Intent(context, HomeActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                getNotifyId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            return sendPlayNotification(
+                context,
+                pendingIntent = pendingIntent,
+                "测试标题",
+                "测试内容",
+                "https://pics0.baidu.com/feed/4afbfbedab64034f8cb3c541115e683d0b551da0.jpeg@f_auto?token=0615e68ff45ba0f08233f95998000880"
+            )
+        }
+
+        private fun sendPlayNotification(
+            context: Context,
+            pendingIntent: PendingIntent,
+            title: String,
+            desc: String,
+            cover: String
+        ): Notification {
+            initNotificationManager(context)
+            val remoteViews = RemoteViews(context.packageName, R.layout.layout_music_play_bar)
+            remoteViews.setTextViewText(R.id.tv_title, title)
+            remoteViews.setTextViewText(R.id.tv_desc, desc)
+
+            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setOngoing(true)
+                //普通视图，高度限制为64dp
+                //.setContent(remoteViews)
+                //普通视图，高度限制为64dp
+                //.setCustomContentView(remoteViews)
+                //扩展视图，高度可以扩展为256dp
+                .setCustomBigContentView(remoteViews)
+                //悬浮通知视图
+                //.setCustomHeadsUpContentView(remoteViews)
+                //设置点击通知后自动清除通知
+                .setAutoCancel(true)
+                //设置通知被创建的时间
+                .setWhen(System.currentTimeMillis())
+                //设置通知的小图标
+                //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
+                .setSmallIcon(R.mipmap.notice)
+                //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
+                //.setContentTitle(title)
+                //.setContentText(desc)
+                //内容下面的一小段文字
+                //.setSubText(house?.title)
+                //收到信息后状态栏显示的文字信息
+                //.setTicker("收到信息后状态栏显示的文字信息~")
+                //设置通知的大图标
+                //下拉系统状态栏时就能看见
+                //.setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.icon))
+                //设置点击通知后的跳转意图
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                //设置通知栏颜色
+                .setColor(context.getColor(R.color.white))
+                .setFullScreenIntent(pendingIntent, true)
+
+            val id = getNotifyId()
+            notificationManager?.notify(id, builder.build())
+
+            Glide.with(context).asBitmap().load(cover)
+                //.apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
+                .diskCacheStrategy(DiskCacheStrategy.ALL).override(
+                    //关键代码，加载原始大小
+                    com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
+                    com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+                )
+                //设置为这种格式去掉透明度通道，可以减少内存占有
+                .format(DecodeFormat.PREFER_RGB_565).into(object : SimpleTarget<Bitmap>(
+                    com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
+                    com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+                ) {
+                    override fun onResourceReady(
+                        resource: Bitmap, transition: Transition<in Bitmap?>?
+                    ) {
+                        remoteViews.setImageViewBitmap(R.id.iv_cover, resource)
+                        //builder.setLargeIcon(resource)
+                        notificationManager?.notify(id, builder.build())
+                    }
+                })
+            return builder.build()
         }
     }
 }

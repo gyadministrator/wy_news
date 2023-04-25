@@ -1,9 +1,7 @@
 package com.android.wy.news.http
 
 import com.android.wy.news.entity.HotEntity
-import com.android.wy.news.entity.music.MusicCateGoryData
 import com.android.wy.news.entity.music.MusicCategoryEntity
-import com.android.wy.news.entity.music.MusicListEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -76,9 +74,6 @@ interface IApiService {
     @GET("/v1/tracklist/category?sign=7e320e72d201147aec2c66b16b7b5553&appid=16073360&timestamp=1682322671")
     fun getMusicCateGory():Call<MusicCategoryEntity>
 
-    @GET("/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&pageSize=20&appid=16073360&timestamp=1682322671")
-    fun getMusicList(@Query("subCateId") subCateId: String?):Call<MusicListEntity>
-
-    @GET("/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&subCateId=2376&pageSize=20&appid=16073360&timestamp=1682322671")
-    fun getMusicList1():Call<ResponseBody>
+    /*@GET("/v1/tracklist/list?sign=c7ff1044501c2bae62323a4e7c6bd64f&pageSize=20&appid=16073360&timestamp=1682322671")
+    fun getMusicList(@Query("subCateId") subCateId: String?):Call<MusicListEntity>*/
 }
