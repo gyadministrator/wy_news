@@ -403,6 +403,7 @@ class NotificationHelper {
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
                 .setSmallIcon(R.mipmap.notice)
+                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
                 //.setContentTitle(title)
                 //.setContentText(desc)
@@ -415,7 +416,7 @@ class NotificationHelper {
                 //.setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.icon))
                 //设置点击通知后的跳转意图
                 .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 //设置通知栏颜色
                 .setColor(context.getColor(R.color.white))
                 .setFullScreenIntent(pendingIntent, true)

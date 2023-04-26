@@ -37,6 +37,7 @@ class NewsAdapter(
                 val view = getView(parent, R.layout.layout_news_item_image_adapter)
                 ImageViewHolder(view)
             }
+
             else -> {
                 val view = getView(parent, R.layout.layout_news_item_normal_adapter)
                 NormalViewHolder(view)
@@ -45,7 +46,7 @@ class NewsAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, data: NewsEntity) {
+    override fun onBindData(holder: ViewHolder, position: Int, data: NewsEntity) {
         when (holder) {
             is ImageViewHolder -> {
                 setNewsContent(
@@ -53,6 +54,7 @@ class NewsAdapter(
                 )
                 loadImage(holder, data)
             }
+
             is NormalViewHolder -> {
                 holder.tvTitle.text = data.title
                 if (TextUtils.isEmpty(data.digest)) {

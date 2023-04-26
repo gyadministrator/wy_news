@@ -65,7 +65,7 @@ class TopAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, data: TopEntity) {
+    override fun onBindData(holder: ViewHolder, position: Int, data: TopEntity) {
         if (holder is NormalViewHolder) {
             holder.tvTitle.text = data.title
             holder.tvSource.text = data.source

@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
     private var itemAdapterListener: OnItemAdapterListener<V>
 ) : RecyclerView.Adapter<H>(), View.OnClickListener {
-    protected var currentPage = 0
+    private var currentPage = 0
 
     protected var mDataList = ArrayList<V>()
 
     abstract fun onViewHolderCreate(parent: ViewGroup, viewType: Int): H
 
-    abstract fun onBindData(holder: H, data: V)
+    abstract fun onBindData(holder: H, position: Int, data: V)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): H {
         return onViewHolderCreate(parent, viewType)
@@ -35,13 +35,17 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
 
     override fun onBindViewHolder(holder: H, position: Int) {
         val data = mDataList[position]
-        onBindData(holder, data)
         holder.itemView.tag = data
         holder.itemView.setOnClickListener(this)
+        onBindData(holder, position, data)
     }
 
     override fun onClick(p0: View?) {
-        p0?.let { itemAdapterListener.onItemClickListener(it, it.tag as V) }
+        p0?.let { onItemClickListener(it) }
+    }
+
+   private fun onItemClickListener(view: View) {
+        itemAdapterListener.onItemClickListener(view, view.tag as V)
     }
 
     interface OnItemAdapterListener<V> {

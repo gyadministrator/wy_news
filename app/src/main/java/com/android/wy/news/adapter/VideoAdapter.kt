@@ -34,7 +34,7 @@ class VideoAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: VideoViewHolder, data: RecommendVideoEntity) {
+    override fun onBindData(holder: VideoViewHolder, position: Int, data: RecommendVideoEntity) {
         holder.playVideo.setPlayState(data.isPlaying)
         holder.playVideo.tag = data.vid
         holder.playVideo

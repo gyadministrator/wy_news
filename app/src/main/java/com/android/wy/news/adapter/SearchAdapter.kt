@@ -30,7 +30,7 @@ class SearchAdapter(itemAdapterListener: OnItemAdapterListener<SearchResult>) :
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, data: SearchResult) {
+    override fun onBindData(holder: ViewHolder, position: Int, data: SearchResult) {
         val title = data.title
         var titleText = title
         if (title.contains("<em>")) {

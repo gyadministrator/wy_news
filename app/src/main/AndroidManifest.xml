@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 读取音频权限 -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- 前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 读取外部存储 -->
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" /><!--通知栏展开-->
     <!-- Android 13 target 32 以上不需要手动授权 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -130,8 +131,23 @@
             android:exported="false" />
 
         <service
-            android:name=".service.NewsService"
+            android:name=".service.MusicService"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+
+        <service android:name=".service.PlayService" />
+
+        <service android:name=".service.PauseService" />
+
+        <receiver
+            android:name=".receiver.MusicBroadCastReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="com.android.wy.news.service.broadcasts.PLAY_PRE" />
+                <action android:name="com.android.wy.news.service.broadcasts.PLAY_NEXT" />
+            </intent-filter>
+        </receiver>
+
 
         <receiver
             android:name=".receiver.NotificationReceiver"

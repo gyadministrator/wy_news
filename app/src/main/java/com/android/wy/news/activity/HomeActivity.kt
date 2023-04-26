@@ -42,10 +42,9 @@ import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.ThreadExecutorManager
-import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
-import com.android.wy.news.service.NewsService
+import com.android.wy.news.service.MusicService
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.NewsMainViewModel
@@ -110,11 +109,11 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         ThreadExecutorManager.mInstance.startExecute {
             mViewModel.getHotWord()
         }
-        //testNotify()
+        //testMusicNotify()
     }
 
-    private fun testNotify() {
-        val intent = Intent(this, NewsService::class.java)
+    private fun testMusicNotify() {
+        val intent = Intent(this, MusicService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {

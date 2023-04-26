@@ -1,6 +1,8 @@
 package com.android.wy.news.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +52,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initData() {
-        musicAdapter = MusicAdapter(this)
+        musicAdapter = MusicAdapter(mActivity, this)
         rvContent.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         rvContent.adapter = musicAdapter
     }

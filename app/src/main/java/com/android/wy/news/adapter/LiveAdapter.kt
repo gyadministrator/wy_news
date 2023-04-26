@@ -37,7 +37,7 @@ class LiveAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, data: LiveReview) {
+    override fun onBindData(holder: ViewHolder, position: Int, data: LiveReview) {
         holder.tvTitle.text = data.roomName
         val playCount = data.userCount
         if (playCount > 0) {

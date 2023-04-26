@@ -26,7 +26,7 @@ class ScreenVideoAdapter(
         return ScreenViewHolder(view)
     }
 
-    override fun onBindData(holder: ScreenViewHolder, data: ScreenVideoEntity) {
+    override fun onBindData(holder: ScreenViewHolder, position: Int, data: ScreenVideoEntity) {
         holder.playVideo.setPlayState(data.isPlaying)
         holder.playVideo
             .setTitle(data.title)
