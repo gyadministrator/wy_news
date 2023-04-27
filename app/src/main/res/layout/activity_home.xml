@@ -78,6 +78,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <com.android.wy.news.view.PlayBarView
+        android:id="@+id/play_bar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <com.android.bottombar.view.GYBottomBarView
         android:id="@+id/bottomView"
         android:layout_width="match_parent"

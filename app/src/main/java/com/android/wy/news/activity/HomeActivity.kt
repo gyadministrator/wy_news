@@ -47,6 +47,7 @@ import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.service.MusicService
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
+import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -66,6 +67,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private lateinit var marqueeTextView: MarqueeTextView
     private lateinit var rlSetting: RelativeLayout
     private lateinit var rlSearch: RelativeLayout
+    private lateinit var playBarView: PlayBarView
     private val list = ArrayList<String>()
 
     override fun initBarItems() {
@@ -175,6 +177,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
 
         rlSearch = findViewById(R.id.rl_search_top)
+        playBarView = findViewById(R.id.play_bar_view)
         rlSearch.setOnClickListener {
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
@@ -371,6 +374,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             bottomView.setBackgroundResource(R.color.default_status_bar_color)
         }
         setBottomBarState(position)
+        if (position != 3) {
+            playBarView.visibility = View.GONE
+        }
     }
 
     private fun setBottomBarState(position: Int) {
@@ -456,5 +462,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private fun showSearch() {
         val rlSearch = findViewById<LinearLayout>(R.id.rl_search)
         rlSearch.visibility = View.VISIBLE
+    }
+
+    fun getPlayBarView(): PlayBarView {
+        return playBarView
     }
 }

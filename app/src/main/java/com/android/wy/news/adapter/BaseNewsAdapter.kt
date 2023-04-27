@@ -44,7 +44,7 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         p0?.let { onItemClickListener(it) }
     }
 
-   private fun onItemClickListener(view: View) {
+   protected fun onItemClickListener(view: View) {
         itemAdapterListener.onItemClickListener(view, view.tag as V)
     }
 

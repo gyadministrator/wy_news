@@ -2,6 +2,7 @@ package com.android.wy.news.viewmodel
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -10,6 +11,7 @@ import com.android.wy.news.entity.IpEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.SplashEntity
+import com.android.wy.news.entity.music.MusicTypeEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.location.LocationHelper
@@ -35,9 +37,9 @@ class SplashViewModel : BaseViewModel() {
     fun init(context: Context) {
         ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
         ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
-        //ThreadExecutorManager.mInstance.startExecute { getIpInfo() }
         ThreadExecutorManager.mInstance.startExecute { JsoupManager.getCityInfo() }
         ThreadExecutorManager.mInstance.startExecute { getSplash() }
+        ThreadExecutorManager.mInstance.startExecute { JsoupManager.getCookie() }
     }
 
     private fun getSplash() {
@@ -57,62 +59,6 @@ class SplashViewModel : BaseViewModel() {
                         SpTools.putString(Constants.SPLASH_AD, url)
                     }
                 }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                t.message?.let { msg.postValue(it) }
-            }
-
-        })
-    }
-
-    private fun getAdInfo() {
-        val apiService =
-            HttpManager.mInstance.getApiService(Constants.AD_URL, IApiService::class.java)
-        val observable = apiService.getAdInfo()
-        observable.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                val s = response.body()?.string()
-                val adData = CommonTools.parseAdData(s)
-                if (adData != null) {
-                    val ads = adData.ads
-                    if (ads != null && ads.isNotEmpty()) {
-                        val adItem = ads[0]
-                        if (adItem != null) {
-                            val resources = adItem.resources
-                            if (resources != null && resources.isNotEmpty()) {
-                                val resource = resources[0]
-                                if (resource != null) {
-                                    val urls = resource.urls
-                                    if (urls != null && urls.isNotEmpty()) {
-                                        val adUrl = urls[0]
-                                        adUrl?.let { SpTools.putString(Constants.SPLASH_AD, it) }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                t.message?.let { msg.postValue(it) }
-            }
-
-        })
-    }
-
-    private fun getIpInfo() {
-        val apiService =
-            HttpManager.mInstance.getApiService(Constants.IP_INFO_URL, IApiService::class.java)
-        val observable = apiService.getCityByIp()
-        observable.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                val s = response.body()?.string()
-                val gson = Gson()
-                val ipEntity = gson.fromJson(s, IpEntity::class.java)
-                val result = ipEntity.result
-                CommonTools.getAddress(result.areaLat.toDouble(), result.areaLng.toDouble())
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -153,6 +99,18 @@ class SplashViewModel : BaseViewModel() {
         )
         Constants.mNewsTitleList.clear()
         Constants.mNewsTitleList.addAll(dataList)
+
+        readMusicTitle(context)
+    }
+
+    private fun readMusicTitle(context: Context) {
+        val content = CommonTools.getAssertContent(context, "music_type.json")
+        val gson = Gson()
+        val dataList = gson.fromJson<ArrayList<MusicTypeEntity>>(
+            content, object : TypeToken<ArrayList<MusicTypeEntity>>() {}.type
+        )
+        Constants.mMusicTitleList.clear()
+        Constants.mMusicTitleList.addAll(dataList)
         isReadFinish.postValue(true)
     }
 

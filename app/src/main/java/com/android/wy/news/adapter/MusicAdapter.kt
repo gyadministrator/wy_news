@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -15,7 +16,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
-import com.android.wy.news.entity.music.MusicResult
+import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.receiver.MusicBroadCastReceiver
 import com.android.wy.news.service.MusicService
 import java.util.*
@@ -28,23 +29,25 @@ import java.util.*
   * @Description:    
  */
 class MusicAdapter(
-    context: Context, itemAdapterListener: OnItemAdapterListener<MusicResult>
-) : BaseNewsAdapter<MusicAdapter.ViewHolder, MusicResult>(itemAdapterListener) {
+    context: Context, itemAdapterListener: OnItemAdapterListener<MusicInfo>
+) : BaseNewsAdapter<MusicAdapter.ViewHolder, MusicInfo>(itemAdapterListener) {
     private var musicBroadCastReceiver: MusicBroadCastReceiver? = null
     private var isBind = false
     private var mContext: Context? = null
     private var selectedPosition = -5
-    private var mResID = -5
+    private var musicRid = ""
     private var musicBinder: MusicService.MusicBinder? = null
     private var musicService: MusicService? = null
-    private var musicResult: MusicResult? = null
+    private var musicInfo: MusicInfo? = null
     private var mServiceIntent: Intent? = null
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutMusicItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
-        var tvPlay = mBinding.tvPlay
+        var tvDesc = mBinding.tvDesc
         var ivCover = mBinding.ivCover
+        var ivPlay = mBinding.ivPlay
+        var ivLoading = mBinding.ivLoading
     }
 
     init {
@@ -85,16 +88,16 @@ class MusicAdapter(
     private fun stateChange(holder: ViewHolder, position: Int) {
         if (selectedPosition == position) {
             setMusicBroadCastListener()
-
-            holder.itemView.setBackgroundResource(R.drawable.bg_select_item)
-            holder.tvTitle.setTextColor(ContextCompat.getColor(mContext!!, R.color.white))
+            holder.ivPlay.setImageResource(R.mipmap.music_pause)
+            holder.ivLoading.visibility = View.VISIBLE
+            holder.ivLoading.show()
 
             val result = mDataList[position]
-            if (result.id == mResID && mResID != -5) {
+            if (musicRid == result.musicrid && TextUtils.isEmpty(musicRid)) {
                 //相同音乐id或者且不是第一次播放，就直接返回
                 return
             }
-            mResID = result.id
+            musicRid = result.musicrid
             //每次切歌需要重新绑定服务
             destroy()
             if (!isBind) {
@@ -102,8 +105,9 @@ class MusicAdapter(
                 isBind = true
             }
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.bg_item)
-            holder.tvTitle.setTextColor(ContextCompat.getColor(mContext!!, R.color.main_title))
+            holder.ivPlay.setImageResource(R.mipmap.music_play)
+            holder.ivLoading.visibility = View.GONE
+            holder.ivLoading.hide()
         }
     }
 
@@ -128,7 +132,7 @@ class MusicAdapter(
         override fun onServiceConnected(p0: ComponentName?, service: IBinder?) {
             musicBinder = service as (MusicService.MusicBinder)
             musicService = musicBinder?.getService();
-            musicResult?.let { musicBinder?.setMusic(musicResult = it) }
+            musicInfo?.let { musicBinder?.setMusic(it) }
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -143,19 +147,9 @@ class MusicAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: MusicResult) {
-        holder.tvTitle.text = data.title
-        val trackCount = data.trackCount
-        if (trackCount is Int) {
-            if (trackCount > 0) {
-                if (trackCount > 10000) {
-                    val fl = trackCount / 10000f
-                    holder.tvPlay.text = "%.1f".format(fl) + "w次播放"
-                } else {
-                    holder.tvPlay.text = trackCount.toString() + "次播放"
-                }
-            }
-        }
+    override fun onBindData(holder: ViewHolder, position: Int, data: MusicInfo) {
+        holder.tvTitle.text = data.artist
+        holder.tvDesc.text = data.album
         setClick(holder, position)
         CommonTools.loadImage(data.pic, holder.ivCover)
         stateChange(holder, position)
@@ -165,11 +159,12 @@ class MusicAdapter(
         holder.itemView.setOnClickListener {
             setSelectedIndex(position)
             showNotify(position)
+            onItemClickListener(it)
         }
     }
 
     private fun showNotify(position: Int) {
-        this.musicResult = mDataList[position]
+        this.musicInfo = mDataList[position]
         //启动服务来播放
         if (mServiceIntent == null) {
             mServiceIntent = Intent(mContext, MusicService::class.java)

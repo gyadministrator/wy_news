@@ -20,11 +20,8 @@ import com.android.wy.news.databinding.LayoutMusicPlayBarBinding
  */
 class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var tvTitle: TextView
-    private lateinit var tvDesc: TextView
     private lateinit var ivCover: ImageView
-    private lateinit var ivPre: ImageView
     private lateinit var ivPlay: ImageView
-    private lateinit var ivNext: ImageView
     private var onPlayBarListener: OnPlayBarListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -39,28 +36,16 @@ class PlayBarView : LinearLayout, View.OnClickListener {
 
     private fun initView(binding: LayoutMusicPlayBarBinding) {
         tvTitle = binding.tvTitle
-        tvDesc = binding.tvDesc
         ivCover = binding.ivCover
-        ivPre = binding.ivPre
         ivPlay = binding.ivPlay
-        ivNext = binding.ivNext
-
-        ivPre.setOnClickListener(this)
+        ivPlay.setOnClickListener(this)
     }
 
     override fun onClick(p0: View?) {
         if (p0 != null) {
             when (p0.id) {
-                R.id.iv_pre -> {
-                    onPlayBarListener?.onClickPre()
-                }
-
                 R.id.iv_play -> {
                     onPlayBarListener?.onClickPlay()
-                }
-
-                R.id.iv_next -> {
-                    onPlayBarListener?.onClickNext()
                 }
 
                 else -> {
@@ -80,8 +65,12 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         return this
     }
 
-    fun setDesc(desc: String): PlayBarView {
-        tvDesc.text = desc
+    fun setPlay(isPlaying: Boolean): PlayBarView {
+        if (isPlaying) {
+            ivPlay.setImageResource(R.mipmap.music_pause)
+        } else {
+            ivPlay.setImageResource(R.mipmap.music_play)
+        }
         return this
     }
 
@@ -91,8 +80,6 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     }
 
     interface OnPlayBarListener {
-        fun onClickPre()
         fun onClickPlay()
-        fun onClickNext()
     }
 }
