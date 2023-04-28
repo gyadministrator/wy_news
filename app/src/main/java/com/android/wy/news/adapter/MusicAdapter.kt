@@ -103,7 +103,7 @@ class MusicAdapter(
             holder.ivLoading.visibility = View.VISIBLE
             holder.ivLoading.show()
 
-            if (musicRid == result.musicrid && TextUtils.isEmpty(musicRid)) {
+            if (musicRid == result.musicrid) {
                 //相同音乐id或者且不是第一次播放，就直接返回
                 return
             }

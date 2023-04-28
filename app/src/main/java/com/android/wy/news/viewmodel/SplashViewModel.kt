@@ -99,7 +99,6 @@ class SplashViewModel : BaseViewModel() {
         )
         Constants.mNewsTitleList.clear()
         Constants.mNewsTitleList.addAll(dataList)
-
         readMusicTitle(context)
     }
 

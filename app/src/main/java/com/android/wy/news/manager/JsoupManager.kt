@@ -119,19 +119,19 @@ class JsoupManager {
             return realUrl
         }
 
-        fun getCookie() {
-           /* val s = SpTools.getString(Constants.CSRF_TOKEN_KEY)
-            if (s != null && s.contains("_")) {
-                val saveTime = s.substring(s.indexOf("_") + 1, s.length)
-                val l = saveTime.toLong()
-                Logger.i("saveTime:$saveTime")
-                val diff = System.currentTimeMillis() - l
-                val days = TimeUnit.MILLISECONDS.toDays(diff)
-                Logger.i("saveTime--->>>days:$days")
-                if (days < 1) {
-                    return
-                }
-            }*/
+        fun getCookie(): Boolean {
+            /* val s = SpTools.getString(Constants.CSRF_TOKEN_KEY)
+             if (s != null && s.contains("_")) {
+                 val saveTime = s.substring(s.indexOf("_") + 1, s.length)
+                 val l = saveTime.toLong()
+                 Logger.i("saveTime:$saveTime")
+                 val diff = System.currentTimeMillis() - l
+                 val days = TimeUnit.MILLISECONDS.toDays(diff)
+                 Logger.i("saveTime--->>>days:$days")
+                 if (days < 1) {
+                     return
+                 }
+             }*/
             try {
                 val response = Jsoup.connect("http://www.kuwo.cn/playlists")
                     .execute()
@@ -144,8 +144,10 @@ class JsoupManager {
                     )
                 }
                 Logger.i("getCookie: $cookies")
+                return true
             } catch (e: Exception) {
                 e.printStackTrace()
+                return false
             }
         }
     }

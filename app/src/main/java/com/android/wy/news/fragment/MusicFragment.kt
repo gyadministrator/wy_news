@@ -25,6 +25,9 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import java.util.Timer
+import java.util.TimerTask
+
 
 /**
  * {
@@ -49,8 +52,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var playBarView: PlayBarView? = null
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
-    private var progressThread: ProgressThread? = null
-    private var isPause = false
+    private var timer: Timer? = null
 
     companion object {
         private const val mKey: String = "category_id"
@@ -91,7 +93,15 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (arguments != null) {
             categoryId = arguments.getInt(mKey)
         }
-        getMusicList()
+        if (!TextUtils.isEmpty(Constants.CSRF_TOKEN)) {
+            getMusicList()
+        } else {
+            getCookie()
+        }
+    }
+
+    private fun getCookie() {
+        mViewModel.getCookie()
     }
 
     private fun getMusicList() {
@@ -140,6 +150,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onNotifyDataChanged() {
+        mViewModel.isSuccess.observe(this) {
+            if (it) {
+                getMusicList()
+            }
+        }
+
         mViewModel.msg.observe(this) {
             Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
             refreshLayout.setEnableLoadMore(false)
@@ -166,28 +182,63 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onClear() {
+        timer?.cancel()
+        timer = null
     }
 
     override fun onItemClickListener(view: View, data: MusicInfo) {
-        currentPosition = view.tag as Int
-        this.currentMusicInfo = data
-        Logger.i("onItemClickListener--->>>currentMusicInfo:$currentMusicInfo")
-        showPlayBar()
-        progressThread = ProgressThread(mMediaHelper, playBarView)
-        progressThread?.start()
-        musicAdapter.setSelectedIndex(currentPosition)
+        play(view.tag as Int)
+    }
+
+    private fun play(position: Int) {
+        val dataList = musicAdapter.getDataList()
+        if (dataList.size > 0 && position < dataList.size) {
+            val musicInfo = dataList[position]
+            if (this.currentMusicInfo?.musicrid == musicInfo.musicrid) return
+            timer?.cancel()
+            timer = null
+            currentPosition = position
+            this.currentMusicInfo = musicInfo
+            Logger.i("onItemClickListener--->>>currentMusicInfo:$currentMusicInfo")
+            showPlayBar()
+            setProgress()
+            musicAdapter.setSelectedIndex(currentPosition)
+        }
+    }
+
+    private fun setProgress() {
+        if (timer == null) {
+            //时间监听器
+            timer = Timer()
+        }
+        timer?.schedule(object : TimerTask() {
+            override fun run() {
+                val time = mMediaHelper?.getCurrentPosition()
+                Logger.i("setProgress--->>>time:$time")
+                time?.let { playBarView?.updateProgress(it) }
+                val duration = playBarView?.getDuration()
+                if (time == duration) {
+                    playBarView?.setPlay(false)
+                    //下一曲
+                    currentPosition++
+                    play(currentPosition)
+                }
+            }
+        }, 0, 50)
     }
 
     override fun onClickPlay(position: Int) {
         Logger.i("onClickPlay--->>>position:$position")
-        /*if (mMediaHelper != null) {
+        if (mMediaHelper != null) {
             if (mMediaHelper!!.isPlaying()) {
+                mMediaHelper?.start()
                 playBarView?.setPlay(true)
             } else {
+                mMediaHelper?.pause()
                 playBarView?.setPlay(false)
             }
-            musicAdapter.setSelectedIndex(position)
-        }*/
+            //musicAdapter.setSelectedIndex(position)
+        }
     }
 
     private fun showPlayBar() {
@@ -204,66 +255,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             playBarView?.visibility = View.VISIBLE
             currentMusicInfo?.pic?.let {
                 currentMusicInfo?.duration?.let { it1 ->
-                    playBarView?.setCover(it)
-                        ?.setTitle(stringBuilder.toString())
-                        ?.setPlay(true)
-                        ?.setPosition(currentPosition)
-                        ?.setDuration(duration = it1 * 1000)
+                    playBarView?.setCover(it)?.setTitle(stringBuilder.toString())?.setPlay(true)
+                        ?.setPosition(currentPosition)?.setDuration(duration = it1 * 1000)
                         ?.addListener(this)
-                }
-            }
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            if (progressThread != null) {
-                showPlayBar()
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        isPause = true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isPause) {
-            isPause = false
-            if (progressThread != null) {
-                showPlayBar()
-            }
-        }
-    }
-
-    @Deprecated("Deprecated in Java", ReplaceWith("super.setUserVisibleHint(isVisibleToUser)"))
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (progressThread != null) {
-            showPlayBar()
-        }
-    }
-
-    private class ProgressThread(
-        private var mediaPlayerHelper: MediaPlayerHelper?,
-        private var playBarView: PlayBarView?
-    ) : Thread() {
-
-        override fun run() {
-            super.run()
-            var flag = true
-            while (flag) {
-                val currentPosition = mediaPlayerHelper?.getCurrentPosition()
-                Logger.i("ProgressThread--->>>currentPosition:$currentPosition")
-                currentPosition?.let { playBarView?.updateProgress(it) }
-                val duration = playBarView?.getDuration()
-                if (currentPosition == duration) {
-                    flag = false
-                    playBarView?.setPlay(false)
-                    interrupt()
                 }
             }
         }

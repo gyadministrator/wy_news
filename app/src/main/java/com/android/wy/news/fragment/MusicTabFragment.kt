@@ -44,7 +44,6 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     override fun initEvent() {
-
     }
 
     override fun getViewBinding(): FragmentTabMusicBinding {
