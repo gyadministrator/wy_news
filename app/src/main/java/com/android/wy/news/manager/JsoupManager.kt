@@ -3,6 +3,7 @@ package com.android.wy.news.manager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.entity.HotNewsEntity
 import org.jsoup.Jsoup
@@ -10,6 +11,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 /*
@@ -118,13 +120,33 @@ class JsoupManager {
         }
 
         fun getCookie() {
-            val response = Jsoup.connect("http://www.kuwo.cn/playlists")
-                .execute()
-            val cookies = response.cookies()
-            if (cookies.contains("kw_token")) {
-                Constants.CSRF_TOKEN = cookies["kw_token"] + ""
+           /* val s = SpTools.getString(Constants.CSRF_TOKEN_KEY)
+            if (s != null && s.contains("_")) {
+                val saveTime = s.substring(s.indexOf("_") + 1, s.length)
+                val l = saveTime.toLong()
+                Logger.i("saveTime:$saveTime")
+                val diff = System.currentTimeMillis() - l
+                val days = TimeUnit.MILLISECONDS.toDays(diff)
+                Logger.i("saveTime--->>>days:$days")
+                if (days < 1) {
+                    return
+                }
+            }*/
+            try {
+                val response = Jsoup.connect("http://www.kuwo.cn/playlists")
+                    .execute()
+                val cookies = response.cookies()
+                if (cookies.contains("kw_token")) {
+                    Constants.CSRF_TOKEN = cookies["kw_token"] + ""
+                    SpTools.putString(
+                        Constants.CSRF_TOKEN_KEY,
+                        Constants.CSRF_TOKEN + "_" + System.currentTimeMillis()
+                    )
+                }
+                Logger.i("getCookie: $cookies")
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            Logger.i("getCookie: $cookies")
         }
     }
 }

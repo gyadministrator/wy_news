@@ -56,7 +56,10 @@ class Constants {
 
         /*以下是音乐相关*/
         val mMusicTitleList = arrayListOf<MusicTypeEntity>()
-        var CSRF_TOKEN: String = ""
+        var LAST_PLAY_MUSIC_KEY = "last_play_music_key"
+        var CSRF_TOKEN_KEY = "csrf_token_key"
+        var CSRF_TOKEN = ""
         const val MUSIC_BASE_URL = "http://www.kuwo.cn"
+        const val MUSIC_BASE_LRC_URL = "http://m.kuwo.cn"
     }
 }

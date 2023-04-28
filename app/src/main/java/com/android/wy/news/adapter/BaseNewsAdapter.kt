@@ -35,17 +35,21 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
 
     override fun onBindViewHolder(holder: H, position: Int) {
         val data = mDataList[position]
-        holder.itemView.tag = data
-        holder.itemView.setOnClickListener(this)
         onBindData(holder, position, data)
+        holder.itemView.tag = position
+        holder.itemView.setOnClickListener(this)
     }
 
     override fun onClick(p0: View?) {
         p0?.let { onItemClickListener(it) }
     }
 
-   protected fun onItemClickListener(view: View) {
-        itemAdapterListener.onItemClickListener(view, view.tag as V)
+    private fun onItemClickListener(view: View) {
+        val tag = view.tag
+        if (tag is Int) {
+            val data = mDataList[tag]
+            itemAdapterListener.onItemClickListener(view, data)
+        }
     }
 
     interface OnItemAdapterListener<V> {

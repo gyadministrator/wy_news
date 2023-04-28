@@ -74,7 +74,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         barItems.add(GYBarItem("头条", R.mipmap.top))
         barItems.add(GYBarItem("精选", R.mipmap.classify))
         barItems.add(GYBarItem("视频", R.mipmap.video))
-        barItems.add(GYBarItem("音乐", R.mipmap.music))
+        barItems.add(GYBarItem("聆听", R.mipmap.music))
         barItems.add(GYBarItem("直播", R.mipmap.live))
     }
 
@@ -376,6 +376,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         setBottomBarState(position)
         if (position != 3) {
             playBarView.visibility = View.GONE
+        } else {
+            playBarView.visibility = View.VISIBLE
         }
     }
 

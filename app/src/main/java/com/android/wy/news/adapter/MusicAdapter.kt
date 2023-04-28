@@ -10,13 +10,13 @@ import android.os.IBinder
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.receiver.MusicBroadCastReceiver
 import com.android.wy.news.service.MusicService
 import java.util.*
@@ -40,6 +40,7 @@ class MusicAdapter(
     private var musicService: MusicService? = null
     private var musicInfo: MusicInfo? = null
     private var mServiceIntent: Intent? = null
+    private var mMediaHelper: MediaPlayerHelper? = null
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutMusicItemBinding.bind(itemView)
@@ -53,6 +54,7 @@ class MusicAdapter(
     init {
         mContext = context
         musicBroadCastReceiver = MusicBroadCastReceiver.instance
+        mMediaHelper = MediaPlayerHelper.getInstance(mContext!!)
         isBind = false
     }
 
@@ -86,13 +88,21 @@ class MusicAdapter(
     }
 
     private fun stateChange(holder: ViewHolder, position: Int) {
+        val result = mDataList[position]
         if (selectedPosition == position) {
             setMusicBroadCastListener()
-            holder.ivPlay.setImageResource(R.mipmap.music_pause)
+
+            /*if (mMediaHelper != null) {
+                if (mMediaHelper!!.isPlaying()) {
+                    holder.ivLoading.setIndicator("LineScalePartyIndicator")
+                } else {
+                    holder.ivLoading.setIndicator("LineSpinFadeLoaderIndicator")
+                }
+            }*/
+            holder.ivPlay.setImageResource(R.mipmap.music_play)
             holder.ivLoading.visibility = View.VISIBLE
             holder.ivLoading.show()
 
-            val result = mDataList[position]
             if (musicRid == result.musicrid && TextUtils.isEmpty(musicRid)) {
                 //相同音乐id或者且不是第一次播放，就直接返回
                 return
@@ -105,18 +115,19 @@ class MusicAdapter(
                 isBind = true
             }
         } else {
-            holder.ivPlay.setImageResource(R.mipmap.music_play)
+            holder.ivPlay.setImageResource(R.mipmap.music_pause)
             holder.ivLoading.visibility = View.GONE
             holder.ivLoading.hide()
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setSelectedIndex(position: Int) {
+    fun setSelectedIndex(position: Int) {
         Logger.i("setSelectedIndex: $position")
         selectedPosition = position
         notifyItemChanged(position)
         notifyDataSetChanged()
+        showNotify(position)
     }
 
 
@@ -150,17 +161,8 @@ class MusicAdapter(
     override fun onBindData(holder: ViewHolder, position: Int, data: MusicInfo) {
         holder.tvTitle.text = data.artist
         holder.tvDesc.text = data.album
-        setClick(holder, position)
         CommonTools.loadImage(data.pic, holder.ivCover)
         stateChange(holder, position)
-    }
-
-    private fun setClick(holder: ViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            setSelectedIndex(position)
-            showNotify(position)
-            onItemClickListener(it)
-        }
     }
 
     private fun showNotify(position: Int) {

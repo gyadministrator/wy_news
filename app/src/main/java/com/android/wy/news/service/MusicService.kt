@@ -12,10 +12,16 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
+import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.entity.music.MusicUrlEntity
+import com.android.wy.news.http.HttpManager
+import com.android.wy.news.http.IApiService
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.receiver.MusicBroadCastReceiver
@@ -24,6 +30,10 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.gson.Gson
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 /*
@@ -104,14 +114,13 @@ class MusicService : Service() {
         }
 
         fun setMusic(musicInfo: MusicInfo) {
-
             Logger.i("setMusic:$musicInfo")
             musicService.defaultMusicState(musicInfo)
 
             musicService.mMediaHelper?.setOnMediaHelperListener(object :
                 MediaPlayerHelper.OnMediaHelperListener {
-                override fun onPrepared(mp: MediaPlayer?) {
-                    Logger.i("onPrepared: ")
+                override fun onPreparedState(mp: MediaPlayer?) {
+                    Logger.i("onPreparedState: ")
                     musicService.flag = MODE_PAUSE
                     musicService.playMusicState(musicInfo)
                     musicService.mMediaHelper?.start()
@@ -127,15 +136,81 @@ class MusicService : Service() {
                     musicService.playMusicState(musicInfo)
                 }
 
-                override fun onError(what: Int, extra: Int) {
-                    Logger.i("onError: what:$what  extra:$extra")
+                override fun onCompleteState() {
+                    Logger.i("onCompleteState: ")
+                    musicService.playCompleteState(musicInfo)
+                }
+
+                override fun onBufferState(percent: Int) {
+                    Logger.i("onBufferState: $percent")
+                    musicService.bufferMusicState(musicInfo)
+                }
+
+                override fun onErrorState(what: Int, extra: Int) {
+                    Logger.i("onErrorState: what:$what  extra:$extra")
                     musicService.defaultMusicState(musicInfo)
                 }
             })
             musicService.changeMusic()
-            //musicService.mMediaHelper?.setRawFile(musicResult.pic as Int)
-            musicService.mMediaHelper?.setPath(musicInfo.pic)
+            //请求播放地址
+            requestMusicUrl(musicInfo)
+
+            val gson = Gson()
+            SpTools.putString(Constants.LAST_PLAY_MUSIC_KEY, gson.toJson(musicInfo))
         }
+
+        private fun requestMusicUrl(musicInfo: MusicInfo) {
+            val musicId = musicInfo.musicrid
+            if (musicId.contains("_")) {
+                val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
+                val apiService =
+                    HttpManager.mInstance.getMusicApiService(
+                        Constants.MUSIC_BASE_URL,
+                        IApiService::class.java
+                    )
+                val observable = apiService.getMusicUrl(mid)
+                observable.enqueue(object : Callback<MusicUrlEntity> {
+                    override fun onResponse(
+                        call: Call<MusicUrlEntity>,
+                        response: Response<MusicUrlEntity>
+                    ) {
+                        val musicUrlEntity = response.body()
+                        Logger.i("mid:$mid---->>>musicUrlEntity:$musicUrlEntity")
+                        if (musicUrlEntity != null) {
+                            val musicUrlData = musicUrlEntity.data
+                            if (musicUrlEntity.code == -1) {
+                                Toast.makeText(
+                                    musicService.applicationContext,
+                                    musicUrlEntity.msg,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            val url = musicUrlData?.url
+                            Logger.i("mid:$mid---->>>url:$url")
+                            if (url != null) {
+                                musicService.mMediaHelper?.setPath(url)
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<MusicUrlEntity>, t: Throwable) {
+                        Toast.makeText(
+                            musicService.applicationContext,
+                            t.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            }
+        }
+    }
+
+    private fun playCompleteState(musicInfo: MusicInfo) {
+
+    }
+
+    private fun bufferMusicState(musicInfo: MusicInfo) {
+
     }
 
     private fun changeMusic() {
@@ -208,7 +283,7 @@ class MusicService : Service() {
         Logger.i("playMusicState: ")
         if (flag == MODE_PLAY) return
         flag = MODE_PLAY
-        val pauseIntent = Intent(this, PauseService::class.java)
+        val pauseIntent = Intent(this, PlayService::class.java)
         val pausePendingIntent = PendingIntent.getService(
             this,
             0,
@@ -217,7 +292,7 @@ class MusicService : Service() {
         )
         notifyLayout?.setOnClickPendingIntent(R.id.iv_play, pausePendingIntent)
         notifyLayout?.setImageViewResource(R.id.iv_cover, R.mipmap.icon)
-        notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_pause)
+        notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_play)
         startMusicForeground(musicInfo)
     }
 
@@ -248,7 +323,7 @@ class MusicService : Service() {
         Logger.i("pauseMusicState: ")
         if (flag == MODE_PAUSE) return
         flag = MODE_PAUSE
-        val playIntent = Intent(this, PlayService::class.java)
+        val playIntent = Intent(this, PauseService::class.java)
         val playPendingIntent = PendingIntent.getService(
             this,
             2,

@@ -10,9 +10,16 @@ import kotlinx.coroutines.Dispatchers
   * @Description:    
  */
 object MusicRepository : BaseRepository() {
+
     fun getMusicList(bangId: Int, pn: Int) = getData(Dispatchers.IO) {
         val musicListEntity = NetworkRequest.getMusicList(bangId, pn)
         if (musicListEntity.code == 200) Result.success(musicListEntity)
         else Result.failure(RuntimeException("getMusicList is error"))
+    }
+
+    fun getMusicUrl(mid: String) = getData(Dispatchers.IO) {
+        val musicUrlEntity = NetworkRequest.getMusicUrl(mid)
+        if (musicUrlEntity.code == 200) Result.success(musicUrlEntity)
+        else Result.failure(RuntimeException("getMusicUrl is error"))
     }
 }

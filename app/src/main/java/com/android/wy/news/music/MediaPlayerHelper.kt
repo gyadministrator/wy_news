@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
+import android.widget.Toast
 import java.io.IOException
 import java.lang.ref.WeakReference
 
@@ -49,22 +50,28 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
      * @param path path
      */
     fun setPath(path: String?) {
-        if (mMediaPlayer?.isPlaying == true) {
-            mMediaPlayer?.reset()
+        if (path == null) {
+            Toast.makeText(mContext, "获取播放地址错误,请重试!!!", Toast.LENGTH_SHORT).show()
+            return
         }
+        /*if (mMediaPlayer!!.isPlaying) {
+            mMediaPlayer?.reset()
+        }*/
         try {
+            mMediaPlayer?.reset()
             mContext?.let { mMediaPlayer!!.setDataSource(it, Uri.parse(path)) }
+            mMediaPlayer?.prepareAsync()
+            initListener()
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        mMediaPlayer?.prepareAsync()
-        mMediaPlayer?.setOnPreparedListener { mp ->
-            mOnMediaHelperListener?.onPrepared(mp)
-        }
-        mMediaPlayer?.setOnCompletionListener {
-            mOnMediaHelperListener?.onPauseState()
-        }
+    }
+
+    private fun initListener() {
+        mMediaPlayer?.setOnPreparedListener(this)
+        mMediaPlayer?.setOnCompletionListener(this)
         mMediaPlayer?.setOnErrorListener(this)
+        mMediaPlayer?.setOnBufferingUpdateListener(this)
     }
 
     /**
@@ -90,7 +97,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
             e.printStackTrace()
         }
         mMediaPlayer?.setOnPreparedListener { mp ->
-            mOnMediaHelperListener?.onPrepared(mp)
+            mOnMediaHelperListener?.onPreparedState(mp)
             try {
                 afd?.close()
             } catch (e: IOException) {
@@ -104,7 +111,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     }
 
     fun start() {
-        if (mMediaPlayer?.isPlaying == true) {
+        if (mMediaPlayer!!.isPlaying) {
             return
         }
         mMediaPlayer?.start()
@@ -140,13 +147,28 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     }
 
     override fun onError(p0: MediaPlayer?, what: Int, extra: Int): Boolean {
-        mOnMediaHelperListener?.onError(what, extra)
+        mOnMediaHelperListener?.onErrorState(what, extra)
         return super.onError(p0, what, extra)
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        super.onCompletion(p0)
+        mOnMediaHelperListener?.onCompleteState()
+    }
+
+    override fun onBufferingUpdate(p0: MediaPlayer?, percent: Int) {
+        super.onBufferingUpdate(p0, percent)
+        mOnMediaHelperListener?.onBufferState(percent)
+    }
+
+    override fun onPrepared(p0: MediaPlayer?) {
+        super.onPrepared(p0)
+        mOnMediaHelperListener?.onPreparedState(p0)
     }
 
     interface OnMediaHelperListener {
         //音乐准备好之后调用
-        fun onPrepared(mp: MediaPlayer?)
+        fun onPreparedState(mp: MediaPlayer?)
 
         //音乐暂停状态
         fun onPauseState()
@@ -154,7 +176,14 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
         //音乐播放状态
         fun onPlayingState()
 
-        fun onError(what: Int, extra: Int)
+        //音乐播放完成状态
+        fun onCompleteState()
+
+        //加载
+        fun onBufferState(percent: Int)
+
+        //音乐加载错误
+        fun onErrorState(what: Int, extra: Int)
     }
 
 }

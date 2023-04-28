@@ -73,7 +73,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:visibility="gone"
-            app:indicatorColor="@color/text_select_color"
+            app:indicatorColor="@color/main_title"
             app:indicatorName="LineScalePartyIndicator" />
     </LinearLayout>
 

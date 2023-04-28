@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.amap.api.maps.offlinemap.Province
 import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
+import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -491,6 +492,21 @@ class CommonTools {
                 }
             }
             return videoList
+        }
+
+        fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo> {
+            val dataList = ArrayList<MusicInfo>()
+            if (musicList != null && musicList.size > 0) {
+                for (i in 0 until musicList.size) {
+                    val musicInfo = musicList[i]
+                    val listenFee = musicInfo.isListenFee
+                    //付费歌曲，获取不了url，不显示
+                    if (!listenFee) {
+                        dataList.add(musicInfo)
+                    }
+                }
+            }
+            return dataList
         }
     }
 }

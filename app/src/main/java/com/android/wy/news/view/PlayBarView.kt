@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutMusicPlayBarBinding
@@ -22,7 +21,10 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var tvTitle: TextView
     private lateinit var ivCover: ImageView
     private lateinit var ivPlay: ImageView
+    private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
+    private var position = 0
+    private var duration = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -38,14 +40,25 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         tvTitle = binding.tvTitle
         ivCover = binding.ivCover
         ivPlay = binding.ivPlay
+        roundProgressBar = binding.roundProgressBar
         ivPlay.setOnClickListener(this)
+    }
+
+    fun updateProgress(progress: Int): PlayBarView {
+        roundProgressBar.setProgress(progress)
+        return this
+    }
+
+    fun setPosition(position: Int): PlayBarView {
+        this.position = position
+        return this
     }
 
     override fun onClick(p0: View?) {
         if (p0 != null) {
             when (p0.id) {
                 R.id.iv_play -> {
-                    onPlayBarListener?.onClickPlay()
+                    onPlayBarListener?.onClickPlay(position = this.position)
                 }
 
                 else -> {
@@ -53,6 +66,16 @@ class PlayBarView : LinearLayout, View.OnClickListener {
                 }
             }
         }
+    }
+
+    fun getDuration(): Int {
+        return this.duration
+    }
+
+    fun setDuration(duration: Int): PlayBarView {
+        this.duration = duration
+        roundProgressBar.setMax(duration)
+        return this
     }
 
     fun setCover(cover: String): PlayBarView {
@@ -67,9 +90,9 @@ class PlayBarView : LinearLayout, View.OnClickListener {
 
     fun setPlay(isPlaying: Boolean): PlayBarView {
         if (isPlaying) {
-            ivPlay.setImageResource(R.mipmap.music_pause)
-        } else {
             ivPlay.setImageResource(R.mipmap.music_play)
+        } else {
+            ivPlay.setImageResource(R.mipmap.music_pause)
         }
         return this
     }
@@ -80,6 +103,6 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     }
 
     interface OnPlayBarListener {
-        fun onClickPlay()
+        fun onClickPlay(position: Int)
     }
 }

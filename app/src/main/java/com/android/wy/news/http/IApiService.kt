@@ -2,6 +2,8 @@ package com.android.wy.news.http
 
 import com.android.wy.news.entity.HotEntity
 import com.android.wy.news.entity.music.MusicListEntity
+import com.android.wy.news.entity.music.MusicLrcEntity
+import com.android.wy.news.entity.music.MusicUrlEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -73,4 +75,10 @@ interface IApiService {
     /*-------------------------------------------以下是音乐相关---------------------------------------*/
     @GET("/api/www/bang/bang/musicList?rn=20&httpsStatus=1&reqId=18c21420-e4d6-11ed-952f-9f227639ff35")
     fun getMusicList(@Query("bangId") bangId: Int, @Query("pn") pn: Int): Call<MusicListEntity>
+
+    @GET("/api/v1/www/music/playUrl?type=music&httpsStatus=1&reqId=1b936721-e4d7-11ed-952f-9f227639ff35")
+    fun getMusicUrl(@Query("mid") mid: String): Call<MusicUrlEntity>
+
+    @GET("/newh5/singles/songinfoandlrc?httpsStatus=1&reqId=7719bb30-e4d7-11ed-84ef-3374439f9c6a")
+    fun getMusicLrc(@Query("musicId") musicId: String): Call<MusicLrcEntity>
 }
