@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
@@ -21,6 +22,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var tvTitle: TextView
     private lateinit var ivCover: ImageView
     private lateinit var ivPlay: ImageView
+    private lateinit var rlPlay: RelativeLayout
     private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
     private var position = 0
@@ -40,8 +42,9 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         tvTitle = binding.tvTitle
         ivCover = binding.ivCover
         ivPlay = binding.ivPlay
+        rlPlay = binding.rlPlay
         roundProgressBar = binding.roundProgressBar
-        ivPlay.setOnClickListener(this)
+        rlPlay.setOnClickListener(this)
     }
 
     fun updateProgress(progress: Int): PlayBarView {
@@ -57,7 +60,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     override fun onClick(p0: View?) {
         if (p0 != null) {
             when (p0.id) {
-                R.id.iv_play -> {
+                R.id.rl_play -> {
                     onPlayBarListener?.onClickPlay(position = this.position)
                 }
 

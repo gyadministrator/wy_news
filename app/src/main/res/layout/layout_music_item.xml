@@ -30,7 +30,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/music_play"
+                android:src="@mipmap/music_pause"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
@@ -65,16 +65,34 @@
                 tools:text="1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前1天前" />
         </LinearLayout>
 
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/iv_loading"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
-            android:visibility="gone"
-            app:indicatorColor="@color/main_title"
-            app:indicatorName="LineScalePartyIndicator" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/iv_state_loading"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:visibility="gone"
+                app:indicatorColor="@color/main_title"
+                app:indicatorName="LineSpinFadeLoaderIndicator" />
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/iv_state_play"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:visibility="gone"
+                app:indicatorColor="@color/main_title"
+                app:indicatorName="LineScalePartyIndicator" />
+        </RelativeLayout>
     </LinearLayout>
 
     <View style="@style/dividerItemStyle" />

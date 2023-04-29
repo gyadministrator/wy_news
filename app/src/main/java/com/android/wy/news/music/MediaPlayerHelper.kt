@@ -1,12 +1,12 @@
 package com.android.wy.news.music
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.widget.Toast
 import java.io.IOException
-import java.lang.ref.WeakReference
 
 
 /*
@@ -26,17 +26,18 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     }
 
     companion object {
-        private var instance: WeakReference<MediaPlayerHelper>? = null
+        @SuppressLint("StaticFieldLeak")
+        private var instance: MediaPlayerHelper? = null
 
         fun getInstance(context: Context): MediaPlayerHelper? {
             if (instance == null) {
                 synchronized(MediaPlayerHelper::class.java) {
                     if (instance == null) {
-                        instance = WeakReference(MediaPlayerHelper(context))
+                        instance = MediaPlayerHelper(context)
                     }
                 }
             }
-            return instance?.get()
+            return instance
         }
     }
 
