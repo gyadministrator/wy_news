@@ -55,12 +55,8 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
             Toast.makeText(mContext, "获取播放地址错误,请重试!!!", Toast.LENGTH_SHORT).show()
             return
         }
-        if (mMediaPlayer!!.isPlaying) {
-           /* mMediaPlayer?.stop()
-            mMediaPlayer?.release()*/
-            mMediaPlayer?.reset()
-        }
         try {
+            mMediaPlayer?.reset()
             mContext?.let { mMediaPlayer!!.setDataSource(it, Uri.parse(path)) }
         } catch (e: IOException) {
             e.printStackTrace()

@@ -65,6 +65,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var timer: Timer? = null
+    private var currentPlayUrl: String? = ""
 
     companion object {
         private const val mKey: String = "category_id"
@@ -163,6 +164,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onNotifyDataChanged() {
         mViewModel.musicUrl.observe(this) {
+            playBarView?.showLoading(false)
             if (!TextUtils.isEmpty(it)) {
                 playMusic(it)
             }
@@ -188,6 +190,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     private fun playMusic(it: String?) {
+        this.currentPlayUrl = it
         mMediaHelper?.setPath(it)
         mMediaHelper?.setOnMediaHelperListener(object :
             MediaPlayerHelper.OnMediaHelperListener {
@@ -215,6 +218,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
             override fun onCompleteState() {
                 Logger.i("onCompleteState: ")
+                timer?.cancel()
+                timer = null
+                playNext()
             }
 
             override fun onBufferState(percent: Int) {
@@ -255,13 +261,13 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
         override fun onServiceDisconnected(p0: ComponentName?) {
         }
-    };
+    }
 
     private fun playNext() {
+        Logger.i("playNext: ")
         playBarView?.setPlay(false)
         //下一曲
-        currentPosition++
-        prepareMusic(currentPosition)
+        prepareMusic(currentPosition + 1)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -283,6 +289,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onItemClickListener(view: View, data: MusicInfo) {
         val i = view.tag as Int
+        playBarView?.showLoading(true)
         prepareMusic(i)
     }
 
@@ -320,15 +327,21 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         Logger.i("onClickPlay--->>>position:$position")
         if (mMediaHelper != null) {
             if (mMediaHelper!!.isPlaying()) {
-                mMediaHelper?.start()
-                playBarView?.setPlay(true)
-                this.currentMusicInfo?.state = MusicState.STATE_PLAY
-            } else {
                 mMediaHelper?.pause()
                 playBarView?.setPlay(false)
                 this.currentMusicInfo?.state = MusicState.STATE_PAUSE
+                musicAdapter.setSelectedIndex(position)
+            } else {
+                if (!TextUtils.isEmpty(currentPlayUrl)) {
+                    mMediaHelper?.start()
+                    playBarView?.setPlay(true)
+                    this.currentMusicInfo?.state = MusicState.STATE_PLAY
+                    musicAdapter.setSelectedIndex(position)
+                } else {
+                    playBarView?.showLoading(true)
+                    this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
+                }
             }
-            musicAdapter.setSelectedIndex(position)
         }
     }
 

@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutMusicPlayBarBinding
+import com.wang.avi.AVLoadingIndicatorView
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -23,6 +24,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var ivCover: ImageView
     private lateinit var ivPlay: ImageView
     private lateinit var rlPlay: RelativeLayout
+    private lateinit var ivStateLoading: AVLoadingIndicatorView
     private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
     private var position = 0
@@ -44,6 +46,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         ivPlay = binding.ivPlay
         rlPlay = binding.rlPlay
         roundProgressBar = binding.roundProgressBar
+        ivStateLoading = binding.ivStateLoading
         rlPlay.setOnClickListener(this)
     }
 
@@ -55,6 +58,18 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     fun setPosition(position: Int): PlayBarView {
         this.position = position
         return this
+    }
+
+    fun showLoading(isShow: Boolean) {
+        /*if (isShow) {
+            ivStateLoading.visibility = View.VISIBLE
+            ivStateLoading.show()
+            rlPlay.visibility = View.GONE
+        } else {
+            ivStateLoading.visibility = View.GONE
+            ivStateLoading.hide()
+            rlPlay.visibility = View.VISIBLE
+        }*/
     }
 
     override fun onClick(p0: View?) {
