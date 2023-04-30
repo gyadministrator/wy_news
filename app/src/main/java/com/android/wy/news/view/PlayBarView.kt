@@ -25,6 +25,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var ivPlay: ImageView
     private lateinit var rlPlay: RelativeLayout
     private lateinit var ivStateLoading: AVLoadingIndicatorView
+    private lateinit var rlLoading: RelativeLayout
     private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
     private var position = 0
@@ -47,6 +48,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         rlPlay = binding.rlPlay
         roundProgressBar = binding.roundProgressBar
         ivStateLoading = binding.ivStateLoading
+        rlLoading = binding.rlLoading
         rlPlay.setOnClickListener(this)
     }
 
@@ -61,15 +63,15 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     }
 
     fun showLoading(isShow: Boolean) {
-        /*if (isShow) {
-            ivStateLoading.visibility = View.VISIBLE
+        if (isShow) {
+            rlLoading.visibility = View.VISIBLE
             ivStateLoading.show()
             rlPlay.visibility = View.GONE
         } else {
-            ivStateLoading.visibility = View.GONE
+            rlLoading.visibility = View.GONE
             ivStateLoading.hide()
             rlPlay.visibility = View.VISIBLE
-        }*/
+        }
     }
 
     override fun onClick(p0: View?) {

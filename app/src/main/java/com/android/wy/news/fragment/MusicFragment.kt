@@ -164,7 +164,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onNotifyDataChanged() {
         mViewModel.musicUrl.observe(this) {
-            playBarView?.showLoading(false)
             if (!TextUtils.isEmpty(it)) {
                 playMusic(it)
             }
@@ -207,6 +206,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
             override fun onPlayingState() {
                 Logger.i("onPlayingState: ")
+                playBarView?.showLoading(false)
                 currentMusicInfo?.state = MusicState.STATE_PLAY
                 musicAdapter.setSelectedIndex(currentPosition)
                 timer?.cancel()
@@ -266,6 +266,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private fun playNext() {
         Logger.i("playNext: ")
         playBarView?.setPlay(false)
+        //滑动到播放的歌曲
+        rvContent.scrollToPosition(currentPosition + 1)
+        playBarView?.showLoading(true)
         //下一曲
         prepareMusic(currentPosition + 1)
     }

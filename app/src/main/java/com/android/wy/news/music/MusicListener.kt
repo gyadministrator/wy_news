@@ -38,7 +38,7 @@ open class MusicListener :
      * extra：针对与具体错误的附加码, 用于定位错误更详细信息
      */
     override fun onError(p0: MediaPlayer?, what: Int, extra: Int): Boolean {
-        return false
+        return true
     }
 
     /**
