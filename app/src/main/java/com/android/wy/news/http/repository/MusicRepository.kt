@@ -22,4 +22,10 @@ object MusicRepository : BaseRepository() {
         if (musicUrlEntity.code == 200) Result.success(musicUrlEntity)
         else Result.failure(RuntimeException("getMusicUrl is error"))
     }
+
+    fun getMusicLrc(musicId: String) = getData(Dispatchers.IO) {
+        val musicLrcEntity = NetworkRequest.getMusicLrc(musicId)
+        if (musicLrcEntity.data != null) Result.success(musicLrcEntity)
+        else Result.failure(RuntimeException("getMusicLrc is error"))
+    }
 }

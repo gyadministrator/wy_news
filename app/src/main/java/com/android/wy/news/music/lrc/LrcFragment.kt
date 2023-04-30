@@ -1,9 +1,10 @@
-package com.android.wy.news.music
+package com.android.wy.news.music.lrc
 
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -20,6 +21,9 @@ import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.http.repository.MusicRepository
+import com.android.wy.news.music.MediaPlayerHelper
+import com.android.wy.news.music.MusicState
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -47,6 +51,7 @@ class LrcFragment : DialogFragment() {
     private var mPlayNeedleAnim: Animation? = null
     private var mStopNeedleAnim: Animation? = null
     private var mMediaHelper: MediaPlayerHelper? = null
+    private var lrcView: LrcView? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -113,8 +118,9 @@ class LrcFragment : DialogFragment() {
         tvTitle = mContentView?.findViewById(R.id.tv_title)
         tvDesc = mContentView?.findViewById(R.id.tv_desc)
         rlDown = mContentView?.findViewById(R.id.rl_down)
-        mFlPlayMusic = mContentView?.findViewById(R.id.fl_play_music);
-        mIvNeedle = mContentView?.findViewById(R.id.iv_needle);
+        mFlPlayMusic = mContentView?.findViewById(R.id.fl_play_music)
+        mIvNeedle = mContentView?.findViewById(R.id.iv_needle)
+        lrcView = mContentView?.findViewById(R.id.lrc_view)
         rlDown?.setOnClickListener {
             dismiss()
         }
@@ -150,6 +156,23 @@ class LrcFragment : DialogFragment() {
             checkState(MusicState.STATE_PLAY)
         } else {
             checkState(MusicState.STATE_PAUSE)
+        }
+        val musicId = this.currentMusicInfo?.musicrid
+        if (musicId!!.contains("_")) {
+            val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
+            MusicRepository.getMusicLrc(mid).observe(this) {
+                val musicLrcEntity = it.getOrNull()
+                if (musicLrcEntity != null) {
+                    val musicLrcData = musicLrcEntity.data
+                    if (musicLrcData != null) {
+                        val lrcList = musicLrcData.lrclist
+                        if (lrcList.isNotEmpty()) {
+                            val realLrcList = CommonTools.parseLrc(lrcList)
+                            lrcView?.setLrcData(realLrcList)
+                        }
+                    }
+                }
+            }
         }
     }
 

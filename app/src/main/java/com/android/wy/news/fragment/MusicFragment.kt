@@ -25,7 +25,7 @@ import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.http.repository.MusicRepository
-import com.android.wy.news.music.LrcFragment
+import com.android.wy.news.music.lrc.LrcFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.service.MusicNotifyService

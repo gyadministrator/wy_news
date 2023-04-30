@@ -7,7 +7,7 @@ package com.android.wy.news.entity.music
   * @Description:    
  */
 data class MusicLrcEntity(
-    val `data`: MusicLrcData,
+    val `data`: MusicLrcData?,
     val msg: String,
     val msgs: Any,
     val profileid: String,

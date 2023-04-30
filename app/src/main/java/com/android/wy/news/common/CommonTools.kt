@@ -8,16 +8,19 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.amap.api.maps.offlinemap.Province
 import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
+import com.android.wy.news.entity.music.Lrclist
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.music.lrc.Lrc
+import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -504,6 +507,18 @@ class CommonTools {
                     if (!listenFee) {
                         dataList.add(musicInfo)
                     }
+                }
+            }
+            return dataList
+        }
+
+        fun parseLrc(lrcList: List<Lrclist>): ArrayList<Lrc> {
+            val dataList = ArrayList<Lrc>()
+            if (lrcList.isNotEmpty()) {
+                for (element in lrcList) {
+                    val parseLrc = LrcHelper.parseLrc(element.time + element.lineLyric)
+                    Log.e("gy", "parseLrc: $parseLrc")
+                    parseLrc?.let { dataList.addAll(it) }
                 }
             }
             return dataList
