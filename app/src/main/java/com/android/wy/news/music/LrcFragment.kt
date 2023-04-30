@@ -25,6 +25,7 @@ import com.android.wy.news.listener.CustomAnimatorUpdateListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
+import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
 
@@ -129,7 +130,7 @@ class LrcFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         val mImmersionBar = ImmersionBar.with(this)
-        mImmersionBar.transparentBar()
+        mImmersionBar.hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
         mImmersionBar.fullScreen(true)
         mImmersionBar.init()
         val dialog = dialog
