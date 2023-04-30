@@ -516,9 +516,8 @@ class CommonTools {
             val dataList = ArrayList<Lrc>()
             if (lrcList.isNotEmpty()) {
                 for (element in lrcList) {
-                    val parseLrc = LrcHelper.parseLrc(element.time + element.lineLyric)
-                    Log.e("gy", "parseLrc: $parseLrc")
-                    parseLrc?.let { dataList.addAll(it) }
+                    val lrc=Lrc(element.time.toFloat(),element.lineLyric)
+                    dataList.add(lrc)
                 }
             }
             return dataList

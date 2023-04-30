@@ -98,7 +98,7 @@ class LrcHelper {
                         if (sec != null) {
                             val lrcTime =
                                 min.toLong() * 60 * 1000 + sec.toLong() * 1000 + mil!!.toLong() * 10
-                            val lrc = Lrc(lrcTime, content)
+                            val lrc = Lrc(lrcTime.toFloat(), content)
                             lrcList.add(lrc)
                         }
                     }
@@ -107,7 +107,7 @@ class LrcHelper {
             return lrcList
         }
 
-        fun formatTime(time: Long): String {
+        fun formatTime(time: Float): String {
             val min = (time / 60000).toInt()
             val sec = (time / 1000 % 60).toInt()
             return adjustFormat(min) + ":" + adjustFormat(sec)

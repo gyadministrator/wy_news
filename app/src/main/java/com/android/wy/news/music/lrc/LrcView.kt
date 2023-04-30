@@ -577,7 +577,7 @@ class LrcView : View {
     }
 
     interface OnPlayIndicatorLineListener {
-        fun onPlay(time: Long, content: String?)
+        fun onPlay(time: Float, content: String?)
     }
 
 
