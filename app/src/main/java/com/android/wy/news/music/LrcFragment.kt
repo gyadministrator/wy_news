@@ -1,8 +1,5 @@
 package com.android.wy.news.music
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -13,7 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.LinearInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -21,7 +20,6 @@ import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.entity.music.MusicInfo
-import com.android.wy.news.listener.CustomAnimatorUpdateListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -41,8 +39,14 @@ class LrcFragment : DialogFragment() {
     private var tvTitle: TextView? = null
     private var tvDesc: TextView? = null
     private var rlDown: RelativeLayout? = null
+    private var mIvNeedle: ImageView? = null
+    private var mFlPlayMusic: FrameLayout? = null
     private var mAnimStyle: Int =
         com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
+    private var mPlayMusicAnim: Animation? = null
+    private var mPlayNeedleAnim: Animation? = null
+    private var mStopNeedleAnim: Animation? = null
+    private var mMediaHelper: MediaPlayerHelper? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -56,6 +60,32 @@ class LrcFragment : DialogFragment() {
             args.putString(MUSIC_INFO_KEY, musicInfoJson)
             fragment.arguments = args
             return fragment
+        }
+    }
+
+    private fun checkState(state: Int) {
+        when (state) {
+            MusicState.STATE_PREPARE -> {
+
+            }
+
+            MusicState.STATE_PLAY -> {
+                mFlPlayMusic?.animation = mPlayMusicAnim
+                mIvNeedle?.animation = mPlayNeedleAnim
+            }
+
+            MusicState.STATE_PAUSE -> {
+                mFlPlayMusic?.clearAnimation()
+                mIvNeedle?.animation = mStopNeedleAnim
+            }
+
+            MusicState.STATE_ERROR -> {
+
+            }
+
+            else -> {
+
+            }
         }
     }
 
@@ -83,12 +113,18 @@ class LrcFragment : DialogFragment() {
         tvTitle = mContentView?.findViewById(R.id.tv_title)
         tvDesc = mContentView?.findViewById(R.id.tv_desc)
         rlDown = mContentView?.findViewById(R.id.rl_down)
+        mFlPlayMusic = mContentView?.findViewById(R.id.fl_play_music);
+        mIvNeedle = mContentView?.findViewById(R.id.iv_needle);
         rlDown?.setOnClickListener {
             dismiss()
         }
+        mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim);
+        mPlayNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.play_needle_anim);
+        mStopNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.stop_needle_anim);
     }
 
     private fun initData() {
+        mMediaHelper = context?.let { MediaPlayerHelper.getInstance(it) }
         val args = arguments
         if (args != null) {
             currentPosition = args.getInt(POSITION_KEY)
@@ -110,21 +146,11 @@ class LrcFragment : DialogFragment() {
         this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.album
-        initAnim()
-    }
-
-    @SuppressLint("ObjectAnimatorBinding")
-    private fun initAnim() {
-        val lin = LinearInterpolator() //声明为线性变化
-        val anim = ObjectAnimator.ofFloat(ivCover, "rotation", 0f, 360f) //设置动画为旋转动画，角度是0-360
-        anim.duration = 15000 //时间15秒，这个可以自己酌情修改
-        anim.interpolator = lin
-        anim.repeatMode = ValueAnimator.RESTART //设置重复模式为重新开始
-        anim.repeatCount = -1 //重复次数为-1，就是无限循环
-        val listener =
-            CustomAnimatorUpdateListener(anim) //将定义好的ObjectAnimator传给MyAnimatorUpdateListener监听
-        anim.addUpdateListener(listener) //给动画加监听
-        listener.play()
+        if (mMediaHelper!!.isPlaying()) {
+            checkState(MusicState.STATE_PLAY)
+        } else {
+            checkState(MusicState.STATE_PAUSE)
+        }
     }
 
     override fun onStart() {

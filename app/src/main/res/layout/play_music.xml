@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:fitsSystemWindows="true">
+    <!--光盘-->
+    <FrameLayout
+        android:id="@+id/fl_play_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/disc"
+            tools:ignore="ContentDescription" />
+        <!--CircleImageView-->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="210dp"
+            android:layout_height="210dp"
+            android:layout_gravity="center"
+            app:riv_oval="true" />
+    </FrameLayout>
+    <!--指针-->
+    <ImageView
+        android:id="@+id/iv_needle"
+        android:layout_width="150dp"
+        android:layout_height="135dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="25dp"
+        android:src="@drawable/needle"
+        tools:ignore="ContentDescription" />
+</FrameLayout>
