@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -20,6 +21,7 @@ import com.bumptech.glide.request.transition.Transition
 class MusicNotifyService : Service() {
     private var mNotifyHelper: MusicNotifyHelper? = null
     private var notifyLayout: RemoteViews? = null
+    private var mMediaHelper: MediaPlayerHelper? = null
 
     companion object {
         private const val notifyID = 100
@@ -55,11 +57,11 @@ class MusicNotifyService : Service() {
         super.onCreate()
         mNotifyHelper = MusicNotifyHelper.getInstance(this)
         notifyLayout = RemoteViews(packageName, R.layout.layout_music_controller_notification)
+        mMediaHelper = MediaPlayerHelper.getInstance(this)
+        mMediaHelper?.start()
     }
 
     /**
-     * 更改了相关设置，比如notifyLayout布局显示之后，需要重新发送前台通知来更新UI
-     * 太坑了，居然是这样的
      * 此外，由于我们是显示成一个播放器，因此通知id，使用固定id，就可以保证每次更新之后是同一个通知。
      * @param musicInfo musicInfo
      */

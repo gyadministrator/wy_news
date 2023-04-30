@@ -195,7 +195,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             MediaPlayerHelper.OnMediaHelperListener {
             override fun onPreparedState(mp: MediaPlayer?) {
                 Logger.i("onPreparedState: ")
-                mMediaHelper?.start()
+                startMusicService()
             }
 
             override fun onPauseState() {
@@ -213,7 +213,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 timer = null
                 showPlayBar()
                 setProgress()
-                startMusicService()
             }
 
             override fun onCompleteState() {
