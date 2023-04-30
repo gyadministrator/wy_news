@@ -125,6 +125,7 @@ dependencies {
     // json解析，可以自行替换
     implementation rootProject.ext.dependencies.gson
     implementation rootProject.ext.dependencies.glide
+    implementation rootProject.ext.dependencies.glideTransformations
     // (必选)使用这个基础的webView实现
     implementation rootProject.ext.dependencies.agentweb
     // 基础依赖包，必须要依赖

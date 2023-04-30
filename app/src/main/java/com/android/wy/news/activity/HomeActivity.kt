@@ -270,7 +270,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 override fun onCancel() {
                     //Toast.makeText(applicationContext, "取消选择", Toast.LENGTH_SHORT).show()
                 }
-            }).show();
+            }).show()
     }
 
     private fun checkNotification() {
@@ -299,7 +299,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
 
         //选择器点击事件
-        pickerView.setOnPickerClickListener { _ ->
+        pickerView.setOnPickerClickListener {
             Toast.makeText(
                 this,
                 pickerData.firstText + "," + pickerData.secondText + "," + pickerData.thirdText,

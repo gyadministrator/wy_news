@@ -10,6 +10,9 @@ import android.os.IBinder
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.HomeActivity
@@ -22,6 +25,7 @@ import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.http.repository.MusicRepository
+import com.android.wy.news.music.LrcFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.service.MusicNotifyService
@@ -219,6 +223,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 Logger.i("onCompleteState: ")
                 timer?.cancel()
                 timer = null
+                //最后一首播放完，播放第一首
+                val dataList = musicAdapter.getDataList()
+                if (currentPosition + 1 > dataList.size - 1) {
+                    currentPosition = 0
+                }
                 playNext()
             }
 
@@ -347,6 +356,26 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
+    override fun onClickPlayBar(position: Int) {
+        //显示歌曲页面
+        showLrcPage()
+    }
+
+    private fun showLrcPage() {
+        val fragmentManager = (mActivity as AppCompatActivity).supportFragmentManager
+        var ft: FragmentTransaction? = fragmentManager.beginTransaction()
+        val prev: Fragment? = fragmentManager.findFragmentByTag(LrcFragment.TAG)
+        if (prev != null) {
+            ft?.remove(prev)?.commit()
+            ft = fragmentManager.beginTransaction()
+        }
+        ft?.addToBackStack(null)
+        val gson = Gson()
+        val s = gson.toJson(this.currentMusicInfo)
+        val lrcFragment = LrcFragment.newInstance(currentPosition, s)
+        ft?.let { lrcFragment.show(ft, LrcFragment.TAG) }
+    }
+
     private fun showPlayBar() {
         val stringBuilder = StringBuilder()
         val album = currentMusicInfo?.album
@@ -361,8 +390,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             playBarView?.visibility = View.VISIBLE
             currentMusicInfo?.pic?.let {
                 currentMusicInfo?.duration?.let { it1 ->
-                    playBarView?.setCover(it)?.setTitle(stringBuilder.toString())?.setPlay(true)
-                        ?.setPosition(currentPosition)?.setDuration(duration = it1 * 1000)
+                    playBarView?.setCover(it)
+                        ?.setTitle(stringBuilder.toString())
+                        ?.setPlay(true)
+                        ?.setPosition(currentPosition)
+                        ?.setDuration(duration = it1 * 1000)
                         ?.addListener(this)
                 }
             }

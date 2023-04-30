@@ -29,7 +29,6 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
     private var position = 0
-    private var duration = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -50,6 +49,8 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         ivStateLoading = binding.ivStateLoading
         rlLoading = binding.rlLoading
         rlPlay.setOnClickListener(this)
+        ivCover.setOnClickListener(this)
+        tvTitle.setOnClickListener(this)
     }
 
     fun updateProgress(progress: Int): PlayBarView {
@@ -81,6 +82,14 @@ class PlayBarView : LinearLayout, View.OnClickListener {
                     onPlayBarListener?.onClickPlay(position = this.position)
                 }
 
+                R.id.iv_cover -> {
+                    onPlayBarListener?.onClickPlayBar(position = this.position)
+                }
+
+                R.id.tv_title -> {
+                    onPlayBarListener?.onClickPlayBar(position = this.position)
+                }
+
                 else -> {
 
                 }
@@ -88,12 +97,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         }
     }
 
-    fun getDuration(): Int {
-        return this.duration
-    }
-
     fun setDuration(duration: Int): PlayBarView {
-        this.duration = duration
         roundProgressBar.setMax(duration)
         return this
     }
@@ -124,5 +128,6 @@ class PlayBarView : LinearLayout, View.OnClickListener {
 
     interface OnPlayBarListener {
         fun onClickPlay(position: Int)
+        fun onClickPlayBar(position: Int)
     }
 }

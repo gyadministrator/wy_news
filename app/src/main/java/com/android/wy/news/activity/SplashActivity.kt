@@ -39,12 +39,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
         }
     }
 
-    /* override fun onNewIntent(intent: Intent?) {
-         super.onNewIntent(intent)
-         setIntent(intent)
-         setJumpUrl(intent)
-     }*/
-
     override fun initData() {
         PermissionHelper.initPermission(this)
         val i = SpTools.getInt(Constants.PRIVACY_STATUS)
