@@ -3,6 +3,7 @@ package com.android.wy.news.adapter
 import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
@@ -19,7 +20,8 @@ import java.util.*
   * @Version:        1.0
   * @Description:    
  */
-class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : BaseNewsAdapter<MusicAdapter.ViewHolder, MusicInfo>(itemAdapterListener) {
+class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
+    BaseNewsAdapter<MusicAdapter.ViewHolder, MusicInfo>(itemAdapterListener) {
     private var selectedPosition = -5
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,6 +32,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
         var ivPlay = mBinding.ivPlay
         var ivStateLoading = mBinding.ivStateLoading
         var ivStatePlay = mBinding.ivStatePlay
+        var viewLine = mBinding.viewLine
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -64,12 +67,38 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
 
                     holder.ivStatePlay.visibility = View.GONE
                     holder.ivStatePlay.hide()
+                    holder.viewLine.visibility = View.INVISIBLE
+                    holder.tvTitle.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvTitle.context,
+                            R.color.main_title
+                        )
+                    )
+                    holder.tvDesc.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvDesc.context,
+                            R.color.second_title
+                        )
+                    )
                 }
 
                 MusicState.STATE_PLAY -> {
                     holder.ivPlay.setImageResource(R.mipmap.music_play)
                     holder.ivStatePlay.visibility = View.VISIBLE
                     holder.ivStatePlay.show()
+                    holder.viewLine.visibility = View.VISIBLE
+                    holder.tvTitle.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvTitle.context,
+                            R.color.text_select_color
+                        )
+                    )
+                    holder.tvDesc.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvDesc.context,
+                            R.color.text_select_color
+                        )
+                    )
 
                     holder.ivStateLoading.visibility = View.GONE
                     holder.ivStateLoading.hide()
@@ -81,6 +110,19 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
                     holder.ivStateLoading.hide()
                     holder.ivStatePlay.visibility = View.GONE
                     holder.ivStatePlay.hide()
+                    holder.viewLine.visibility = View.INVISIBLE
+                    holder.tvTitle.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvTitle.context,
+                            R.color.main_title
+                        )
+                    )
+                    holder.tvDesc.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvDesc.context,
+                            R.color.second_title
+                        )
+                    )
                 }
 
                 MusicState.STATE_ERROR -> {
@@ -89,6 +131,19 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
                     holder.ivStateLoading.hide()
                     holder.ivStatePlay.visibility = View.GONE
                     holder.ivStatePlay.hide()
+                    holder.viewLine.visibility = View.INVISIBLE
+                    holder.tvTitle.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvTitle.context,
+                            R.color.main_title
+                        )
+                    )
+                    holder.tvDesc.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvDesc.context,
+                            R.color.second_title
+                        )
+                    )
                 }
 
                 else -> {
@@ -97,6 +152,19 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
                     holder.ivStateLoading.hide()
                     holder.ivStatePlay.visibility = View.GONE
                     holder.ivStatePlay.hide()
+                    holder.viewLine.visibility = View.INVISIBLE
+                    holder.tvTitle.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvTitle.context,
+                            R.color.main_title
+                        )
+                    )
+                    holder.tvDesc.setTextColor(
+                        ContextCompat.getColor(
+                            holder.tvDesc.context,
+                            R.color.second_title
+                        )
+                    )
                 }
             }
         } else {
@@ -105,6 +173,19 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) : Base
             holder.ivStateLoading.hide()
             holder.ivStatePlay.visibility = View.GONE
             holder.ivStatePlay.hide()
+            holder.viewLine.visibility = View.INVISIBLE
+            holder.tvTitle.setTextColor(
+                ContextCompat.getColor(
+                    holder.tvTitle.context,
+                    R.color.main_title
+                )
+            )
+            holder.tvDesc.setTextColor(
+                ContextCompat.getColor(
+                    holder.tvDesc.context,
+                    R.color.second_title
+                )
+            )
         }
     }
 }

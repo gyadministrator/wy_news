@@ -11,7 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="6dp">
+        android:paddingTop="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="6dp"
+        tools:ignore="RtlSymmetry">
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:background="@color/text_select_color"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

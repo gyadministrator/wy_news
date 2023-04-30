@@ -26,8 +26,8 @@
             android:layout_height="60dp">
 
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/ic_down"
                 app:tint="@color/main_title"
