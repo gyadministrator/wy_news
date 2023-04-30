@@ -1,6 +1,5 @@
 package com.android.wy.news.music
 
-import android.R.anim
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -14,9 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
@@ -40,6 +39,7 @@ class LrcFragment : DialogFragment() {
     private var ivBg: ImageView? = null
     private var tvTitle: TextView? = null
     private var tvDesc: TextView? = null
+    private var rlDown: RelativeLayout? = null
     private var mAnimStyle: Int =
         com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
 
@@ -81,6 +81,10 @@ class LrcFragment : DialogFragment() {
         ivCover = mContentView?.findViewById(R.id.iv_cover)
         tvTitle = mContentView?.findViewById(R.id.tv_title)
         tvDesc = mContentView?.findViewById(R.id.tv_desc)
+        rlDown = mContentView?.findViewById(R.id.rl_down)
+        rlDown?.setOnClickListener {
+            dismiss()
+        }
     }
 
     private fun initData() {
