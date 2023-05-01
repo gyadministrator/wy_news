@@ -51,11 +51,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/second_title"
+            android:textColor="@color/main_title"
             android:textSize="14sp"
             tools:text="456" />
 
@@ -66,80 +66,149 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            app:currentIndicateLrcColor="@color/main_title"
+            app:indicatorLineColor="@color/text_select_color"
+            app:lrcCurrentTextColor="@color/text_select_color"
+            app:lrcNormalTextColor="@color/main_title"
+            app:noLrcTextColor="@color/main_title" />
+
+        <SeekBar
+            android:id="@+id/sb_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:progressDrawable="@drawable/bg_seek_progress"
+            android:thumb="@drawable/bg_seek_thumb" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:id="@+id/tv_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="@string/_00_00"
+                android:textColor="@color/main_title"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/_00_00"
+                android:textColor="@color/main_title"
+                android:textSize="16sp"
+                tools:ignore="RelativeOverlap" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
 
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/music_pre"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/state_repeat"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
 
-            <FrameLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:id="@+id/rl_play"
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/music_pre"
+                    app:tint="@color/main_title"
+                    tools:ignore="ContentDescription" />
+
+                <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/iv_play"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerInParent="true"
-                        android:src="@mipmap/music_play"
-                        app:tint="@color/main_title"
-                        tools:ignore="ContentDescription" />
-
-                    <com.android.wy.news.view.RoundProgressBar
-                        android:id="@+id/round_progress_bar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerInParent="true"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        app:max="100"
-                        app:roundColor="@color/main_title"
-                        app:roundProgressColor="@color/text_select_color"
-                        app:roundWidth="2dp"
-                        app:style="STROKE"
-                        app:textIsDisplayable="false" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_loading"
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp">
 
-                    <com.wang.avi.AVLoadingIndicatorView
-                        android:id="@+id/iv_state_loading"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="6dp"
-                        app:indicatorColor="@color/main_title"
-                        app:indicatorName="LineSpinFadeLoaderIndicator" />
-                </RelativeLayout>
-            </FrameLayout>
+                    <RelativeLayout
+                        android:id="@+id/rl_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/iv_play"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerInParent="true"
+                            android:src="@mipmap/music_play"
+                            app:tint="@color/main_title"
+                            tools:ignore="ContentDescription" />
+
+                        <com.android.wy.news.view.RoundProgressBar
+                            android:id="@+id/round_progress_bar"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            app:max="100"
+                            app:roundColor="@color/main_title"
+                            app:roundProgressColor="@color/text_select_color"
+                            app:roundWidth="2dp"
+                            app:style="STROKE"
+                            app:textIsDisplayable="false" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <com.wang.avi.AVLoadingIndicatorView
+                            android:id="@+id/iv_state_loading"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="6dp"
+                            app:indicatorColor="@color/main_title"
+                            app:indicatorName="LineSpinFadeLoaderIndicator" />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/music_next"
+                    app:tint="@color/main_title"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
 
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/music_next"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/music_list"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
         </LinearLayout>

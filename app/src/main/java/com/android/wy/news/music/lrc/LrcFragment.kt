@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -16,11 +15,15 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.event.MusicEvent
+import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
@@ -30,6 +33,9 @@ import com.google.gson.Gson
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class LrcFragment : DialogFragment() {
@@ -52,6 +58,9 @@ class LrcFragment : DialogFragment() {
     private var mStopNeedleAnim: Animation? = null
     private var mMediaHelper: MediaPlayerHelper? = null
     private var lrcView: LrcView? = null
+    private var sbMusic: SeekBar? = null
+    private var tvStart: TextView? = null
+    private var tvEnd: TextView? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -82,6 +91,7 @@ class LrcFragment : DialogFragment() {
             MusicState.STATE_PAUSE -> {
                 mFlPlayMusic?.clearAnimation()
                 mIvNeedle?.animation = mStopNeedleAnim
+                lrcView?.pause()
             }
 
             MusicState.STATE_ERROR -> {
@@ -97,6 +107,28 @@ class LrcFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, com.android.wy.news.locationselect.R.style.CityPickerStyle)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onEvent(o: Any) {
+        if (o is MusicEvent) {
+            Logger.i("onEvent--->>>time:${o.time}")
+            lrcView?.updateTime(o.time.toLong())
+            sbMusic?.progress = o.time
+            tvStart?.text = LrcHelper.formatTime(o.time.toFloat())
+        } else if (o is MusicInfoEvent) {
+            val gson = Gson()
+            currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
+            setMusic()
+        }
     }
 
     override fun onCreateView(
@@ -121,12 +153,20 @@ class LrcFragment : DialogFragment() {
         mFlPlayMusic = mContentView?.findViewById(R.id.fl_play_music)
         mIvNeedle = mContentView?.findViewById(R.id.iv_needle)
         lrcView = mContentView?.findViewById(R.id.lrc_view)
+        sbMusic = mContentView?.findViewById(R.id.sb_music)
+        tvStart = mContentView?.findViewById(R.id.tv_start)
+        tvEnd = mContentView?.findViewById(R.id.tv_end)
         rlDown?.setOnClickListener {
             dismiss()
         }
-        mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim);
-        mPlayNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.play_needle_anim);
-        mStopNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.stop_needle_anim);
+        mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim)
+        mPlayNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.play_needle_anim)
+        mStopNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.stop_needle_anim)
+        lrcView?.setOnPlayIndicatorLineListener(object : LrcView.OnPlayIndicatorLineListener {
+            override fun onPlay(time: Float, content: String?) {
+                mMediaHelper?.seekTo(time.toInt())
+            }
+        })
     }
 
     private fun initData() {
@@ -144,19 +184,6 @@ class LrcFragment : DialogFragment() {
     }
 
     private fun setMusic() {
-        ivBg?.let {
-            Glide.with(this).load(this.currentMusicInfo?.pic)
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10)))
-                .into(it)
-        }
-        this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
-        tvTitle?.text = this.currentMusicInfo?.artist
-        tvDesc?.text = this.currentMusicInfo?.album
-        if (mMediaHelper!!.isPlaying()) {
-            checkState(MusicState.STATE_PLAY)
-        } else {
-            checkState(MusicState.STATE_PAUSE)
-        }
         val musicId = this.currentMusicInfo?.musicrid
         if (musicId!!.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -173,6 +200,21 @@ class LrcFragment : DialogFragment() {
                     }
                 }
             }
+        }
+        sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
+        tvEnd?.text =
+            LrcHelper.formatTime((this.currentMusicInfo?.duration)?.times(1000)!!.toFloat())
+        ivBg?.let {
+            Glide.with(this).load(this.currentMusicInfo?.pic)
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
+        }
+        this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
+        tvTitle?.text = this.currentMusicInfo?.artist
+        tvDesc?.text = this.currentMusicInfo?.album
+        if (mMediaHelper!!.isPlaying()) {
+            checkState(MusicState.STATE_PLAY)
+        } else {
+            checkState(MusicState.STATE_PAUSE)
         }
     }
 

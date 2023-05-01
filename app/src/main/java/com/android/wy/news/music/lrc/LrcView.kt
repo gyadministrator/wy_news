@@ -29,9 +29,10 @@ import kotlin.math.abs
 
 
 class LrcView : View {
-    companion object{
+    companion object {
         private const val DEFAULT_CONTENT = "暂无歌词"
     }
+
     private var mLrcData: ArrayList<Lrc>? = null
     private var mTextPaint: TextPaint? = null
     private var mDefaultContent: String? = null
@@ -85,27 +86,40 @@ class LrcView : View {
         context,
         attrs,
         defStyleAttr
-    ){
+    ) {
         context?.let { attrs?.let { it1 -> init(it, it1) } }
     }
 
     private fun init(context: Context, attrs: AttributeSet) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LrcView)
-        mLrcTextSize = typedArray.getDimension(R.styleable.LrcView_lrcTextSize, sp2px(context, 15f).toFloat())
+        mLrcTextSize =
+            typedArray.getDimension(R.styleable.LrcView_lrcTextSize, sp2px(context, 15f).toFloat())
         mLrcLineSpaceHeight =
-            typedArray.getDimension(R.styleable.LrcView_lrcLineSpaceSize, dp2px(context, 20f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_lrcLineSpaceSize,
+                dp2px(context, 20f).toFloat()
+            )
         mTouchDelay = typedArray.getInt(R.styleable.LrcView_lrcTouchDelay, 3500)
         mIndicatorTouchDelay = typedArray.getInt(R.styleable.LrcView_indicatorTouchDelay, 2500)
         mNormalColor = typedArray.getColor(R.styleable.LrcView_lrcNormalTextColor, Color.GRAY)
         mCurrentPlayLineColor =
             typedArray.getColor(R.styleable.LrcView_lrcCurrentTextColor, Color.BLUE)
         mNoLrcTextSize =
-            typedArray.getDimension(R.styleable.LrcView_noLrcTextSize, dp2px(context, 20f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_noLrcTextSize,
+                dp2px(context, 20f).toFloat()
+            )
         mNoLrcTextColor = typedArray.getColor(R.styleable.LrcView_noLrcTextColor, Color.BLACK)
         mIndicatorLineWidth =
-            typedArray.getDimension(R.styleable.LrcView_indicatorLineHeight, dp2px(context, 0.5f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_indicatorLineHeight,
+                dp2px(context, 0.5f).toFloat()
+            )
         mIndicatorTextSize =
-            typedArray.getDimension(R.styleable.LrcView_indicatorTextSize, sp2px(context, 13f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_indicatorTextSize,
+                sp2px(context, 13f).toFloat()
+            )
         mIndicatorTextColor =
             typedArray.getColor(R.styleable.LrcView_indicatorTextColor, Color.GRAY)
         mCurrentIndicateLineTextColor =
@@ -113,11 +127,21 @@ class LrcView : View {
         mIndicatorLineColor =
             typedArray.getColor(R.styleable.LrcView_indicatorLineColor, Color.GRAY)
         mIndicatorMargin =
-            typedArray.getDimension(R.styleable.LrcView_indicatorStartEndMargin, dp2px(context, 5f).toFloat())
-        mIconLineGap = typedArray.getDimension(R.styleable.LrcView_iconLineGap, dp2px(context, 3f).toFloat())
-        mIconWidth = typedArray.getDimension(R.styleable.LrcView_playIconWidth, dp2px(context, 20f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_indicatorStartEndMargin,
+                dp2px(context, 5f).toFloat()
+            )
+        mIconLineGap =
+            typedArray.getDimension(R.styleable.LrcView_iconLineGap, dp2px(context, 3f).toFloat())
+        mIconWidth = typedArray.getDimension(
+            R.styleable.LrcView_playIconWidth,
+            dp2px(context, 20f).toFloat()
+        )
         mIconHeight =
-            typedArray.getDimension(R.styleable.LrcView_playIconHeight, dp2px(context, 20f).toFloat())
+            typedArray.getDimension(
+                R.styleable.LrcView_playIconHeight,
+                dp2px(context, 20f).toFloat()
+            )
         mPlayDrawable = typedArray.getDrawable(R.styleable.LrcView_playIcon)
         mPlayDrawable = if (mPlayDrawable == null) ContextCompat.getDrawable(
             context,
@@ -293,13 +317,15 @@ class LrcView : View {
     }
 
     private fun getUpdateTimeLinePosition(time: Long): Int {
+        //注意 time 单位为ms lrc.time 为s
         var linePos = 0
-        for (i in 0 until getLrcCount()) {
-            val (time1) = mLrcData!![i]
-            if (time >= time1) {
-                if (i == getLrcCount() - 1) {
-                    linePos = getLrcCount() - 1
-                } else if (time < mLrcData!![i + 1].time) {
+        val lrcCount = getLrcCount()
+        for (i in 0 until lrcCount) {
+            val lrc = mLrcData!![i]
+            if (time >= (lrc.time) * 1000) {
+                if (i == lrcCount - 1) {
+                    linePos = lrcCount - 1
+                } else if (time < (mLrcData!![i + 1].time) * 1000) {
                     linePos = i
                     break
                 }

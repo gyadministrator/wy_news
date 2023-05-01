@@ -24,6 +24,8 @@ import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.event.MusicEvent
+import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.lrc.LrcFragment
 import com.android.wy.news.music.MediaPlayerHelper
@@ -37,6 +39,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import org.greenrobot.eventbus.EventBus
 import java.util.Timer
 import java.util.TimerTask
 
@@ -312,10 +315,14 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             currentPosition = position
             this.currentMusicInfo = musicInfo
             this.currentMusicInfo?.state = MusicState.STATE_PREPARE
+
+            val gson = Gson()
+            val musicInfoEvent = MusicInfoEvent(gson.toJson(this.currentMusicInfo))
+            EventBus.getDefault().postSticky(musicInfoEvent)
+
             musicAdapter.setSelectedIndex(currentPosition)
             mViewModel.requestMusicUrl(musicInfo)
 
-            val gson = Gson()
             SpTools.putString(Constants.LAST_PLAY_MUSIC_KEY, gson.toJson(currentMusicInfo))
         }
     }
@@ -329,6 +336,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             override fun run() {
                 val time = mMediaHelper?.getCurrentPosition()
                 Logger.i("setProgress--->>>time:$time")
+                val musicEvent = time?.let { MusicEvent(MusicState.STATE_PLAY, it) }
+                EventBus.getDefault().postSticky(musicEvent)
                 time?.let { playBarView?.updateProgress(it) }
             }
         }, 0, 50)
