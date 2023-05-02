@@ -1,5 +1,6 @@
 package com.android.wy.news.service
 
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.Bitmap
@@ -67,10 +68,13 @@ class MusicService : Service() {
                 override fun onPreparedState(mp: MediaPlayer?) {
                     Logger.i("onPreparedState: ")
                     musicService.mediaHelper?.start()
+                    musicService.startMusicForeground(musicInfo)
                 }
 
                 override fun onPauseState() {
                     Logger.i("onPauseState: ")
+                    musicService.timer?.cancel()
+                    musicService.timer = null
                     musicService.mediaHelper?.pause()
                     receiverIntent.action = MUSIC_PAUSE_ACTION
                     musicService.sendBroadcast(receiverIntent)
@@ -101,7 +105,6 @@ class MusicService : Service() {
                     Logger.i("onErrorState: what:$what  extra:$extra")
                 }
             })
-            musicService.startMusicForeground(musicInfo)
         }
     }
 
@@ -125,6 +128,18 @@ class MusicService : Service() {
         mNotifyHelper = MusicNotifyHelper.getInstance(this)
         notifyLayout = RemoteViews(packageName, R.layout.layout_music_controller_notification)
         mediaHelper = MediaPlayerHelper.getInstance(this)
+        //initIntent()
+    }
+
+    private fun initIntent() {
+        val pauseIntent = Intent(this, PlayService::class.java)
+        val pausePendingIntent = PendingIntent.getService(
+            this,
+            0,
+            pauseIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_play, pausePendingIntent)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -173,6 +188,11 @@ class MusicService : Service() {
 
         val builder: NotificationCompat.Builder? =
             mNotifyHelper?.createForeNotification(CHANNEL_ID, notifyLayout)
+        if (mediaHelper!!.isPlaying()) {
+            notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_play)
+        } else {
+            notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_pause)
+        }
         builder?.setContentTitle(musicInfo.artist)
         builder?.setContentText(musicInfo.album)
         startForeground(notifyID, builder?.build())

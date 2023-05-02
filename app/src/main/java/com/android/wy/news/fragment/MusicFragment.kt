@@ -391,7 +391,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    private class MusicReceiver(musicFragment: MusicFragment) : BroadcastReceiver() {
+    class MusicReceiver(musicFragment: MusicFragment) : BroadcastReceiver() {
         private var musicFragment: MusicFragment? = null
 
         init {

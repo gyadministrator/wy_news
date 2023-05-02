@@ -143,7 +143,7 @@
                 <action android:name="service.action.prepare" />
             </intent-filter>
         </service>
-
+        <service android:name=".service.PlayService" />
 
         <receiver
             android:name=".receiver.NotificationReceiver"

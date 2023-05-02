@@ -48,7 +48,6 @@ class MusicNotifyHelper(context: Context) {
     /**
      * 返回一个前台通知
      * @param channelId  通知渠道id，注意8.0创建通知的时候渠道id与此要匹配
-     * @param musicResult 数据对象
      * @param remoteViews 自定义通知样式的对象，但是与View不同，不提供findViewById方法，详细建议看看源码和官方文档
      * @return Notification
      */
