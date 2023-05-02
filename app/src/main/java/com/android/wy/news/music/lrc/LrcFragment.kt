@@ -56,11 +56,12 @@ class LrcFragment : DialogFragment() {
     private var mPlayMusicAnim: Animation? = null
     private var mPlayNeedleAnim: Animation? = null
     private var mStopNeedleAnim: Animation? = null
-    private var mMediaHelper: MediaPlayerHelper? = null
+    private var mediaHelper: MediaPlayerHelper? = null
     private var lrcView: LrcView? = null
     private var sbMusic: SeekBar? = null
     private var tvStart: TextView? = null
     private var tvEnd: TextView? = null
+    private var isDragSeek = false
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -122,7 +123,9 @@ class LrcFragment : DialogFragment() {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             lrcView?.updateTime(o.time.toLong())
-            sbMusic?.progress = o.time
+            if (!isDragSeek) {
+                sbMusic?.progress = o.time
+            }
             tvStart?.text = LrcHelper.formatTime(o.time.toFloat())
         } else if (o is MusicInfoEvent) {
             val gson = Gson()
@@ -164,24 +167,26 @@ class LrcFragment : DialogFragment() {
         mStopNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.stop_needle_anim)
         lrcView?.setOnPlayIndicatorLineListener(object : LrcView.OnPlayIndicatorLineListener {
             override fun onPlay(time: Float, content: String?) {
-                mMediaHelper?.seekTo(time.toInt())
+                mediaHelper?.seekTo(time.toInt())
             }
         })
-        sbMusic?.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+        sbMusic?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
+                isDragSeek = true
             }
 
             override fun onStopTrackingTouch(p0: SeekBar?) {
-
+                isDragSeek = false
+                p0?.progress?.let { mediaHelper?.seekTo(it) }
             }
         })
     }
 
     private fun initData() {
-        mMediaHelper = context?.let { MediaPlayerHelper.getInstance(it) }
+        mediaHelper = context?.let { MediaPlayerHelper.getInstance(it) }
         val args = arguments
         if (args != null) {
             currentPosition = args.getInt(POSITION_KEY)
@@ -222,7 +227,7 @@ class LrcFragment : DialogFragment() {
         this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.album
-        if (mMediaHelper!!.isPlaying()) {
+        if (mediaHelper!!.isPlaying()) {
             checkState(MusicState.STATE_PLAY)
         } else {
             checkState(MusicState.STATE_PAUSE)
