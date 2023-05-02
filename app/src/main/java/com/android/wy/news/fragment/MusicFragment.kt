@@ -384,6 +384,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 currentMusicInfo?.duration?.let { it1 ->
                     playBarView?.setCover(it)?.setTitle(stringBuilder.toString())?.setPlay(true)
                         ?.setPosition(currentPosition)?.setDuration(duration = it1 * 1000)
+                        ?.showPlayContainer(true)
                         ?.addListener(this)
                 }
             }

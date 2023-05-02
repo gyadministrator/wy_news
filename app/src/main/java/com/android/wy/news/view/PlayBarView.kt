@@ -69,6 +69,15 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         return this
     }
 
+    fun showPlayContainer(isShow: Boolean): PlayBarView {
+        if (isShow) {
+            rlPlay.visibility = View.VISIBLE
+        } else {
+            rlPlay.visibility = View.GONE
+        }
+        return this
+    }
+
     fun showLoading(isShow: Boolean) {
         if (isShow) {
             rlLoading.visibility = View.VISIBLE
