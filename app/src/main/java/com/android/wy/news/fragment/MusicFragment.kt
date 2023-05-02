@@ -28,6 +28,7 @@ import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
+import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.LrcFragment
 import com.android.wy.news.service.MusicService
@@ -72,7 +73,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var currentMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
     private var musicReceiver: MusicReceiver? = null
-    private var playPosition = 0
+    private var mediaHelper: MediaPlayerHelper? = null
 
     companion object {
         private const val mKey: String = "category_id"
@@ -96,6 +97,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initData() {
+        mediaHelper = MediaPlayerHelper.getInstance(mActivity)
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -106,8 +108,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         val gson = Gson()
         val s = SpTools.getString(Constants.LAST_PLAY_MUSIC_KEY)
         this.currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
-        showPlayBar()
-        playBarView?.setPlay(false)
+        if (this.currentMusicInfo != null) {
+            showPlayBar()
+            playBarView?.setPlay(false)
+        }
     }
 
     override fun onDestroyView() {
@@ -119,6 +123,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     fun onEvent(o: Any) {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
+            playBarView?.setPlay(true)
             playBarView?.updateProgress(o.time)
         }
     }
@@ -212,7 +217,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playMusic(it: String?) {
         this.currentPlayUrl = it
-        startMusicService(MusicService.MUSIC_PREPARE_ACTION)
+        startMusicService()
     }
 
     private fun registerMusicReceiver() {
@@ -232,11 +237,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    private fun startMusicService(action: String) {
+    private fun startMusicService() {
         if (mServiceIntent == null) {
             mServiceIntent = Intent(mActivity, MusicService::class.java)
         }
-        mServiceIntent?.action = action
         unBind()
         if (!isBind) {
             mActivity.bindService(mServiceIntent, connection, Context.BIND_AUTO_CREATE)
@@ -261,9 +265,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             this@MusicFragment.currentMusicInfo?.let {
                 this@MusicFragment.currentPlayUrl?.let { it1 ->
                     musicBinder?.setMusic(
-                        musicInfo = it,
-                        it1,
-                        playPosition
+                        musicInfo = it, it1
                     )
                 }
             }
@@ -326,21 +328,22 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onClickPlay(position: Int) {
         Logger.i("onClickPlay--->>>position:$position")
-        if (isBind) {
-            playPosition = playBarView?.getProgress()!!
-            unBind()
-            playBarView?.setPlay(false)
-            this.currentMusicInfo?.state = MusicState.STATE_PAUSE
-            musicAdapter.setSelectedIndex(position)
-        } else {
-            if (!TextUtils.isEmpty(currentPlayUrl)) {
-                startMusicService(MusicService.MUSIC_PLAY_ACTION)
-                playBarView?.setPlay(true)
-                this.currentMusicInfo?.state = MusicState.STATE_PLAY
+        if (mediaHelper != null) {
+            if (mediaHelper!!.isPlaying()) {
+                mediaHelper?.pause()
+                playBarView?.setPlay(false)
+                this.currentMusicInfo?.state = MusicState.STATE_PAUSE
                 musicAdapter.setSelectedIndex(position)
             } else {
-                playBarView?.showLoading(true)
-                this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
+                if (!TextUtils.isEmpty(currentPlayUrl)) {
+                    mediaHelper?.start()
+                    playBarView?.setPlay(true)
+                    this.currentMusicInfo?.state = MusicState.STATE_PLAY
+                    musicAdapter.setSelectedIndex(position)
+                } else {
+                    playBarView?.showLoading(true)
+                    this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
+                }
             }
         }
     }
@@ -379,11 +382,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             playBarView?.visibility = View.VISIBLE
             currentMusicInfo?.pic?.let {
                 currentMusicInfo?.duration?.let { it1 ->
-                    playBarView?.setCover(it)
-                        ?.setTitle(stringBuilder.toString())
-                        ?.setPlay(true)
-                        ?.setPosition(currentPosition)
-                        ?.setDuration(duration = it1 * 1000)
+                    playBarView?.setCover(it)?.setTitle(stringBuilder.toString())?.setPlay(true)
+                        ?.setPosition(currentPosition)?.setDuration(duration = it1 * 1000)
                         ?.addListener(this)
                 }
             }
@@ -431,7 +431,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     }
 
                     MusicService.MUSIC_COMPLETE_ACTION -> {
-                        this.musicFragment?.playPosition = 0
                         //最后一首播放完，播放第一首
                         val dataList = this.musicFragment?.musicAdapter?.getDataList()
                         if (dataList != null) {

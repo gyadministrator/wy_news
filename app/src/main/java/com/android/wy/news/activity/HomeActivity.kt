@@ -376,6 +376,8 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         setBottomBarState(position)
         if (position != 3) {
             playBarView.visibility = View.GONE
+        }else{
+            playBarView.visibility = View.VISIBLE
         }
     }
 

@@ -139,6 +139,8 @@
                 <action android:name="service.action.play_next" />
                 <action android:name="service.action.play" />
                 <action android:name="service.action.pause" />
+                <action android:name="service.action.complete" />
+                <action android:name="service.action.prepare" />
             </intent-filter>
         </service>
 
