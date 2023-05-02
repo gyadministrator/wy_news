@@ -28,7 +28,6 @@ import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
-import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.LrcFragment
 import com.android.wy.news.service.MusicService
@@ -68,12 +67,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var musicBinder: MusicService.MusicBinder? = null
     private var musicService: MusicService? = null
     private lateinit var refreshLayout: SmartRefreshLayout
-    private var mMediaHelper: MediaPlayerHelper? = null
     private var playBarView: PlayBarView? = null
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
     private var musicReceiver: MusicReceiver? = null
+    private var playPosition = 0
 
     companion object {
         private const val mKey: String = "category_id"
@@ -103,7 +102,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         musicAdapter = MusicAdapter(this)
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = musicAdapter
-        mMediaHelper = MediaPlayerHelper.getInstance(mActivity)
 
         val gson = Gson()
         val s = SpTools.getString(Constants.LAST_PLAY_MUSIC_KEY)
@@ -214,8 +212,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playMusic(it: String?) {
         this.currentPlayUrl = it
-        startMusicService()
-        registerMusicReceiver()
+        startMusicService(MusicService.MUSIC_PREPARE_ACTION)
     }
 
     private fun registerMusicReceiver() {
@@ -235,15 +232,17 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    private fun startMusicService() {
+    private fun startMusicService(action: String) {
         if (mServiceIntent == null) {
             mServiceIntent = Intent(mActivity, MusicService::class.java)
         }
+        mServiceIntent?.action = action
         unBind()
         if (!isBind) {
             mActivity.bindService(mServiceIntent, connection, Context.BIND_AUTO_CREATE)
             isBind = true
         }
+        registerMusicReceiver()
     }
 
     private fun unBind() {
@@ -263,7 +262,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 this@MusicFragment.currentPlayUrl?.let { it1 ->
                     musicBinder?.setMusic(
                         musicInfo = it,
-                        it1
+                        it1,
+                        playPosition
                     )
                 }
             }
@@ -326,22 +326,21 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onClickPlay(position: Int) {
         Logger.i("onClickPlay--->>>position:$position")
-        if (mMediaHelper != null) {
-            if (mMediaHelper!!.isPlaying()) {
-                mMediaHelper?.pause()
-                playBarView?.setPlay(false)
-                this.currentMusicInfo?.state = MusicState.STATE_PAUSE
+        if (isBind) {
+            playPosition = playBarView?.getProgress()!!
+            unBind()
+            playBarView?.setPlay(false)
+            this.currentMusicInfo?.state = MusicState.STATE_PAUSE
+            musicAdapter.setSelectedIndex(position)
+        } else {
+            if (!TextUtils.isEmpty(currentPlayUrl)) {
+                startMusicService(MusicService.MUSIC_PLAY_ACTION)
+                playBarView?.setPlay(true)
+                this.currentMusicInfo?.state = MusicState.STATE_PLAY
                 musicAdapter.setSelectedIndex(position)
             } else {
-                if (!TextUtils.isEmpty(currentPlayUrl)) {
-                    mMediaHelper?.start()
-                    playBarView?.setPlay(true)
-                    this.currentMusicInfo?.state = MusicState.STATE_PLAY
-                    musicAdapter.setSelectedIndex(position)
-                } else {
-                    playBarView?.showLoading(true)
-                    this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
-                }
+                playBarView?.showLoading(true)
+                this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
             }
         }
     }
@@ -432,6 +431,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     }
 
                     MusicService.MUSIC_COMPLETE_ACTION -> {
+                        this.musicFragment?.playPosition = 0
                         //最后一首播放完，播放第一首
                         val dataList = this.musicFragment?.musicAdapter?.getDataList()
                         if (dataList != null) {

@@ -40,6 +40,7 @@ class MusicService : Service() {
         const val MUSIC_PLAY_ACTION = "service.action.play"
         const val MUSIC_PAUSE_ACTION = "service.action.pause"
         const val MUSIC_COMPLETE_ACTION = "service.action.complete"
+        const val MUSIC_PREPARE_ACTION = "service.action.prepare"
     }
 
     override fun onBind(p0: Intent?): IBinder {
@@ -57,7 +58,7 @@ class MusicService : Service() {
             return this.musicService
         }
 
-        fun setMusic(musicInfo: MusicInfo, url: String) {
+        fun setMusic(musicInfo: MusicInfo, url: String, playPosition: Int) {
             Logger.i("setMusic:$musicInfo")
             this.musicService.mediaHelper?.setPath(url)
             val receiverIntent = Intent()
@@ -65,6 +66,9 @@ class MusicService : Service() {
                 MediaPlayerHelper.OnMediaHelperListener {
                 override fun onPreparedState(mp: MediaPlayer?) {
                     Logger.i("onPreparedState: ")
+                    if (playPosition > 0) {
+                        musicService.mediaHelper?.seekTo(playPosition)
+                    }
                     musicService.mediaHelper?.start()
                 }
 
@@ -102,6 +106,13 @@ class MusicService : Service() {
             })
             musicService.startMusicForeground(musicInfo)
         }
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        mediaHelper?.pause()
+        timer?.cancel()
+        timer = null
+        return super.onUnbind(intent)
     }
 
     private fun setProgress() {

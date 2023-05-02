@@ -29,6 +29,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     private lateinit var roundProgressBar: RoundProgressBar
     private var onPlayBarListener: OnPlayBarListener? = null
     private var position = 0
+    private var currentProgress = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -54,8 +55,13 @@ class PlayBarView : LinearLayout, View.OnClickListener {
     }
 
     fun updateProgress(progress: Int): PlayBarView {
+        this.currentProgress = progress
         roundProgressBar.setProgress(progress)
         return this
+    }
+
+    fun getProgress(): Int {
+        return currentProgress
     }
 
     fun setPosition(position: Int): PlayBarView {
