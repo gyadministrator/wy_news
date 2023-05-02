@@ -132,25 +132,15 @@
 
         <service
             android:name=".service.MusicService"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-
-        <service android:name=".service.PlayService" />
-
-        <service android:name=".service.PauseService" />
-
-        <service
-            android:name=".service.MusicNotifyService"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-
-        <receiver
-            android:name=".receiver.MusicBroadCastReceiver"
             android:exported="true"
-            tools:ignore="ExportedReceiver">
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
-                <action android:name="com.android.wy.news.service.broadcasts.PLAY_PRE" />
-                <action android:name="com.android.wy.news.service.broadcasts.PLAY_NEXT" />
+                <action android:name="service.action.play_pre" />
+                <action android:name="service.action.play_next" />
+                <action android:name="service.action.play" />
+                <action android:name="service.action.pause" />
             </intent-filter>
-        </receiver>
+        </service>
 
 
         <receiver

@@ -30,7 +30,7 @@ import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.lrc.LrcFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.service.MusicNotifyService
+import com.android.wy.news.service.MusicService
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
@@ -64,8 +64,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var isLoadingNext = true
     private var isBind = false
     private var mServiceIntent: Intent? = null
-    private var musicBinder: MusicNotifyService.MusicBinder? = null
-    private var musicService: MusicNotifyService? = null
+    private var musicBinder: MusicService.MusicBinder? = null
+    private var musicService: MusicService? = null
     private lateinit var refreshLayout: SmartRefreshLayout
     private var mMediaHelper: MediaPlayerHelper? = null
     private var playBarView: PlayBarView? = null
@@ -246,7 +246,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun startMusicService() {
         if (mServiceIntent == null) {
-            mServiceIntent = Intent(mActivity, MusicNotifyService::class.java)
+            mServiceIntent = Intent(mActivity, MusicService::class.java)
         }
         unBind()
         if (!isBind) {
@@ -265,7 +265,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private val connection = object : ServiceConnection {
 
         override fun onServiceConnected(p0: ComponentName?, service: IBinder?) {
-            musicBinder = service as (MusicNotifyService.MusicBinder)
+            musicBinder = service as (MusicService.MusicBinder)
             musicService = musicBinder?.getService()
             this@MusicFragment.currentMusicInfo?.let { musicBinder?.setMusic(musicInfo = it) }
         }

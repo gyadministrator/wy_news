@@ -64,7 +64,7 @@ class MusicNotifyHelper(context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Builder(mContext, channelId)
-            .setSmallIcon(R.mipmap.icon)
+            .setSmallIcon(R.mipmap.notice)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomBigContentView(remoteViews)
             .setContentIntent(mainIntent)

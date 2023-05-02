@@ -167,6 +167,17 @@ class LrcFragment : DialogFragment() {
                 mMediaHelper?.seekTo(time.toInt())
             }
         })
+        sbMusic?.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+
+            }
+        })
     }
 
     private fun initData() {
