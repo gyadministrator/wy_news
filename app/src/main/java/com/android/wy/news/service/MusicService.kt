@@ -19,6 +19,8 @@ import com.android.wy.news.music.MusicState
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import org.greenrobot.eventbus.EventBus
@@ -68,11 +70,11 @@ class MusicService : Service() {
                 override fun onPreparedState(mp: MediaPlayer?) {
                     Logger.i("onPreparedState: ")
                     musicService.mediaHelper?.start()
-                    musicService.startMusicForeground(musicInfo)
                 }
 
                 override fun onPauseState() {
                     Logger.i("onPauseState: ")
+                    musicService.startMusicForeground(musicInfo)
                     musicService.timer?.cancel()
                     musicService.timer = null
                     musicService.mediaHelper?.pause()
@@ -82,6 +84,7 @@ class MusicService : Service() {
 
                 override fun onPlayingState() {
                     Logger.i("onPlayingState: ")
+                    musicService.startMusicForeground(musicInfo)
                     musicService.timer?.cancel()
                     musicService.timer = null
                     musicService.setProgress()
@@ -193,12 +196,12 @@ class MusicService : Service() {
         } else {
             notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_pause)
         }
-        builder?.setContentTitle(musicInfo.artist)
-        builder?.setContentText(musicInfo.album)
+        notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
+        notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.album)
         startForeground(notifyID, builder?.build())
 
         Glide.with(this).asBitmap().load(musicInfo.pic)
-            //.apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
             .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                 //关键代码，加载原始大小
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
@@ -212,7 +215,7 @@ class MusicService : Service() {
                 override fun onResourceReady(
                     resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
-                    builder?.setLargeIcon(resource)
+                    notifyLayout?.setImageViewBitmap(R.id.iv_cover, resource)
                     startForeground(notifyID, builder?.build())
                 }
             })
