@@ -65,7 +65,10 @@ class MusicNotifyHelper(context: Context) {
         return NotificationCompat.Builder(mContext, channelId)
             .setSmallIcon(R.mipmap.notice)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-            .setCustomBigContentView(remoteViews)
+            //setCustomBigContentView() 为展开后通知设置不同的布局
+            //.setCustomBigContentView(remoteViews)
+            //setCustomContentView() 以设置收起后通知的布局
+            .setCustomContentView(remoteViews)
             .setContentIntent(mainIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }

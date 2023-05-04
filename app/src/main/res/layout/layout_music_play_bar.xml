@@ -52,7 +52,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:src="@mipmap/music_play"
+                    android:src="@mipmap/music_pause"
                     app:tint="@color/main_title"
                     tools:ignore="ContentDescription" />
 

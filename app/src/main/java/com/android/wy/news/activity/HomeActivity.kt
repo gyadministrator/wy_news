@@ -376,7 +376,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         setBottomBarState(position)
         if (position != 3) {
             playBarView.visibility = View.GONE
-        }else{
+        } else {
             playBarView.visibility = View.VISIBLE
         }
     }
@@ -445,7 +445,9 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             firstTime = secondTime
         } else {
             LocationHelper.destroyLocation()
-            finish()
+            //暂时消失当前activity，移动到后台
+            moveTaskToBack(true)
+            //finish()
             //exitProcess(0)
         }
         //super.onBackPressed()

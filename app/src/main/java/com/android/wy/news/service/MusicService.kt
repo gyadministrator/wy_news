@@ -13,6 +13,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
+import com.android.wy.news.fragment.MusicFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.music.MusicState
@@ -43,7 +44,7 @@ class MusicService : Service() {
         const val MUSIC_PLAY_ACTION = "service.action.play"
         const val MUSIC_PAUSE_ACTION = "service.action.pause"
         const val MUSIC_COMPLETE_ACTION = "service.action.complete"
-        const val MUSIC_PREPARE_ACTION = "service.action.prepare"
+        const val MUSIC_STATE_ACTION = "service.action.state"
     }
 
     override fun onBind(p0: Intent?): IBinder {
@@ -131,52 +132,39 @@ class MusicService : Service() {
         mNotifyHelper = MusicNotifyHelper.getInstance(this)
         notifyLayout = RemoteViews(packageName, R.layout.layout_music_controller_notification)
         mediaHelper = MediaPlayerHelper.getInstance(this)
-        //initIntent()
+        initPendingIntent()
     }
 
-    private fun initIntent() {
-        val pauseIntent = Intent(this, PlayService::class.java)
-        val pausePendingIntent = PendingIntent.getService(
+    private fun initPendingIntent() {
+        val stateIntent = Intent(this, PlayService::class.java)
+        stateIntent.action = MUSIC_STATE_ACTION
+        val statePendingIntent = PendingIntent.getService(
             this,
             0,
-            pauseIntent,
+            stateIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        notifyLayout?.setOnClickPendingIntent(R.id.iv_play, pausePendingIntent)
-    }
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_play, statePendingIntent)
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null) {
-            val action = intent.action
-            if (action != null) {
-                when (action) {
-                    MUSIC_PLAY_ACTION -> {
-                        if (!mediaHelper!!.isPlaying()) {
-                            mediaHelper?.start()
-                        }
-                    }
+        val preIntent = Intent(this, PlayService::class.java)
+        preIntent.action = MUSIC_PRE_ACTION
+        val prePendingIntent = PendingIntent.getService(
+            this,
+            1,
+            preIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_pre, prePendingIntent)
 
-                    MUSIC_PAUSE_ACTION -> {
-                        if (mediaHelper!!.isPlaying()) {
-                            mediaHelper?.pause()
-                        }
-                    }
-
-                    MUSIC_PRE_ACTION -> {
-
-                    }
-
-                    MUSIC_NEXT_ACTION -> {
-
-                    }
-
-                    else -> {
-
-                    }
-                }
-            }
-        }
-        return super.onStartCommand(intent, flags, startId)
+        val nextIntent = Intent(this, PlayService::class.java)
+        nextIntent.action = MUSIC_NEXT_ACTION
+        val nextPendingIntent = PendingIntent.getService(
+            this,
+            2,
+            nextIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent)
     }
 
     /**
@@ -198,10 +186,11 @@ class MusicService : Service() {
         }
         notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
         notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.album)
+        builder?.build()?.flags = NotificationCompat.FLAG_AUTO_CANCEL
         startForeground(notifyID, builder?.build())
 
         Glide.with(this).asBitmap().load(musicInfo.pic)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(40)))
             .diskCacheStrategy(DiskCacheStrategy.ALL).override(
                 //关键代码，加载原始大小
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,

@@ -90,6 +90,10 @@ class PlayBarView : LinearLayout, View.OnClickListener {
         }
     }
 
+    fun getPlayContainer(): RelativeLayout {
+        return rlPlay
+    }
+
     override fun onClick(p0: View?) {
         if (p0 != null) {
             when (p0.id) {
