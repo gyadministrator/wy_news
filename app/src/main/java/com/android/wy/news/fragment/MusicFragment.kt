@@ -285,7 +285,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         Logger.i("playNext: ")
         //滑动到播放的歌曲
         rvContent.scrollToPosition(currentPosition + 1)
-        playBarView?.showLoading(true)
         //下一曲
         prepareMusic(currentPosition + 1)
     }
@@ -294,7 +293,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         Logger.i("playPre: ")
         //滑动到播放的歌曲
         rvContent.scrollToPosition(currentPosition - 1)
-        playBarView?.showLoading(true)
         //上一曲
         prepareMusic(currentPosition - 1)
     }
@@ -316,12 +314,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onItemClickListener(view: View, data: MusicInfo) {
         val i = view.tag as Int
-        playBarView?.showLoading(true)
         prepareMusic(i)
     }
 
     private fun prepareMusic(position: Int) {
         if (currentPosition == position) return
+        playBarView?.showLoading(true)
         val dataList = musicAdapter.getDataList()
         if (position < 0) currentPosition = 0
         if (position > dataList.size) currentPosition = dataList.size - 1
