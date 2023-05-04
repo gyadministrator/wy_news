@@ -1,5 +1,6 @@
 package com.android.wy.news.music.lrc
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -27,6 +28,8 @@ import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
+import com.android.wy.news.service.MusicService
+import com.android.wy.news.service.PlayService
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -61,6 +64,8 @@ class LrcFragment : DialogFragment() {
     private var sbMusic: SeekBar? = null
     private var tvStart: TextView? = null
     private var tvEnd: TextView? = null
+    private var ivPre: ImageView? = null
+    private var ivNext: ImageView? = null
     private var isDragSeek = false
 
     companion object {
@@ -159,6 +164,14 @@ class LrcFragment : DialogFragment() {
         sbMusic = mContentView?.findViewById(R.id.sb_music)
         tvStart = mContentView?.findViewById(R.id.tv_start)
         tvEnd = mContentView?.findViewById(R.id.tv_end)
+        ivPre = mContentView?.findViewById(R.id.iv_pre)
+        ivNext = mContentView?.findViewById(R.id.iv_next)
+        ivPre?.setOnClickListener {
+            playPre()
+        }
+        ivNext?.setOnClickListener {
+            playNext()
+        }
         rlDown?.setOnClickListener {
             dismiss()
         }
@@ -183,6 +196,20 @@ class LrcFragment : DialogFragment() {
                 p0?.progress?.let { mediaHelper?.seekTo(it) }
             }
         })
+    }
+
+    private fun playNext() {
+        checkState(MusicState.STATE_PAUSE)
+        val intent = Intent(context, PlayService::class.java)
+        intent.action = MusicService.MUSIC_NEXT_ACTION
+        context?.startService(intent)
+    }
+
+    private fun playPre() {
+        checkState(MusicState.STATE_PAUSE)
+        val intent = Intent(context, PlayService::class.java)
+        intent.action = MusicService.MUSIC_PRE_ACTION
+        context?.startService(intent)
     }
 
     private fun initData() {
