@@ -114,6 +114,7 @@ dependencies {
     testImplementation rootProject.ext.dependencies.junit
     androidTestImplementation rootProject.ext.dependencies.junitExt
     androidTestImplementation rootProject.ext.dependencies.espressoCore
+    implementation rootProject.ext.dependencies.splashScreen
     //作者的库
     implementation rootProject.ext.dependencies.customTabLayout
     implementation rootProject.ext.dependencies.gYBottomBar

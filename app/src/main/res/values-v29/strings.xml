@@ -33,4 +33,6 @@
     <string name="complaint_or_reply">投诉与建议</string>
     <string name="open_source_more">github链接</string>
     <string name="_00_00">00:00</string>
+    <string name="off">关闭</string>
+    <string name="close">关闭</string>
 </resources>

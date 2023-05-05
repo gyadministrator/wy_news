@@ -13,6 +13,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
+import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.fragment.MusicFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
@@ -75,6 +76,7 @@ class MusicService : Service() {
 
                 override fun onPauseState() {
                     Logger.i("onPauseState: ")
+                    EventBus.getDefault().postSticky(PlayEvent())
                     musicService.startMusicForeground(musicInfo)
                     musicService.timer?.cancel()
                     musicService.timer = null
@@ -85,6 +87,7 @@ class MusicService : Service() {
 
                 override fun onPlayingState() {
                     Logger.i("onPlayingState: ")
+                    EventBus.getDefault().postSticky(PlayEvent())
                     musicService.startMusicForeground(musicInfo)
                     musicService.timer?.cancel()
                     musicService.timer = null

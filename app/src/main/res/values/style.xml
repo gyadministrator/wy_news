@@ -30,6 +30,13 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/main_bg_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/loading</item>
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat.Light.NoActionBar</item>
+    </style>
+
     <declare-styleable name="TitleBarView">
         <attr name="title" format="string" />
     </declare-styleable>
@@ -62,25 +69,35 @@
         </attr>
     </declare-styleable>
     <declare-styleable name="LrcView">
-        <attr name="lrcTextSize" format="dimension"/>
-        <attr name="lrcLineSpaceSize" format="dimension"/>
-        <attr name="lrcNormalTextColor" format="reference|color"/>
-        <attr name="lrcCurrentTextColor" format="reference|color"/>
-        <attr name="lrcTouchDelay" format="integer"/>
-        <attr name="noLrcTextSize" format="dimension"/>
-        <attr name="noLrcTextColor" format="reference|color"/>
-        <attr name="indicatorLineHeight" format="dimension"/>
-        <attr name="indicatorTextSize" format="dimension"/>
-        <attr name="indicatorTextColor" format="reference|color"/>
-        <attr name="currentIndicateLrcColor" format="reference|color"/>
-        <attr name="indicatorTouchDelay" format="integer"/>
-        <attr name="indicatorLineColor" format="reference|color"/>
-        <attr name="indicatorStartEndMargin" format="dimension"/>
-        <attr name="iconLineGap" format="dimension"/>
-        <attr name="playIconWidth" format="dimension"/>
-        <attr name="playIconHeight" format="dimension"/>
-        <attr name="playIcon" format="reference"/>
-        <attr name="isLrcCurrentTextBold" format="boolean"/>
-        <attr name="isLrcIndicatorTextBold" format="boolean"/>
+        <attr name="lrcTextSize" format="dimension" />
+        <attr name="lrcLineSpaceSize" format="dimension" />
+        <attr name="lrcNormalTextColor" format="reference|color" />
+        <attr name="lrcCurrentTextColor" format="reference|color" />
+        <attr name="lrcTouchDelay" format="integer" />
+        <attr name="noLrcTextSize" format="dimension" />
+        <attr name="noLrcTextColor" format="reference|color" />
+        <attr name="indicatorLineHeight" format="dimension" />
+        <attr name="indicatorTextSize" format="dimension" />
+        <attr name="indicatorTextColor" format="reference|color" />
+        <attr name="currentIndicateLrcColor" format="reference|color" />
+        <attr name="indicatorTouchDelay" format="integer" />
+        <attr name="indicatorLineColor" format="reference|color" />
+        <attr name="indicatorStartEndMargin" format="dimension" />
+        <attr name="iconLineGap" format="dimension" />
+        <attr name="playIconWidth" format="dimension" />
+        <attr name="playIconHeight" format="dimension" />
+        <attr name="playIcon" format="reference" />
+        <attr name="isLrcCurrentTextBold" format="boolean" />
+        <attr name="isLrcIndicatorTextBold" format="boolean" />
     </declare-styleable>
+
+
+    <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
+    </style>
+
+    <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
+        <item name="behavior_peekHeight">600dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

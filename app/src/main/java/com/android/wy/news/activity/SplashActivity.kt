@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
@@ -67,6 +68,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     }
 
     override fun getViewBinding(): ActivitySplashBinding {
+        installSplashScreen()
         return ActivitySplashBinding.inflate(layoutInflater)
     }
 

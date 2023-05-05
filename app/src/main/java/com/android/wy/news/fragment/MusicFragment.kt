@@ -29,6 +29,8 @@ import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
+import com.android.wy.news.event.MusicListEvent
+import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
@@ -118,6 +120,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
+        unRegisterMusicReceiver()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -129,6 +132,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initEvent() {
+        registerMusicReceiver()
         val arguments = arguments
         if (arguments != null) {
             categoryId = arguments.getInt(mKey)
@@ -169,6 +173,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     musicAdapter.loadMoreData(dataList)
                 }
             }
+
+            val musicListEvent = MusicListEvent(musicAdapter.getDataList())
+            EventBus.getDefault().postSticky(musicListEvent)
+
             if (dataList.size < 20 && isLoadingNext) {
                 isLoadingNext = false
                 //加载下一页补充
@@ -252,13 +260,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             mActivity.bindService(mServiceIntent, connection, Context.BIND_AUTO_CREATE)
             isBind = true
         }
-        registerMusicReceiver()
     }
 
     private fun unBind() {
         if (isBind) {
             mActivity.unbindService(connection)
-            unRegisterMusicReceiver()
             isBind = false
         }
     }
@@ -283,6 +289,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playNext() {
         Logger.i("playNext: ")
+        val dataList = musicAdapter.getDataList()
+        if (currentPosition + 1 > dataList.size - 1) currentPosition = dataList.size - 2
         //滑动到播放的歌曲
         rvContent.scrollToPosition(currentPosition + 1)
         //下一曲
@@ -291,6 +299,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playPre() {
         Logger.i("playPre: ")
+        if (currentPosition - 1 < 0) currentPosition = 1
         //滑动到播放的歌曲
         rvContent.scrollToPosition(currentPosition - 1)
         //上一曲

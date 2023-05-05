@@ -28,6 +28,7 @@ ext {
             //compose 核心
             'androidx.compose.ui:ui'                               : '1.0.1',
             'androidx.compose.material:material'                   : '1.0.1',
+            'androidx.core:core-splashscreen'                      : '1.0.0-beta02',
             'androidx.compose.ui:ui-tooling-preview'               : '1.0.1',
 
             // 作者的库
@@ -97,6 +98,7 @@ ext {
             viewmodelKtx                 : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions['androidx.lifecycle:lifecycle-viewmodel-ktx']}",
             junit                        : "junit:junit:${versions['junit:junit']}",
             junitExt                     : "androidx.test.ext:junit:${versions['androidx.test.ext:junit']}",
+            splashScreen                 : "androidx.core:core-splashscreen:${versions['androidx.core:core-splashscreen']}",
             espressoCore                 : "androidx.test.espresso:espresso-core:${versions['androidx.test.espresso:espresso-core']}",
 
             // 作者的库

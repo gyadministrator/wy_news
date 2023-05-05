@@ -18,18 +18,25 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
+import com.android.wy.news.databinding.LrcFragmentBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
+import com.android.wy.news.event.MusicListEvent
+import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
+import com.android.wy.news.music.MusicListDialog
+import com.android.wy.news.music.MusicPlayMode
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.service.MusicService
 import com.android.wy.news.service.PlayService
+import com.android.wy.news.view.RoundProgressBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
@@ -66,7 +73,15 @@ class LrcFragment : DialogFragment() {
     private var tvEnd: TextView? = null
     private var ivPre: ImageView? = null
     private var ivNext: ImageView? = null
+    private var ivMusicMode: ImageView? = null
+    private var ivMusicList: ImageView? = null
     private var isDragSeek = false
+
+    private var ivPlay: ImageView? = null
+    private var rlPlay: RelativeLayout? = null
+    private var roundProgressBar: RoundProgressBar? = null
+    private var index = 0
+    private var musicListDialog: MusicListDialog? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -90,14 +105,16 @@ class LrcFragment : DialogFragment() {
             }
 
             MusicState.STATE_PLAY -> {
-                mFlPlayMusic?.animation = mPlayMusicAnim
-                mIvNeedle?.animation = mPlayNeedleAnim
+                mIvNeedle?.startAnimation(mPlayNeedleAnim)
+                mFlPlayMusic?.startAnimation(mPlayMusicAnim)
+                ivPlay?.setImageResource(R.mipmap.music_play)
             }
 
             MusicState.STATE_PAUSE -> {
                 mFlPlayMusic?.clearAnimation()
-                mIvNeedle?.animation = mStopNeedleAnim
+                mIvNeedle?.startAnimation(mStopNeedleAnim)
                 lrcView?.pause()
+                ivPlay?.setImageResource(R.mipmap.music_pause)
             }
 
             MusicState.STATE_ERROR -> {
@@ -113,6 +130,7 @@ class LrcFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, com.android.wy.news.locationselect.R.style.CityPickerStyle)
+        musicListDialog = context?.let { MusicListDialog(it, R.style.BottomSheetDialog) }
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -127,6 +145,7 @@ class LrcFragment : DialogFragment() {
     fun onEvent(o: Any) {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
+            roundProgressBar?.setProgress(o.time)
             lrcView?.updateTime(o.time.toLong())
             if (!isDragSeek) {
                 sbMusic?.progress = o.time
@@ -136,6 +155,16 @@ class LrcFragment : DialogFragment() {
             val gson = Gson()
             currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
             setMusic()
+        } else if (o is PlayEvent) {
+            if (mediaHelper!!.isPlaying()) {
+                checkState(MusicState.STATE_PLAY)
+            } else {
+                checkState(MusicState.STATE_PAUSE)
+            }
+        } else if (o is MusicListEvent) {
+            val dataList = o.dataList
+            Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
+            musicListDialog?.setData(dataList)
         }
     }
 
@@ -148,24 +177,42 @@ class LrcFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
+        val binding = mContentView?.let { LrcFragmentBinding.bind(it) }
+        initViews(binding)
         initData()
     }
 
-    private fun initViews() {
-        ivBg = mContentView?.findViewById(R.id.iv_bg)
-        ivCover = mContentView?.findViewById(R.id.iv_cover)
-        tvTitle = mContentView?.findViewById(R.id.tv_title)
-        tvDesc = mContentView?.findViewById(R.id.tv_desc)
-        rlDown = mContentView?.findViewById(R.id.rl_down)
-        mFlPlayMusic = mContentView?.findViewById(R.id.fl_play_music)
-        mIvNeedle = mContentView?.findViewById(R.id.iv_needle)
-        lrcView = mContentView?.findViewById(R.id.lrc_view)
-        sbMusic = mContentView?.findViewById(R.id.sb_music)
-        tvStart = mContentView?.findViewById(R.id.tv_start)
-        tvEnd = mContentView?.findViewById(R.id.tv_end)
-        ivPre = mContentView?.findViewById(R.id.iv_pre)
-        ivNext = mContentView?.findViewById(R.id.iv_next)
+    private fun initViews(binding: LrcFragmentBinding?) {
+        val playMusicBinding = binding?.playMusic
+        ivBg = binding?.ivBg
+        ivCover = playMusicBinding?.ivCover
+        tvTitle = binding?.tvTitle
+        tvDesc = binding?.tvDesc
+        rlDown = binding?.rlDown
+        mFlPlayMusic = playMusicBinding?.flPlayMusic
+        mIvNeedle = playMusicBinding?.ivNeedle
+        lrcView = binding?.lrcView
+        sbMusic = binding?.sbMusic
+        tvStart = binding?.tvStart
+        tvEnd = binding?.tvEnd
+        ivPre = binding?.ivPre
+        ivNext = binding?.ivNext
+        ivMusicMode = binding?.ivMusicMode
+        ivMusicList = binding?.ivMusicList
+
+        ivPlay = binding?.ivPlay
+        rlPlay = binding?.rlPlay
+        roundProgressBar = binding?.roundProgressBar
+
+        ivMusicList?.setOnClickListener {
+            showMusicList()
+        }
+        ivMusicMode?.setOnClickListener {
+            setMusicMode()
+        }
+        rlPlay?.setOnClickListener {
+            play()
+        }
         ivPre?.setOnClickListener {
             playPre()
         }
@@ -175,9 +222,11 @@ class LrcFragment : DialogFragment() {
         rlDown?.setOnClickListener {
             dismiss()
         }
+
         mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim)
         mPlayNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.play_needle_anim)
         mStopNeedleAnim = AnimationUtils.loadAnimation(context, R.anim.stop_needle_anim)
+
         lrcView?.setOnPlayIndicatorLineListener(object : LrcView.OnPlayIndicatorLineListener {
             override fun onPlay(time: Float, content: String?) {
                 mediaHelper?.seekTo(time.toInt())
@@ -196,6 +245,52 @@ class LrcFragment : DialogFragment() {
                 p0?.progress?.let { mediaHelper?.seekTo(it) }
             }
         })
+    }
+
+    private fun showMusicList() {
+        musicListDialog?.show()
+    }
+
+    private fun setMusicMode() {
+        val map = MusicPlayMode.map
+        index++
+        if (index > 2) {
+            index = 0
+        }
+        val s = map[index]
+        MusicPlayMode.setMode(index)
+        Toast.makeText(context, "已切换到$s", Toast.LENGTH_SHORT).show()
+        initMusicMode()
+    }
+
+    private fun initMusicMode() {
+        val mode = MusicPlayMode.getMode()
+        if (mode != null) {
+            index = mode
+        }
+        when (mode) {
+            MusicPlayMode.STATE_TYPE_NORMAL -> {
+                ivMusicMode?.setImageResource(R.mipmap.state_repeat)
+            }
+
+            MusicPlayMode.STATE_TYPE_RANDOM -> {
+                ivMusicMode?.setImageResource(R.mipmap.state_random)
+            }
+
+            MusicPlayMode.STATE_TYPE_ONE -> {
+                ivMusicMode?.setImageResource(R.mipmap.state_one)
+            }
+
+            else -> {
+                ivMusicMode?.setImageResource(R.mipmap.state_repeat)
+            }
+        }
+    }
+
+    private fun play() {
+        val intent = Intent(context, PlayService::class.java)
+        intent.action = MusicService.MUSIC_STATE_ACTION
+        context?.startService(intent)
     }
 
     private fun playNext() {
@@ -224,6 +319,7 @@ class LrcFragment : DialogFragment() {
             }
         }
         setMusic()
+        initMusicMode()
     }
 
     private fun setMusic() {
@@ -244,6 +340,7 @@ class LrcFragment : DialogFragment() {
                 }
             }
         }
+        roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
         tvEnd?.text =
             LrcHelper.formatTime((this.currentMusicInfo?.duration)?.times(1000)!!.toFloat())
@@ -263,10 +360,7 @@ class LrcFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val mImmersionBar = ImmersionBar.with(this)
-        mImmersionBar.hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
-        mImmersionBar.fullScreen(true)
-        mImmersionBar.init()
+        hideNavigationBar()
         val dialog = dialog
         dialog?.setOnKeyListener { _, keyCode, _ ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -282,6 +376,12 @@ class LrcFragment : DialogFragment() {
             window.setLayout(width, height /*- ScreenUtil.getStatusBarHeight(requireActivity())*/)
             window.setWindowAnimations(mAnimStyle)
         }
+    }
+
+    private fun hideNavigationBar() {
+        val mImmersionBar = ImmersionBar.with(this)
+        mImmersionBar.hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
+        mImmersionBar.init()
     }
 
     //测量宽高

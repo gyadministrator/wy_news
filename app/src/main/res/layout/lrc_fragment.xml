@@ -17,6 +17,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bg_lrc_color"
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
@@ -59,7 +60,9 @@
             android:textSize="14sp"
             tools:text="456" />
 
-        <include layout="@layout/play_music" />
+        <include
+            android:id="@+id/play_music"
+            layout="@layout/play_music" />
 
         <com.android.wy.news.music.lrc.LrcView
             android:id="@+id/lrc_view"
@@ -123,6 +126,7 @@
             android:paddingEnd="20dp">
 
             <ImageView
+                android:id="@+id/iv_music_mode"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@mipmap/state_repeat"
@@ -160,7 +164,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_centerInParent="true"
-                            android:src="@mipmap/music_play"
+                            android:src="@mipmap/music_pause"
                             app:tint="@color/main_title"
                             tools:ignore="ContentDescription" />
 
@@ -178,24 +182,6 @@
                             app:style="STROKE"
                             app:textIsDisplayable="false" />
                     </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/rl_loading"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="gone">
-
-                        <com.wang.avi.AVLoadingIndicatorView
-                            android:id="@+id/iv_state_loading"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_centerInParent="true"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="6dp"
-                            app:indicatorColor="@color/main_title"
-                            app:indicatorName="LineSpinFadeLoaderIndicator" />
-                    </RelativeLayout>
                 </FrameLayout>
 
                 <ImageView
@@ -208,6 +194,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iv_music_list"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@mipmap/music_list"
