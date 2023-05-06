@@ -4,38 +4,32 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.location.Address
-import android.location.Geocoder
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
 import com.android.wy.news.entity.music.Lrclist
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.lrc.Lrc
-import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /*
@@ -178,9 +172,16 @@ class CommonTools {
         }
 
         fun loadImage(imgSrc: String, ivCover: ImageView) {
-            Glide.with(ivCover.context).asBitmap().load(imgSrc)
+            Glide.with(ivCover.context)
+                .asBitmap()
+                .load(imgSrc)
                 //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
-                .diskCacheStrategy(DiskCacheStrategy.ALL).override(
+                //DiskCacheStrategy.NONE：表示不缓存任何内容。
+                //DiskCacheStrategy.SOURCE：表示只缓存原始图片。
+                //DiskCacheStrategy.RESULT：表示只缓存转换过后的图片（默认选项）。
+                //DiskCacheStrategy.ALL ：表示既缓存原始图片，也缓存转换过后的图片。
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(
                     //关键代码，加载原始大小
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
@@ -189,7 +190,7 @@ class CommonTools {
                 .format(DecodeFormat.PREFER_RGB_565)
                 //.placeholder(R.mipmap.img_default)
                 //.error(R.mipmap.img_error)
-                .into(object : SimpleTarget<Bitmap>(
+                .into(object : CustomTarget<Bitmap>(
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                     com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                 ) {
@@ -197,6 +198,10 @@ class CommonTools {
                         resource: Bitmap, transition: Transition<in Bitmap?>?
                     ) {
                         ivCover.setImageBitmap(resource)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+
                     }
                 })
         }
@@ -210,20 +215,6 @@ class CommonTools {
                 return format.format(date)
             }
             return ""
-        }
-
-        fun getAddress(latitude: Double, longitude: Double) {
-            var addressList: List<Address?>? = null
-            val geocoder = Geocoder(App.app.applicationContext)
-            try {
-                addressList = geocoder.getFromLocation(latitude, longitude, 1)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            if (addressList != null) {
-                for (address in addressList) {
-                }
-            }
         }
 
         @SuppressLint("SimpleDateFormat")
@@ -516,11 +507,21 @@ class CommonTools {
             val dataList = ArrayList<Lrc>()
             if (lrcList.isNotEmpty()) {
                 for (element in lrcList) {
-                    val lrc=Lrc(element.time.toFloat(),element.lineLyric)
+                    val lrc = Lrc(element.time.toFloat(), element.lineLyric)
                     dataList.add(lrc)
                 }
             }
             return dataList
+        }
+
+        fun parseLrcMap(lrcList: List<Lrclist>): HashMap<String, String> {
+            val dataMap = HashMap<String, String>()
+            if (lrcList.isNotEmpty()) {
+                for (element in lrcList) {
+                    dataMap[(element.time.toFloat() * 1000f).toString()] = element.lineLyric
+                }
+            }
+            return dataMap
         }
     }
 }

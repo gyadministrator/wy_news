@@ -1,4 +1,4 @@
-package com.android.wy.news.music.lrc
+package com.android.wy.news.fragment
 
 import android.content.Intent
 import android.os.Build
@@ -31,11 +31,13 @@ import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
-import com.android.wy.news.music.MusicListDialog
+import com.android.wy.news.dialog.MusicListDialog
 import com.android.wy.news.music.MusicPlayMode
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.service.MusicService
-import com.android.wy.news.service.PlayService
+import com.android.wy.news.music.lrc.LrcHelper
+import com.android.wy.news.music.lrc.LrcView
+import com.android.wy.news.service.MusicNotifyService
+import com.android.wy.news.service.MusicPlayService
 import com.android.wy.news.view.RoundProgressBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -288,22 +290,22 @@ class LrcFragment : DialogFragment() {
     }
 
     private fun play() {
-        val intent = Intent(context, PlayService::class.java)
-        intent.action = MusicService.MUSIC_STATE_ACTION
+        val intent = Intent(context, MusicPlayService::class.java)
+        intent.action = MusicNotifyService.MUSIC_STATE_ACTION
         context?.startService(intent)
     }
 
     private fun playNext() {
         checkState(MusicState.STATE_PAUSE)
-        val intent = Intent(context, PlayService::class.java)
-        intent.action = MusicService.MUSIC_NEXT_ACTION
+        val intent = Intent(context, MusicPlayService::class.java)
+        intent.action = MusicNotifyService.MUSIC_NEXT_ACTION
         context?.startService(intent)
     }
 
     private fun playPre() {
         checkState(MusicState.STATE_PAUSE)
-        val intent = Intent(context, PlayService::class.java)
-        intent.action = MusicService.MUSIC_PRE_ACTION
+        val intent = Intent(context, MusicPlayService::class.java)
+        intent.action = MusicNotifyService.MUSIC_PRE_ACTION
         context?.startService(intent)
     }
 
@@ -323,6 +325,26 @@ class LrcFragment : DialogFragment() {
     }
 
     private fun setMusic() {
+        getLrc()
+        roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
+        sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
+        tvEnd?.text =
+            LrcHelper.formatTime((this.currentMusicInfo?.duration)?.times(1000)!!.toFloat())
+        ivBg?.let {
+            Glide.with(this).load(this.currentMusicInfo?.pic)
+                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
+        }
+        this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
+        tvTitle?.text = this.currentMusicInfo?.artist
+        tvDesc?.text = this.currentMusicInfo?.album
+        if (mediaHelper!!.isPlaying()) {
+            checkState(MusicState.STATE_PLAY)
+        } else {
+            checkState(MusicState.STATE_PAUSE)
+        }
+    }
+
+    private fun getLrc() {
         val musicId = this.currentMusicInfo?.musicrid
         if (musicId!!.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -339,22 +361,6 @@ class LrcFragment : DialogFragment() {
                     }
                 }
             }
-        }
-        roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
-        sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
-        tvEnd?.text =
-            LrcHelper.formatTime((this.currentMusicInfo?.duration)?.times(1000)!!.toFloat())
-        ivBg?.let {
-            Glide.with(this).load(this.currentMusicInfo?.pic)
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
-        }
-        this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
-        tvTitle?.text = this.currentMusicInfo?.artist
-        tvDesc?.text = this.currentMusicInfo?.album
-        if (mediaHelper!!.isPlaying()) {
-            checkState(MusicState.STATE_PLAY)
-        } else {
-            checkState(MusicState.STATE_PAUSE)
         }
     }
 

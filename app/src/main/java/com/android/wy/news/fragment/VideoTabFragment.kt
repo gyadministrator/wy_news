@@ -14,7 +14,6 @@ import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabVideoBinding
 import com.android.wy.news.entity.RecommendVideoEntity
-import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.JsoupManager
 import com.android.wy.news.manager.ThreadExecutorManager

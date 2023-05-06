@@ -63,6 +63,8 @@ class MusicNotifyHelper(context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         return NotificationCompat.Builder(mContext, channelId)
+            //设置不可手动清除，除非app死掉或者在代码中取消
+            .setOngoing(true)
             .setSmallIcon(R.mipmap.notice)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             //setCustomBigContentView() 为展开后通知设置不同的布局

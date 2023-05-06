@@ -16,13 +16,15 @@ import java.io.IOException
   * @Description:    
  */
 class MediaPlayerHelper(context: Context) : MusicListener() {
-    private var mContext: Context? = null
-    private var mMediaPlayer: MediaPlayer? = null
-    private var mOnMediaHelperListener: OnMediaHelperListener? = null
+    private var context: Context? = null
+    private var mediaPlayer: MediaPlayer? = null
+    private var onMediaHelperListener: OnMediaHelperListener? = null
     private var mResID = -5
+    private var currentPath: String? = null
+    private var audioManager: AudioManager? = null
 
-    fun setOnMediaHelperListener(mOnMediaHelperListener: OnMediaHelperListener?) {
-        this.mOnMediaHelperListener = mOnMediaHelperListener
+    fun setOnMediaHelperListener(onMediaHelperListener: OnMediaHelperListener?) {
+        this.onMediaHelperListener = onMediaHelperListener
     }
 
     companion object {
@@ -42,8 +44,9 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     }
 
     init {
-        mContext = context
-        mMediaPlayer = MediaPlayer()
+        this.context = context
+        this.mediaPlayer = MediaPlayer()
+        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
     /**
@@ -51,25 +54,26 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
      * @param path path
      */
     fun setPath(path: String?) {
+        currentPath = path
         if (path == null) {
-            Toast.makeText(mContext, "获取播放地址错误,请重试!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "获取播放地址错误,请重试!!!", Toast.LENGTH_SHORT).show()
             return
         }
         try {
-            mMediaPlayer?.reset()
-            mContext?.let { mMediaPlayer!!.setDataSource(it, Uri.parse(path)) }
+            mediaPlayer?.reset()
+            context?.let { mediaPlayer!!.setDataSource(it, Uri.parse(path)) }
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        mMediaPlayer?.prepareAsync()
+        mediaPlayer?.prepareAsync()
         initListener()
     }
 
     private fun initListener() {
-        mMediaPlayer?.setOnPreparedListener(this)
-        mMediaPlayer?.setOnCompletionListener(this)
-        mMediaPlayer?.setOnErrorListener(this)
-        mMediaPlayer?.setOnBufferingUpdateListener(this)
+        mediaPlayer?.setOnPreparedListener(this)
+        mediaPlayer?.setOnCompletionListener(this)
+        mediaPlayer?.setOnErrorListener(this)
+        mediaPlayer?.setOnBufferingUpdateListener(this)
     }
 
     /**
@@ -81,88 +85,136 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
             //相同音乐id或者且不是第一次播放，就直接返回
             return
         }
-        //mOnInitMusicListener.initMode();
         mResID = resId
-        val afd = mContext?.resources?.openRawResourceFd(resId)
+        val afd = context?.resources?.openRawResourceFd(resId)
         try {
-            mMediaPlayer?.reset()
-            mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mediaPlayer?.reset()
+            mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             if (afd != null) {
-                mMediaPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                mediaPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
             }
-            mMediaPlayer?.prepareAsync()
+            mediaPlayer?.prepareAsync()
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        mMediaPlayer?.setOnPreparedListener { mp ->
-            mOnMediaHelperListener?.onPreparedState(mp)
+        mediaPlayer?.setOnPreparedListener { mp ->
+            onMediaHelperListener?.onPreparedState(mp)
             try {
                 afd?.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
-        mMediaPlayer?.setOnCompletionListener {
-            mOnMediaHelperListener?.onPauseState()
+        mediaPlayer?.setOnCompletionListener {
+            onMediaHelperListener?.onPauseState()
         }
-        mMediaPlayer?.setOnErrorListener(this)
+        mediaPlayer?.setOnErrorListener(this)
     }
 
     fun start() {
-        if (mMediaPlayer!!.isPlaying) {
-            return
-        }
-        mMediaPlayer?.start()
-        if (mOnMediaHelperListener != null) {
-            mOnMediaHelperListener?.onPlayingState()
+        val requestAudioFocus = audioManager?.requestAudioFocus(
+            focusChangeListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT
+        )
+        if (requestAudioFocus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            if (mediaPlayer!!.isPlaying) {
+                return
+            }
+            mediaPlayer?.start()
+            if (onMediaHelperListener != null) {
+                onMediaHelperListener?.onPlayingState()
+            }
         }
     }
 
     fun pause() {
-        if (!mMediaPlayer!!.isPlaying) {
+        if (!mediaPlayer!!.isPlaying) {
             return
         }
-        mMediaPlayer?.pause()
-        if (mOnMediaHelperListener != null) {
-            mOnMediaHelperListener?.onPauseState()
+        mediaPlayer?.pause()
+        if (onMediaHelperListener != null) {
+            onMediaHelperListener?.onPauseState()
         }
+        audioManager?.abandonAudioFocus(focusChangeListener)
+    }
+
+    private fun stop() {
+        if (mediaPlayer!!.isPlaying) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+        audioManager?.abandonAudioFocus(focusChangeListener)
     }
 
     fun isPlaying(): Boolean {
-        return mMediaPlayer != null && mMediaPlayer?.isPlaying == true
+        return mediaPlayer != null && mediaPlayer?.isPlaying == true
     }
 
     fun getCurrentPosition(): Int {
-        return mMediaPlayer!!.currentPosition
+        return mediaPlayer!!.currentPosition
     }
 
     fun getDuration(): Int {
-        return mMediaPlayer!!.duration
+        return mediaPlayer!!.duration
     }
 
     fun seekTo(progress: Int) {
-        mMediaPlayer!!.seekTo(progress)
+        mediaPlayer!!.seekTo(progress)
     }
 
     override fun onError(p0: MediaPlayer?, what: Int, extra: Int): Boolean {
-        mOnMediaHelperListener?.onErrorState(what, extra)
+        onMediaHelperListener?.onErrorState(what, extra)
         return super.onError(p0, what, extra)
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
         super.onCompletion(p0)
-        mOnMediaHelperListener?.onCompleteState()
+        onMediaHelperListener?.onCompleteState()
     }
 
     override fun onBufferingUpdate(p0: MediaPlayer?, percent: Int) {
         super.onBufferingUpdate(p0, percent)
-        mOnMediaHelperListener?.onBufferState(percent)
+        onMediaHelperListener?.onBufferState(percent)
     }
 
     override fun onPrepared(p0: MediaPlayer?) {
         super.onPrepared(p0)
-        mOnMediaHelperListener?.onPreparedState(p0)
+        onMediaHelperListener?.onPreparedState(p0)
     }
+
+    private val focusChangeListener =
+        AudioManager.OnAudioFocusChangeListener { focusChange ->
+            when (focusChange) {
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                    if (isPlaying()) {
+                        pause()
+                    }
+                }
+
+                /*AudioManager.AUDIOFOCUS_GAIN -> {
+                    if (currentPath != null && !isPlaying()) {
+                        start()
+                    }
+                }*/
+
+                AudioManager.AUDIOFOCUS_LOSS -> {
+                    stop()
+                }
+
+                AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
+                    //stop()
+                    if (currentPath != null && !isPlaying()) {
+                        start()
+                    }
+                }
+
+                AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
+                    stop()
+                }
+            }
+        }
 
     interface OnMediaHelperListener {
         //音乐准备好之后调用

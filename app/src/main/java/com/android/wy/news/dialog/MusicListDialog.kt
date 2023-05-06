@@ -1,4 +1,4 @@
-package com.android.wy.news.music
+package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +15,6 @@ import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.databinding.MusicListDialogBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 
 

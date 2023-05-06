@@ -44,7 +44,6 @@ import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
-import com.android.wy.news.service.MusicService
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
@@ -69,6 +68,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     private lateinit var rlSearch: RelativeLayout
     private lateinit var playBarView: PlayBarView
     private val list = ArrayList<String>()
+    private var currentSelectPosition = 0
 
     override fun initBarItems() {
         barItems.add(GYBarItem("头条", R.mipmap.top))
@@ -110,16 +110,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
         ThreadExecutorManager.mInstance.startExecute {
             mViewModel.getHotWord()
-        }
-        //testMusicNotify()
-    }
-
-    private fun testMusicNotify() {
-        val intent = Intent(this, MusicService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
         }
     }
 
@@ -363,6 +353,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     override fun onSelected(position: Int) {
+        currentSelectPosition = position
         if (position == 2) {
             hideSearch()
             ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black)
@@ -379,6 +370,10 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         } else {
             playBarView.visibility = View.VISIBLE
         }
+    }
+
+    fun getSelectPosition(): Int {
+        return currentSelectPosition
     }
 
     private fun setBottomBarState(position: Int) {

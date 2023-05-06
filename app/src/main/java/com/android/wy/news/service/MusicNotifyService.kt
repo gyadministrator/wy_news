@@ -1,12 +1,15 @@
 package com.android.wy.news.service
 
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import android.text.TextUtils
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
@@ -14,7 +17,6 @@ import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.PlayEvent
-import com.android.wy.news.fragment.MusicFragment
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.music.MusicState
@@ -23,13 +25,14 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.gson.Gson
 import org.greenrobot.eventbus.EventBus
 import java.util.Timer
 import java.util.TimerTask
 
-class MusicService : Service() {
+class MusicNotifyService : Service() {
     private var mNotifyHelper: MusicNotifyHelper? = null
     private var notifyLayout: RemoteViews? = null
     private var mediaHelper: MediaPlayerHelper? = null
@@ -46,73 +49,13 @@ class MusicService : Service() {
         const val MUSIC_PAUSE_ACTION = "service.action.pause"
         const val MUSIC_COMPLETE_ACTION = "service.action.complete"
         const val MUSIC_STATE_ACTION = "service.action.state"
+        const val MUSIC_PREPARE_ACTION = "service.action.prepare"
+        const val MUSIC_INFO_KEY = "music.info.key"
+        const val MUSIC_URL_KEY = "music.url.key"
     }
 
     override fun onBind(p0: Intent?): IBinder {
-        return MusicBinder(this)
-    }
-
-    class MusicBinder(musicService: MusicService) : Binder() {
-        private var musicService: MusicService
-
-        init {
-            this.musicService = musicService
-        }
-
-        fun getService(): MusicService {
-            return this.musicService
-        }
-
-        fun setMusic(musicInfo: MusicInfo, url: String) {
-            Logger.i("setMusic:$musicInfo")
-            this.musicService.mediaHelper?.setPath(url)
-            val receiverIntent = Intent()
-            this.musicService.mediaHelper?.setOnMediaHelperListener(object :
-                MediaPlayerHelper.OnMediaHelperListener {
-                override fun onPreparedState(mp: MediaPlayer?) {
-                    Logger.i("onPreparedState: ")
-                    musicService.mediaHelper?.start()
-                }
-
-                override fun onPauseState() {
-                    Logger.i("onPauseState: ")
-                    EventBus.getDefault().postSticky(PlayEvent())
-                    musicService.startMusicForeground(musicInfo)
-                    musicService.timer?.cancel()
-                    musicService.timer = null
-                    musicService.mediaHelper?.pause()
-                    receiverIntent.action = MUSIC_PAUSE_ACTION
-                    musicService.sendBroadcast(receiverIntent)
-                }
-
-                override fun onPlayingState() {
-                    Logger.i("onPlayingState: ")
-                    EventBus.getDefault().postSticky(PlayEvent())
-                    musicService.startMusicForeground(musicInfo)
-                    musicService.timer?.cancel()
-                    musicService.timer = null
-                    musicService.setProgress()
-                    receiverIntent.action = MUSIC_PLAY_ACTION
-                    musicService.sendBroadcast(receiverIntent)
-                }
-
-                override fun onCompleteState() {
-                    Logger.i("onCompleteState: ")
-                    musicService.timer?.cancel()
-                    musicService.timer = null
-                    receiverIntent.action = MUSIC_COMPLETE_ACTION
-                    musicService.sendBroadcast(receiverIntent)
-                }
-
-                override fun onBufferState(percent: Int) {
-                    Logger.i("onBufferState: $percent")
-                }
-
-                override fun onErrorState(what: Int, extra: Int) {
-                    Logger.i("onErrorState: what:$what  extra:$extra")
-                }
-            })
-        }
+        return Binder()
     }
 
     private fun setProgress() {
@@ -138,8 +81,90 @@ class MusicService : Service() {
         initPendingIntent()
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent != null) {
+            val action = intent.action
+            Logger.i("onStartCommand--->>>action:$action")
+            when (action) {
+                MUSIC_PREPARE_ACTION -> {
+                    val s = intent.getStringExtra(MUSIC_INFO_KEY)
+                    val url = intent.getStringExtra(MUSIC_URL_KEY)
+                    if (!TextUtils.isEmpty(s) && !TextUtils.isEmpty(url)) {
+                        val gson = Gson()
+                        val musicInfo = gson.fromJson(s, MusicInfo::class.java)
+                        url?.let { setMusic(musicInfo, it) }
+                    }
+                }
+
+                MUSIC_STATE_ACTION -> {
+                    if (mediaHelper!!.isPlaying()) {
+                        mediaHelper?.pause()
+                    } else {
+                        mediaHelper?.start()
+                    }
+                }
+
+                else -> {
+
+                }
+            }
+        }
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun setMusic(musicInfo: MusicInfo, url: String) {
+        Logger.i("setMusic:$musicInfo")
+        mediaHelper?.setPath(url)
+        val receiverIntent = Intent()
+        mediaHelper?.setOnMediaHelperListener(object :
+            MediaPlayerHelper.OnMediaHelperListener {
+            override fun onPreparedState(mp: MediaPlayer?) {
+                Logger.i("onPreparedState: ")
+                mediaHelper?.start()
+            }
+
+            override fun onPauseState() {
+                Logger.i("onPauseState: ")
+                EventBus.getDefault().postSticky(PlayEvent())
+                startMusicForeground(musicInfo)
+                timer?.cancel()
+                timer = null
+                mediaHelper?.pause()
+                receiverIntent.action = MUSIC_PAUSE_ACTION
+                sendBroadcast(receiverIntent)
+            }
+
+            override fun onPlayingState() {
+                Logger.i("onPlayingState: ")
+                EventBus.getDefault().postSticky(PlayEvent())
+                startMusicForeground(musicInfo)
+                timer?.cancel()
+                timer = null
+                setProgress()
+                receiverIntent.action = MUSIC_PLAY_ACTION
+                sendBroadcast(receiverIntent)
+            }
+
+            override fun onCompleteState() {
+                Logger.i("onCompleteState: ")
+                timer?.cancel()
+                timer = null
+                receiverIntent.action = MUSIC_COMPLETE_ACTION
+                sendBroadcast(receiverIntent)
+            }
+
+            override fun onBufferState(percent: Int) {
+                Logger.i("onBufferState: $percent")
+            }
+
+            override fun onErrorState(what: Int, extra: Int) {
+                Logger.i("onErrorState: what:$what  extra:$extra")
+            }
+        })
+    }
+
     private fun initPendingIntent() {
-        val stateIntent = Intent(this, PlayService::class.java)
+        val stateIntent = Intent(this, MusicPlayService::class.java)
         stateIntent.action = MUSIC_STATE_ACTION
         val statePendingIntent = PendingIntent.getService(
             this,
@@ -149,7 +174,7 @@ class MusicService : Service() {
         )
         notifyLayout?.setOnClickPendingIntent(R.id.iv_play, statePendingIntent)
 
-        val preIntent = Intent(this, PlayService::class.java)
+        val preIntent = Intent(this, MusicPlayService::class.java)
         preIntent.action = MUSIC_PRE_ACTION
         val prePendingIntent = PendingIntent.getService(
             this,
@@ -159,7 +184,7 @@ class MusicService : Service() {
         )
         notifyLayout?.setOnClickPendingIntent(R.id.iv_pre, prePendingIntent)
 
-        val nextIntent = Intent(this, PlayService::class.java)
+        val nextIntent = Intent(this, MusicPlayService::class.java)
         nextIntent.action = MUSIC_NEXT_ACTION
         val nextPendingIntent = PendingIntent.getService(
             this,
@@ -189,26 +214,27 @@ class MusicService : Service() {
         }
         notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
         notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.album)
-        builder?.build()?.flags = NotificationCompat.FLAG_AUTO_CANCEL
-        startForeground(notifyID, builder?.build())
+        //startForeground(notifyID, builder?.build())
+        val notificationManager = getSystemService(
+            NotificationManager::class.java
+        )
+        notificationManager.notify(notifyID, builder?.build())
 
         Glide.with(this).asBitmap().load(musicInfo.pic)
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(40)))
-            .diskCacheStrategy(DiskCacheStrategy.ALL).override(
-                //关键代码，加载原始大小
-                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
-                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
-            )
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
+            .diskCacheStrategy(DiskCacheStrategy.ALL).override(50, 50)
             //设置为这种格式去掉透明度通道，可以减少内存占有
-            .format(DecodeFormat.PREFER_RGB_565).into(object : SimpleTarget<Bitmap>(
-                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
-                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
-            ) {
+            .format(DecodeFormat.PREFER_RGB_565).into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(
                     resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
                     notifyLayout?.setImageViewBitmap(R.id.iv_cover, resource)
-                    startForeground(notifyID, builder?.build())
+                    //startForeground(notifyID, builder?.build())
+                    notificationManager.notify(notifyID, builder?.build())
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
                 }
             })
     }

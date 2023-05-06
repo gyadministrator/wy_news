@@ -9,6 +9,7 @@
         android:id="@+id/iv_cover"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@mipmap/music_default"
         tools:ignore="ContentDescription" />

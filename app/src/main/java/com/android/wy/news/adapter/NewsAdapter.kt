@@ -2,6 +2,7 @@ package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +16,11 @@ import com.android.wy.news.databinding.LayoutItemImageBinding
 import com.android.wy.news.databinding.LayoutNewsItemImageAdapterBinding
 import com.android.wy.news.databinding.LayoutNewsItemNormalAdapterBinding
 import com.android.wy.news.entity.NewsEntity
+import com.android.wy.news.manager.ThreadExecutorManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 
 
@@ -143,18 +145,20 @@ class NewsAdapter(
             loadOneImage(newsEntity.imgsrc, holder, true)
         } else {
             val imgExtra = newsEntity.imgextra
-            if (imgExtra != null && imgExtra.isNotEmpty()) {
+            if (!imgExtra.isNullOrEmpty()) {
                 imgCount = if (imgExtra.size > 3) {
                     3
                 } else {
                     imgExtra.size
                 }
                 for (i in 0 until imgCount) {
-                    val imageExtra = imgExtra[i]
-                    if (imgCount == 1) {
-                        loadOneImage(imageExtra.imgsrc, holder, true)
-                    } else {
-                        loadOneImage(imageExtra.imgsrc, holder, false)
+                    ThreadExecutorManager.mInstance.startExecute {
+                        val imageExtra = imgExtra[i]
+                        if (imgCount == 1) {
+                            loadOneImage(imageExtra.imgsrc, holder, true)
+                        } else {
+                            loadOneImage(imageExtra.imgsrc, holder, false)
+                        }
                     }
                 }
             }
@@ -174,7 +178,7 @@ class NewsAdapter(
             .format(DecodeFormat.PREFER_RGB_565)
             //.placeholder(R.mipmap.img_default)
             //.error(R.mipmap.img_error)
-            .into(object : SimpleTarget<Bitmap>(
+            .into(object : CustomTarget<Bitmap>(
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
             ) {
@@ -212,6 +216,10 @@ class NewsAdapter(
                     }
                     holder.llContent.addView(root)
                 }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
             })
     }
 
@@ -219,7 +227,7 @@ class NewsAdapter(
         val newsEntity = mDataList[position]
         val hasImg = newsEntity.hasImg
         val imgExtra = newsEntity.imgextra
-        if (hasImg == 1 || (imgExtra != null && imgExtra.isNotEmpty())) {
+        if (hasImg == 1 || !imgExtra.isNullOrEmpty()) {
             return ITEM_TYPE_IMAGE
         }
         return ITEM_TYPE_NORMAL

@@ -229,7 +229,8 @@ class NotificationHelper {
                 house?.ptime?.let { CommonTools.getTimeDiff(it) })
 
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setOngoing(true)
+                //设置了之后，没有清除操作
+                //.setOngoing(true)
                 //普通视图，高度限制为64dp
                 //.setContent(remoteViews)
                 //普通视图，高度限制为64dp
