@@ -8,7 +8,6 @@ app截图
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_3.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_4.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_5.png)
-
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_6.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_7.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_8.png)
