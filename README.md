@@ -3,15 +3,14 @@
 
 app截图
 
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_one.jpg)
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_two.jpg)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_1.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_2.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_3.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_4.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_5.png)
 
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_three.jpg)
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_four.jpg)
-
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_five.jpg)
-![image](https://github.com/gyadministrator/wy_news/blob/master/introduce/introduce_six.jpg)
-
-视频介绍
-
-![video](https://github.com/gyadministrator/wy_news/blob/master/introduce/wy_news_introduce.mp4)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_6.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_7.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_8.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_9.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_10.png)
