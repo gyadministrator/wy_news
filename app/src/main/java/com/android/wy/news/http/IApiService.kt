@@ -67,10 +67,13 @@ interface IApiService {
     @GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-20.do?callback=videoList")
     fun getRecommendVideo(@Path("pageStart") pageStart: Int): Call<ResponseBody>
 
-    //添加这个注解用来下载大文件
+    /**@Streaming
+     * 添加这个注解用来下载大文件
+    文件特别大的时候可以防止内存溢出
+     */
     @Streaming
-    @GET
-    fun downloadVideo(@Url fileUrl: String): Call<ResponseBody>
+    @GET("/gyadministrator/wy_news/releases/download/v1.0/updateInfo.json")
+    fun download(/*@Url fileUrl: String*/): Call<ResponseBody>
 
     /*-------------------------------------------以下是音乐相关---------------------------------------*/
     @GET("/api/www/bang/bang/musicList?rn=20&httpsStatus=1&reqId=18c21420-e4d6-11ed-952f-9f227639ff35")

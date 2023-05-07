@@ -53,6 +53,12 @@ class Constants {
             "https://static.ws.126.net/163/apk/newsapp/newsreader_sps_article.apk"
         val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
         val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
+        const val APP_UPDATE_INFO_URL =
+            "https://github.com/gyadministrator/wy_news/releases/download/v1.0/updateInfo.json"
+        const val APP_UPDATE_BASE_URL =
+            "https://github.com"
+        const val APP_DOWNLOAD_URL =
+            "https://github.com/gyadministrator/wy_news/releases/download/v1.0/release-v1.0-2023.05.07.apk"
 
         /*以下是音乐相关*/
         val mMusicTitleList = arrayListOf<MusicTypeEntity>()

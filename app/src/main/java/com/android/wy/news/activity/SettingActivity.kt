@@ -6,10 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.text.TextUtils
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,9 +21,13 @@ import com.android.wy.news.common.*
 import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.dialog.UpdateDialogFragment
+import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.update.UpdateManager
 import com.android.wy.news.viewmodel.SettingViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -44,6 +50,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var scPlay: SwitchCompat
     private lateinit var scWifi: SwitchCompat
     private var intentActivityResultLauncher: ActivityResultLauncher<Intent>? = null
+    private var downloadAppUrl: String? = null
 
     companion object {
         fun startSettingActivity(context: Context) {
@@ -139,7 +146,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             AboutActivity.startAboutActivity(this)
         }
         rlUpdate.setOnClickListener {
-            showUpdateDialog()
+            UpdateManager.checkUpdate(mActivity, onUpdateManagerListener)
         }
         rlPermission.setOnClickListener {
             PermissionActivity.startPermissionActivity(this)
@@ -194,11 +201,37 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         })
     }
 
-    private fun showUpdateDialog() {
-        val content =
-            "1.布局大调整，使用统一的卡片风格;\n2.适配深色模式，保护眼睛观看;\n3.优化视频播放，加入边下边缓存功能;"
-        val dialogFragment =
-            UpdateDialogFragment.newInstance("发现新版本", content, "下载", "忽略更新")
+    private val onUpdateManagerListener = object : UpdateManager.OnUpdateManagerListener {
+        override fun onSuccess(s: String) {
+            if (!TextUtils.isEmpty(s)) {
+                try {
+                    val gson = Gson()
+                    val dataList = gson.fromJson<ArrayList<UpdateEntity>>(
+                        s, object : TypeToken<ArrayList<UpdateEntity>>() {}.type
+                    )
+                    if (dataList.isNotEmpty()) {
+                        val updateEntity: UpdateEntity = dataList[0]
+                        showUpdateDialog(updateEntity)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onError(msg: String) {
+            Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showUpdateDialog(updateEntity: UpdateEntity) {
+        val versionCode = updateEntity.versionCode
+        val code = CommonTools.getVersionCode(mActivity)
+        if (versionCode <= code) return
+        val dialogFragment = UpdateDialogFragment.newInstance(
+            updateEntity.title, updateEntity.content, "下载", "忽略更新"
+        )
+        downloadAppUrl = updateEntity.url
         dialogFragment.show(supportFragmentManager, "update_dialog")
         dialogFragment.addListener(object : UpdateDialogFragment.OnDialogFragmentListener {
             override fun onClickSure() {
@@ -230,8 +263,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             if (!packageManager.canRequestPackageInstalls()) {
                 //权限没有打开，跳转界面，提示用户去手动打开
                 val intent = Intent(
-                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                    Uri.parse("package:$packageName")
+                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:$packageName")
                 )
                 intentActivityResultLauncher?.launch(intent)
             } else {
@@ -246,11 +278,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
 
     private fun start() {
-        val downloadUrl = Constants.TEST_APK_URL
         val titleStr = "新闻早报新版本"
         val contentStr = "正在下载中，请耐心等待"
         //初始化版本控制
-        DownloadController.download(this, downloadUrl, titleStr, contentStr)
+        DownloadController.download(this, downloadAppUrl, titleStr, contentStr)
         DownloadController.registerReceiver(this)
     }
 

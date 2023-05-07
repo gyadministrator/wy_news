@@ -1,7 +1,10 @@
 package com.android.wy.news.entity
 
 data class UpdateEntity(
-    var title: String,
-    var content: String,
-    var time: String
+    val content: String,
+    val time: String,
+    val title: String,
+    val versionCode: Int,
+    val versionName: String,
+    val url: String
 )

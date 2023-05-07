@@ -1,7 +1,10 @@
 [
   {
     "title": "新闻早报V1.0",
-    "content": "1.布局大调整，使用统一的卡片风格;\n2.适配深色模式，保护眼睛观看;\n3.优化视频播放，加入边下边缓存功能;",
-    "time": "2023.4.22"
+    "content": "1.优化视频播放功能;\n2.修复通知栏音乐偶尔不显示问题;\n3.歌词界面布局大调整;",
+    "time": "2023.05.07",
+    "versionCode": 2,
+    "versionName": "1.0",
+    "url":"https://github.com/gyadministrator/wy_news/releases/download/v1.0/release-v1.0-2023.05.07.apk"
   }
 ]

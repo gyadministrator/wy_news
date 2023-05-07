@@ -12,12 +12,6 @@ import android.os.Build
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.android.wy.news.common.Logger
-import com.android.wy.news.http.HttpManager
-import com.android.wy.news.http.IApiService
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.File
 
 
@@ -33,25 +27,6 @@ class DownloadController {
         private var downloadManager: DownloadManager? = null
         private const val APK_NAME = "wy_news.apk"
         private var broadcastReceiver: BroadcastReceiver? = null
-
-        fun downloadVideo(url: String) {
-            val apiService =
-                HttpManager.mInstance.getApiService(IApiService::class.java)
-            val observable = apiService.downloadVideo(url)
-            observable.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
-                }
-
-            })
-        }
 
         fun download(context: Context, url: String?, titleStr: String?, contentStr: String?) {
             //创建下载任务

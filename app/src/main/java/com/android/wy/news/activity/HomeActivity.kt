@@ -1,7 +1,6 @@
 package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
