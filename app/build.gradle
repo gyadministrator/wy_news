@@ -84,7 +84,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
+    //关闭Android Studio的PNG合法性检查
+    lintOptions {
+        aaptOptions.cruncherEnabled = false
+        aaptOptions.useNewCruncher = false
+    }
     /*productFlavors {
         //根据渠道配置
         wy_news_debug {
