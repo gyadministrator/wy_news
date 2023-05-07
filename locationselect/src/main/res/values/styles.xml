@@ -22,7 +22,7 @@
         <item name="cpCancelTextSize">@dimen/cp_cancel_text_size</item>
         <item name="cpCancelTextColor">@color/cp_color_gray</item>
 
-        <item name="cpClearTextIcon">@mipmap/cp_icon_clear_all</item>
+        <item name="cpClearTextIcon">@mipmap/clear</item>
         <item name="cpSearchTextSize">@dimen/cp_search_text_size</item>
         <item name="cpSearchTextColor">@color/cp_color_gray_dark</item>
         <item name="cpSearchHintText">@string/cp_search_hint_text</item>
@@ -33,7 +33,7 @@
         <item name="cpListItemTextSize">@dimen/cp_list_item_text_size</item>
         <item name="cpListItemTextColor">@color/cp_color_gray_deep</item>
 
-        <item name="cpEmptyIcon">@mipmap/cp_icon_empty</item>
+        <item name="cpEmptyIcon">@mipmap/empty</item>
         <item name="cpEmptyIconWidth">@dimen/cp_empty_icon_width</item>
         <item name="cpEmptyIconHeight">@dimen/cp_empty_icon_height</item>
         <item name="cpEmptyText">@string/cp_no_result</item>

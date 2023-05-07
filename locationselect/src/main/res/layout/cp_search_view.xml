@@ -9,29 +9,37 @@
     android:padding="16dp"
     tools:showIn="@layout/cp_dialog_city_picker">
 
-    <EditText
-        android:id="@+id/cp_search_box"
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_weight="1"
-        android:background="@drawable/bg_search"
-        android:hint="?attr/cpSearchHintText"
-        android:maxLength="20"
-        android:maxLines="1"
-        android:paddingStart="10dp"
-        android:textColor="@color/main_title"
-        android:textColorHint="@color/second_title"
-        android:textCursorDrawable="@drawable/bg_edit_cursor"
-        android:textSize="?attr/cpSearchTextSize" />
+        android:layout_weight="1">
 
-    <ImageView
-        android:id="@+id/cp_clear_all"
-        android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:padding="2dp"
-        android:scaleType="fitCenter"
-        android:src="?attr/cpClearTextIcon"
-        android:visibility="gone" />
+        <EditText
+            android:id="@+id/cp_search_box"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_search"
+            android:hint="?attr/cpSearchHintText"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:paddingStart="15dp"
+            android:textColor="@color/main_title"
+            android:textColorHint="@color/second_title"
+            android:textCursorDrawable="@drawable/bg_edit_cursor"
+            android:textSize="?attr/cpSearchTextSize" />
+
+        <ImageView
+            android:id="@+id/cp_clear_all"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:padding="2dp"
+            android:scaleType="fitCenter"
+            android:src="?attr/cpClearTextIcon"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <Space
         android:layout_width="6dp"
