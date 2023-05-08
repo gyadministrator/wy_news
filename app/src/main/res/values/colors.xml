@@ -24,4 +24,5 @@
     <color name="title_bar_color">#ffffff</color>
     <color name="bg_search_color">#EDF1F4</color>
     <color name="link_color">#4d82ff</color>
+    <color name="select_indicator_color">#12be74</color>
 </resources>

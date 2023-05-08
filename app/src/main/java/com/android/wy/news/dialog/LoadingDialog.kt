@@ -2,6 +2,8 @@ package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.android.wy.news.R
@@ -25,6 +27,8 @@ class LoadingDialog {
             dialog?.setContentView(view)
             dialog?.setCanceledOnTouchOutside(false)
             dialog?.setCancelable(false)
+            //设置dialog背景透明
+            dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val screenWidth = CommonTools.getScreenWidth()
             //设置布局宽高
             dialog?.window?.setLayout(screenWidth * 2 / 5, screenWidth * 2 / 5)

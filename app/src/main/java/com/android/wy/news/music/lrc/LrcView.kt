@@ -1,6 +1,7 @@
 package com.android.wy.news.music.lrc
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -25,12 +26,29 @@ import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.android.wy.news.R
+import com.android.wy.news.common.Logger
 import kotlin.math.abs
 
 
+/**
+ * 正常播放时，当前播放的那一行应该在视图中央，首先计算出每一行位于中央时画布应该滚动的距离。
+ * 将所有歌词按顺序画出，然后将画布滚动的相应的距离，将正在播放的歌词置于屏幕中央。
+ * 歌词滚动时要有动画，使用属性动画即可，我们可以使用当前行和上一行的滚动距离作为动画的起止值。
+ * 多行歌词绘制采用StaticLayout。
+ *
+ * 上下拖动时，歌词跟随手指滚动，绘制时间线。
+ * 手指离开屏幕时，一段时间内，如果没有下一步操作，则隐藏时间线，同时将歌词滚动到实际位置，回到正常播放状态；
+ * 如果点击播放按钮，则跳转到指定位置，回到正常播放状态。
+ */
 class LrcView : View {
     companion object {
         private const val DEFAULT_CONTENT = "暂无歌词"
+
+        //相对行间距，相对字体大小，0.5f表示行间距为0.5倍的字体高度
+        private const val spacingMult = 0.5f
+
+        //在基础行距上添加多少
+        private const val spacingAdd = 0f
     }
 
     private var mLrcData: ArrayList<Lrc>? = null
@@ -135,12 +153,12 @@ class LrcView : View {
             typedArray.getDimension(R.styleable.LrcView_iconLineGap, dp2px(context, 3f).toFloat())
         mIconWidth = typedArray.getDimension(
             R.styleable.LrcView_playIconWidth,
-            dp2px(context, 20f).toFloat()
+            dp2px(context, 25f).toFloat()
         )
         mIconHeight =
             typedArray.getDimension(
                 R.styleable.LrcView_playIconHeight,
-                dp2px(context, 20f).toFloat()
+                dp2px(context, 25f).toFloat()
             )
         mPlayDrawable = typedArray.getDrawable(R.styleable.LrcView_playIcon)
         mPlayDrawable = if (mPlayDrawable == null) ContextCompat.getDrawable(
@@ -159,12 +177,12 @@ class LrcView : View {
         mMaximumFlingVelocity = ViewConfiguration.get(context).scaledMaximumFlingVelocity
         mMinimumFlingVelocity = ViewConfiguration.get(context).scaledMinimumFlingVelocity
         mOverScroller = OverScroller(context, DecelerateInterpolator())
-        mOverScroller!!.setFriction(0.1f)
-        //        ViewConfiguration.getScrollFriction();  默认摩擦力 0.015f
+        mOverScroller?.setFriction(0.1f)
+        //ViewConfiguration.getScrollFriction();  默认摩擦力 0.015f
         mTextPaint = TextPaint()
-        mTextPaint!!.isAntiAlias = true
-        mTextPaint!!.textAlign = Paint.Align.CENTER
-        mTextPaint!!.textSize = mLrcTextSize
+        mTextPaint?.isAntiAlias = true
+        mTextPaint?.textAlign = Paint.Align.CENTER
+        mTextPaint?.textSize = mLrcTextSize
         mDefaultContent = DEFAULT_CONTENT
         mIndicatorPaint = Paint()
         mIndicatorPaint?.isAntiAlias = true
@@ -202,7 +220,7 @@ class LrcView : View {
     }
 
     fun setLrcData(lrcData: ArrayList<Lrc>) {
-        resetView(DEFAULT_CONTENT)
+        resetView()
         mLrcData = lrcData
         invalidate()
     }
@@ -220,31 +238,34 @@ class LrcView : View {
             return
         }
         val indicatePosition: Int = getIndicatePosition()
-        mTextPaint!!.textSize = mLrcTextSize
-        mTextPaint!!.textAlign = Paint.Align.CENTER
-        var y = getLrcHeight() / 2f
+        mTextPaint?.textSize = mLrcTextSize
+        mTextPaint?.textAlign = Paint.Align.CENTER
+        //var y = getLrcHeight() / 2f
+        var y = getLrcHeight() / 6f
         val x = getLrcWidth() / 2f + paddingLeft
         for (i in 0 until getLrcCount()) {
             if (i > 0) {
                 y += (getTextHeight(i - 1) + getTextHeight(i)) / 2f + mLrcLineSpaceHeight
             }
             if (mCurrentLine == i) {
-                mTextPaint!!.color = mCurrentPlayLineColor
-                mTextPaint!!.isFakeBoldText = isCurrentTextBold
+                mTextPaint?.color = mCurrentPlayLineColor
+                mTextPaint?.isFakeBoldText = isCurrentTextBold
             } else if (indicatePosition == i && isShowTimeIndicator) {
-                mTextPaint!!.isFakeBoldText = isLrcIndicatorTextBold
-                mTextPaint!!.color = mCurrentIndicateLineTextColor
+                mTextPaint?.isFakeBoldText = isLrcIndicatorTextBold
+                mTextPaint?.color = mCurrentIndicateLineTextColor
             } else {
-                mTextPaint!!.isFakeBoldText = false
-                mTextPaint!!.color = mNormalColor
+                mTextPaint?.isFakeBoldText = false
+                mTextPaint?.color = mNormalColor
             }
             canvas?.let { drawLrc(it, x, y, i) }
         }
 
         if (isShowTimeIndicator) {
             canvas?.let { mPlayDrawable?.draw(it) }
-            val time = mLrcData!![indicatePosition].time
-            val timeWidth = mIndicatorPaint?.measureText(LrcHelper.formatTime(time))
+            val time = mLrcData!![indicatePosition].time * 1000f
+            val formatTime = LrcHelper.formatTime(time)
+            Logger.i("indicatePosition:${indicatePosition}--->>>$time--->>>$formatTime")
+            val timeWidth = mIndicatorPaint?.measureText(formatTime)
             mIndicatorPaint?.color = mIndicatorLineColor
             if (timeWidth != null) {
                 canvas?.drawLine(
@@ -255,9 +276,9 @@ class LrcView : View {
             val baseX = (width - timeWidth!! * 1.1f).toInt()
             val baseline =
                 height / 2f - (mIndicatorPaint!!.descent() - mIndicatorPaint!!.ascent()) / 2 - mIndicatorPaint!!.ascent()
-            mIndicatorPaint!!.color = mIndicatorTextColor
+            mIndicatorPaint?.color = mIndicatorTextColor
             canvas?.drawText(
-                LrcHelper.formatTime(time),
+                formatTime,
                 baseX.toFloat(),
                 baseline,
                 mIndicatorPaint!!
@@ -273,31 +294,45 @@ class LrcView : View {
         val formattedText: String = formatter.unicodeWrap(text)
         var staticLayout = mLrcMap[formattedText]
         if (staticLayout == null) {
-            mTextPaint!!.textSize = mLrcTextSize
-            staticLayout = StaticLayout(
-                formattedText, mTextPaint, getLrcWidth(),
-                Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false
-            )
-            mLrcMap[formattedText] = staticLayout
+            mTextPaint?.textSize = mLrcTextSize
+            mTextPaint?.let {
+                staticLayout = StaticLayout.Builder.obtain(
+                    formattedText,
+                    0,
+                    formattedText.length,
+                    it,
+                    getLrcWidth()
+                )
+                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                    .setLineSpacing(spacingAdd, spacingMult)
+                    .setIncludePad(false)
+                    .build()
+            }
+            mLrcMap[formattedText] = staticLayout!!
         }
         canvas.save()
-        canvas.translate(x, y - staticLayout.height / 2f - mOffset)
-        staticLayout.draw(canvas)
+        canvas.translate(x, y - staticLayout!!.height / 2f - mOffset)
+        staticLayout?.draw(canvas)
         canvas.restore()
     }
 
     //中间空文字
     private fun drawEmptyText(canvas: Canvas) {
-        mTextPaint!!.textAlign = Paint.Align.CENTER
-        mTextPaint!!.color = mNoLrcTextColor
-        mTextPaint!!.textSize = mNoLrcTextSize
+        mTextPaint?.textAlign = Paint.Align.CENTER
+        mTextPaint?.color = mNoLrcTextColor
+        mTextPaint?.textSize = mNoLrcTextSize
         canvas.save()
-        val staticLayout = StaticLayout(
-            mDefaultContent, mTextPaint,
-            getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false
-        )
+        val staticLayout = mDefaultContent?.let {
+            mTextPaint?.let { it1 ->
+                StaticLayout.Builder.obtain(it, 0, mDefaultContent!!.length, it1, getLrcWidth())
+                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                    .setLineSpacing(spacingAdd, spacingMult)
+                    .setIncludePad(false)
+                    .build()
+            }
+        }
         canvas.translate(getLrcWidth() / 2f + paddingLeft, getLrcHeight() / 2f)
-        staticLayout.draw(canvas)
+        staticLayout?.draw(canvas)
         canvas.restore()
     }
 
@@ -382,20 +417,24 @@ class LrcView : View {
         val text = mLrcData!![linePosition].text
         var staticLayout = mStaticLayoutHashMap[text]
         if (staticLayout == null) {
-            mTextPaint!!.textSize = mLrcTextSize
-            staticLayout = StaticLayout(
-                text, mTextPaint,
-                getLrcWidth(), Layout.Alignment.ALIGN_NORMAL, 1f, 0f, false
-            )
-            mStaticLayoutHashMap[text] = staticLayout
+            mTextPaint?.textSize = mLrcTextSize
+            mTextPaint?.let {
+                staticLayout = StaticLayout.Builder.obtain(text, 0, text.length, it, getLrcWidth())
+                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                    .setLineSpacing(spacingAdd, spacingMult)
+                    .setIncludePad(false)
+                    .build()
+            }
+            mStaticLayoutHashMap[text] = staticLayout!!
         }
-        return staticLayout.height.toFloat()
+        return staticLayout!!.height.toFloat()
     }
 
     private fun overScrolled(): Boolean {
         return mOffset > getItemOffsetY(getLrcCount() - 1) || mOffset < 0
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (isLrcEmpty()) {
             return super.onTouchEvent(event)
@@ -403,7 +442,7 @@ class LrcView : View {
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain()
         }
-        mVelocityTracker!!.addMovement(event)
+        mVelocityTracker?.addMovement(event)
         when (event!!.action) {
             MotionEvent.ACTION_DOWN -> {
                 removeCallbacks(mScrollRunnable)
@@ -466,12 +505,10 @@ class LrcView : View {
         if (isShowTimeIndicator && mPlayRect != null && onClickPlayButton(event)) {
             isShowTimeIndicator = false
             invalidateView()
-            if (mOnPlayIndicatorLineListener != null) {
-                mOnPlayIndicatorLineListener?.onPlay(
-                    mLrcData!![getIndicatePosition()].time,
-                    mLrcData!![getIndicatePosition()].text
-                )
-            }
+            mOnPlayIndicatorLineListener?.onPlay(
+                mLrcData!![getIndicatePosition()].time * 1000f,
+                mLrcData!![getIndicatePosition()].text
+            )
         }
         if (overScrolled() && mOffset < 0) {
             scrollToPosition(0)
@@ -495,11 +532,11 @@ class LrcView : View {
             }
             return
         }
-        mVelocityTracker!!.computeCurrentVelocity(1000, mMaximumFlingVelocity.toFloat())
+        mVelocityTracker?.computeCurrentVelocity(1000, mMaximumFlingVelocity.toFloat())
         val yVelocity = mVelocityTracker!!.yVelocity
         val absYVelocity = abs(yVelocity)
         if (absYVelocity > mMinimumFlingVelocity) {
-            mOverScroller!!.fling(
+            mOverScroller?.fling(
                 0, mOffset.toInt(), 0, (-yVelocity).toInt(), 0,
                 0, 0, getItemOffsetY(getLrcCount() - 1).toInt(),
                 0, getTextHeight(0).toInt()
@@ -513,32 +550,32 @@ class LrcView : View {
     }
 
     private fun onClickPlayButton(event: MotionEvent): Boolean {
-        val left = mPlayRect!!.left.toFloat()
-        val right = mPlayRect!!.right.toFloat()
-        val top = mPlayRect!!.top.toFloat()
-        val bottom = mPlayRect!!.bottom.toFloat()
+        val left = mPlayRect?.left?.toFloat()
+        val right = mPlayRect?.right?.toFloat()
+        val top = mPlayRect?.top?.toFloat()
+        val bottom = mPlayRect?.bottom?.toFloat()
         val x = event.x
         val y = event.y
-        return mLastMotionX > left && mLastMotionX < right && mLastMotionY > top && mLastMotionY < bottom && x > left && x < right && y > top && y < bottom
+        return mLastMotionX > left!! && mLastMotionX < right!! && mLastMotionY > top!! && mLastMotionY < bottom!! && x > left && x < right && y > top && y < bottom
     }
 
     override fun computeScroll() {
         super.computeScroll()
         if (mOverScroller!!.computeScrollOffset()) {
             mOffset = mOverScroller?.currY?.toFloat()!!
-            invalidateView();
+            invalidateView()
         }
     }
 
     private fun releaseVelocityTracker() {
         if (null != mVelocityTracker) {
             mVelocityTracker!!.clear()
-            mVelocityTracker!!.recycle()
+            mVelocityTracker?.recycle()
             mVelocityTracker = null
         }
     }
 
-    private fun resetView(defaultContent: String) {
+    private fun resetView() {
         if (mLrcData != null) {
             mLrcData?.clear()
         }
@@ -548,7 +585,7 @@ class LrcView : View {
         mOffset = 0f
         isUserScroll = false
         isDragging = false
-        mDefaultContent = defaultContent
+        mDefaultContent = DEFAULT_CONTENT
         removeCallbacks(mScrollRunnable)
         invalidate()
     }
@@ -591,9 +628,6 @@ class LrcView : View {
             postInvalidate()
         }
     }
-
-
-    /*------------------Config-------------------*/
 
     /*------------------Config-------------------*/
     private var mOnPlayIndicatorLineListener: OnPlayIndicatorLineListener? = null

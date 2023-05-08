@@ -44,14 +44,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
-/**
- * {
- *     "title": "畅听榜",
- *     "id": 145
- *   }
- */
-
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicInfo>,
     PlayBarView.OnPlayBarListener {
@@ -62,7 +54,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private lateinit var musicAdapter: MusicAdapter
     private var isRefresh = false
     private var isLoading = false
-    private var isLoadingNext = true
     private var mServiceIntent: Intent? = null
     private lateinit var refreshLayout: SmartRefreshLayout
     private var playBarView: PlayBarView? = null
@@ -167,7 +158,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
             val musicList = musicListData?.musicList
-            val dataList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -176,27 +166,25 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             if (isLoading) {
                 refreshLayout.finishLoadMore()
             }
-            if (dataList.size == 0) {
-                if (isLoading) {
-                    refreshLayout.setNoMoreData(true)
+            if (musicList != null) {
+                if (musicList.size == 0) {
+                    if (isLoading) {
+                        refreshLayout.setNoMoreData(true)
+                    }
+                } else {
+                    if (isRefresh) {
+                        musicAdapter.refreshData(musicList)
+                    } else {
+                        musicAdapter.loadMoreData(musicList)
+                    }
                 }
             } else {
-                if (isRefresh) {
-                    musicAdapter.refreshData(dataList)
-                } else {
-                    musicAdapter.loadMoreData(dataList)
-                }
+                refreshLayout.setNoMoreData(true)
             }
 
             val musicListEvent = MusicListEvent(musicAdapter.getDataList())
             EventBus.getDefault().postSticky(musicListEvent)
 
-            if (dataList.size < 20 && isLoadingNext) {
-                isLoadingNext = false
-                //加载下一页补充
-                pageStart++
-                getMusicList()
-            }
             shimmerRecyclerView.hideShimmerAdapter()
             isRefresh = false
             isLoading = false
@@ -213,9 +201,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onNotifyDataChanged() {
         mViewModel.musicUrl.observe(this) {
-            if (!TextUtils.isEmpty(it)) {
-                playMusic(it)
-            }
+            playMusic(it)
         }
 
         mViewModel.isSuccess.observe(this) {
@@ -373,7 +359,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     mediaHelper?.start()
                     this.currentMusicInfo?.state = MusicState.STATE_PLAY
                     musicAdapter.setSelectedIndex(position)
-                    //startMusicService()
                 } else {
                     playBarView?.showLoading(true)
                     this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
@@ -398,13 +383,13 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         ft?.addToBackStack(null)
         val gson = Gson()
         val s = gson.toJson(this.currentMusicInfo)
-        val lrcFragment = LrcFragment.newInstance(currentPosition, s)
+        val lrcFragment = LrcFragment.newInstance(currentPosition, s, currentPlayUrl)
         ft?.let { lrcFragment.show(ft, LrcFragment.TAG) }
     }
 
     private fun showPlayBar() {
         val stringBuilder = StringBuilder()
-        val album = currentMusicInfo?.album
+        val album = currentMusicInfo?.name
         val artist = currentMusicInfo?.artist
         stringBuilder.append(artist)
         if (!TextUtils.isEmpty(album)) {

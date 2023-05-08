@@ -21,44 +21,59 @@
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/rl_down"
-            android:layout_width="60dp"
-            android:layout_height="60dp">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/ic_down"
-                app:tint="@color/main_title"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_title"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/main_title"
-            android:textSize="16sp"
-            tools:text="123" />
-
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="10dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/main_title"
-            android:textSize="14sp"
-            tools:text="456" />
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_down"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/ic_down"
+                    app:tint="@color/main_title"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp"
+                    tools:text="123" />
+
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/main_title"
+                    android:textSize="14sp"
+                    tools:text="456" />
+            </LinearLayout>
+        </LinearLayout>
 
         <include
             android:id="@+id/play_music"
@@ -68,10 +83,9 @@
             android:id="@+id/lrc_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="10dp"
             android:layout_weight="1"
-            app:currentIndicateLrcColor="@color/main_title"
-            app:indicatorLineColor="@color/text_select_color"
+            app:currentIndicateLrcColor="@color/select_indicator_color"
+            app:indicatorLineColor="@color/select_indicator_color"
             app:lrcCurrentTextColor="@color/text_select_color"
             app:lrcNormalTextColor="@color/main_title"
             app:noLrcTextColor="@color/main_title" />

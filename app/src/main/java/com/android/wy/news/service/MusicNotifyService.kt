@@ -89,10 +89,10 @@ class MusicNotifyService : Service() {
                 MUSIC_PREPARE_ACTION -> {
                     val s = intent.getStringExtra(MUSIC_INFO_KEY)
                     val url = intent.getStringExtra(MUSIC_URL_KEY)
-                    if (!TextUtils.isEmpty(s) && !TextUtils.isEmpty(url)) {
+                    if (!TextUtils.isEmpty(s)) {
                         val gson = Gson()
                         val musicInfo = gson.fromJson(s, MusicInfo::class.java)
-                        url?.let { setMusic(musicInfo, it) }
+                        setMusic(musicInfo, url)
                     }
                 }
 
@@ -112,7 +112,7 @@ class MusicNotifyService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun setMusic(musicInfo: MusicInfo, url: String) {
+    private fun setMusic(musicInfo: MusicInfo, url: String?) {
         Logger.i("setMusic:$musicInfo")
         mediaHelper?.setPath(url)
         val receiverIntent = Intent()
@@ -213,7 +213,7 @@ class MusicNotifyService : Service() {
             notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_pause)
         }
         notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
-        notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.album)
+        notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.name)
         //startForeground(notifyID, builder?.build())
         val notificationManager = getSystemService(
             NotificationManager::class.java

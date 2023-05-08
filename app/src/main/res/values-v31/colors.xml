@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="link_color">#4d82ff</color>
     <color name="select_indicator_color">#12be74</color>
 </resources>

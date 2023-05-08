@@ -21,7 +21,7 @@ import retrofit2.Response
  */
 class MusicViewModel : BaseViewModel() {
     val isSuccess = MutableLiveData<Boolean>()
-    val musicUrl = MutableLiveData<String>()
+    val musicUrl = MutableLiveData<String?>()
     fun getCookie() {
         ThreadExecutorManager.mInstance.startExecute {
             val success = JsoupManager.getCookie()
@@ -49,15 +49,12 @@ class MusicViewModel : BaseViewModel() {
                     if (musicUrlEntity != null) {
                         val musicUrlData = musicUrlEntity.data
                         if (musicUrlEntity.code == -1) {
-                            msg.postValue(musicUrlEntity.msg)
+                            //msg.postValue(musicUrlEntity.msg)
+                            msg.postValue("该歌曲为付费歌曲,暂时不能免费播放")
                         }
                         val url = musicUrlData?.url
                         Logger.i("mid:$mid---->>>url:$url")
-                        if (url != null) {
-                            url.let { musicUrl.postValue(it) }
-                        } else {
-                            msg.postValue("获取播放地址错误")
-                        }
+                        musicUrl.postValue(url)
                     }
                 }
 

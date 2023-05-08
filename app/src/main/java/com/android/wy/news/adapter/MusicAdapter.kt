@@ -51,7 +51,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
     @SuppressLint("SetTextI18n")
     override fun onBindData(holder: ViewHolder, position: Int, data: MusicInfo) {
         holder.tvTitle.text = data.artist
-        holder.tvDesc.text = data.album
+        holder.tvDesc.text = data.name
         CommonTools.loadImage(data.pic, holder.ivCover)
         checkState(holder, position)
     }

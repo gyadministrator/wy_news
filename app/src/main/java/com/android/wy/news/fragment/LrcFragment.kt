@@ -24,6 +24,7 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LrcFragmentBinding
+import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
@@ -84,17 +85,20 @@ class LrcFragment : DialogFragment() {
     private var roundProgressBar: RoundProgressBar? = null
     private var index = 0
     private var musicListDialog: MusicListDialog? = null
+    private var currentPlayUrl: String? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
         private const val MUSIC_INFO_KEY = "music_info_key"
+        private const val MUSIC_URL_KEY = "music_url_key"
         const val TAG = "LrcFragment"
 
-        fun newInstance(position: Int, musicInfoJson: String): LrcFragment {
+        fun newInstance(position: Int, musicInfoJson: String, url: String?): LrcFragment {
             val fragment = LrcFragment()
             val args = Bundle()
             args.putInt(POSITION_KEY, position)
             args.putString(MUSIC_INFO_KEY, musicInfoJson)
+            args.putString(MUSIC_URL_KEY, url)
             fragment.arguments = args
             return fragment
         }
@@ -145,6 +149,7 @@ class LrcFragment : DialogFragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onEvent(o: Any) {
+        Logger.i("LrcFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             roundProgressBar?.setProgress(o.time)
@@ -158,6 +163,9 @@ class LrcFragment : DialogFragment() {
             currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
             setMusic()
         } else if (o is PlayEvent) {
+            if (TextUtils.isEmpty(currentPlayUrl)) {
+                LoadingDialog.hide()
+            }
             if (mediaHelper!!.isPlaying()) {
                 checkState(MusicState.STATE_PLAY)
             } else {
@@ -180,11 +188,11 @@ class LrcFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = mContentView?.let { LrcFragmentBinding.bind(it) }
-        initViews(binding)
+        initView(binding)
         initData()
     }
 
-    private fun initViews(binding: LrcFragmentBinding?) {
+    private fun initView(binding: LrcFragmentBinding?) {
         val playMusicBinding = binding?.playMusic
         ivBg = binding?.ivBg
         ivCover = playMusicBinding?.ivCover
@@ -290,6 +298,9 @@ class LrcFragment : DialogFragment() {
     }
 
     private fun play() {
+        if (TextUtils.isEmpty(currentPlayUrl)) {
+            context?.let { LoadingDialog.show(it, "请稍等...") }
+        }
         val intent = Intent(context, MusicPlayService::class.java)
         intent.action = MusicNotifyService.MUSIC_STATE_ACTION
         context?.startService(intent)
@@ -314,6 +325,7 @@ class LrcFragment : DialogFragment() {
         val args = arguments
         if (args != null) {
             currentPosition = args.getInt(POSITION_KEY)
+            currentPlayUrl = args.getString(MUSIC_URL_KEY)
             val s = args.getString(MUSIC_INFO_KEY)
             if (!TextUtils.isEmpty(s)) {
                 val gson = Gson()
@@ -336,7 +348,7 @@ class LrcFragment : DialogFragment() {
         }
         this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
         tvTitle?.text = this.currentMusicInfo?.artist
-        tvDesc?.text = this.currentMusicInfo?.album
+        tvDesc?.text = this.currentMusicInfo?.name
         if (mediaHelper!!.isPlaying()) {
             checkState(MusicState.STATE_PLAY)
         } else {

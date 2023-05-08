@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.widget.Toast
+import com.android.wy.news.common.Logger
 import java.io.IOException
 
 
@@ -56,7 +57,8 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     fun setPath(path: String?) {
         currentPath = path
         if (path == null) {
-            Toast.makeText(context, "获取播放地址错误,请重试!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "获取播放地址错误,已为你跳过", Toast.LENGTH_SHORT).show()
+            onMediaHelperListener?.onCompleteState()
             return
         }
         try {
@@ -105,9 +107,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
                 e.printStackTrace()
             }
         }
-        mediaPlayer?.setOnCompletionListener {
-            onMediaHelperListener?.onPauseState()
-        }
+        mediaPlayer?.setOnCompletionListener(this)
         mediaPlayer?.setOnErrorListener(this)
     }
 
@@ -122,9 +122,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
                 return
             }
             mediaPlayer?.start()
-            if (onMediaHelperListener != null) {
-                onMediaHelperListener?.onPlayingState()
-            }
+            onMediaHelperListener?.onPlayingState()
         }
     }
 
@@ -133,9 +131,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
             return
         }
         mediaPlayer?.pause()
-        if (onMediaHelperListener != null) {
-            onMediaHelperListener?.onPauseState()
-        }
+        onMediaHelperListener?.onPauseState()
         audioManager?.abandonAudioFocus(focusChangeListener)
     }
 
@@ -188,6 +184,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
         AudioManager.OnAudioFocusChangeListener { focusChange ->
             when (focusChange) {
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                    Logger.i("AudioManager.AUDIOFOCUS_LOSS_TRANSIENT")
                     if (isPlaying()) {
                         pause()
                     }
@@ -200,17 +197,19 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
                 }*/
 
                 AudioManager.AUDIOFOCUS_LOSS -> {
+                    Logger.i("AudioManager.AUDIOFOCUS_LOSS")
                     stop()
                 }
 
                 AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> {
-                    //stop()
+                    Logger.i("AudioManager.AUDIOFOCUS_REQUEST_GRANTED")
                     if (currentPath != null && !isPlaying()) {
                         start()
                     }
                 }
 
                 AudioManager.AUDIOFOCUS_REQUEST_FAILED -> {
+                    Logger.i("AudioManager.AUDIOFOCUS_REQUEST_FAILED")
                     stop()
                 }
             }

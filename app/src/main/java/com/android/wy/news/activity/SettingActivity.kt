@@ -227,7 +227,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private fun showUpdateDialog(updateEntity: UpdateEntity) {
         val versionCode = updateEntity.versionCode
         val code = CommonTools.getVersionCode(mActivity)
-        if (versionCode <= code) return
+        if (versionCode <= code) {
+            Toast.makeText(this, "当前已经是最新版本", Toast.LENGTH_SHORT).show()
+            return
+        }
         val dialogFragment = UpdateDialogFragment.newInstance(
             updateEntity.title, updateEntity.content, "下载", "忽略更新"
         )
