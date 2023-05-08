@@ -26,6 +26,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -95,7 +96,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:maxHeight="2dp"
             android:minHeight="2dp"
@@ -132,8 +132,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="20dp"
@@ -141,8 +139,8 @@
 
             <ImageView
                 android:id="@+id/iv_music_mode"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@mipmap/state_repeat"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
@@ -209,8 +207,9 @@
 
             <ImageView
                 android:id="@+id/iv_music_list"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:src="@mipmap/music_list"
                 app:tint="@color/main_title"
                 tools:ignore="ContentDescription" />
