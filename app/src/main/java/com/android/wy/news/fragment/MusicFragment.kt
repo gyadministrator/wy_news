@@ -27,6 +27,7 @@ import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
+import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
@@ -115,6 +116,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             playBarView?.updateProgress(o.time)
             val lrc = currentLrcList?.get(getTimeLinePosition(o.time.toLong()))
             lrc?.let { playBarView?.setTitle(lrc.text) }
+        } else if (o is MusicUrlEvent) {
+            playMusic(o.url)
         }
     }
 

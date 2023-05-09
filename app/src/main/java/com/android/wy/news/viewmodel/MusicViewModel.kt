@@ -1,14 +1,18 @@
 package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import com.android.wy.news.app.App
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.entity.music.MusicUrlEntity
+import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
 import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.util.AppUtil
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +26,7 @@ import retrofit2.Response
 class MusicViewModel : BaseViewModel() {
     val isSuccess = MutableLiveData<Boolean>()
     val musicUrl = MutableLiveData<String?>()
+
     fun getCookie() {
         ThreadExecutorManager.mInstance.startExecute {
             val success = JsoupManager.getCookie()
@@ -54,7 +59,13 @@ class MusicViewModel : BaseViewModel() {
                         }
                         val url = musicUrlData?.url
                         Logger.i("mid:$mid---->>>url:$url")
-                        musicUrl.postValue(url)
+                        if (AppUtil.isBackground(App.app)) {
+                            Logger.i("requestMusicUrl--->>>app onBack")
+                            val musicUrlEvent = MusicUrlEvent(url)
+                            EventBus.getDefault().postSticky(musicUrlEvent)
+                        } else {
+                            musicUrl.postValue(url)
+                        }
                     }
                 }
 

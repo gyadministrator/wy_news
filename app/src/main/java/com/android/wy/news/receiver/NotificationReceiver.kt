@@ -4,10 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.common.AppUtil
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.event.NoticeEvent
+import com.android.wy.news.util.AppUtil
 import org.greenrobot.eventbus.EventBus
 
 /*     

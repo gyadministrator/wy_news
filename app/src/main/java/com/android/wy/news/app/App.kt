@@ -1,14 +1,18 @@
 package com.android.wy.news.app
 
+import android.app.Activity
 import android.app.Application
 import com.amap.api.location.AMapLocationClient
 import com.android.wy.news.BuildConfig
+import com.android.wy.news.R
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.shortcut.ShortCutHelper
 import com.android.wy.news.skin.UiModeManager
+import com.android.wy.news.util.AppFrontBack
+import com.android.wy.news.util.AppFrontBackListener
 
 
 /*
@@ -36,6 +40,7 @@ class App : Application() {
         }
         initSkin()
         initShortCut()
+        appFrontBackRegister()
     }
 
     private fun initShortCut() {
@@ -49,5 +54,20 @@ class App : Application() {
         } else {
             UiModeManager.setCurrentUiMode(SkinType.SKIN_TYPE_LIGHT)
         }
+    }
+
+    /**
+     * 注册APP前后台切换监听
+     */
+    private fun appFrontBackRegister() {
+        AppFrontBack.register(this, object : AppFrontBackListener {
+            override fun onBack(activity: Activity?) {
+                Logger.i(getString(R.string.app_name) + "app onBack")
+            }
+
+            override fun onFront(activity: Activity?) {
+                Logger.i(getString(R.string.app_name) + "app onFront")
+            }
+        })
     }
 }

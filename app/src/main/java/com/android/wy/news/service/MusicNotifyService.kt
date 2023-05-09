@@ -1,6 +1,5 @@
 package com.android.wy.news.service
 
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
@@ -214,11 +213,7 @@ class MusicNotifyService : Service() {
         }
         notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
         notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.name)
-        //startForeground(notifyID, builder?.build())
-        val notificationManager = getSystemService(
-            NotificationManager::class.java
-        )
-        notificationManager.notify(notifyID, builder?.build())
+        startForeground(notifyID, builder?.build())
 
         Glide.with(this).asBitmap().load(musicInfo.pic)
             .apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
@@ -229,8 +224,7 @@ class MusicNotifyService : Service() {
                     resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
                     notifyLayout?.setImageViewBitmap(R.id.iv_cover, resource)
-                    //startForeground(notifyID, builder?.build())
-                    notificationManager.notify(notifyID, builder?.build())
+                    startForeground(notifyID, builder?.build())
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {

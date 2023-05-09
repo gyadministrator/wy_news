@@ -67,6 +67,8 @@ class MusicNotifyHelper(context: Context) {
             .setOngoing(true)
             .setSmallIcon(R.mipmap.notice)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            //会有边距
+            //.setStyle(androidx.media.app.NotificationCompat.MediaStyle())
             //setCustomBigContentView() 为展开后通知设置不同的布局
             //.setCustomBigContentView(remoteViews)
             //setCustomContentView() 以设置收起后通知的布局

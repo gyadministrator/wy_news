@@ -44,6 +44,9 @@ import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
+import com.android.wy.news.util.AutoStartUtil
+import com.android.wy.news.util.BatteryManageUtil
+import com.android.wy.news.util.PermissionCheckUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.NewsMainViewModel
@@ -178,6 +181,27 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         Handler(Looper.getMainLooper()).postDelayed({
             checkNotification()
         }, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({
+            guideNotification()
+        }, 2000)
+    }
+
+    /**
+     * 引导之后，部分机型可以直接设置。当然，部分机型还有如下问题：
+     *1.小米需要更改通知过滤规则，避免消息被过滤掉；
+     *2.华为需要手动在电池管理里进行操作，才能进行自启动和后台运行。
+     * 没办法，提供操作说明和解决方案吧。提供解决方案以后，目前还正常。
+     */
+    private fun guideNotification() {
+        val checkFloatPermission = PermissionCheckUtil.checkFloatPermission(this)
+        if (!checkFloatPermission) {
+            //打开悬浮窗
+            PermissionCheckUtil.requestSettingCanDrawOverlays(this)
+        }
+        //打开自启动窗口
+        //AutoStartUtil.getAutostartSettingIntent(this)
+        //打开电池优化
+        BatteryManageUtil.ignoreBatteryOptimization(this)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -200,7 +224,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     private fun goLocationPage() {
-        //LocationActivity.startLocationActivity(this)
         val hotCities: ArrayList<HotCity> = ArrayList<HotCity>()
         //code为城市代码
         hotCities.add(HotCity("北京", "北京", "101010100"))
@@ -257,7 +280,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 }
 
                 override fun onCancel() {
-                    //Toast.makeText(applicationContext, "取消选择", Toast.LENGTH_SHORT).show()
+                    Logger.i("用户取消城市选择")
                 }
             }).show()
     }
