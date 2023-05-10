@@ -395,7 +395,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
             if (isShowDesktopLrc != null && isShowDesktopLrc == true) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    LrcDesktopManager.showDesktopLrc()
+                    LrcDesktopManager.showDesktopLrc(this)
                 }, 1000)
             }
             //finish()

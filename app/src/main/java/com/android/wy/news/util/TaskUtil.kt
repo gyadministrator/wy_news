@@ -15,14 +15,12 @@ object TaskUtil {
     private val runnableList = LinkedList<Runnable>()
     private val handler = Handler(Looper.getMainLooper())
 
-    @Synchronized
     fun postOnUiThread(runnable: Runnable) {
         if (!runnableList.contains(runnable)) {
             handler.post(runnable)
         }
     }
 
-    @Synchronized
     fun postOnThread(runnable: Runnable) {
         if (!runnableList.contains(runnable)) {
             ThreadExecutorManager.mInstance.startExecute(runnable)
