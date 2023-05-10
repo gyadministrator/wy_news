@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- 读取外部存储 -->
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <!--悬浮框权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <!--通知栏展开-->
     <!-- Android 13 target 32 以上不需要手动授权 -->
     <uses-permission

@@ -2,7 +2,6 @@ package com.android.wy.news.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.wy.news.activity.WebActivity
@@ -12,6 +11,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.databinding.FragmentLiveBinding
 import com.android.wy.news.entity.LiveReview
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.LiveViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -104,7 +104,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefre
         }
 
         mViewModel.msg.observe(this) {
-            Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(it)
             refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)

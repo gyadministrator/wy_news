@@ -2,7 +2,6 @@ package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -18,15 +17,11 @@ import com.amap.api.maps.MapsInitializer
 import com.android.bottombar.activity.GYBottomActivity
 import com.android.bottombar.model.GYBarItem
 import com.android.bottombar.view.GYBottomBarView
-import com.android.custom.pickview.entity.PickerData
-import com.android.custom.pickview.util.JsonUtil
-import com.android.custom.pickview.view.CustomPickerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
-import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
@@ -40,18 +35,17 @@ import com.android.wy.news.locationselect.model.City
 import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
+import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
-import com.android.wy.news.util.AutoStartUtil
 import com.android.wy.news.util.BatteryManageUtil
 import com.android.wy.news.util.PermissionCheckUtil
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.NewsMainViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
 import com.hjq.permissions.Permission
 import org.greenrobot.eventbus.EventBus
@@ -176,7 +170,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         tvCity.setOnClickListener {
             goLocationPage()
         }
-        //initCityData()
         jumpUrl()
         Handler(Looper.getMainLooper()).postDelayed({
             checkNotification()
@@ -271,8 +264,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                                 }
 
                                 override fun error(msg: String) {
-                                    Toast.makeText(this@HomeActivity, msg, Toast.LENGTH_SHORT)
-                                        .show()
+                                    ToastUtil.show(msg)
                                 }
 
                             })
@@ -296,70 +288,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                     }
                 })
         }
-    }
-
-    private fun initCityData() {
-        val pickerData: PickerData = readJson()
-        val pickerView = CustomPickerView(this, pickerData)
-        pickerView.setScreenH(3).setDiscolourHook(true).setRadius(0).setContentLine(true)
-            .setContentText(16, Color.RED).setListText(16, Color.RED).setTitle("请选择地址")
-            .setBtnText("确定").setBtnColor(Color.RED).setRadius(0).build()
-
-        tvCity.setOnClickListener {
-            //显示选择器
-            pickerView.show(tvCity)
-        }
-
-        //选择器点击事件
-        pickerView.setOnPickerClickListener {
-            Toast.makeText(
-                this,
-                pickerData.firstText + "," + pickerData.secondText + "," + pickerData.thirdText,
-                Toast.LENGTH_SHORT
-            ).show()
-            pickerView.dismiss() //关闭选择器
-        }
-    }
-
-    private fun readJson(): PickerData {
-        val mCityData: MutableList<String> = ArrayList()
-        val mDistrictMap: MutableMap<String, List<String>> = HashMap()
-        val mVillageMap: MutableMap<String, List<String>> = HashMap()
-        val json = JsonUtil.getJson("city.json", this)
-        val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<CityInfo>>(
-            json, object : TypeToken<ArrayList<CityInfo>>() {}.type
-        )
-        if (dataList.size > 0) {
-            for (i in 0 until dataList.size) {
-                val cityInfo = dataList[i]
-                mCityData.add(cityInfo.name)
-                val cityList = cityInfo.cityList
-                if (cityList.size > 0) {
-                    val districtNameList = ArrayList<String>()
-                    for (j in 0 until cityList.size) {
-                        val city = cityList[j]
-                        districtNameList.add(city.name)
-                        val areaList = city.areaList
-                        if (areaList.size > 0) {
-                            val areaNameList = ArrayList<String>()
-                            for (m in 0 until areaList.size) {
-                                val area = areaList[m]
-                                areaNameList.add(area.name)
-                            }
-                            mVillageMap[city.name] = areaNameList
-                        }
-                    }
-                    mDistrictMap[cityInfo.name] = districtNameList
-                }
-            }
-        }
-        val pickerData = PickerData()
-        pickerData.firstData = mCityData
-        pickerData.secondData = mDistrictMap
-        pickerData.thirdData = mVillageMap
-        pickerData.setInitSelectText("请选择")
-        return pickerData
     }
 
     private fun jumpUrl() {
@@ -458,12 +386,18 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         }
         val secondTime = System.currentTimeMillis()
         if (secondTime - firstTime > 2000) {
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show()
+            ToastUtil.show("再按一次退出程序")
             firstTime = secondTime
         } else {
             LocationHelper.destroyLocation()
             //暂时消失当前activity，移动到后台
             moveTaskToBack(true)
+            val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
+            if (isShowDesktopLrc != null && isShowDesktopLrc == true) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    LrcDesktopManager.showDesktopLrc()
+                }, 1000)
+            }
             //finish()
             //exitProcess(0)
         }

@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -33,6 +32,7 @@ import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.service.MusicNotifyService
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
@@ -214,7 +214,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
 
         mViewModel.msg.observe(this) {
-            Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(it)
             refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)

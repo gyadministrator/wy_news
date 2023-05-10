@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +17,7 @@ import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.JsoupManager
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.manager.VideoLayoutManager
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.ScreenVideoView
 import com.android.wy.news.viewmodel.VideoTabViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -105,7 +105,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         }
 
         mViewModel.msg.observe(this) {
-            Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(it)
             refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)

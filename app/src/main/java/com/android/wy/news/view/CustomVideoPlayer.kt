@@ -5,13 +5,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import cn.jzvd.JzvdStd
 import cn.jzvd.R
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.dialog.ConfirmDialogFragment
+import com.android.wy.news.util.ToastUtil
 
 class CustomVideoPlayer : JzvdStd {
     private var onVideoListener: OnVideoListener? = null
@@ -96,8 +96,7 @@ class CustomVideoPlayer : JzvdStd {
         val isWifiNoticeDialog = SpTools.getBoolean(Constants.IS_WIFI_NOTICE_DIALOG)
         if (isNoWifiPlay != null && isNoWifiPlay == true) {
             if (isWifiNotice != null && isWifiNotice == false) {
-                Toast.makeText(context, "当前不是WiFi环境下,请注意流量使用", Toast.LENGTH_SHORT)
-                    .show()
+                ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
                 SpTools.putBoolean(Constants.IS_WIFI_NOTICE, true)
             }
             if (state == STATE_PAUSE) {
@@ -119,11 +118,7 @@ class CustomVideoPlayer : JzvdStd {
                 dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
                     override fun onClickSure() {
                         SpTools.putBoolean(Constants.NO_WIFI_PLAY, true)
-                        Toast.makeText(
-                            context,
-                            "当前不是WiFi环境下,请注意流量使用",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
                         SpTools.putBoolean(Constants.IS_WIFI_NOTICE_DIALOG, true)
                         if (state == STATE_PAUSE) {
                             startButton.performClick()

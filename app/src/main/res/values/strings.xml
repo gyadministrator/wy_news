@@ -36,4 +36,7 @@
     <string name="_00_00">00:00</string>
     <string name="off">关闭</string>
     <string name="close">关闭</string>
+    <string name="no_wifi_play_music">非WiFi环境播放音乐</string>
+    <string name="allow_other_play">允许与其他应用同时播放</string>
+    <string name="desktop_lrc">桌面歌词</string>
 </resources>

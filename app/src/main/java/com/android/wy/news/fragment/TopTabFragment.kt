@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
@@ -29,6 +28,7 @@ import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.TopViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -99,7 +99,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 }
 
                 override fun error(msg: String) {
-                    Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show()
+                    ToastUtil.show(msg)
                 }
 
             })
@@ -162,7 +162,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         }
 
         mViewModel.msg.observe(this) {
-            Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(it)
             refreshLayout.setEnableLoadMore(false)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)

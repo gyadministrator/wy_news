@@ -218,6 +218,123 @@
             <View style="@style/dividerItemStyle" />
 
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/no_wifi_play_music"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:textOff="off"
+                    android:textOn="on"
+                    android:thumb="@drawable/switch_common_thumb"
+                    app:showText="true"
+                    app:splitTrack="false"
+                    app:switchMinWidth="60dp"
+                    app:switchPadding="6dp"
+                    app:switchTextAppearance="@style/switchText"
+                    app:track="@drawable/switch_common_track"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/allow_other_play"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_allow_other_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:textOff="off"
+                    android:textOn="on"
+                    android:thumb="@drawable/switch_common_thumb"
+                    app:showText="true"
+                    app:splitTrack="false"
+                    app:switchMinWidth="60dp"
+                    app:switchPadding="6dp"
+                    app:switchTextAppearance="@style/switchText"
+                    app:track="@drawable/switch_common_track"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/bg_item_color"
+                android:gravity="center_vertical"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/desktop_lrc"
+                    android:textColor="@color/main_title"
+                    android:textSize="16sp"
+                    tools:ignore="RelativeOverlap" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_desktop_lrc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:textOff="off"
+                    android:textOn="on"
+                    android:thumb="@drawable/switch_common_thumb"
+                    app:showText="true"
+                    app:splitTrack="false"
+                    app:switchMinWidth="60dp"
+                    app:switchPadding="6dp"
+                    app:switchTextAppearance="@style/switchText"
+                    app:track="@drawable/switch_common_track"
+                    tools:ignore="HardcodedText" />
+            </RelativeLayout>
+
+            <View style="@style/dividerItemStyle" />
+
+            <RelativeLayout
                 android:id="@+id/rl_skin"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"

@@ -11,7 +11,6 @@ import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +24,7 @@ import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.update.UpdateManager
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.SettingViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -49,6 +49,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private lateinit var rlAuthor: RelativeLayout
     private lateinit var scPlay: SwitchCompat
     private lateinit var scWifi: SwitchCompat
+    private lateinit var scDesktopLrc: SwitchCompat
     private var intentActivityResultLauncher: ActivityResultLauncher<Intent>? = null
     private var downloadAppUrl: String? = null
 
@@ -90,6 +91,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         scWifi = mBinding.scWifi
         rlAbout = mBinding.rlAbout
         rlAuthor = mBinding.rlAuthor
+        scDesktopLrc = mBinding.scDesktopLrc
     }
 
     override fun onRestart() {
@@ -124,6 +126,11 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             }
         } else {
             tvSkin.text = "已关闭"
+        }
+
+        val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
+        if (isShowDesktopLrc != null) {
+            scDesktopLrc.isChecked = isShowDesktopLrc
         }
     }
 
@@ -199,6 +206,16 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
                 }
             }
         })
+        scDesktopLrc.setOnCheckedChangeListener(object : OnCheckedChangeListener {
+            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+                if (p0 != null) {
+                    if (!p0.isPressed) {
+                        return
+                    }
+                    SpTools.putBoolean(Constants.IS_SHOW_DESKTOP_LRC, p1)
+                }
+            }
+        })
     }
 
     private val onUpdateManagerListener = object : UpdateManager.OnUpdateManagerListener {
@@ -220,7 +237,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         }
 
         override fun onError(msg: String) {
-            Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(msg)
         }
     }
 
@@ -228,7 +245,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         val versionCode = updateEntity.versionCode
         val code = CommonTools.getVersionCode(mActivity)
         if (versionCode <= code) {
-            Toast.makeText(this, "当前已经是最新版本", Toast.LENGTH_SHORT).show()
+            ToastUtil.show("当前已经是最新版本")
             return
         }
         val dialogFragment = UpdateDialogFragment.newInstance(

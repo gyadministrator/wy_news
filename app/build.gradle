@@ -122,7 +122,6 @@ dependencies {
     //作者的库
     implementation rootProject.ext.dependencies.customTabLayout
     implementation rootProject.ext.dependencies.gYBottomBar
-    implementation rootProject.ext.dependencies.customAddressSelect
 
     // Retrofit库
     implementation rootProject.ext.dependencies.retrofit

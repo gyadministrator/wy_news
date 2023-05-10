@@ -123,7 +123,8 @@ class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
         if (UiModeManager.isNightMode(this)) {
             //深色模式
             val darkJs =
-                "javascript:function showDarkJs() {" + "document.body.style.backgroundColor='#111111';" + "}"
+                "javascript:function showDarkJs() {" + "document.body.style.backgroundColor='#111111';" +
+                        "document.body.style.color='#BEBEBE';" + "}"
             view?.loadUrl(darkJs)
             view?.loadUrl("javascript:showDarkJs();")
         }

@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +26,7 @@ import com.android.wy.news.http.repository.HotRepository
 import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.sql.SearchHistoryEntity
 import com.android.wy.news.sql.SearchHistoryRepository
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.ClearEditText
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.SearchViewModel
@@ -322,7 +322,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
 
         mViewModel.msg.observe(this) {
             CommonTools.closeKeyboard(this, etSearch)
-            Toast.makeText(mActivity, it, Toast.LENGTH_SHORT).show()
+            ToastUtil.show(it)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh(false)

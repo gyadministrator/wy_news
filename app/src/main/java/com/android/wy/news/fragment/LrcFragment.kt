@@ -18,7 +18,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
@@ -39,6 +38,7 @@ import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.music.lrc.LrcView
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.service.MusicPlayService
+import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.RoundProgressBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -269,7 +269,7 @@ class LrcFragment : DialogFragment() {
         }
         val s = map[index]
         MusicPlayMode.setMode(index)
-        Toast.makeText(context, "已切换到$s", Toast.LENGTH_SHORT).show()
+        ToastUtil.show("已切换到$s")
         initMusicMode()
     }
 

@@ -73,5 +73,10 @@
     "title": "写设备缓存的权限",
     "name": "android.permission.WRITE_SETTINGS",
     "desc": "允许写设备缓存，用于问题排查"
+  },
+  {
+    "title": "悬浮框权限",
+    "name": "android.permission.SYSTEM_ALERT_WINDOW",
+    "desc": "用于桌面歌词的展示"
   }
 ]

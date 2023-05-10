@@ -5,8 +5,8 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.widget.Toast
 import com.android.wy.news.common.Logger
+import com.android.wy.news.util.ToastUtil
 import java.io.IOException
 
 
@@ -57,7 +57,7 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
     fun setPath(path: String?) {
         currentPath = path
         if (path == null) {
-            Toast.makeText(context, "获取播放地址错误,已为你跳过", Toast.LENGTH_SHORT).show()
+            ToastUtil.show("获取播放地址错误,已为你跳过")
             onMediaHelperListener?.onCompleteState()
             return
         }
