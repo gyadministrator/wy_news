@@ -109,7 +109,7 @@ object LrcDesktopManager {
         contentView?.get()?.let { mParams?.let { it1 -> updateView(it, it1) } }
     }
 
-    fun removeView() {
+    private fun removeView() {
         val windowManager =
             App.app.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val view = contentView?.get()
@@ -124,6 +124,7 @@ object LrcDesktopManager {
 
     private fun initView(binding: LayoutDesktopLrcBinding) {
         val ivLock = binding.ivLock
+        val ivClose = binding.ivClose
         ivLock.setOnClickListener {
             isLock = !isLock
             if (isLock) {
@@ -131,6 +132,9 @@ object LrcDesktopManager {
             } else {
                 ivLock.setImageResource(R.mipmap.unlock)
             }
+        }
+        ivClose.setOnClickListener {
+            removeView()
         }
     }
 }
