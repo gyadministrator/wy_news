@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.fragment.app.Fragment
 import cn.jzvd.Jzvd
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.MapsInitializer
@@ -34,7 +33,6 @@ import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.notification.NotificationUtil
-import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.BatteryManageUtil
 import com.android.wy.news.util.PermissionCheckUtil
@@ -44,7 +42,6 @@ import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.NewsMainViewModel
 import com.gyf.immersionbar.ImmersionBar
-import com.hjq.permissions.Permission
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -132,13 +129,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun initView() {
-        val checkPermission = PermissionHelper.checkPermission(this, Permission.WRITE_SETTINGS)
-        if (!checkPermission) {
-            TaskUtil.runOnUiThread({
-                PermissionHelper.requestPermission(this, Permission.WRITE_SETTINGS)
-            }, 500)
-        }
-
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -171,9 +161,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         TaskUtil.runOnUiThread({
             checkNotification()
         }, 1000)
-        TaskUtil.runOnUiThread({
-            guideNotification()
-        }, 2000)
     }
 
     /**
@@ -282,6 +269,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 object : NotificationUtil.Companion.OnNextListener {
                     override fun onNext() {
                         Logger.i(resources.getString(R.string.app_name) + "已开启通知权限")
+                        guideNotification()
                     }
                 })
         }
@@ -361,19 +349,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 imageView.setImageDrawable(wrap)
             }
         }
-    }
-
-    @SuppressLint("RestrictedApi")
-    fun getShowFragment(): Fragment? {
-        val fragments: List<Fragment> = supportFragmentManager.fragments
-        var fragment: Fragment? = null
-        for (i in fragments.indices) {
-            fragment = fragments[i]
-            if (fragment.isAdded && fragment.isMenuVisible) {
-                break
-            }
-        }
-        return fragment
     }
 
     @Deprecated("Deprecated in Java")

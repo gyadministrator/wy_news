@@ -147,8 +147,6 @@ object LrcDesktopManager {
             windowManager.removeView(view)
             hasAddView = false
             contentView = null
-            SpTools.putBoolean(Constants.IS_SHOW_DESKTOP_LRC, false)
-            ToastUtil.show("桌面歌词已关闭,如需要,请在设置中再打开")
         }
     }
 
@@ -171,6 +169,8 @@ object LrcDesktopManager {
         }
         ivClose.setOnClickListener {
             removeView()
+            SpTools.putBoolean(Constants.IS_SHOW_DESKTOP_LRC, false)
+            ToastUtil.show("桌面歌词已关闭,如需要,请在设置中再打开")
         }
     }
 
