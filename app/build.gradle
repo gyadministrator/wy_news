@@ -1,4 +1,9 @@
 //file:noinspection DependencyNotationArgument
+//file:noinspection ConfigurationAvoidance
+//file:noinspection GrDeprecatedAPIUsage
+import java.text.SimpleDateFormat
+
+//file:noinspection DependencyNotationArgument
 //file:noinspection GroovyImplicitNullArgumentCall
 plugins {
     id 'com.android.application'
@@ -6,9 +11,20 @@ plugins {
     id 'kotlin-kapt'
 }
 
+// 构建时间
+def buildTime = System.currentTimeMillis()
+// 是否显示Log
+def isShowLog = true
+
 android {
     namespace 'com.android.wy.news'
     compileSdk rootProject.ext.android.compileSdkVersion
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
 
     sourceSets {
         main {
@@ -34,8 +50,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //必须要保证所有的flavor 都属于同一个维度
-        //flavorDimensions "default"
-        buildConfigField "boolean", "isShowLog", "true"
+        flavorDimensions "versionCode"
+        buildConfigField "boolean", "isShowLog", "${isShowLog}"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -47,61 +63,72 @@ android {
             shrinkResources false
             signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
-                }
-            }
         }
+
         debug {
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            android.applicationVariants.all { variant ->
-                variant.outputs.all {
-                    outputFileName = "${variant.name}-v${variant.versionName}-${releaseTime()}.apk"
-                }
-            }
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.all {
+            // 自定义生成的apk名称
+            def dateFormat = new SimpleDateFormat("yyyyMMdd_HHmm")
+            def date = new Date(buildTime)
+            def dateStr = dateFormat.format(date)
+            if (variant.buildType.name == "release") {
+                outputFileName = "${variant.name}_v${variant.versionName}_product_${dateStr}.apk"
+            } else {
+                outputFileName = "${variant.name}_v${variant.versionName}_develop_${dateStr}.apk"
+            }
+        }
+    }
+
     buildFeatures {
         viewBinding true
         compose true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.3.2'
     }
+
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    //关闭Android Studio的PNG合法性检查
-    lintOptions {
-        aaptOptions.cruncherEnabled = false
-        aaptOptions.useNewCruncher = false
-    }
-    /*productFlavors {
+
+    productFlavors {
         //根据渠道配置
-        wy_news_debug {
-            buildConfigField "String", "CHANNEL", "\"_debug\""
-        }
-        wy_news_release {
+        wy_news_normal {
             buildConfigField "String", "CHANNEL", "\"_release\""
         }
-    }*/
-}
-
-static def releaseTime() {
-    return new Date().format("yyyy.MM.dd", TimeZone.getTimeZone("GMT+8"))
+        wy_news_vivo {
+            buildConfigField "String", "CHANNEL", "\"_debug\""
+        }
+        wy_news_oppo {
+            buildConfigField "String", "CHANNEL", "\"_release\""
+        }
+        wy_news_xiaomi {
+            buildConfigField "String", "CHANNEL", "\"_release\""
+        }
+        wy_news_huawei {
+            buildConfigField "String", "CHANNEL", "\"_release\""
+        }
+    }
 }
 
 dependencies {
@@ -166,3 +193,81 @@ dependencies {
     implementation rootProject.ext.dependencies.jiaozivideoplayer
     implementation project(':locationselect')
 }
+
+gradle.addBuildListener(new BuildListener() {
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {
+
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        // 所有项目已配置完成，可以获取相关信息
+        Project skinProject = null
+        project.getParent().getChildProjects().each {
+            if (it.key == "skin") {
+                skinProject = it.value;
+            }
+        }
+
+        if (skinProject == null) {
+            logger.error("Can not Find Skin project")
+            return
+        }
+
+        // 固定使用skin的release包
+        def skinAssembleTask = skinProject.getTasks().getByName("assembleRelease")
+        def skinPackageTask = skinProject.getTasks().getByName("packageRelease")
+
+        project.getTasks().each {
+            if (it.name.startsWith("merge") && it.name.endsWith("Assets") && !it.name.endsWith("TestAssets")) {
+
+                // 在当前项目assets打包任务前先执行skin打包任务
+                it.dependsOn(skinAssembleTask)
+
+                // 将skin打包生成的apk复制到项目的assets目录中
+                it.doLast {
+
+                    // 获取skin生成的apk
+                    def skinOutputs = skinPackageTask.getOutputs().getFiles().getFiles()
+                    def skinApkDir = skinOutputs[skinOutputs.size() - 1]
+                    def skinFiles = skinApkDir.listFiles()
+                    File skinApkFile = null
+                    skinFiles.each {
+                        if (it.name.endsWith(".skin")) {
+                            skinApkFile = it
+                        }
+                    }
+
+                    if (skinApkFile == null) {
+                        logger.error("Can not Find Skin file")
+                        return
+                    }
+
+                    // 获取assets路径
+                    def assetsOutputs = it.getOutputs().getFiles().getFiles()
+                    def assetsDir = assetsOutputs[assetsOutputs.size() - 1]
+
+                    // 拷贝文件
+                    copy {
+                        from skinApkFile
+                        into assetsDir.getPath() + "/skins/"
+                    }
+                    logger.quiet("Finish Copying Skin file From ${skinApkFile.getPath()} To ${assetsDir.getPath()}/skins/")
+                }
+            }
+        }
+
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+
+    }
+})

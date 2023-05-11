@@ -2,21 +2,18 @@ package com.android.wy.news.viewmodel
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.SpTools
-import com.android.wy.news.entity.IpEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.SplashEntity
 import com.android.wy.news.entity.music.MusicTypeEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
-import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.manager.JsoupManager
-import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.util.TaskUtil
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
@@ -35,11 +32,11 @@ class SplashViewModel : BaseViewModel() {
     var isReadFinish = MutableLiveData(false)
 
     fun init(context: Context) {
-        ThreadExecutorManager.mInstance.startExecute { readNewsTitle(context) }
-        ThreadExecutorManager.mInstance.startExecute { getLiveClassify() }
-        ThreadExecutorManager.mInstance.startExecute { JsoupManager.getCityInfo() }
-        ThreadExecutorManager.mInstance.startExecute { getSplash() }
-        ThreadExecutorManager.mInstance.startExecute { JsoupManager.getCookie() }
+        TaskUtil.runOnThread { readNewsTitle(context) }
+        TaskUtil.runOnThread { getLiveClassify() }
+        TaskUtil.runOnThread { JsoupManager.getCityInfo() }
+        TaskUtil.runOnThread { getSplash() }
+        TaskUtil.runOnThread { JsoupManager.getCookie() }
     }
 
     private fun getSplash() {

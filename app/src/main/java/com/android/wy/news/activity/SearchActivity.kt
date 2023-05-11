@@ -23,9 +23,9 @@ import com.android.wy.news.databinding.LayoutHotItemBinding
 import com.android.wy.news.entity.HotWord
 import com.android.wy.news.entity.SearchResult
 import com.android.wy.news.http.repository.HotRepository
-import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.sql.SearchHistoryEntity
 import com.android.wy.news.sql.SearchHistoryRepository
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.ClearEditText
 import com.android.wy.news.view.CustomLoadingView
@@ -119,7 +119,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
 
     private fun goSearch() {
         //添加关键词到数据库
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             addHistory()
         }
         llContent.visibility = View.GONE
@@ -193,7 +193,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
 
     private val clearClickListener = View.OnClickListener { p0 ->
         if (p0 != null) {
-            ThreadExecutorManager.mInstance.startExecute {
+            TaskUtil.runOnThread {
                 historyList?.let { searchHistoryRepository?.deleteAllSearchHistory(it) }
             }
             llHistory.visibility = View.GONE
@@ -220,7 +220,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = searchAdapter
 
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             getHistoryList()
         }
         getHot()

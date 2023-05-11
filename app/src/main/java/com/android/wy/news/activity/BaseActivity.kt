@@ -53,7 +53,6 @@ abstract class BaseActivity<V : ViewBinding, M : BaseViewModel> : AppCompatActiv
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val uiMode = newConfig.uiMode
         if (isFollowNightMode()) {
             UiModeManager.onUiModeChange(this)
         }

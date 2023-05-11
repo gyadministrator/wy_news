@@ -3,6 +3,7 @@ package com.android.wy.news.common
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.music.MusicTypeEntity
+import com.android.wy.news.music.lrc.Lrc
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -60,9 +61,11 @@ class Constants {
             "https://github.com"
         const val APP_DOWNLOAD_URL =
             "https://github.com/gyadministrator/wy_news/releases/download/v1.0/release-v1.0-2023.05.07.apk"
+        var hasAddView = false
 
         /*以下是音乐相关*/
         val mMusicTitleList = arrayListOf<MusicTypeEntity>()
+        val currentLrcData = arrayListOf<Lrc>()
         var LAST_PLAY_MUSIC_KEY = "last_play_music_key"
         var CSRF_TOKEN_KEY = "csrf_token_key"
         var CSRF_TOKEN = ""

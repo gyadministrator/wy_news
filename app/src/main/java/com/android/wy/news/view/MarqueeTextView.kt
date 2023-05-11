@@ -2,14 +2,13 @@ package com.android.wy.news.view
 
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wy.news.R
+import com.android.wy.news.util.TaskUtil
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -20,7 +19,6 @@ import com.android.wy.news.R
 class MarqueeTextView : LinearLayout {
     private var mBannerTV1: TextView
     private var mBannerTV2: TextView
-    private var mHandler: Handler
     private var isShow = false
     private var startY1 = 0
     private var endY1 = 0
@@ -43,7 +41,6 @@ class MarqueeTextView : LinearLayout {
             LayoutInflater.from(context).inflate(R.layout.widget_scroll_text_layout, this)
         mBannerTV1 = view.findViewById(R.id.tv_banner1)
         mBannerTV2 = view.findViewById(R.id.tv_banner2)
-        mHandler = Handler(Looper.getMainLooper())
         runnable = Runnable {
             isShow = !isShow
             if (position == list.size - 1) {
@@ -64,7 +61,7 @@ class MarqueeTextView : LinearLayout {
             endY2 = if (isShow) 0 else -offsetY
             ObjectAnimator.ofFloat(mBannerTV2, "translationY", startY2.toFloat(), endY2.toFloat())
                 .setDuration(300).start()
-            mHandler.postDelayed(runnable, 3000)
+            TaskUtil.runOnUiThread(runnable, 3000)
         }
     }
 
@@ -86,7 +83,7 @@ class MarqueeTextView : LinearLayout {
             if (!hasPostRunnable) {
                 hasPostRunnable = true
                 //处理第一次进入 第一条数据切换第二条 太快的问题
-                mHandler.postDelayed(runnable, 3000)
+                TaskUtil.runOnUiThread(runnable, 3000)
             }
         } else {
             //只有一条数据不进行滚动
@@ -95,8 +92,7 @@ class MarqueeTextView : LinearLayout {
     }
 
     fun stopScroll() {
-        val handler: Handler? = handler
-        handler?.removeCallbacks(runnable)
+        TaskUtil.removeUiThreadCallback(runnable)
         hasPostRunnable = false
     }
 }

@@ -32,6 +32,7 @@ import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.dialog.MusicListDialog
+import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MusicPlayMode
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.LrcHelper
@@ -153,6 +154,7 @@ class LrcFragment : DialogFragment() {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             roundProgressBar?.setProgress(o.time)
+            activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
             lrcView?.updateTime(o.time.toLong())
             if (!isDragSeek) {
                 sbMusic?.progress = o.time

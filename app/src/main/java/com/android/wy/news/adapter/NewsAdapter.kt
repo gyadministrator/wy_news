@@ -16,7 +16,7 @@ import com.android.wy.news.databinding.LayoutItemImageBinding
 import com.android.wy.news.databinding.LayoutNewsItemImageAdapterBinding
 import com.android.wy.news.databinding.LayoutNewsItemNormalAdapterBinding
 import com.android.wy.news.entity.NewsEntity
-import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.util.TaskUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -152,7 +152,7 @@ class NewsAdapter(
                     imgExtra.size
                 }
                 for (i in 0 until imgCount) {
-                    ThreadExecutorManager.mInstance.startExecute {
+                    TaskUtil.runOnThread {
                         val imageExtra = imgExtra[i]
                         if (imgCount == 1) {
                             loadOneImage(imageExtra.imgsrc, holder, true)

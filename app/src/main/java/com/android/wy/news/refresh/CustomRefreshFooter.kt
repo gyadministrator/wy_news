@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wy.news.R
+import com.android.wy.news.util.AppUtil
 import com.scwang.smart.refresh.layout.api.RefreshFooter
 import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -37,7 +38,7 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
         val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshFooter)
         textFooterTipColor = typedArray?.getColor(
             R.styleable.CustomRefreshFooter_textFooterTipColor,
-            resources.getColor(R.color.main_title)
+            AppUtil.getColor(R.color.main_title)
         )
         textFooterTipColor?.let { tvFooterTip?.setTextColor(it) }
         textFooterTipColor?.let { mImage?.setIndicatorColor(it) }

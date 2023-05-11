@@ -28,6 +28,7 @@ import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.repository.MusicRepository
+import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.Lrc
@@ -114,6 +115,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             playBarView?.updateProgress(o.time)
+            LrcDesktopManager.showDesktopLrc(mActivity, o.time.toLong())
             val lrc = currentLrcList?.get(getTimeLinePosition(o.time.toLong()))
             lrc?.let { playBarView?.setTitle(lrc.text) }
         } else if (o is MusicUrlEvent) {
@@ -244,6 +246,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                         val lrcList = musicLrcData.lrclist
                         if (lrcList.isNotEmpty()) {
                             currentLrcList = CommonTools.parseLrc(lrcList)
+                            Constants.currentLrcData.clear()
+                            Constants.currentLrcData.addAll(currentLrcList!!)
                         }
                     }
                 }

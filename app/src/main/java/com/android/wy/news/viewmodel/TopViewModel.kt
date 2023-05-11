@@ -10,7 +10,7 @@ import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
-import com.android.wy.news.manager.ThreadExecutorManager
+import com.android.wy.news.util.TaskUtil
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -61,7 +61,7 @@ class TopViewModel : BaseViewModel() {
     }
 
     fun getTopNewsData() {
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             val list = JsoupManager.getTopNews(Constants.HOT_NEWS_URL)
             hotNewsList.postValue(list)
         }

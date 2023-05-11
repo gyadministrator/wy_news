@@ -3,15 +3,14 @@ package com.android.wy.news.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import com.android.wy.news.R
+import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.TaskUtil
 
 class CustomLoadingView : View {
     private var loadPaint: Paint? = null
@@ -19,7 +18,6 @@ class CustomLoadingView : View {
     private var loadingText: String? = null
     private var loadingSize: Float? = 10f
     private var percent = 0f
-    private val handler: Handler = Handler(Looper.getMainLooper())
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -45,12 +43,12 @@ class CustomLoadingView : View {
 
     private fun init() {
         paint = Paint()
-        paint?.color = resources.getColor(R.color.main_title)
+        paint?.color = AppUtil.getColor(R.color.main_title)
         loadingSize?.let { paint?.textSize = it }
 
         loadPaint = Paint()
         loadPaint?.style = Paint.Style.FILL
-        loadPaint?.color = resources.getColor(R.color.load_color)
+        loadPaint?.color = AppUtil.getColor(R.color.load_color)
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -69,7 +67,7 @@ class CustomLoadingView : View {
         canvas.clipRect(rect)
         loadPaint?.let { canvas.drawRect(rect, it) }
         canvas.restore()
-        handler.postDelayed({
+        TaskUtil.runOnUiThread({
             if (percent >= 1.0) {
                 percent = 0f
             } else {

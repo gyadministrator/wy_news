@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wy.news.R
+import com.android.wy.news.util.AppUtil
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -35,7 +36,7 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshHeader)
         textHeaderTipColor = typedArray?.getColor(
             R.styleable.CustomRefreshHeader_textHeaderTipColor,
-            resources.getColor(R.color.main_title)
+            AppUtil.getColor(R.color.main_title)
         )
         textHeaderTipColor?.let { tvTip?.setTextColor(it) }
         typedArray?.recycle()

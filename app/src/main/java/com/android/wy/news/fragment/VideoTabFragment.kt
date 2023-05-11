@@ -1,7 +1,6 @@
 package com.android.wy.news.fragment
 
 import android.content.Context
-import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -15,8 +14,8 @@ import com.android.wy.news.databinding.FragmentTabVideoBinding
 import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.JsoupManager
-import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.manager.VideoLayoutManager
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.ScreenVideoView
 import com.android.wy.news.viewmodel.VideoTabViewModel
@@ -144,7 +143,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun playVideo(position: Int) {
-        Handler(Looper.getMainLooper()).post {
+        TaskUtil.runOnUiThread {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
             if (holder is VideoAdapter.VideoViewHolder) {
                 val tag = holder.playVideo.tag
@@ -156,9 +155,9 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun getRealUrl(screenVideoView: ScreenVideoView, vid: String) {
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             val videoUrl = JsoupManager.getVideoUrl(vid)
-            Handler(Looper.getMainLooper()).post {
+            TaskUtil.runOnUiThread {
                 screenVideoView.setUp(videoUrl)
                 screenVideoView.play()
             }

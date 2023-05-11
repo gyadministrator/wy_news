@@ -3,8 +3,6 @@ package com.android.wy.news.activity
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
@@ -35,13 +33,12 @@ import com.android.wy.news.locationselect.model.City
 import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
-import com.android.wy.news.manager.LrcDesktopManager
-import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.BatteryManageUtil
 import com.android.wy.news.util.PermissionCheckUtil
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
@@ -104,7 +101,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             marqueeTextView.setList(list)
             marqueeTextView.startScroll()
         }
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
     }
@@ -137,7 +134,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     override fun initView() {
         val checkPermission = PermissionHelper.checkPermission(this, Permission.WRITE_SETTINGS)
         if (!checkPermission) {
-            Handler(Looper.getMainLooper()).postDelayed({
+            TaskUtil.runOnUiThread({
                 PermissionHelper.requestPermission(this, Permission.WRITE_SETTINGS)
             }, 500)
         }
@@ -171,10 +168,10 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             goLocationPage()
         }
         jumpUrl()
-        Handler(Looper.getMainLooper()).postDelayed({
+        TaskUtil.runOnUiThread({
             checkNotification()
         }, 1000)
-        Handler(Looper.getMainLooper()).postDelayed({
+        TaskUtil.runOnUiThread({
             guideNotification()
         }, 2000)
     }
@@ -203,7 +200,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             val url = o.url
             val noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
             if (noticeStatus == true) {
-                Handler(Looper.getMainLooper()).postDelayed({
+                TaskUtil.runOnUiThread({
                     WebActivity.startActivity(this, url = url)
                 }, 500)
             } else {
@@ -249,7 +246,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                 override fun onLocate() {
                     MapsInitializer.updatePrivacyShow(this@HomeActivity, true, true)
                     MapsInitializer.updatePrivacyAgree(this@HomeActivity, true)
-                    Handler(Looper.getMainLooper()).postDelayed({
+                    TaskUtil.runOnUiThread({
                         LocationHelper.startLocation(this@HomeActivity,
                             object : LocationHelper.OnLocationListener {
                                 override fun success(aMapLocation: AMapLocation) {
@@ -291,7 +288,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     }
 
     private fun jumpUrl() {
-        Handler(Looper.getMainLooper()).postDelayed({
+        TaskUtil.runOnUiThread({
             val intent = intent
             if (intent.hasExtra(WebActivity.WEB_URL)) {
                 val url = intent.getStringExtra(WebActivity.WEB_URL).toString()
@@ -392,12 +389,6 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             LocationHelper.destroyLocation()
             //暂时消失当前activity，移动到后台
             moveTaskToBack(true)
-            val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
-            if (isShowDesktopLrc != null && isShowDesktopLrc == true) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    LrcDesktopManager.showDesktopLrc(this)
-                }, 1000)
-            }
             //finish()
             //exitProcess(0)
         }

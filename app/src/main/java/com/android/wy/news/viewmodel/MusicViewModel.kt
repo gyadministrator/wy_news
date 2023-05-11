@@ -10,8 +10,8 @@ import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
-import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.TaskUtil
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,7 +28,7 @@ class MusicViewModel : BaseViewModel() {
     val musicUrl = MutableLiveData<String?>()
 
     fun getCookie() {
-        ThreadExecutorManager.mInstance.startExecute {
+        TaskUtil.runOnThread {
             val success = JsoupManager.getCookie()
             isSuccess.postValue(success)
         }

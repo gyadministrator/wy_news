@@ -1,7 +1,5 @@
 package com.android.wy.news.fragment
 
-import android.os.Handler
-import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +24,8 @@ import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.location.LocationHelper
-import com.android.wy.news.manager.ThreadExecutorManager
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.TopViewModel
@@ -88,7 +86,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         AMapLocationClient.setApiKey(Constants.LOCATION_KEY)
         MapsInitializer.updatePrivacyShow(mActivity, true, true)
         MapsInitializer.updatePrivacyAgree(mActivity, true)
-        Handler(Looper.getMainLooper()).postDelayed({
+        TaskUtil.runOnUiThread({
             LocationHelper.startLocation(mActivity, object : LocationHelper.OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
                     currentCity = aMapLocation.city
@@ -177,7 +175,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         mViewModel.cityNewsList.observe(this) {
             loadingView.visibility = View.GONE
             addBannerHeader(it)
-            ThreadExecutorManager.mInstance.startExecute {
+            TaskUtil.runOnThread {
                 var noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
                 if (noticeStatus == null) noticeStatus = false
                 if (!isNotify && !noticeStatus) {

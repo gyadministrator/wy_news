@@ -9,6 +9,7 @@ import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.shortcut.ShortCutHelper
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.AppFrontBack
@@ -63,10 +64,15 @@ class App : Application() {
         AppFrontBack.register(this, object : AppFrontBackListener {
             override fun onBack(activity: Activity?) {
                 Logger.i(getString(R.string.app_name) + "app onBack")
+                val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
+                if (isShowDesktopLrc != null && isShowDesktopLrc == true) {
+                    activity?.let { LrcDesktopManager.showDesktopLrc(it, 0) }
+                }
             }
 
             override fun onFront(activity: Activity?) {
                 Logger.i(getString(R.string.app_name) + "app onFront")
+                LrcDesktopManager.removeView()
             }
         })
     }

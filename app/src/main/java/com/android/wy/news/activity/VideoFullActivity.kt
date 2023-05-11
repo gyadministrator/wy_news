@@ -3,23 +3,19 @@ package com.android.wy.news.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.ScreenVideoAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityVideoFullBinding
 import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.VideoLayoutManager
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.viewmodel.VideoFullViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -207,7 +203,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     private fun playVideo(position: Int) {
-        Handler(Looper.getMainLooper()).post {
+        TaskUtil.runOnUiThread {
             val holder = rvContent.findViewHolderForAdapterPosition(position)
             if (holder is ScreenVideoAdapter.ScreenViewHolder) {
                 holder.playVideo.play()
