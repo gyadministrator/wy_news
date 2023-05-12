@@ -101,6 +101,16 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         this.currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
         if (this.currentMusicInfo != null) {
             showPlayBar()
+        } else {
+            hidePlayBar()
+        }
+    }
+
+    private fun hidePlayBar() {
+        if (mActivity is HomeActivity) {
+            val homeActivity = mActivity as HomeActivity
+            playBarView = homeActivity.getPlayBarView()
+            playBarView?.visibility = View.GONE
         }
     }
 

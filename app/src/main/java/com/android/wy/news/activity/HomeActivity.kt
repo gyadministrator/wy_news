@@ -19,6 +19,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.LiveTabFragment
@@ -41,6 +42,7 @@ import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.NewsMainViewModel
+import com.google.gson.Gson
 import com.gyf.immersionbar.ImmersionBar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -303,7 +305,12 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         if (position != 3) {
             playBarView.visibility = View.GONE
         } else {
-            playBarView.visibility = View.VISIBLE
+            val gson = Gson()
+            val s = SpTools.getString(Constants.LAST_PLAY_MUSIC_KEY)
+            val musicInfo = gson.fromJson(s, MusicInfo::class.java)
+            if (musicInfo != null) {
+                playBarView.visibility = View.VISIBLE
+            }
         }
     }
 
