@@ -48,7 +48,7 @@ class CustomLoadingView : View {
 
         loadPaint = Paint()
         loadPaint?.style = Paint.Style.FILL
-        loadPaint?.color = AppUtil.getColor(R.color.load_color)
+        loadPaint?.color = context.resources.getColor(R.color.load_color)
     }
 
     override fun onDraw(canvas: Canvas?) {

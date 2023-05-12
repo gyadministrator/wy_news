@@ -28,7 +28,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
-            android:src="@mipmap/icon"
+            android:src="@mipmap/ic_launcher"
             tools:ignore="ContentDescription" />
 
         <TextView

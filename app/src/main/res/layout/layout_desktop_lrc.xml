@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:gravity="center"
+        android:lineSpacingExtra="4dp"
         android:textColor="@color/desktop_lrc_color"
         android:textSize="16sp"
-        tools:text="123dsdsdsdssddsdsdsds" />
+        tools:text="123dsdsdsdssddsdsdsds123dsdsdsdssddsdsdsds123dsdsdsdssddsdsdsds123dsdsdsdssddsdsdsds123dsdsdsdssddsdsdsds" />
 </LinearLayout>

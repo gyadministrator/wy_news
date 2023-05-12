@@ -65,7 +65,7 @@ class MusicNotifyHelper(context: Context) {
         return NotificationCompat.Builder(mContext, channelId)
             //设置不可手动清除，除非app死掉或者在代码中取消
             .setOngoing(true)
-            .setSmallIcon(R.mipmap.notice)
+            .setSmallIcon(R.mipmap.ic_notify)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             //会有边距
             //.setStyle(androidx.media.app.NotificationCompat.MediaStyle())

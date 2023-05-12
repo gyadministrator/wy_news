@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wy.news.R
+import com.android.wy.news.app.App
 import com.android.wy.news.util.AppUtil
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshKernel
@@ -34,10 +35,12 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         tvTip = view.findViewById(R.id.tv_tip)
 
         val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshHeader)
-        textHeaderTipColor = typedArray?.getColor(
-            R.styleable.CustomRefreshHeader_textHeaderTipColor,
-            AppUtil.getColor(R.color.main_title)
-        )
+        textHeaderTipColor = context?.resources?.getColor(R.color.main_title)?.let {
+            typedArray?.getColor(
+                R.styleable.CustomRefreshHeader_textHeaderTipColor,
+                it
+            )
+        }
         textHeaderTipColor?.let { tvTip?.setTextColor(it) }
         typedArray?.recycle()
     }
@@ -51,7 +54,7 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         refreshLayout: RefreshLayout, oldState: RefreshState, newState: RefreshState
     ) {
         when (newState) {
-            RefreshState.PullDownToRefresh -> mImage?.setImageResource(R.drawable.icon)
+            RefreshState.PullDownToRefresh -> mImage?.setImageResource(R.mipmap.ic_launcher)
             RefreshState.ReleaseToRefresh -> {
                 mImage?.setImageResource(R.drawable.anim_pull_end)
                 mAnimPull = mImage?.drawable as AnimationDrawable

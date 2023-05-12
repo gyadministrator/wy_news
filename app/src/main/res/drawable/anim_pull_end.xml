@@ -3,23 +3,23 @@
     android:oneshot="true">
 
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@mipmap/ic_launcher"
         android:duration="100" />
 
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@mipmap/ic_launcher"
         android:duration="100" />
 
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@mipmap/ic_launcher"
         android:duration="100" />
 
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@mipmap/ic_launcher"
         android:duration="100" />
 
     <item
-        android:drawable="@drawable/icon"
+        android:drawable="@mipmap/ic_launcher"
         android:duration="100" />
 
 </animation-list>

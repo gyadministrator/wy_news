@@ -36,10 +36,12 @@ class CustomRefreshFooter : LinearLayout, RefreshFooter {
         tvFooterTip = view.findViewById(R.id.tv_footer_tip)
 
         val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshFooter)
-        textFooterTipColor = typedArray?.getColor(
-            R.styleable.CustomRefreshFooter_textFooterTipColor,
-            AppUtil.getColor(R.color.main_title)
-        )
+        textFooterTipColor = context?.resources?.getColor(R.color.main_title)?.let {
+            typedArray?.getColor(
+                R.styleable.CustomRefreshFooter_textFooterTipColor,
+                it
+            )
+        }
         textFooterTipColor?.let { tvFooterTip?.setTextColor(it) }
         textFooterTipColor?.let { mImage?.setIndicatorColor(it) }
         typedArray?.recycle()

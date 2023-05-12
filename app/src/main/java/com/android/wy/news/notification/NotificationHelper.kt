@@ -8,12 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
-import com.android.wy.news.activity.HomeActivity
-import com.android.wy.news.activity.SplashActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Constants
@@ -22,7 +21,7 @@ import com.android.wy.news.receiver.NotificationReceiver
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 
 
@@ -40,7 +39,7 @@ class NotificationHelper {
         private const val CHANNEL_NAME = "新闻快报通知栏"
 
         private fun sendNormalNotification(
-            context: Context, pendingIntent: PendingIntent, title: String, content: String
+            context: Context, pendingIntent: PendingIntent
         ): Notification {
             initNotificationManager(context)
             //notificationManager?.notify(getNotifyId(), notification)
@@ -49,17 +48,17 @@ class NotificationHelper {
                 //设置点击通知后自动清除通知
                 .setAutoCancel(true)
                 //设置通知的标题内容
-                .setContentTitle(title)
+                .setContentTitle("你好")
                 //设置通知的正文内容
-                .setContentText(content)
+                .setContentText("测试")
                 //设置通知被创建的时间
                 .setWhen(System.currentTimeMillis())
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-                .setSmallIcon(R.mipmap.notice)
+                .setSmallIcon(R.mipmap.ic_notify)
                 //设置通知的大图标
                 //下拉系统状态栏时就能看见
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.icon))
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
                 //设置点击通知后的跳转意图
                 .setContentIntent(pendingIntent)
                 //设置自定义通知
@@ -172,17 +171,15 @@ class NotificationHelper {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-            return sendNormalNotification(
-                context, pendingIntent = pendingIntent, "你好", "测试"
-            )
+            return sendNormalNotification(context, pendingIntent = pendingIntent)
         }
 
         fun sendCustomNotification(context: Context, house: House) {
             // 直接要打开的Intent放到最后，其余的依次倒序放置，先打开先被覆盖。
-            val intents: Array<Intent> = arrayOf(
+            /*val intents: Array<Intent> = arrayOf(
                 Intent(context, SplashActivity::class.java),
                 Intent(context, HomeActivity::class.java)
-            )
+            )*/
             //当 Activity 的启动模式是 singleTask 或者 singleInstance 的时候。
             //如果使用了 intent 传值，则可能出现 intent 的值无法更新的问题。
             //也就是说每次 intent 接收到的值都是第一次接到的值。因为 intent 没有被更新。
@@ -245,7 +242,7 @@ class NotificationHelper {
                 .setWhen(System.currentTimeMillis())
                 //设置通知的小图标
                 //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-                .setSmallIcon(R.mipmap.notice)
+                .setSmallIcon(R.mipmap.ic_notify)
                 //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
                 .setContentTitle(house?.source)
                 .setContentText(house?.title)
@@ -303,7 +300,7 @@ class NotificationHelper {
             builder.setLargeIcon(
                 BitmapFactory.decodeResource(
                     context.resources,
-                    R.mipmap.icon
+                    R.mipmap.ic_launcher
                 )
             )
             //builder.build().flags = NotificationCompat.FLAG_NO_CLEAR
@@ -322,7 +319,7 @@ class NotificationHelper {
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                             )
                             //设置为这种格式去掉透明度通道，可以减少内存占有
-                            .format(DecodeFormat.PREFER_RGB_565).into(object : SimpleTarget<Bitmap>(
+                            .format(DecodeFormat.PREFER_RGB_565).into(object : CustomTarget<Bitmap>(
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
                                 com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
                             ) {
@@ -330,8 +327,11 @@ class NotificationHelper {
                                     resource: Bitmap, transition: Transition<in Bitmap?>?
                                 ) {
                                     builder.setLargeIcon(resource)
-                                    //builder.build().flags = NotificationCompat.FLAG_NO_CLEAR
                                     notificationManager?.notify(id, builder.build())
+                                }
+
+                                override fun onLoadCleared(placeholder: Drawable?) {
+
                                 }
                             })
                     }
@@ -342,7 +342,7 @@ class NotificationHelper {
         fun sendProgressNotification(context: Context, progress: Int, isFinish: Boolean) {
             initNotificationManager(context)
             val builder = NotificationCompat.Builder(context, CHANNEL_ID).setOngoing(true)
-                .setSmallIcon(R.mipmap.icon) //小图标
+                .setSmallIcon(R.mipmap.ic_notify) //小图标
                 .setContentTitle("正在下载...")  //通知标题
                 //.setContentIntent(pendingIntent) //点击通知栏跳转到指定页面
                 .setAutoCancel(true)    //点击通知后关闭通知
