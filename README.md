@@ -15,3 +15,5 @@ app截图
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_8.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_9.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_10.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_11.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_12.png)
