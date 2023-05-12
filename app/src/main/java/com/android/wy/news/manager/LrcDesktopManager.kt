@@ -69,7 +69,8 @@ object LrcDesktopManager {
             mParams = WindowManager.LayoutParams()
             val screenWidth = CommonTools.getScreenWidth()
             mParams?.width = screenWidth * 9 / 10
-            mParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            mParams?.height =
+                CommonTools.dip2px(activity, 150f)/*ViewGroup.LayoutParams.WRAP_CONTENT*/
             //窗口位置
             mParams?.gravity = Gravity.CENTER_VERTICAL
             //位图格式 半透明
