@@ -10,14 +10,14 @@
     android:padding="6dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="150dp"
-        android:layout_height="150dp">
+        android:layout_width="120dp"
+        android:layout_height="120dp">
 
         <ImageView
             android:id="@+id/iv_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:src="@mipmap/ic_launcher"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="3"
-            android:textColor="@color/tip_toast_color"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
