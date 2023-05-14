@@ -400,8 +400,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         ft?.addToBackStack(null)
         val gson = Gson()
         val s = gson.toJson(this.currentMusicInfo)
-        val lrcFragment = LrcFragment.newInstance(currentPosition, s, currentPlayUrl)
-        ft?.let { lrcFragment.show(ft, LrcFragment.TAG) }
+        //val lrcFragment = LrcFragment.newInstance(currentPosition, s, currentPlayUrl)
+        val playMusicFragment = PlayMusicFragment.newInstance(currentPosition, s, currentPlayUrl)
+        ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
     }
 
     private fun showPlayBar() {
