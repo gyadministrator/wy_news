@@ -54,7 +54,7 @@ object LrcDesktopManager {
     fun showDesktopLrc(activity: Activity, time: Long) {
         val background = AppUtil.isBackground(activity)
         if (!background) return
-        currentLrc = getLrcText(time)
+        currentLrc = CommonTools.getLrcText(Constants.currentLrcData, time)
         if (hasAddView) {
             val tvLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_lrc)
             tvLrc?.text = currentLrc
@@ -166,27 +166,5 @@ object LrcDesktopManager {
             }
             true
         }
-    }
-
-    private fun getLrcText(time: Long): String {
-        //注意 time 单位为ms lrc.time 为s
-        var linePos = 0
-        val lrcCount = Constants.currentLrcData.size
-        if (lrcCount == 0) {
-            return "暂无歌词"
-        }
-        for (i in 0 until lrcCount) {
-            val lrc = Constants.currentLrcData[i]
-            if (time >= (lrc.time) * 1000) {
-                if (i == lrcCount - 1) {
-                    linePos = lrcCount - 1
-                } else if (time < (Constants.currentLrcData[i + 1].time) * 1000) {
-                    linePos = i
-                    break
-                }
-            }
-        }
-        val lrc = Constants.currentLrcData[linePos]
-        return lrc.text
     }
 }

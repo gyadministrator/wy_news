@@ -40,6 +40,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
             tabLayout.setupWithViewPager(viewPager)
             tabLayout.initLayout()
             viewPager.isSaveEnabled = false
+            tabLayout.setSelectedTabIndicatorHeight(0)
         }
     }
 

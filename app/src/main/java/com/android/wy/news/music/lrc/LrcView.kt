@@ -45,7 +45,7 @@ class LrcView : View {
         private const val DEFAULT_CONTENT = "暂无歌词"
 
         //相对行间距，相对字体大小，0.5f表示行间距为0.5倍的字体高度
-        private const val spacingMult = 0.5f
+        private const val spacingMult = 0.8f
 
         //在基础行距上添加多少
         private const val spacingAdd = 0f

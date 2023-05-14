@@ -43,9 +43,9 @@ class PlayMusicFragment : DialogFragment() {
     private var viewPager: ViewPager? = null
 
     companion object {
-        private const val POSITION_KEY = "position_key"
-        private const val MUSIC_INFO_KEY = "music_info_key"
-        private const val MUSIC_URL_KEY = "music_url_key"
+        const val POSITION_KEY = "position_key"
+        const val MUSIC_INFO_KEY = "music_info_key"
+        const val MUSIC_URL_KEY = "music_url_key"
         const val TAG = "PlayMusicFragment"
 
         fun newInstance(position: Int, musicInfoJson: String, url: String?): PlayMusicFragment {
@@ -89,7 +89,6 @@ class PlayMusicFragment : DialogFragment() {
     }
 
     private fun initData() {
-        initTab()
         val args = arguments
         if (args != null) {
             currentPosition = args.getInt(POSITION_KEY)
@@ -100,6 +99,7 @@ class PlayMusicFragment : DialogFragment() {
                 currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
             }
         }
+        initTab()
         ivBg?.let {
             Glide.with(this).load(this.currentMusicInfo?.pic)
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)

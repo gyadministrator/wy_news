@@ -49,6 +49,7 @@ class LiveTabFragment : BaseFragment<FragmentTabLiveBinding, LiveTabViewModel>()
             tabLayout.setupWithViewPager(viewPager)
             tabLayout.initLayout()
             viewPager.isSaveEnabled = false
+            tabLayout.setSelectedTabIndicatorHeight(0)
         }
     }
 

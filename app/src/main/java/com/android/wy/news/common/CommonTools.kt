@@ -523,5 +523,27 @@ class CommonTools {
             }
             return dataMap
         }
+
+        fun getLrcText(lrcList: ArrayList<Lrc>, time: Long): String {
+            //注意 time 单位为ms lrc.time 为s
+            var linePos = 0
+            val lrcCount = lrcList.size
+            if (lrcCount == 0) {
+                return "暂无歌词"
+            }
+            for (i in 0 until lrcCount) {
+                val lrc = lrcList[i]
+                if (time >= (lrc.time) * 1000) {
+                    if (i == lrcCount - 1) {
+                        linePos = lrcCount - 1
+                    } else if (time < (lrcList[i + 1].time) * 1000) {
+                        linePos = i
+                        break
+                    }
+                }
+            }
+            val lrc = lrcList[linePos]
+            return lrc.text
+        }
     }
 }

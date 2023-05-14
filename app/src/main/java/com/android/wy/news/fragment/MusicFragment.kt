@@ -392,7 +392,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private fun showLrcPage() {
         val fragmentManager = (mActivity as AppCompatActivity).supportFragmentManager
         var ft: FragmentTransaction? = fragmentManager.beginTransaction()
-        val prev: Fragment? = fragmentManager.findFragmentByTag(LrcFragment.TAG)
+        val prev: Fragment? = fragmentManager.findFragmentByTag(PlayMusicFragment.TAG)
         if (prev != null) {
             ft?.remove(prev)?.commit()
             ft = fragmentManager.beginTransaction()
@@ -400,7 +400,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         ft?.addToBackStack(null)
         val gson = Gson()
         val s = gson.toJson(this.currentMusicInfo)
-        //val lrcFragment = LrcFragment.newInstance(currentPosition, s, currentPlayUrl)
         val playMusicFragment = PlayMusicFragment.newInstance(currentPosition, s, currentPlayUrl)
         ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
     }
