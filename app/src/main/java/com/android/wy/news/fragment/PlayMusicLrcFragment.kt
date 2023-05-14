@@ -12,6 +12,7 @@ import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
+import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.music.lrc.LrcView
 import com.android.wy.news.viewmodel.PlayMusicLrcViewModel
 import com.google.gson.Gson
@@ -25,6 +26,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     private var lrcView: LrcView? = null
     private var currentMusicInfo: MusicInfo? = null
     private var mediaHelper: MediaPlayerHelper? = null
+    private var currentLrcList = ArrayList<Lrc>()
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -73,7 +75,9 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
                         val lrcList = musicLrcData.lrclist
                         if (lrcList.isNotEmpty()) {
                             val realLrcList = CommonTools.parseLrc(lrcList)
-                            lrcView?.setLrcData(realLrcList)
+                            currentLrcList.clear()
+                            currentLrcList.addAll(realLrcList)
+                            lrcView?.setLrcData(currentLrcList)
                         }
                     }
                 }
@@ -97,6 +101,9 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         Logger.i("LrcFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
+            if (currentLrcList.size == 0) {
+                setMusic()
+            }
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
             lrcView?.updateTime(o.time.toLong())
         } else if (o is MusicInfoEvent) {
@@ -110,6 +117,13 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
         getLrc()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden){
+            setMusic()
+        }
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {

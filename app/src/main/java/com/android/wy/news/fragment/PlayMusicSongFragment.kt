@@ -122,6 +122,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         Logger.i("PlayMusicSongFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
+            if (currentLrcList.size == 0) {
+                getLrc()
+            }
             roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
             val lrcText = CommonTools.getLrcText(currentLrcList, o.time.toLong())
@@ -147,6 +150,13 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             val dataList = o.dataList
             Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
             musicListDialog?.setData(dataList)
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden){
+            getLrc()
         }
     }
 
@@ -285,6 +295,8 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun setMusic() {
+        val lrcText = CommonTools.getLrcText(currentLrcList, 0)
+        tvLrc?.text = lrcText
         getLrc()
         roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
@@ -315,8 +327,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
                             val realLrcList = CommonTools.parseLrc(lrcList)
                             currentLrcList.clear()
                             currentLrcList.addAll(realLrcList)
-                            val lrcText = CommonTools.getLrcText(currentLrcList, 0)
-                            tvLrc?.text = lrcText
                         }
                     }
                 }
