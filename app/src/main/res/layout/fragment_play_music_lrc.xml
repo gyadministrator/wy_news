@@ -34,8 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
-        android:layout_weight="1"
         android:layout_marginTop="20dp"
+        android:layout_weight="1"
         app:currentIndicateLrcColor="@color/select_indicator_color"
         app:indicatorLineColor="@color/select_indicator_color"
         app:lrcCurrentTextColor="@color/text_select_color"
@@ -43,4 +43,9 @@
         app:lrcNormalTextColor="@color/main_title"
         app:lrcTextSize="18sp"
         app:noLrcTextColor="@color/main_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1" />
 </LinearLayout>
