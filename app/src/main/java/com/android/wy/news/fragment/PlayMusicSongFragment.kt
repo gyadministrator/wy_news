@@ -12,6 +12,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicSongBinding
 import com.android.wy.news.dialog.LoadingDialog
@@ -21,12 +22,10 @@ import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.PlayEvent
-import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicPlayMode
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.service.MusicPlayService
@@ -66,7 +65,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var index = 0
     private var musicListDialog: MusicListDialog? = null
     private var currentPlayUrl: String? = null
-    private var currentLrcList = ArrayList<Lrc>()
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -122,12 +120,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         Logger.i("PlayMusicSongFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
-            if (currentLrcList.size == 0) {
-                getLrc()
-            }
             roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            val lrcText = CommonTools.getLrcText(currentLrcList, o.time.toLong())
+            val lrcText = CommonTools.getLrcText(Constants.currentLrcData, o.time.toLong())
             tvLrc?.text = lrcText
             if (!isDragSeek) {
                 sbMusic?.progress = o.time
@@ -150,13 +145,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             val dataList = o.dataList
             Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
             musicListDialog?.setData(dataList)
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden){
-            getLrc()
         }
     }
 
@@ -295,9 +283,8 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun setMusic() {
-        val lrcText = CommonTools.getLrcText(currentLrcList, 0)
+        val lrcText = CommonTools.getLrcText(Constants.currentLrcData, 0)
         tvLrc?.text = lrcText
-        getLrc()
         roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
         tvEnd?.text =
@@ -310,27 +297,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             checkState(MusicState.STATE_PLAY)
         } else {
             checkState(MusicState.STATE_PAUSE)
-        }
-    }
-
-    private fun getLrc() {
-        val musicId = this.currentMusicInfo?.musicrid
-        if (musicId!!.contains("_")) {
-            val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
-            MusicRepository.getMusicLrc(mid).observe(this) {
-                val musicLrcEntity = it.getOrNull()
-                if (musicLrcEntity != null) {
-                    val musicLrcData = musicLrcEntity.data
-                    if (musicLrcData != null) {
-                        val lrcList = musicLrcData.lrclist
-                        if (lrcList.isNotEmpty()) {
-                            val realLrcList = CommonTools.parseLrc(lrcList)
-                            currentLrcList.clear()
-                            currentLrcList.addAll(realLrcList)
-                        }
-                    }
-                }
-            }
         }
     }
 

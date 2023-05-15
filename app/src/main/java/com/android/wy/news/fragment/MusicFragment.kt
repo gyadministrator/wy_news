@@ -124,6 +124,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     fun onEvent(o: Any) {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
+            if (Constants.currentLrcData.size == 0) {
+                getLrc()
+            }
             playBarView?.updateProgress(o.time)
             LrcDesktopManager.showDesktopLrc(mActivity, o.time.toLong())
             val lrc = currentLrcList?.get(getTimeLinePosition(o.time.toLong()))

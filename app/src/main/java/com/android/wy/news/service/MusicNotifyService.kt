@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
+import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
@@ -146,6 +147,7 @@ class MusicNotifyService : Service() {
 
             override fun onCompleteState() {
                 Logger.i("onCompleteState: ")
+                Constants.currentLrcData.clear()
                 timer?.cancel()
                 timer = null
                 receiverIntent.action = MUSIC_COMPLETE_ACTION

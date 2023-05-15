@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Constants
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicLrcBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
-import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
-import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.music.lrc.LrcView
 import com.android.wy.news.viewmodel.PlayMusicLrcViewModel
 import com.google.gson.Gson
@@ -26,7 +25,6 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     private var lrcView: LrcView? = null
     private var currentMusicInfo: MusicInfo? = null
     private var mediaHelper: MediaPlayerHelper? = null
-    private var currentLrcList = ArrayList<Lrc>()
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -63,28 +61,6 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         setMusic()
     }
 
-    private fun getLrc() {
-        val musicId = this.currentMusicInfo?.musicrid
-        if (musicId!!.contains("_")) {
-            val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
-            MusicRepository.getMusicLrc(mid).observe(this) {
-                val musicLrcEntity = it.getOrNull()
-                if (musicLrcEntity != null) {
-                    val musicLrcData = musicLrcEntity.data
-                    if (musicLrcData != null) {
-                        val lrcList = musicLrcData.lrclist
-                        if (lrcList.isNotEmpty()) {
-                            val realLrcList = CommonTools.parseLrc(lrcList)
-                            currentLrcList.clear()
-                            currentLrcList.addAll(realLrcList)
-                            lrcView?.setLrcData(currentLrcList)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     override fun initEvent() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
@@ -101,9 +77,6 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         Logger.i("LrcFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
-            if (currentLrcList.size == 0) {
-                setMusic()
-            }
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
             lrcView?.updateTime(o.time.toLong())
         } else if (o is MusicInfoEvent) {
@@ -116,14 +89,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     private fun setMusic() {
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
-        getLrc()
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden){
-            setMusic()
-        }
+        lrcView?.setLrcData(Constants.currentLrcData)
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {
