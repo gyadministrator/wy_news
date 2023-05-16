@@ -2,7 +2,7 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
@@ -39,7 +39,7 @@ class NewsViewModel : BaseViewModel() {
 
     fun getNewsList(tid: String, pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.BASE_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.BASE_URL, IApiService::class.java)
         val observable = apiService.getNewsList(tid, pageStart)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

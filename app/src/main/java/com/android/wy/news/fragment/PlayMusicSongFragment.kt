@@ -12,7 +12,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicSongBinding
 import com.android.wy.news.dialog.LoadingDialog
@@ -122,7 +122,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             Logger.i("onEvent--->>>time:${o.time}")
             roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            val lrcText = CommonTools.getLrcText(Constants.currentLrcData, o.time.toLong())
+            val lrcText = CommonTools.getLrcText(GlobalData.currentLrcData, o.time.toLong())
             tvLrc?.text = lrcText
             if (!isDragSeek) {
                 sbMusic?.progress = o.time
@@ -283,7 +283,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun setMusic() {
-        val lrcText = CommonTools.getLrcText(Constants.currentLrcData, 0)
+        val lrcText = CommonTools.getLrcText(GlobalData.currentLrcData, 0)
         tvLrc?.text = lrcText
         roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!

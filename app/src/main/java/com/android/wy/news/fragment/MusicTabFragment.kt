@@ -5,7 +5,7 @@ import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabMusicBinding
 import com.android.wy.news.viewmodel.MusicTabViewModel
 
@@ -23,7 +23,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     override fun initData() {
-        val titleList = Constants.mMusicTitleList
+        val titleList = GlobalData.mMusicTitleList
         val fragments = ArrayList<Fragment>()
         val mTitles = arrayListOf<String>()
         if (titleList.size > 0) {

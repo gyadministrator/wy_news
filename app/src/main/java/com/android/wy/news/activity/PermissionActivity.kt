@@ -4,14 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityPermissionBinding
 import com.android.wy.news.databinding.LayoutPermissionItemBinding
 import com.android.wy.news.entity.PermissionEntity
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.viewmodel.PermissionViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+@Route(path = RouteManager.PATH_ACTIVITY_PERMISSION)
 class PermissionActivity : BaseActivity<ActivityPermissionBinding, PermissionViewModel>() {
     private lateinit var llContent: LinearLayout
 

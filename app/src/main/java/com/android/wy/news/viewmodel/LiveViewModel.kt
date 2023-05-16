@@ -1,9 +1,8 @@
 package com.android.wy.news.viewmodel
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.LiveEntity
 import com.android.wy.news.entity.LiveReview
 import com.android.wy.news.http.HttpManager
@@ -19,7 +18,7 @@ class LiveViewModel : BaseViewModel() {
 
     fun getLiveContentList(liveId: Int, pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.LIVE_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.LIVE_URL, IApiService::class.java)
         val observable = apiService.getLiveList(liveId, pageStart)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

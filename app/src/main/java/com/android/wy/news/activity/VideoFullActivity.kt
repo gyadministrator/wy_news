@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.R
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.ScreenVideoAdapter
@@ -14,6 +15,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityVideoFullBinding
 import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.manager.VideoLayoutManager
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.viewmodel.VideoFullViewModel
@@ -24,6 +26,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 
+@Route(path = RouteManager.PATH_ACTIVITY_VIDEO_FULL)
 class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewModel>(),
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<ScreenVideoEntity>,
     OnViewPagerListener, ScreenVideoAdapter.OnScreenVideoListener {

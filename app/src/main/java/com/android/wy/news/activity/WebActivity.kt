@@ -9,8 +9,10 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.LinearLayout
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityWebBinding
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.view.TitleBarView
@@ -18,6 +20,7 @@ import com.android.wy.news.viewmodel.WebViewModel
 import com.just.agentweb.AgentWeb
 import com.just.agentweb.WebChromeClient
 
+@Route(path = RouteManager.PATH_ACTIVITY_WEB)
 class WebActivity : BaseActivity<ActivityWebBinding, WebViewModel>() {
     private var url: String? = null
     private lateinit var llContent: LinearLayout

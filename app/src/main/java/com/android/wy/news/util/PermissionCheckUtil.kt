@@ -18,8 +18,7 @@ import java.lang.reflect.Method
   * @Version:        1.0
   * @Description:    
  */
-class PermissionCheckUtil {
-    companion object {
+object PermissionCheckUtil {
         //判断是否开启悬浮窗权限   context可以用你的Activity.或者this
         fun checkFloatPermission(context: Context): Boolean {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -82,5 +81,4 @@ class PermissionCheckUtil {
                 //无需处理了
             }
         }
-    }
 }

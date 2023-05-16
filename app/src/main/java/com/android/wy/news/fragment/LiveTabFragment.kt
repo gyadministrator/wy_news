@@ -7,7 +7,7 @@ import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabLiveBinding
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.LiveTabViewModel
@@ -30,7 +30,7 @@ class LiveTabFragment : BaseFragment<FragmentTabLiveBinding, LiveTabViewModel>()
     }
 
     override fun initData() {
-        val titleList = Constants.mNewsLiveTitleList
+        val titleList = GlobalData.mNewsLiveTitleList
         val fragments = ArrayList<Fragment>()
         val mTitles = arrayListOf<String>()
         if (titleList.size > 0) {

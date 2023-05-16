@@ -1,11 +1,9 @@
 package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.HotEntity
 import com.android.wy.news.entity.HotWord
-import com.android.wy.news.entity.RollHotWord
-import com.android.wy.news.entity.RollingWordEntity
 import com.android.wy.news.entity.SearchEntity
 import com.android.wy.news.entity.SearchResult
 import com.android.wy.news.http.HttpManager
@@ -23,7 +21,7 @@ class SearchViewModel : BaseViewModel() {
 
     fun getSearchPageList(query: String, pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.SEARCH_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.SEARCH_URL, IApiService::class.java)
         val observable = apiService.getPageSearch(query = query, pageStart)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -48,7 +46,7 @@ class SearchViewModel : BaseViewModel() {
 
     fun getRefreshSearchList(query: String) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.SEARCH_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.SEARCH_URL, IApiService::class.java)
         val observable = apiService.getFirstSearch(query = query)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -73,7 +71,7 @@ class SearchViewModel : BaseViewModel() {
 
     fun getHot() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.HOT_WORD_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.HOT_WORD_URL, IApiService::class.java)
         val observable = apiService.getHot()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

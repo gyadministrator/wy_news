@@ -2,7 +2,7 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.CityNewsEntity
 import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
@@ -24,7 +24,7 @@ class TopViewModel : BaseViewModel() {
 
     fun getTopNews(pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.BASE_HEAD_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.BASE_HEAD_URL, IApiService::class.java)
         val headerNews = apiService.getTopNews(pageStart)
         headerNews.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -42,7 +42,7 @@ class TopViewModel : BaseViewModel() {
 
     fun getCityNews(city: String) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.CITY_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.CITY_URL, IApiService::class.java)
         val headerNews = apiService.getCurrentCityNewsList(city)
         headerNews.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -62,7 +62,7 @@ class TopViewModel : BaseViewModel() {
 
     fun getTopNewsData() {
         TaskUtil.runOnThread {
-            val list = JsoupManager.getTopNews(Constants.HOT_NEWS_URL)
+            val list = JsoupManager.getTopNews(GlobalConstant.HOT_NEWS_URL)
             hotNewsList.postValue(list)
         }
     }

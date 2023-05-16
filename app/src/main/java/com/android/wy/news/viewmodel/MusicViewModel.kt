@@ -2,7 +2,7 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.app.App
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.entity.music.MusicUrlEntity
@@ -40,7 +40,7 @@ class MusicViewModel : BaseViewModel() {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
             val apiService =
                 HttpManager.mInstance.getMusicApiService(
-                    Constants.MUSIC_BASE_URL,
+                    GlobalConstant.MUSIC_BASE_URL,
                     IApiService::class.java
                 )
             val observable = apiService.getMusicUrl(mid)

@@ -8,7 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import cn.jzvd.JzvdStd
 import cn.jzvd.R
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.util.ToastUtil
@@ -91,13 +91,13 @@ class CustomVideoPlayer : JzvdStd {
 
     override fun showWifiDialog() {
         //super.showWifiDialog()
-        val isNoWifiPlay = SpTools.getBoolean(Constants.NO_WIFI_PLAY)
-        val isWifiNotice = SpTools.getBoolean(Constants.IS_WIFI_NOTICE)
-        val isWifiNoticeDialog = SpTools.getBoolean(Constants.IS_WIFI_NOTICE_DIALOG)
+        val isNoWifiPlay = SpTools.getBoolean(GlobalData.SpKey.NO_WIFI_PLAY)
+        val isWifiNotice = SpTools.getBoolean(GlobalData.SpKey.IS_WIFI_NOTICE)
+        val isWifiNoticeDialog = SpTools.getBoolean(GlobalData.SpKey.IS_WIFI_NOTICE_DIALOG)
         if (isNoWifiPlay != null && isNoWifiPlay == true) {
             if (isWifiNotice != null && isWifiNotice == false) {
                 ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
-                SpTools.putBoolean(Constants.IS_WIFI_NOTICE, true)
+                SpTools.putBoolean(GlobalData.SpKey.IS_WIFI_NOTICE, true)
             }
             if (state == STATE_PAUSE) {
                 startButton.performClick()
@@ -117,9 +117,9 @@ class CustomVideoPlayer : JzvdStd {
                 dialogFragment.show(activity.supportFragmentManager, "wy_no_wifi")
                 dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
                     override fun onClickSure() {
-                        SpTools.putBoolean(Constants.NO_WIFI_PLAY, true)
+                        SpTools.putBoolean(GlobalData.SpKey.NO_WIFI_PLAY, true)
                         ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
-                        SpTools.putBoolean(Constants.IS_WIFI_NOTICE_DIALOG, true)
+                        SpTools.putBoolean(GlobalData.SpKey.IS_WIFI_NOTICE_DIALOG, true)
                         if (state == STATE_PAUSE) {
                             startButton.performClick()
                         } else {

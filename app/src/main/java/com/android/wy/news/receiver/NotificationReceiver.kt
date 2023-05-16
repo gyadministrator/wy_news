@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.util.AppUtil
@@ -37,7 +37,7 @@ class NotificationReceiver : BroadcastReceiver() {
                     val rstB = AppUtil.isProcessRunning(p0, uid)
                     if (!(rstA || rstB)) {
                         //指定包名的程序未在运行中
-                        SpTools.putBoolean(Constants.NOTICE_STATUS, true)
+                        SpTools.putBoolean(GlobalData.SpKey.NOTICE_STATUS, true)
                         AppUtil.startApp(p0)
                     }
                 }

@@ -7,13 +7,16 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.SwitchCompat
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySkinBinding
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.viewmodel.SkinViewModel
 
+@Route(path = RouteManager.PATH_ACTIVITY_SKIN)
 class SkinActivity : BaseActivity<ActivitySkinBinding, SkinViewModel>(), View.OnClickListener {
     private lateinit var scSkin: SwitchCompat
     private lateinit var rlLight: RelativeLayout

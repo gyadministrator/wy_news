@@ -8,7 +8,7 @@ import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.LiveAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.databinding.FragmentLiveBinding
 import com.android.wy.news.entity.LiveReview
 import com.android.wy.news.util.ToastUtil
@@ -133,7 +133,7 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefre
     }
 
     override fun onItemClickListener(view: View, data: LiveReview) {
-        val url = Constants.LIVE_WEB_URL + data.roomId + ".html"
+        val url = GlobalConstant.LIVE_WEB_URL + data.roomId + ".html"
         WebActivity.startActivity(mActivity, url)
     }
 

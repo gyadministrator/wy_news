@@ -4,7 +4,8 @@ import android.content.Context
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
@@ -41,7 +42,7 @@ class SplashViewModel : BaseViewModel() {
 
     private fun getSplash() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.SPLASH_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.SPLASH_URL, IApiService::class.java)
         val observable = apiService.getSplash()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -52,8 +53,8 @@ class SplashViewModel : BaseViewModel() {
                     val data = splashEntity.images
                     if (!data.isNullOrEmpty()) {
                         val image = data[0]
-                        val url = Constants.SPLASH_URL + image.url
-                        SpTools.putString(Constants.SPLASH_AD, url)
+                        val url = GlobalConstant.SPLASH_URL + image.url
+                        SpTools.putString(GlobalData.SpKey.SPLASH_AD, url)
                     }
                 }
             }
@@ -68,7 +69,7 @@ class SplashViewModel : BaseViewModel() {
 
     private fun getLiveClassify() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.LIVE_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.LIVE_URL, IApiService::class.java)
         val observable = apiService.getLiveClassify()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -77,8 +78,8 @@ class SplashViewModel : BaseViewModel() {
                 val dataList = gson.fromJson<ArrayList<LiveClassifyEntity>>(
                     s, object : TypeToken<ArrayList<LiveClassifyEntity>>() {}.type
                 )
-                Constants.mNewsLiveTitleList.clear()
-                Constants.mNewsLiveTitleList.addAll(dataList)
+                GlobalData.mNewsLiveTitleList.clear()
+                GlobalData.mNewsLiveTitleList.addAll(dataList)
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -94,8 +95,8 @@ class SplashViewModel : BaseViewModel() {
         val dataList = gson.fromJson<ArrayList<NewsClassifyEntity>>(
             content, object : TypeToken<ArrayList<NewsClassifyEntity>>() {}.type
         )
-        Constants.mNewsTitleList.clear()
-        Constants.mNewsTitleList.addAll(dataList)
+        GlobalData.mNewsTitleList.clear()
+        GlobalData.mNewsTitleList.addAll(dataList)
         readMusicTitle(context)
     }
 
@@ -105,8 +106,8 @@ class SplashViewModel : BaseViewModel() {
         val dataList = gson.fromJson<ArrayList<MusicTypeEntity>>(
             content, object : TypeToken<ArrayList<MusicTypeEntity>>() {}.type
         )
-        Constants.mMusicTitleList.clear()
-        Constants.mMusicTitleList.addAll(dataList)
+        GlobalData.mMusicTitleList.clear()
+        GlobalData.mMusicTitleList.addAll(dataList)
         isReadFinish.postValue(true)
     }
 

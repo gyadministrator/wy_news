@@ -6,7 +6,7 @@ import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabClassifyBinding
 import com.android.wy.news.viewmodel.ClassifyTabViewModel
 
@@ -24,7 +24,7 @@ class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTab
     }
 
     override fun initData() {
-        val titleList = Constants.mNewsTitleList
+        val titleList = GlobalData.mNewsTitleList
         val fragments = ArrayList<Fragment>()
         val mTitles = arrayListOf<String>()
         if (titleList.size > 0) {

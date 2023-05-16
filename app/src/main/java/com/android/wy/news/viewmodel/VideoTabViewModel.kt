@@ -2,7 +2,7 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
@@ -16,7 +16,10 @@ class VideoTabViewModel : BaseViewModel() {
 
     fun getRecommendVideoList(pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.HOT_NEWS_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(
+                GlobalConstant.HOT_NEWS_URL,
+                IApiService::class.java
+            )
         val observable = apiService.getRecommendVideo(pageStart)
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

@@ -16,7 +16,8 @@ import com.android.wy.news.adapter.BannerImgAdapter
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabTopBinding
 import com.android.wy.news.databinding.LayoutTopCityItemBinding
@@ -24,6 +25,7 @@ import com.android.wy.news.entity.HotNewsEntity
 import com.android.wy.news.entity.House
 import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.location.LocationHelper
+import com.android.wy.news.location.OnLocationListener
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
@@ -83,11 +85,11 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     private fun initLocation() {
         //防止深色模式切换后，activity重启没有设置Key
-        AMapLocationClient.setApiKey(Constants.LOCATION_KEY)
+        AMapLocationClient.setApiKey(GlobalData.LOCATION_KEY)
         MapsInitializer.updatePrivacyShow(mActivity, true, true)
         MapsInitializer.updatePrivacyAgree(mActivity, true)
         TaskUtil.runOnUiThread({
-            LocationHelper.startLocation(mActivity, object : LocationHelper.OnLocationListener {
+            LocationHelper.startLocation(mActivity, object : OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
                     currentCity = aMapLocation.city
                     if (mActivity is HomeActivity) {
@@ -176,7 +178,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             loadingView.visibility = View.GONE
             addBannerHeader(it)
             TaskUtil.runOnThread {
-                var noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
+                var noticeStatus = SpTools.getBoolean(GlobalData.SpKey.NOTICE_STATUS)
                 if (noticeStatus == null) noticeStatus = false
                 if (!isNotify && !noticeStatus) {
                     sendNotify(it)
@@ -270,7 +272,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     private val bannerItemListener = OnBannerListener<House> { data, _ ->
-        val url = Constants.WEB_URL + data.docid + ".html"
+        val url = GlobalConstant.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
     }
 
@@ -295,7 +297,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     override fun onItemClickListener(view: View, data: TopEntity) {
         if (data.videoinfo == null) {
-            val url = Constants.WEB_URL + data.docid + ".html"
+            val url = GlobalConstant.WEB_URL + data.docid + ".html"
             WebActivity.startActivity(mActivity, url)
         }
     }

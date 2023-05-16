@@ -2,8 +2,7 @@ package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
-import com.android.wy.news.entity.ScreenVideoEntity
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.VideoEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
@@ -17,7 +16,7 @@ class VideoFullViewModel : BaseViewModel() {
 
     fun getVideoList() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.VIDEO_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.VIDEO_URL, IApiService::class.java)
         val observable = apiService.getVideoList()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

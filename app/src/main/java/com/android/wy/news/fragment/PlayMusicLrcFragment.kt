@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicLrcBinding
 import com.android.wy.news.entity.music.MusicInfo
@@ -89,7 +89,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     private fun setMusic() {
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
-        lrcView?.setLrcData(Constants.currentLrcData)
+        lrcView?.setLrcData(GlobalData.currentLrcData)
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {

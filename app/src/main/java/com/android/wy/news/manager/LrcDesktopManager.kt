@@ -16,7 +16,7 @@ import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.LayoutDesktopLrcBinding
@@ -54,7 +54,7 @@ object LrcDesktopManager {
     fun showDesktopLrc(activity: Activity, time: Long) {
         val background = AppUtil.isBackground(activity)
         if (!background) return
-        currentLrc = CommonTools.getLrcText(Constants.currentLrcData, time)
+        currentLrc = CommonTools.getLrcText(GlobalData.currentLrcData, time)
         if (hasAddView) {
             val tvLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_lrc)
             tvLrc?.text = currentLrc
@@ -139,7 +139,7 @@ object LrcDesktopManager {
         }
         ivClose.setOnClickListener {
             removeView()
-            SpTools.putBoolean(Constants.IS_SHOW_DESKTOP_LRC, false)
+            SpTools.putBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC, false)
             ToastUtil.show("桌面歌词已关闭,如需要,请在设置中再打开")
         }
         binding.root.setOnTouchListener { _, event ->

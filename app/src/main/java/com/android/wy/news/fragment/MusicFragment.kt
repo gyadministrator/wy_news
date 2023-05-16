@@ -18,7 +18,7 @@ import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
@@ -97,7 +97,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         rvContent.adapter = musicAdapter
 
         val gson = Gson()
-        val s = SpTools.getString(Constants.LAST_PLAY_MUSIC_KEY)
+        val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
         this.currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
         if (this.currentMusicInfo != null) {
             showPlayBar()
@@ -124,7 +124,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     fun onEvent(o: Any) {
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
-            if (Constants.currentLrcData.size == 0) {
+            if (GlobalData.currentLrcData.size == 0) {
                 getLrc()
             }
             playBarView?.updateProgress(o.time)
@@ -160,7 +160,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (arguments != null) {
             categoryId = arguments.getInt(mKey)
         }
-        if (!TextUtils.isEmpty(Constants.CSRF_TOKEN)) {
+        if (!TextUtils.isEmpty(GlobalData.CSRF_TOKEN)) {
             getMusicList()
         } else {
             getCookie()
@@ -259,8 +259,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                         val lrcList = musicLrcData.lrclist
                         if (lrcList.isNotEmpty()) {
                             currentLrcList = CommonTools.parseLrc(lrcList)
-                            Constants.currentLrcData.clear()
-                            Constants.currentLrcData.addAll(currentLrcList!!)
+                            GlobalData.currentLrcData.clear()
+                            GlobalData.currentLrcData.addAll(currentLrcList!!)
                         }
                     }
                 }
@@ -363,7 +363,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             musicAdapter.setSelectedIndex(currentPosition)
             mViewModel.requestMusicUrl(musicInfo)
 
-            SpTools.putString(Constants.LAST_PLAY_MUSIC_KEY, gson.toJson(currentMusicInfo))
+            SpTools.putString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, gson.toJson(currentMusicInfo))
         }
     }
 

@@ -3,7 +3,6 @@ package com.android.wy.news.dialog
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -19,7 +18,7 @@ import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.databinding.LayoutDialogBinding
 
 
@@ -56,7 +55,7 @@ class PrivacyDialogFragment : DialogFragment() {
         //隐私政策
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(p0: View) {
-                activity?.let { WebActivity.startActivity(it, Constants.privacyUrl) }
+                activity?.let { WebActivity.startActivity(it, GlobalConstant.privacyUrl) }
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -71,7 +70,7 @@ class PrivacyDialogFragment : DialogFragment() {
         //用户协议
         spannable.setSpan(object : ClickableSpan() {
             override fun onClick(p0: View) {
-                activity?.let { WebActivity.startActivity(it, Constants.userUrl) }
+                activity?.let { WebActivity.startActivity(it, GlobalConstant.userUrl) }
             }
 
             override fun updateDrawState(ds: TextPaint) {

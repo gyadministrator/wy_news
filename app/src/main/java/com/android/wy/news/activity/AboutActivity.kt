@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.databinding.ActivityAboutBinding
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.viewmodel.AboutViewModel
 
+@Route(path = RouteManager.PATH_ACTIVITY_ABOUT)
 class AboutActivity : BaseActivity<ActivityAboutBinding, AboutViewModel>() {
     private lateinit var tvVersionInfo: TextView
     private lateinit var rlComplaint: RelativeLayout
@@ -57,7 +60,7 @@ class AboutActivity : BaseActivity<ActivityAboutBinding, AboutViewModel>() {
 
     override fun initEvent() {
         rlComplaint.setOnClickListener {
-            WebActivity.startActivity(this, Constants.REPOSITORY_URL)
+            WebActivity.startActivity(this, GlobalConstant.REPOSITORY_URL)
         }
         rlIntroduce.setOnClickListener {
             IntroduceActivity.startIntroduceActivity(this)

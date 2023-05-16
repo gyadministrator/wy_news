@@ -1,7 +1,7 @@
 package com.android.wy.news.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.RollHotWord
 import com.android.wy.news.entity.RollingWordEntity
 import com.android.wy.news.http.HttpManager
@@ -24,7 +24,7 @@ class NewsMainViewModel : BaseViewModel() {
 
     fun getHotWord() {
         val apiService =
-            HttpManager.mInstance.getApiService(Constants.HOT_WORD_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(GlobalConstant.HOT_WORD_URL, IApiService::class.java)
         val observable = apiService.getRollingWord()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

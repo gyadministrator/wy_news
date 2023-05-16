@@ -11,17 +11,22 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
+import com.android.wy.news.common.PrivacyStatus
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivitySplashBinding
 import com.android.wy.news.location.LocationHelper
+import com.android.wy.news.location.OnPrivacyListener
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.permission.PermissionHelper
 import com.android.wy.news.viewmodel.SplashViewModel
 
 @SuppressLint("CustomSplashScreen")
+@Route(path = RouteManager.PATH_ACTIVITY_SPLASH)
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
-    LocationHelper.OnPrivacyListener {
+    OnPrivacyListener {
     private lateinit var ivAd: ImageView
     private lateinit var rlContent: RelativeLayout
     private lateinit var tvDown: TextView
@@ -42,8 +47,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
 
     override fun initData() {
         PermissionHelper.initPermission(this)
-        val i = SpTools.getInt(Constants.PRIVACY_STATUS)
-        if (i == Constants.PRIVACY_STATUS_AGREE) {
+        val i = SpTools.getInt(GlobalData.SpKey.PRIVACY_STATUS)
+        if (i == PrivacyStatus.PRIVACY_STATUS_AGREE) {
             handlerAgree()
         } else {
             LocationHelper.privacyCompliance(this, this)
@@ -59,7 +64,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     }
 
     private fun loadAD() {
-        splashAD = SpTools.getString(Constants.SPLASH_AD)
+        splashAD = SpTools.getString(GlobalData.SpKey.SPLASH_AD)
         if (!TextUtils.isEmpty(splashAD)) {
             isShowAD = true
             rlContent.visibility = View.VISIBLE
@@ -82,8 +87,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     @SuppressLint("SetTextI18n")
     override fun onNotifyDataChanged() {
         mViewModel.isReadFinish.observe(this) {
-            val i = SpTools.getInt(Constants.PRIVACY_STATUS)
-            if (i == Constants.PRIVACY_STATUS_AGREE) {
+            val i = SpTools.getInt(GlobalData.SpKey.PRIVACY_STATUS)
+            if (i == PrivacyStatus.PRIVACY_STATUS_AGREE) {
                 handlerRead(it)
             }
         }

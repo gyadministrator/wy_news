@@ -8,7 +8,7 @@ import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.NewsAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.databinding.FragmentNewsBinding
 import com.android.wy.news.entity.NewsEntity
 import com.android.wy.news.util.ToastUtil
@@ -138,7 +138,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(), OnRefre
     }
 
     override fun onItemClickListener(view: View, data: NewsEntity) {
-        val url = Constants.WEB_URL + data.docid + ".html"
+        val url = GlobalConstant.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
     }
 }

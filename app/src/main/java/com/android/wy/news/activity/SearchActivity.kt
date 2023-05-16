@@ -13,16 +13,18 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.SearchAdapter
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.databinding.ActivitySearchBinding
 import com.android.wy.news.databinding.LayoutHistoryItemBinding
 import com.android.wy.news.databinding.LayoutHotItemBinding
 import com.android.wy.news.entity.HotWord
 import com.android.wy.news.entity.SearchResult
 import com.android.wy.news.http.repository.HotRepository
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.sql.SearchHistoryEntity
 import com.android.wy.news.sql.SearchHistoryRepository
 import com.android.wy.news.util.TaskUtil
@@ -35,7 +37,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
-
+@Route(path = RouteManager.PATH_ACTIVITY_SEARCH)
 class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<SearchResult>,
     ClearEditText.OnEditTextListener {
@@ -403,7 +405,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     }
 
     override fun onItemClickListener(view: View, data: SearchResult) {
-        val url = Constants.WEB_URL + data.docid + ".html"
+        val url = GlobalConstant.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
     }
 

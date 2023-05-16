@@ -1,10 +1,9 @@
 package com.android.wy.news.http
 
-import com.android.wy.news.common.Constants
-import okhttp3.Interceptor
+import com.android.wy.news.common.GlobalConstant
+import com.android.wy.news.common.GlobalData
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.Proxy
@@ -17,7 +16,10 @@ import java.util.concurrent.TimeUnit
   * @Description:    
  */
 class HttpManager {
-    private var builder: OkHttpClient.Builder
+    private var builder: OkHttpClient.Builder = OkHttpClient.Builder()
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
 
     companion object {
         const val TIMEOUT = 60L
@@ -27,10 +29,6 @@ class HttpManager {
     }
 
     init {
-        builder = OkHttpClient.Builder()
-            .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
         builder.proxy(Proxy.NO_PROXY)
     }
 
@@ -38,8 +36,8 @@ class HttpManager {
         builder.addInterceptor { chain ->
             val request: Request = chain.request()
                 .newBuilder()
-                .addHeader("csrf", Constants.CSRF_TOKEN)
-                .addHeader("cookie", "kw_token=" + Constants.CSRF_TOKEN)
+                .addHeader("csrf", GlobalData.CSRF_TOKEN)
+                .addHeader("cookie", "kw_token=" + GlobalData.CSRF_TOKEN)
                 .build()
             chain.proceed(request)
         }
@@ -74,7 +72,7 @@ class HttpManager {
     /*-------------------------------------------以下是协程相关-------------------------------------------------------*/
     private fun getRetrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl(Constants.HOT_WORD_URL)
+            .baseUrl(GlobalConstant.HOT_WORD_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -84,5 +82,5 @@ class HttpManager {
 
     /*------------------------------------------以下是音乐相关-------------------------------------------------------*/
     fun <T> createMusic(serviceClass: Class<T>): T =
-        getMusicApiService(Constants.MUSIC_BASE_URL, serviceClass)
+        getMusicApiService(GlobalConstant.MUSIC_BASE_URL, serviceClass)
 }

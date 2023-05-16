@@ -3,10 +3,13 @@ package com.android.wy.news.activity
 import android.content.Context
 import android.content.Intent
 import android.widget.TextView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityThirdBinding
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.viewmodel.ThirdViewModel
 
+@Route(path = RouteManager.PATH_ACTIVITY_THIRD)
 class ThirdActivity : BaseActivity<ActivityThirdBinding, ThirdViewModel>() {
     private lateinit var tvGaoDeLink: TextView
 

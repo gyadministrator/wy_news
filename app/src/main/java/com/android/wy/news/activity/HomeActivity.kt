@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import cn.jzvd.Jzvd
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.MapsInitializer
 import com.android.bottombar.activity.GYBottomActivity
@@ -16,7 +17,7 @@ import com.android.bottombar.model.GYBarItem
 import com.android.bottombar.view.GYBottomBarView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.Constants
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.music.MusicInfo
@@ -27,12 +28,14 @@ import com.android.wy.news.fragment.MusicTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.location.LocationHelper
+import com.android.wy.news.location.OnLocationListener
 import com.android.wy.news.locationselect.CityPicker
 import com.android.wy.news.locationselect.adapter.OnPickListener
 import com.android.wy.news.locationselect.model.City
 import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.BatteryManageUtil
@@ -49,7 +52,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
-
+@Route(path = RouteManager.PATH_ACTIVITY_HOME)
 class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListener {
     private lateinit var bottomView: GYBottomBarView
     private lateinit var tvCity: TextView
@@ -74,7 +77,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
         super.onDestroy()
         marqueeTextView.stopScroll()
         EventBus.getDefault().unregister(this)
-        SpTools.putBoolean(Constants.NOTICE_STATUS, false)
+        SpTools.putBoolean(GlobalData.SpKey.NOTICE_STATUS, false)
     }
 
     override fun initFragment() {
@@ -187,7 +190,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
     fun onEvent(o: Any) {
         if (o is NoticeEvent) {
             val url = o.url
-            val noticeStatus = SpTools.getBoolean(Constants.NOTICE_STATUS)
+            val noticeStatus = SpTools.getBoolean(GlobalData.SpKey.NOTICE_STATUS)
             if (noticeStatus == true) {
                 TaskUtil.runOnUiThread({
                     WebActivity.startActivity(this, url = url)
@@ -237,7 +240,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
                     MapsInitializer.updatePrivacyAgree(this@HomeActivity, true)
                     TaskUtil.runOnUiThread({
                         LocationHelper.startLocation(this@HomeActivity,
-                            object : LocationHelper.OnLocationListener {
+                            object : OnLocationListener {
                                 override fun success(aMapLocation: AMapLocation) {
                                     //定位完成之后更新数据
                                     cityPicker.locateComplete(
@@ -268,7 +271,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             //判断是否需要开启通知栏功能
             NotificationUtil.openNotificationSetting(
                 this,
-                object : NotificationUtil.Companion.OnNextListener {
+                object : NotificationUtil.OnNextListener {
                     override fun onNext() {
                         Logger.i(resources.getString(R.string.app_name) + "已开启通知权限")
                         guideNotification()
@@ -306,7 +309,7 @@ class HomeActivity : GYBottomActivity(), GYBottomBarView.IGYBottomBarChangeListe
             playBarView.visibility = View.GONE
         } else {
             val gson = Gson()
-            val s = SpTools.getString(Constants.LAST_PLAY_MUSIC_KEY)
+            val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
             val musicInfo = gson.fromJson(s, MusicInfo::class.java)
             if (musicInfo != null) {
                 playBarView.visibility = View.VISIBLE

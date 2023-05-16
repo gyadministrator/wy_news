@@ -6,17 +6,15 @@ package com.android.wy.news.common
   * @Version:        1.0
   * @Description:    
  */
-interface SkinType {
-    companion object {
-        //跟随系统
-        const val SKIN_TYPE_SYSTEM = 0
+object SkinType {
+    //跟随系统
+    const val SKIN_TYPE_SYSTEM = 0
 
-        //浅色
-        const val SKIN_TYPE_LIGHT = 1
+    //浅色
+    const val SKIN_TYPE_LIGHT = 1
 
-        //深色
-        const val SKIN_TYPE_DARK = 2
+    //深色
+    const val SKIN_TYPE_DARK = 2
 
-        const val SKIN_TYPE = "skin_type"
-    }
+    const val SKIN_TYPE = "skin_type"
 }

@@ -15,6 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.cache.DataCleanManager
 import com.android.wy.news.common.*
 import com.android.wy.news.databinding.ActivitySettingBinding
@@ -22,7 +23,9 @@ import com.android.wy.news.dialog.ConfirmDialogFragment
 import com.android.wy.news.dialog.UpdateDialogFragment
 import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.DownloadController
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.update.OnUpdateManagerListener
 import com.android.wy.news.update.UpdateManager
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.SettingViewModel
@@ -33,7 +36,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-
+@Route(path = RouteManager.PATH_ACTIVITY_SETTING)
 class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>() {
     private lateinit var tvVersion: TextView
     private lateinit var tvCache: TextView
@@ -107,12 +110,12 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     }
 
     private fun getSkinState() {
-        val isCacheVideo = SpTools.getBoolean(Constants.CACHE_VIDEO)
+        val isCacheVideo = SpTools.getBoolean(GlobalData.SpKey.CACHE_VIDEO)
         if (isCacheVideo != null) {
             scPlay.isChecked = isCacheVideo
         }
 
-        val isNoWifiPlay = SpTools.getBoolean(Constants.NO_WIFI_PLAY)
+        val isNoWifiPlay = SpTools.getBoolean(GlobalData.SpKey.NO_WIFI_PLAY)
         if (isNoWifiPlay != null) {
             scWifi.isChecked = isNoWifiPlay
         }
@@ -128,7 +131,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             tvSkin.text = "已关闭"
         }
 
-        val isShowDesktopLrc = SpTools.getBoolean(Constants.IS_SHOW_DESKTOP_LRC)
+        val isShowDesktopLrc = SpTools.getBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC)
         if (isShowDesktopLrc != null) {
             scDesktopLrc.isChecked = isShowDesktopLrc
         }
@@ -147,7 +150,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
     override fun initEvent() {
         rlAuthor.setOnClickListener {
-            WebActivity.startActivity(this, Constants.AUTHOR_URL)
+            WebActivity.startActivity(this, GlobalConstant.AUTHOR_URL)
         }
         rlAbout.setOnClickListener {
             AboutActivity.startAboutActivity(this)
@@ -165,10 +168,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             SkinActivity.startSkinActivity(this)
         }
         rlPrivacy.setOnClickListener {
-            WebActivity.startActivity(this, Constants.privacyUrl)
+            WebActivity.startActivity(this, GlobalConstant.privacyUrl)
         }
         rlUser.setOnClickListener {
-            WebActivity.startActivity(this, Constants.userUrl)
+            WebActivity.startActivity(this, GlobalConstant.userUrl)
         }
         rlCache.setOnClickListener {
             val dialogFragment = ConfirmDialogFragment.newInstance(
@@ -192,7 +195,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
                     if (!p0.isPressed) {
                         return
                     }
-                    SpTools.putBoolean(Constants.CACHE_VIDEO, p1)
+                    SpTools.putBoolean(GlobalData.SpKey.CACHE_VIDEO, p1)
                 }
             }
         })
@@ -202,7 +205,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
                     if (!p0.isPressed) {
                         return
                     }
-                    SpTools.putBoolean(Constants.NO_WIFI_PLAY, p1)
+                    SpTools.putBoolean(GlobalData.SpKey.NO_WIFI_PLAY, p1)
                 }
             }
         })
@@ -212,13 +215,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
                     if (!p0.isPressed) {
                         return
                     }
-                    SpTools.putBoolean(Constants.IS_SHOW_DESKTOP_LRC, p1)
+                    SpTools.putBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC, p1)
                 }
             }
         })
     }
 
-    private val onUpdateManagerListener = object : UpdateManager.OnUpdateManagerListener {
+    private val onUpdateManagerListener = object : OnUpdateManagerListener {
         override fun onSuccess(s: String) {
             if (!TextUtils.isEmpty(s)) {
                 try {
