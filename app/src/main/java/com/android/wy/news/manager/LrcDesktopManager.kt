@@ -53,7 +53,8 @@ object LrcDesktopManager {
     @SuppressLint("InflateParams", "ClickableViewAccessibility")
     fun showDesktopLrc(activity: Activity, time: Long) {
         val background = AppUtil.isBackground(activity)
-        if (!background) return
+        val isShowDesktop = SpTools.getBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC)
+        if (!background || isShowDesktop == null || isShowDesktop == false) return
         currentLrc = CommonTools.getLrcText(GlobalData.currentLrcData, time)
         if (hasAddView) {
             val tvLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_lrc)
