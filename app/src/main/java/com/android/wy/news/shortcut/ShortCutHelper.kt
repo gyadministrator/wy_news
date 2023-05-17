@@ -7,7 +7,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import com.android.wy.news.R
-import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.MainActivity
 import com.android.wy.news.activity.SearchActivity
 import com.android.wy.news.activity.SettingActivity
 import com.android.wy.news.activity.SkinActivity
@@ -80,7 +80,7 @@ object ShortCutHelper {
                 .setShortLabel(label)//短标签
                 .setIcon(IconCompat.createWithResource(context, R.mipmap.ic_launcher))//图标
                 //跳转的目标，定义Activity
-                .setIntent(Intent(Intent.ACTION_MAIN, null, context, HomeActivity::class.java))
+                .setIntent(Intent(Intent.ACTION_MAIN, null, context, MainActivity::class.java))
                 .build()
             shortCutList.add(shortScan)
             //执行添加操作

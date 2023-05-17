@@ -154,7 +154,6 @@ dependencies {
     implementation rootProject.ext.dependencies.splashScreen
     //作者的库
     implementation rootProject.ext.dependencies.customTabLayout
-    implementation rootProject.ext.dependencies.gYBottomBar
 
     // Retrofit库
     implementation rootProject.ext.dependencies.retrofit
@@ -198,6 +197,7 @@ dependencies {
     implementation rootProject.ext.dependencies.eventbus
     implementation rootProject.ext.dependencies.jiaozivideoplayer
     implementation project(':locationselect')
+    implementation project(':bottombar')
     //kotlin路由导入
     implementation rootProject.ext.dependencies.arouterApi
     kapt rootProject.ext.dependencies.arouterCompiler

@@ -10,7 +10,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
-import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.MainActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BannerImgAdapter
 import com.android.wy.news.adapter.BaseNewsAdapter
@@ -92,8 +92,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             LocationHelper.startLocation(mActivity, object : OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
                     currentCity = aMapLocation.city
-                    if (mActivity is HomeActivity) {
-                        (mActivity as HomeActivity).updateCity(currentCity)
+                    if (mActivity is MainActivity) {
+                        (mActivity as MainActivity).updateCity(currentCity)
                     }
                     getCityData()
                 }

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.MainActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
@@ -107,8 +107,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     private fun hidePlayBar() {
-        if (mActivity is HomeActivity) {
-            val homeActivity = mActivity as HomeActivity
+        if (mActivity is MainActivity) {
+            val homeActivity = mActivity as MainActivity
             playBarView = homeActivity.getPlayBarView()
             playBarView?.visibility = View.GONE
         }
@@ -415,8 +415,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (!TextUtils.isEmpty(album)) {
             stringBuilder.append("-$album")
         }
-        if (mActivity is HomeActivity) {
-            val homeActivity = mActivity as HomeActivity
+        if (mActivity is MainActivity) {
+            val homeActivity = mActivity as MainActivity
             playBarView = homeActivity.getPlayBarView()
             val selectPosition = homeActivity.getSelectPosition()
             if (selectPosition != 3) return

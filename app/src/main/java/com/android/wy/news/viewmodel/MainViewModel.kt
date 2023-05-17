@@ -14,17 +14,19 @@ import retrofit2.Response
 
 /*     
   * @Author:         gao_yun@leapmotor.com
-  * @CreateDate:     2023/3/20 14:01
+  * @CreateDate:     2023/5/17 11:21
   * @Version:        1.0
   * @Description:    
  */
-class NewsMainViewModel : BaseViewModel() {
-
+class MainViewModel : BaseViewModel() {
     val dataList = MutableLiveData<ArrayList<RollHotWord>>()
 
     fun getHotWord() {
         val apiService =
-            HttpManager.mInstance.getApiService(GlobalConstant.HOT_WORD_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(
+                GlobalConstant.HOT_WORD_URL,
+                IApiService::class.java
+            )
         val observable = apiService.getRollingWord()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

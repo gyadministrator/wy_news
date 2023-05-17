@@ -33,7 +33,6 @@ ext {
 
             // 作者的库
             'com.github.gyadministrator:CustomTabLayout'           : '1.1',
-            'com.github.gyadministrator:GYBottomBar'               : '4.0',
 
             // 三方框架
             //网络
@@ -104,7 +103,6 @@ ext {
 
             // 作者的库
             customTabLayout              : "com.github.gyadministrator:CustomTabLayout:${versions['com.github.gyadministrator:CustomTabLayout']}",
-            gYBottomBar                  : "com.github.gyadministrator:GYBottomBar:${versions['com.github.gyadministrator:GYBottomBar']}",
 
             // 三方框架
             retrofit                     : "com.squareup.retrofit2:retrofit:${versions['com.squareup.retrofit2:retrofit']}",

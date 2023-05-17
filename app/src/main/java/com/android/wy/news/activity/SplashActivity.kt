@@ -126,7 +126,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     }
 
     private fun jump() {
-        val intent = Intent(mActivity, HomeActivity::class.java)
+        //val intent = Intent(mActivity, HomeActivity::class.java)
+        val intent = Intent(mActivity, MainActivity::class.java)
         intent.putExtra(WebActivity.WEB_URL, url)
         startActivity(intent)
         finish()

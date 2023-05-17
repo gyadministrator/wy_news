@@ -43,7 +43,7 @@ class CustomLoadingView : View {
 
     private fun init() {
         paint = Paint()
-        paint?.color = AppUtil.getColor(R.color.main_title)
+        paint?.color = AppUtil.getColor(context,R.color.main_title)
         loadingSize?.let { paint?.textSize = it }
 
         loadPaint = Paint()

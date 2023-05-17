@@ -19,3 +19,4 @@ rootProject.name = "wy_news"
 include ':app'
 include ':locationselect'
 include ':commonui'
+include ':bottombar'

@@ -88,13 +88,9 @@
         android:clipToPadding="false"
         android:visibility="gone" />
 
-    <com.android.bottombar.view.GYBottomBarView
-        android:id="@+id/bottomView"
+    <com.android.wy.news.bottombar.view.BottomBar
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/default_status_bar_color"
-        app:fixed="true"
-        app:isPageRepeatLoading="false"
-        app:normalTextColor="@color/text_normal_color"
-        app:selectTextColor="@color/text_select_color" />
+        android:layout_height="50dp"
+        android:background="@color/default_status_bar_color" />
 </LinearLayout>

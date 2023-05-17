@@ -9,7 +9,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
-import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.MainActivity
 import java.lang.ref.WeakReference
 
 
@@ -55,7 +55,7 @@ class MusicNotifyHelper(context: Context) {
         channelId: String,
         remoteViews: RemoteViews?
     ): NotificationCompat.Builder {
-        val intent = Intent(mContext, HomeActivity::class.java)
+        val intent = Intent(mContext, MainActivity::class.java)
         val mainIntent = PendingIntent.getActivity(
             mContext,
             0,
