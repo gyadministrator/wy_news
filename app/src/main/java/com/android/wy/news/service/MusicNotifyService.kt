@@ -50,6 +50,7 @@ class MusicNotifyService : Service() {
         const val MUSIC_COMPLETE_ACTION = "service.action.complete"
         const val MUSIC_STATE_ACTION = "service.action.state"
         const val MUSIC_PREPARE_ACTION = "service.action.prepare"
+        const val MUSIC_CLOSE_ACTION = "service.action.close"
         const val MUSIC_INFO_KEY = "music.info.key"
         const val MUSIC_URL_KEY = "music.url.key"
     }
@@ -194,6 +195,17 @@ class MusicNotifyService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         notifyLayout?.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent)
+
+        val closeIntent = Intent(this, MusicPlayService::class.java)
+        closeIntent.action = MUSIC_CLOSE_ACTION
+        val closePendingIntent = PendingIntent.getService(
+            this,
+            3,
+            closeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_close, closePendingIntent)
     }
 
     /**

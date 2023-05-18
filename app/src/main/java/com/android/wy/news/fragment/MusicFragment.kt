@@ -118,6 +118,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
         unRegisterMusicReceiver()
+        stopMusicService()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -278,6 +279,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         filter.addAction(MusicNotifyService.MUSIC_PRE_ACTION)
         filter.addAction(MusicNotifyService.MUSIC_COMPLETE_ACTION)
         filter.addAction(MusicNotifyService.MUSIC_STATE_ACTION)
+        filter.addAction(MusicNotifyService.MUSIC_CLOSE_ACTION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             mActivity.registerReceiver(musicReceiver, filter, Context.RECEIVER_EXPORTED)
         } else {
@@ -303,6 +305,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         )
         mServiceIntent?.putExtra(MusicNotifyService.MUSIC_URL_KEY, this.currentPlayUrl)
         mActivity.startService(mServiceIntent)
+    }
+
+    private fun stopMusicService() {
+        if (mServiceIntent != null) {
+            mActivity.stopService(mServiceIntent)
+        }
     }
 
     private fun playNext() {
@@ -487,6 +495,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                             }
                         }
                         this.musicFragment?.playNext()
+                    }
+
+                    MusicNotifyService.MUSIC_CLOSE_ACTION -> {
+                        //关闭音乐服务
+                        this.musicFragment?.stopMusicService()
                     }
 
                     else -> {
