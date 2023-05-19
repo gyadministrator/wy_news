@@ -54,7 +54,7 @@ object NotificationHelper {
             .setWhen(System.currentTimeMillis())
             //设置通知的小图标
             //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-            .setSmallIcon(R.mipmap.ic_notify)
+            .setSmallIcon(R.mipmap.ic_launcher)
             //设置通知的大图标
             //下拉系统状态栏时就能看见
             .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
@@ -241,7 +241,7 @@ object NotificationHelper {
             .setWhen(System.currentTimeMillis())
             //设置通知的小图标
             //注意：只能使用纯alpha图层的图片进行设置，小图标会显示在系统状态栏上
-            .setSmallIcon(R.mipmap.ic_notify)
+            .setSmallIcon(R.mipmap.ic_launcher)
             //.setContentTitle(house?.ptime?.let { CommonTools.getTimeDiff(it) })
             .setContentTitle(house?.source)
             .setContentText(house?.title)
@@ -341,7 +341,7 @@ object NotificationHelper {
     fun sendProgressNotification(context: Context, progress: Int, isFinish: Boolean) {
         initNotificationManager(context)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID).setOngoing(true)
-            .setSmallIcon(R.mipmap.ic_notify) //小图标
+            .setSmallIcon(R.mipmap.ic_launcher) //小图标
             .setContentTitle("正在下载...")  //通知标题
             //.setContentIntent(pendingIntent) //点击通知栏跳转到指定页面
             .setAutoCancel(true)    //点击通知后关闭通知
