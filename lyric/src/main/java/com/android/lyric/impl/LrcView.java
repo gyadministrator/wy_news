@@ -255,7 +255,7 @@ public class LrcView extends View implements ILrcView {
         //当没有歌词的时候
         if (mLrcRows == null || mLrcRows.size() == 0) {
             if (mLoadingLrcTip != null) {
-                mPaint.setColor(mHighLightRowColor);
+                mPaint.setColor(mNormalRowColor);
                 mPaint.setTextSize(mLrcFontSize);
                 mPaint.setTextAlign(Align.CENTER);
                 canvas.drawText(mLoadingLrcTip, width / 2f, height / 2f - mLrcFontSize, mPaint);

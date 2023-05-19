@@ -1,4 +1,5 @@
 # wy_news 1984629668@qq.com
+
 新闻早报(Kotlin+retrofit+mvvm+compose)
 
 [下载app体验](https://github.com/gyadministrator/wy_news/releases/download/v1.0/release-v1.0-2023.05.07.apk)
@@ -19,3 +20,5 @@ app截图
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_12.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_13.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_14.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_15.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_16.png)

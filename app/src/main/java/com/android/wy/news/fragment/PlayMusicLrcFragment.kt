@@ -82,16 +82,22 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onEvent(o: Any) {
         Logger.i("LrcFragment--->>>onEvent--->>>o:$o")
-        if (o is MusicEvent) {
-            Logger.i("onEvent--->>>time:${o.time}")
-            activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            lrcView?.seekLrcToTime(o.time.toLong())
-        } else if (o is MusicInfoEvent) {
-            val gson = Gson()
-            currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
-            setMusic()
-        } else if (o is LrcChangeEvent) {
-            setLrcInfo()
+        when (o) {
+            is MusicEvent -> {
+                Logger.i("onEvent--->>>time:${o.time}")
+                activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
+                lrcView?.seekLrcToTime(o.time.toLong())
+            }
+
+            is MusicInfoEvent -> {
+                val gson = Gson()
+                currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
+                setMusic()
+            }
+
+            is LrcChangeEvent -> {
+                setLrcInfo()
+            }
         }
     }
 
