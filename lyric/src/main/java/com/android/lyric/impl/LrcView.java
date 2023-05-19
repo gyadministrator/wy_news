@@ -258,6 +258,7 @@ public class LrcView extends View implements ILrcView {
                 mPaint.setColor(mNormalRowColor);
                 mPaint.setTextSize(mLrcFontSize);
                 mPaint.setTextAlign(Align.CENTER);
+                mHighLightRow = 0;
                 canvas.drawText(mLoadingLrcTip, width / 2f, height / 2f - mLrcFontSize, mPaint);
             }
             return;
