@@ -239,6 +239,48 @@ public class LrcView extends View implements ILrcView {
     public void setLrcViewListener(ILrcViewListener listener) {
         mLrcViewListener = listener;
     }
+
+    /**
+     * 设置歌词行集合
+     *
+     * @param lrcRows lrcRows
+     */
+    @Override
+    public void setLrc(List<LrcRow> lrcRows) {
+        this.mLrcRows = lrcRows;
+        invalidate();
+    }
+
+    /**
+     * 播放的时候调用该方法滚动歌词，高亮正在播放的那句歌词
+     *
+     * @param time time
+     */
+    @Override
+    public void seekLrcToTime(long time) {
+        if (mLrcRows == null || mLrcRows.size() == 0) {
+            return;
+        }
+        if (mDisplayMode != DISPLAY_MODE_NORMAL) {
+            return;
+        }
+
+        currentMillis = time;
+        Log.d(TAG, "seekLrcToTime:" + time);
+
+        for (int i = 0; i < mLrcRows.size(); i++) {
+            LrcRow current = mLrcRows.get(i);
+            LrcRow next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
+            /*
+             *  正在播放的时间大于current行的歌词的时间而小于next行歌词的时间， 设置要高亮的行为current行
+             *  正在播放的时间大于current行的歌词，而current行为最后一句歌词时，设置要高亮的行为current行
+             */
+            if ((time >= current.startTime && next != null && time < next.startTime) || (time > current.startTime && next == null)) {
+                seekLrc(i, false);
+                return;
+            }
+        }
+    }
     /*----------------------------------------公开方法结束---------------------------------------------------*/
 
     public LrcView(Context context, AttributeSet attr) {
@@ -438,7 +480,7 @@ public class LrcView extends View implements ILrcView {
      * @param position 要高亮的歌词行数
      * @param cb       是否是手指拖动后要高亮的歌词
      */
-    public void seekLrc(int position, boolean cb) {
+    private void seekLrc(int position, boolean cb) {
         if (mLrcRows == null || position < 0 || position > mLrcRows.size()) {
             return;
         }
@@ -641,46 +683,6 @@ public class LrcView extends View implements ILrcView {
             return (int) (maxOffset / 10);//放大双指之间移动的最大差距的1/10
         } else {
             return -(int) (maxOffset / 10);//缩小双指之间移动的最大差距的1/10
-        }
-    }
-
-    /**
-     * 设置歌词行集合
-     *
-     * @param lrcRows lrcRows
-     */
-    public void setLrc(List<LrcRow> lrcRows) {
-        mLrcRows = lrcRows;
-        invalidate();
-    }
-
-    /**
-     * 播放的时候调用该方法滚动歌词，高亮正在播放的那句歌词
-     *
-     * @param time time
-     */
-    public void seekLrcToTime(long time) {
-        if (mLrcRows == null || mLrcRows.size() == 0) {
-            return;
-        }
-        if (mDisplayMode != DISPLAY_MODE_NORMAL) {
-            return;
-        }
-
-        currentMillis = time;
-        Log.d(TAG, "seekLrcToTime:" + time);
-
-        for (int i = 0; i < mLrcRows.size(); i++) {
-            LrcRow current = mLrcRows.get(i);
-            LrcRow next = i + 1 == mLrcRows.size() ? null : mLrcRows.get(i + 1);
-            /*
-             *  正在播放的时间大于current行的歌词的时间而小于next行歌词的时间， 设置要高亮的行为current行
-             *  正在播放的时间大于current行的歌词，而current行为最后一句歌词时，设置要高亮的行为current行
-             */
-            if ((time >= current.startTime && next != null && time < next.startTime) || (time > current.startTime && next == null)) {
-                seekLrc(i, false);
-                return;
-            }
         }
     }
 }

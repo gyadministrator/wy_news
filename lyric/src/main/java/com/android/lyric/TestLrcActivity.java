@@ -65,14 +65,12 @@ public class TestLrcActivity extends Activity {
         beginLrcPlay();
 
         //设置自定义的LrcView上下拖动歌词时监听
-        mLrcView.setLrcViewListener(new ILrcViewListener() {
-            //当歌词被用户上下拖动的时候回调该方法,从高亮的那一句歌词开始播放
-            public void onLrcSought(int newPosition, LrcRow row) {
-                Log.e(TAG, "onLrcSought: newPosition=" + newPosition + " row=" + row);
-                if (mPlayer != null) {
-                    Log.d(TAG, "onLrcSought:" + row.startTime);
-                    mPlayer.seekTo((int) row.startTime);
-                }
+        //当歌词被用户上下拖动的时候回调该方法,从高亮的那一句歌词开始播放
+        mLrcView.setLrcViewListener((newPosition, row) -> {
+            Log.e(TAG, "onLrcSought: newPosition=" + newPosition + " row=" + row);
+            if (mPlayer != null) {
+                Log.d(TAG, "onLrcSought:" + row.startTime);
+                mPlayer.seekTo((int) row.startTime);
             }
         });
     }

@@ -28,6 +28,7 @@ import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.MusicUrlEvent
+import com.android.wy.news.event.PlayFinishEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
@@ -489,6 +490,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     }
 
                     MusicNotifyService.MUSIC_COMPLETE_ACTION -> {
+                        EventBus.getDefault().postSticky(PlayFinishEvent())
                         //最后一首播放完，播放第一首
                         val dataList = this.musicFragment?.musicAdapter?.getDataList()
                         if (dataList != null) {

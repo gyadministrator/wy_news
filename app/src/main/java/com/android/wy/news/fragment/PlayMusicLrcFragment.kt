@@ -15,6 +15,7 @@ import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
+import com.android.wy.news.event.PlayFinishEvent
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.lrc.LrcBuilder
@@ -65,7 +66,13 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
                 currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
             }
         }
-        setMusic()
+        setMusicInfo()
+        setLrcInfo()
+    }
+
+    private fun playFinish() {
+        Logger.i("PlayMusicLrcFragment--->>>playFinish")
+        lrcView?.setLrc(null)
     }
 
     override fun initEvent() {
@@ -92,19 +99,22 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
             is MusicInfoEvent -> {
                 val gson = Gson()
                 currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
-                setMusic()
+                setMusicInfo()
             }
 
             is LrcChangeEvent -> {
                 setLrcInfo()
             }
+
+            is PlayFinishEvent -> {
+                playFinish()
+            }
         }
     }
 
-    private fun setMusic() {
+    private fun setMusicInfo() {
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
-        setLrcInfo()
     }
 
     private fun setLrcInfo() {
@@ -120,9 +130,9 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
             ?.setSeekLineSize(16)
             ?.setLrcSize(15)
             ?.setLrcSelectSize(18)
-            ?.setMode(LrcView.MODE_HIGH_LIGHT_KARAOKE)
-            ?.setLrcViewListener(this)
-        lrcView?.setLrc(lrcRows)
+            ?.setMode(LrcView.MODE_HIGH_LIGHT_NORMAL)
+            ?.setLrc(lrcRows)
+        lrcView?.setLrcViewListener(this)
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {
