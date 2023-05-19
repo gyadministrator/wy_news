@@ -3,23 +3,30 @@ package com.android.wy.news.fragment
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
+import com.android.lyric.ILrcViewListener
+import com.android.lyric.impl.LrcRow
+import com.android.lyric.impl.LrcView
+import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicLrcBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
-import com.android.wy.news.music.lrc.LrcView
+import com.android.wy.news.music.lrc.LrcBuilder
+import com.android.wy.news.util.AppUtil
 import com.android.wy.news.viewmodel.PlayMusicLrcViewModel
 import com.google.gson.Gson
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusicLrcViewModel>() {
+class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusicLrcViewModel>(),
+    ILrcViewListener {
     private var tvTitle: TextView? = null
     private var tvDesc: TextView? = null
     private var lrcView: LrcView? = null
@@ -78,18 +85,38 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            lrcView?.updateTime(o.time.toLong())
+            lrcView?.seekLrcToTime(o.time.toLong())
         } else if (o is MusicInfoEvent) {
             val gson = Gson()
             currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
             setMusic()
+        } else if (o is LrcChangeEvent) {
+            setLrcInfo()
         }
     }
 
     private fun setMusic() {
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
-        lrcView?.setLrcData(GlobalData.currentLrcData)
+        setLrcInfo()
+    }
+
+    private fun setLrcInfo() {
+        val lrcBuilder = mediaHelper?.let { LrcBuilder(it) }
+        val gson = Gson()
+        val s = gson.toJson(GlobalData.currentLrcData)
+        val lrcRows = lrcBuilder?.getLrcRows(s)
+        lrcView?.setNormalLrcColor(AppUtil.getColor(mActivity, R.color.main_title))
+            ?.setSelectLrcColor(AppUtil.getColor(mActivity, R.color.text_select_color))
+            ?.setSeekLineColor(AppUtil.getColor(mActivity, R.color.select_indicator_color))
+            ?.setSeekLineLrcColor(AppUtil.getColor(mActivity, R.color.select_indicator_color))
+            ?.setLineSpace(30)
+            ?.setSeekLineSize(16)
+            ?.setLrcSize(15)
+            ?.setLrcSelectSize(18)
+            ?.setMode(LrcView.MODE_HIGH_LIGHT_KARAOKE)
+            ?.setLrcViewListener(this)
+        lrcView?.setLrc(lrcRows)
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {
@@ -104,5 +131,9 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     }
 
     override fun onNotifyDataChanged() {
+    }
+
+    override fun onLrcSought(newPosition: Int, row: LrcRow?) {
+        row?.startTime?.toInt()?.let { mediaHelper?.seekTo(it) }
     }
 }

@@ -23,6 +23,7 @@ import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
@@ -262,6 +263,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                             currentLrcList = CommonTools.parseLrc(lrcList)
                             GlobalData.currentLrcData.clear()
                             GlobalData.currentLrcData.addAll(currentLrcList!!)
+                            EventBus.getDefault().postSticky(LrcChangeEvent())
                         }
                     }
                 }
