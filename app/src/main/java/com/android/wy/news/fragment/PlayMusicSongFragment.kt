@@ -3,6 +3,7 @@ package com.android.wy.news.fragment
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
@@ -43,7 +44,8 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var ivCover: ImageView? = null
     private var tvTitle: TextView? = null
     private var tvDesc: TextView? = null
-    private var tvLrc: TextView? = null
+    private var tvCurrentLrc: TextView? = null
+    private var tvNextLrc: TextView? = null
     private var mIvNeedle: ImageView? = null
     private var mFlPlayMusic: FrameLayout? = null
     private var mPlayMusicAnim: Animation? = null
@@ -122,8 +124,12 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             Logger.i("onEvent--->>>time:${o.time}")
             roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            val lrcText = CommonTools.getLrcText(GlobalData.currentLrcData, o.time.toLong())
-            tvLrc?.text = lrcText
+            val lrcTextList = CommonTools.getLrcTextList(GlobalData.currentLrcData, o.time.toLong())
+            if (lrcTextList.size > 0) {
+                tvCurrentLrc?.visibility = View.VISIBLE
+                tvCurrentLrc?.text = lrcTextList[0]
+                tvNextLrc?.text = lrcTextList[1]
+            }
             if (!isDragSeek) {
                 sbMusic?.progress = o.time
             }
@@ -162,7 +168,8 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         ivNext = mBinding.ivNext
         ivMusicMode = mBinding.ivMusicMode
         ivMusicList = mBinding.ivMusicList
-        tvLrc = mBinding.tvLrc
+        tvCurrentLrc = mBinding.tvCurrentLrc
+        tvNextLrc = mBinding.tvNextLrc
 
         ivPlay = mBinding.ivPlay
         rlPlay = mBinding.rlPlay
@@ -283,8 +290,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun setMusic() {
-        val lrcText = CommonTools.getLrcText(GlobalData.currentLrcData, 0)
-        tvLrc?.text = lrcText
         roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
         tvEnd?.text =

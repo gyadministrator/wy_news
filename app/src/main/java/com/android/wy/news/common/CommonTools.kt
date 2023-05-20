@@ -30,6 +30,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /*
@@ -543,5 +544,35 @@ object CommonTools {
         }
         val lrc = lrcList[linePos]
         return lrc.text
+    }
+
+    fun getLrcTextList(lrcList: ArrayList<Lrc>, time: Long): ArrayList<String> {
+        val list = ArrayList<String>()
+        //注意 time 单位为ms lrc.time 为s
+        var linePos = 0
+        val lrcCount = lrcList.size
+        if (lrcCount == 0) {
+            list.add("")
+            list.add("暂无歌词")
+        }
+        for (i in 0 until lrcCount) {
+            val lrc = lrcList[i]
+            if (time >= (lrc.time) * 1000) {
+                if (i == lrcCount - 1) {
+                    linePos = lrcCount - 1
+                } else if (time < (lrcList[i + 1].time) * 1000) {
+                    linePos = i
+                    break
+                }
+            }
+        }
+        val lrc = lrcList[linePos]
+        list.add(lrc.text)
+        if (linePos + 1 > lrcList.size - 1) {
+            list.add("即将结束,将马上播放下一曲")
+        } else {
+            list.add(lrcList[linePos + 1].text)
+        }
+        return list
     }
 }

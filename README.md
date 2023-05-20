@@ -22,3 +22,5 @@ app截图
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_14.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_15.png)
 ![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_16.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_17.png)
+![image](https://github.com/gyadministrator/wy_news/blob/master/screenshot/Screenshot_18.png)
