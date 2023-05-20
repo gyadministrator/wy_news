@@ -10,6 +10,8 @@ import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.common.LrcType
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentPlayMusicLrcBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.LrcChangeEvent
@@ -130,9 +132,18 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
             ?.setSeekLineSize(16)
             ?.setLrcSize(15)
             ?.setLrcSelectSize(18)
-            ?.setMode(LrcView.MODE_HIGH_LIGHT_NORMAL)
             ?.setLrc(lrcRows)
+        setLrcType()
         lrcView?.setLrcViewListener(this)
+    }
+
+    private fun setLrcType() {
+        val lrcType = SpTools.getInt(GlobalData.SpKey.LRC_TYPE)
+        if (lrcType == LrcType.LRC_TYPE_KALAOK) {
+            lrcView?.setMode(LrcView.MODE_HIGH_LIGHT_KARAOKE)
+        } else {
+            lrcView?.setMode(LrcView.MODE_HIGH_LIGHT_NORMAL)
+        }
     }
 
     override fun getViewBinding(): FragmentPlayMusicLrcBinding {
@@ -147,6 +158,10 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
     }
 
     override fun onNotifyDataChanged() {
+        GlobalData.lrcTypeChange.observe(this) {
+            setLrcType()
+            lrcView?.invalidate()
+        }
     }
 
     override fun onLrcSought(newPosition: Int, row: LrcRow?) {

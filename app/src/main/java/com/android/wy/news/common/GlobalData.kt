@@ -1,5 +1,6 @@
 package com.android.wy.news.common
 
+import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.music.MusicTypeEntity
@@ -24,6 +25,7 @@ object GlobalData {
         const val NOTICE_STATUS = "notice_status"
         var LAST_PLAY_MUSIC_KEY = "last_play_music_key"
         var CSRF_TOKEN_KEY = "csrf_token_key"
+        var LRC_TYPE = "lrc_type"
     }
 
     /*-----------------全局数据----------------------*/
@@ -33,4 +35,5 @@ object GlobalData {
     val mMusicTitleList = arrayListOf<MusicTypeEntity>()
     val currentLrcData = arrayListOf<Lrc>()
     var CSRF_TOKEN = ""
+    val lrcTypeChange = MutableLiveData<Int>()
 }

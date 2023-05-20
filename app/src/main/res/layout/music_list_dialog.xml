@@ -31,6 +31,7 @@
             android:layout_height="25dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/close"
+            app:tint="@color/main_title"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 

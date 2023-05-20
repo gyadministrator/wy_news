@@ -2,8 +2,6 @@ package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -39,8 +37,8 @@ class MusicListDialog(context: Context, theme: Int) : BottomSheetDialog(context,
         val binding = MusicListDialogBinding.bind(view)
         initView(binding)
         this.setContentView(view)
-        setCanceledOnTouchOutside(false)
-        setCancelable(false)
+        setCanceledOnTouchOutside(true)
+        setCancelable(true)
     }
 
     private fun initView(binding: MusicListDialogBinding) {
@@ -57,34 +55,7 @@ class MusicListDialog(context: Context, theme: Int) : BottomSheetDialog(context,
 
     override fun onStart() {
         super.onStart()
-        //hideBar()
         setBarColor()
-    }
-
-    private fun hideBar() {
-        //去除对话框内边距与背景透明
-        val layoutParams = window?.attributes
-        val width: Float = context.resources.displayMetrics.widthPixels * 1f
-        val height: Float = context.resources.displayMetrics.heightPixels * 1f
-        layoutParams?.width = width.toInt()
-        layoutParams?.height = height.toInt()
-        window?.attributes = layoutParams
-        window?.decorView?.background = ColorDrawable(Color.TRANSPARENT)
-        window?.decorView?.setPadding(0, 0, 0, 0)
-        //隐藏导航栏与状态栏
-        val params = window?.attributes
-        params?.systemUiVisibility =
-            (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
-        window?.attributes = params
-        setBarColor()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        //hideBar()
     }
 
     private fun setBarColor() {

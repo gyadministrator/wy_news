@@ -39,5 +39,8 @@
     <string name="no_wifi_play_music">非WiFi环境播放音乐</string>
     <string name="allow_other_play">允许与其他应用同时播放</string>
     <string name="desktop_lrc">桌面歌词</string>
-    <string name="loading_lrc">歌词载入中...</string>
+    <string name="loading_lrc">歌词载入中…</string>
+    <string name="lrc_type">歌词模式</string>
+    <string name="line_highligh">逐行高亮</string>
+    <string name="word_highligh">逐字高亮(卡拉OK)</string>
 </resources>

@@ -19,6 +19,7 @@ import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.R
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
+import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -36,11 +37,13 @@ class PlayMusicFragment : DialogFragment() {
     private var width = 0
     private var ivBg: ImageView? = null
     private var rlDown: RelativeLayout? = null
+    private var rlMore: RelativeLayout? = null
     private var mAnimStyle: Int =
         com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
     private var currentPlayUrl: String? = null
     private var tabLayout: CustomTabLayout? = null
     private var viewPager: ViewPager? = null
+    private var lrcTypeDialog: LrcTypeDialog? = null
 
     companion object {
         const val POSITION_KEY = "position_key"
@@ -74,6 +77,7 @@ class PlayMusicFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = mContentView?.let { FragmentPlayMusicBinding.bind(it) }
+        lrcTypeDialog = context?.let { LrcTypeDialog(it, R.style.BottomSheetDialog) }
         initView(binding)
         initData()
     }
@@ -81,11 +85,19 @@ class PlayMusicFragment : DialogFragment() {
     private fun initView(binding: FragmentPlayMusicBinding?) {
         ivBg = binding?.ivBg
         rlDown = binding?.rlDown
+        rlMore = binding?.rlMore
         viewPager = binding?.viewPager
         tabLayout = binding?.tabLayout
         rlDown?.setOnClickListener {
             dismiss()
         }
+        rlMore?.setOnClickListener {
+            showMore()
+        }
+    }
+
+    private fun showMore() {
+        lrcTypeDialog?.show()
     }
 
     private fun initData() {
