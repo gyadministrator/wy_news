@@ -411,10 +411,12 @@ class LrcView : View, ILrcView {
 
         //画出正在播放的那句歌词的上面所有的歌词
         while (rowY > -mLrcFontSize && rowNum >= 0) {
-            val text = mLrcRows!![rowNum].content
-            canvas!!.drawText(text, rowX.toFloat(), rowY.toFloat(), mPaint!!)
-            rowY -= mPaddingY + mLrcFontSize
-            rowNum--
+            if (rowNum < mLrcRows?.size!!) {
+                val text = mLrcRows!![rowNum].content
+                canvas!!.drawText(text, rowX.toFloat(), rowY.toFloat(), mPaint!!)
+                rowY -= mPaddingY + mLrcFontSize
+                rowNum--
+            }
         }
 
         // 3、画出正在播放的那句歌词的下面的可以展示出来的歌词
@@ -475,6 +477,7 @@ class LrcView : View, ILrcView {
         rowX: Int,
         highlightRowY: Int
     ) {
+        if (mHighLightRow > mLrcRows?.size!! - 1) return
         val highLrcRow: LrcRow = mLrcRows!![mHighLightRow]
         val highlightText: String = highLrcRow.content
 
@@ -544,6 +547,7 @@ class LrcView : View, ILrcView {
     }
 
     private fun drawHighLrcRow(canvas: Canvas, rowX: Int, highlightRowY: Int) {
+        if (mHighLightRow > mLrcRows?.size!! - 1) return
         val highlightText = mLrcRows!![mHighLightRow].content
         mPaint!!.color = mHighLightRowColor
         mPaint!!.textSize = mLrcFontSelectSize.toFloat()
