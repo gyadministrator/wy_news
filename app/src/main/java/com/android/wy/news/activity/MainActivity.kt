@@ -156,13 +156,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
      * 没办法，提供操作说明和解决方案吧。提供解决方案以后，目前还正常。
      */
     private fun guideNotification() {
-        val checkFloatPermission = PermissionCheckUtil.checkFloatPermission(this)
-        if (!checkFloatPermission) {
-            //打开悬浮窗
-            PermissionCheckUtil.requestSettingCanDrawOverlays(this)
-        }
-        //打开自启动窗口
-        //AutoStartUtil.getAutostartSettingIntent(this)
+        //判断悬浮窗权限
+        PermissionCheckUtil.checkOverPermission(this)
         //打开电池优化
         BatteryManageUtil.ignoreBatteryOptimization(this)
     }
