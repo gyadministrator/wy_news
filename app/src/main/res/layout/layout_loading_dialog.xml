@@ -2,25 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:background="@drawable/bg_music_loading"
     android:gravity="center"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+    android:padding="10dp"
     tools:ignore="MissingDefaultResource">
 
     <com.android.wy.news.view.LoadingView
         android:id="@+id/loading_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:tint="@color/main_title" />
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:gravity="center"
+        android:layout_marginStart="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/main_title"
         android:textSize="16sp"
         tools:text="加载中..." />

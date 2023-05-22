@@ -488,7 +488,7 @@ object CommonTools {
         return videoList
     }
 
-    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo> {
+    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo>? {
         val dataList = ArrayList<MusicInfo>()
         if (musicList != null && musicList.size > 0) {
             for (i in 0 until musicList.size) {

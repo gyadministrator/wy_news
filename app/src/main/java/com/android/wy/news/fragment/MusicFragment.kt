@@ -48,6 +48,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+/**
+ * {
+ *     "title": "畅听榜",
+ *     "id": 145
+ *   }
+ */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicInfo>,
     PlayBarView.OnPlayBarListener {
@@ -106,6 +112,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         } else {
             hidePlayBar()
         }
+        getLrc()
     }
 
     private fun hidePlayBar() {
@@ -179,6 +186,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
             val musicList = musicListData?.musicList
+            val filterMusicList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -187,16 +195,16 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             if (isLoading) {
                 refreshLayout.finishLoadMore()
             }
-            if (musicList != null) {
-                if (musicList.size == 0) {
+            if (filterMusicList != null) {
+                if (filterMusicList.size == 0) {
                     if (isLoading) {
                         refreshLayout.setNoMoreData(true)
                     }
                 } else {
                     if (isRefresh) {
-                        musicAdapter.refreshData(musicList)
+                        musicAdapter.refreshData(filterMusicList)
                     } else {
-                        musicAdapter.loadMoreData(musicList)
+                        musicAdapter.loadMoreData(filterMusicList)
                     }
                 }
             } else {
@@ -246,6 +254,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playMusic(it: String?) {
         this.currentPlayUrl = it
+        GlobalData.playUrlChange.postValue(it)
         startMusicService()
         getLrc()
     }

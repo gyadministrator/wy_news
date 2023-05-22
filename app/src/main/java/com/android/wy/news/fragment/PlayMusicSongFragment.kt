@@ -124,12 +124,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             Logger.i("onEvent--->>>time:${o.time}")
             roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            val lrcTextList = CommonTools.getLrcTextList(GlobalData.currentLrcData, o.time.toLong())
-            if (lrcTextList.size > 0) {
-                tvCurrentLrc?.visibility = View.VISIBLE
-                tvCurrentLrc?.text = lrcTextList[0]
-                tvNextLrc?.text = lrcTextList[1]
-            }
+            setLrcText(o.time.toLong())
             if (!isDragSeek) {
                 sbMusic?.progress = o.time
             }
@@ -151,6 +146,15 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             val dataList = o.dataList
             Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
             musicListDialog?.setData(dataList)
+        }
+    }
+
+    private fun setLrcText(time: Long) {
+        val lrcTextList = CommonTools.getLrcTextList(GlobalData.currentLrcData, time)
+        if (lrcTextList.size > 0) {
+            tvCurrentLrc?.visibility = View.VISIBLE
+            tvCurrentLrc?.text = lrcTextList[0]
+            tvNextLrc?.text = lrcTextList[1]
         }
     }
 
@@ -283,6 +287,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             if (!TextUtils.isEmpty(s)) {
                 val gson = Gson()
                 currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
+                setLrcText(0)
             }
         }
         setMusic()
@@ -324,5 +329,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     override fun onNotifyDataChanged() {
+        GlobalData.playUrlChange.observe(this) {
+            currentPlayUrl = it
+            LoadingDialog.hide()
+        }
     }
 }

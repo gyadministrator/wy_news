@@ -65,7 +65,7 @@
                 android:layout_marginTop="6dp"
                 android:gravity="start"
                 android:text="@string/loading_lrc"
-                android:textColor="@color/second_title"
+                android:textColor="@color/main_title"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

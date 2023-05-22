@@ -198,7 +198,7 @@ dependencies {
     implementation rootProject.ext.dependencies.jiaozivideoplayer
     implementation project(':locationselect')
     implementation project(':bottombar')
-    implementation project(':lyric')
+    implementation project(':lrc')
     //kotlin路由导入
     implementation rootProject.ext.dependencies.arouterApi
     kapt rootProject.ext.dependencies.arouterCompiler

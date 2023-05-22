@@ -14,7 +14,7 @@
             <option value="$PROJECT_DIR$/bottombar" />
             <option value="$PROJECT_DIR$/commonui" />
             <option value="$PROJECT_DIR$/locationselect" />
-            <option value="$PROJECT_DIR$/lyric" />
+            <option value="$PROJECT_DIR$/lrc" />
           </set>
         </option>
       </GradleProjectSettings>

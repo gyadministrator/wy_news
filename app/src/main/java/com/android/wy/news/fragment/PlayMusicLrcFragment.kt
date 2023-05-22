@@ -3,9 +3,6 @@ package com.android.wy.news.fragment
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
-import com.android.lyric.ILrcViewListener
-import com.android.lyric.impl.LrcRow
-import com.android.lyric.impl.LrcView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
@@ -18,6 +15,9 @@ import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.PlayFinishEvent
+import com.android.wy.news.lrc.impl.LrcRow
+import com.android.wy.news.lrc.impl.LrcView
+import com.android.wy.news.lrc.listener.ILrcViewListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.lrc.LrcBuilder
@@ -129,9 +129,9 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
             ?.setSeekLineColor(AppUtil.getColor(mActivity, R.color.select_indicator_color))
             ?.setSeekLineLrcColor(AppUtil.getColor(mActivity, R.color.select_indicator_color))
             ?.setLineSpace(30)
-            ?.setSeekLineSize(16)
-            ?.setLrcSize(15)
-            ?.setLrcSelectSize(18)
+            ?.setSeekLineSize(17)
+            ?.setLrcSize(17)
+            ?.setLrcSelectSize(20)
             ?.setLrc(lrcRows)
         setLrcType()
         lrcView?.setLrcViewListener(this)
@@ -164,7 +164,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         }
     }
 
-    override fun onLrcSought(newPosition: Int, row: LrcRow?) {
-        row?.startTime?.toInt()?.let { mediaHelper?.seekTo(it) }
+    override fun onLrcDrag(newPosition: Int, row: LrcRow) {
+        mediaHelper?.seekTo(row.startTime.toInt())
     }
 }

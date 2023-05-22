@@ -14,17 +14,17 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_cover"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_marginTop="-10dp"
         android:clipChildren="false"
         android:scaleType="centerCrop"
-        app:riv_corner_radius="4dp"
+        app:riv_oval="true"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="horizontal">
@@ -63,8 +63,8 @@
 
                 <com.android.wy.news.view.RoundProgressBar
                     android:id="@+id/round_progress_bar"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerInParent="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
@@ -84,8 +84,8 @@
 
                 <com.wang.avi.AVLoadingIndicatorView
                     android:id="@+id/iv_state_loading"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"

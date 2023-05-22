@@ -36,4 +36,5 @@ object GlobalData {
     val currentLrcData = arrayListOf<Lrc>()
     var CSRF_TOKEN = ""
     val lrcTypeChange = MutableLiveData<Int>()
+    val playUrlChange = MutableLiveData<String>()
 }
