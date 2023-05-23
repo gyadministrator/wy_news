@@ -10,7 +10,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
-import com.android.wy.news.activity.MainActivity
+import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.adapter.BannerImgAdapter
 import com.android.wy.news.adapter.BaseNewsAdapter
@@ -92,8 +92,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             LocationHelper.startLocation(mActivity, object : OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
                     currentCity = aMapLocation.city
-                    if (mActivity is MainActivity) {
-                        (mActivity as MainActivity).updateCity(currentCity)
+                    if (mActivity is HomeActivity) {
+                        (mActivity as HomeActivity).updateCity(currentCity)
                     }
                     getCityData()
                 }
@@ -177,6 +177,12 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         mViewModel.cityNewsList.observe(this) {
             loadingView.visibility = View.GONE
             addBannerHeader(it)
+            if (it.size > 0) {
+                if (mActivity is HomeActivity) {
+                    val homeActivity = mActivity as HomeActivity
+                    homeActivity.setMessageNum(0, it.size)
+                }
+            }
             TaskUtil.runOnThread {
                 var noticeStatus = SpTools.getBoolean(GlobalData.SpKey.NOTICE_STATUS)
                 if (noticeStatus == null) noticeStatus = false
@@ -191,6 +197,12 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             if (it.size > 0) {
                 loadingView.visibility = View.GONE
                 addCityNewsHeader(it)
+            }
+        }
+
+        GlobalData.doubleClickChange.observe(this) {
+            if (it == 0) {
+                refreshLayout.autoRefresh()
             }
         }
     }
@@ -282,6 +294,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
+        refresh()
+    }
+
+    private fun refresh() {
         isRefresh = true
         pageStart = 0
         getTopData()

@@ -1,7 +1,6 @@
 package com.android.wy.news.fragment
 
 import android.content.Context
-import android.os.Looper
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.OrientationHelper
@@ -10,6 +9,7 @@ import cn.jzvd.Jzvd
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabVideoBinding
 import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
@@ -30,12 +30,11 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
-    private lateinit var videoAdapter: VideoAdapter
+    private var videoAdapter: VideoAdapter? = null
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var layoutManager: VideoLayoutManager
     private var currentPosition: Int = 0
     private var pageStart = 0
-    private var isPause = false
 
     companion object {
         fun newInstance() = VideoTabFragment()
@@ -89,13 +88,17 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
                 }
             } else {
                 if (isRefresh) {
-                    videoAdapter.refreshData(it)
+                    videoAdapter?.refreshData(it)
                 } else {
-                    val i = videoAdapter.loadMoreData(it)
+                    val i = videoAdapter?.loadMoreData(it)
                     if (isLoading) {
                         //加载完成，直接滑动到新加载的第一条数据
-                        rvContent.scrollToPosition(i + 1)
-                        playVideo(i + 1)
+                        if (i != null) {
+                            rvContent.scrollToPosition(i + 1)
+                        }
+                        if (i != null) {
+                            playVideo(i + 1)
+                        }
                     }
                 }
             }
@@ -112,6 +115,12 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
             }
             if (isLoading) {
                 refreshLayout.finishLoadMore()
+            }
+        }
+
+        GlobalData.indexChange.observe(this) {
+            if (it == 2) {
+                rePlay()
             }
         }
     }
@@ -169,7 +178,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun releaseVideo(index: Int) {
-        //JCVideoPlayer.releaseAllVideos()
+        //Jzvd.releaseAllVideos()
     }
 
     override fun onPageSelected(position: Int, isBottom: Boolean) {
@@ -177,42 +186,16 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         playVideo(position)
     }
 
-    override fun onPause() {
-        super.onPause()
-        isPause = true
-        Jzvd.releaseAllVideos()
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (hidden) {
-            Jzvd.releaseAllVideos()
-        } else {
-            rePlay()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isPause) {
-            isPause = false
-            rePlay()
-        }
-    }
-
     private fun rePlay() {
-        val dataList = videoAdapter.getDataList()
-        val recommendVideoEntity = dataList[currentPosition]
-        recommendVideoEntity.isPlaying = true
-        videoAdapter.notifyItemChanged(currentPosition)
-
-        playVideo(currentPosition)
-    }
-
-    @Deprecated("Deprecated in Java", ReplaceWith("super.setUserVisibleHint(isVisibleToUser)"))
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        playVideo(currentPosition)
+        if (videoAdapter != null) {
+            val dataList = videoAdapter?.getDataList()
+            if (currentPosition < dataList!!.size) {
+                val recommendVideoEntity = dataList[currentPosition]
+                recommendVideoEntity.isPlaying = true
+                videoAdapter?.notifyItemChanged(currentPosition)
+                playVideo(currentPosition)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {

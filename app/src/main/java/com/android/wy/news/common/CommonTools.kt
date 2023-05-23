@@ -554,6 +554,7 @@ object CommonTools {
         if (lrcCount == 0) {
             list.add("")
             list.add("暂无歌词")
+            return list
         }
         for (i in 0 until lrcCount) {
             val lrc = lrcList[i]
@@ -569,7 +570,7 @@ object CommonTools {
         val lrc = lrcList[linePos]
         list.add(lrc.text)
         if (linePos + 1 > lrcList.size - 1) {
-            list.add("即将结束,将马上播放下一曲")
+            list.add("马上结束,即将播放下一曲")
         } else {
             list.add(lrcList[linePos + 1].text)
         }

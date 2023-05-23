@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.activity.MainActivity
+import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
@@ -104,6 +104,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         rvContent.layoutManager = LinearLayoutManager(mActivity)
         rvContent.adapter = musicAdapter
 
+        initPlayBar()
+        getLrc()
+    }
+
+    private fun initPlayBar() {
         val gson = Gson()
         val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
         this.currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
@@ -112,12 +117,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         } else {
             hidePlayBar()
         }
-        getLrc()
     }
 
     private fun hidePlayBar() {
-        if (mActivity is MainActivity) {
-            val homeActivity = mActivity as MainActivity
+        if (mActivity is HomeActivity) {
+            val homeActivity = mActivity as HomeActivity
             playBarView = homeActivity.getPlayBarView()
             playBarView?.visibility = View.GONE
         }
@@ -250,6 +254,16 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 refreshLayout.finishLoadMore(false)
             }
         }
+
+        GlobalData.indexChange.observe(this) {
+            if (it == 3) {
+                registerMusicReceiver()
+                if (!EventBus.getDefault().isRegistered(this)) {
+                    EventBus.getDefault().register(this)
+                }
+                initPlayBar()
+            }
+        }
     }
 
     private fun playMusic(it: String?) {
@@ -283,25 +297,28 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerMusicReceiver() {
-        musicReceiver = MusicReceiver(this)
-        val filter = IntentFilter()
-        filter.addAction(MusicNotifyService.MUSIC_PLAY_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_PAUSE_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_NEXT_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_PRE_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_COMPLETE_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_STATE_ACTION)
-        filter.addAction(MusicNotifyService.MUSIC_CLOSE_ACTION)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mActivity.registerReceiver(musicReceiver, filter, Context.RECEIVER_EXPORTED)
-        } else {
-            mActivity.registerReceiver(musicReceiver, filter)
+        if (musicReceiver == null) {
+            musicReceiver = MusicReceiver(this)
+            val filter = IntentFilter()
+            filter.addAction(MusicNotifyService.MUSIC_PLAY_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_PAUSE_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_NEXT_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_PRE_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_COMPLETE_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_STATE_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_CLOSE_ACTION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mActivity.registerReceiver(musicReceiver, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                mActivity.registerReceiver(musicReceiver, filter)
+            }
         }
     }
 
     private fun unRegisterMusicReceiver() {
         if (musicReceiver != null) {
             mActivity.unregisterReceiver(musicReceiver)
+            musicReceiver = null
         }
     }
 
@@ -435,8 +452,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (!TextUtils.isEmpty(album)) {
             stringBuilder.append("-$album")
         }
-        if (mActivity is MainActivity) {
-            val homeActivity = mActivity as MainActivity
+        if (mActivity is HomeActivity) {
+            val homeActivity = mActivity as HomeActivity
             playBarView = homeActivity.getPlayBarView()
             val selectPosition = homeActivity.getSelectPosition()
             if (selectPosition != 3) return

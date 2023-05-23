@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 object RouteManager {
     const val PATH_ACTIVITY_ABOUT = "/activity/AboutActivity"
     const val PATH_ACTIVITY_MAIN = "/activity/MainActivity"
+    const val PATH_ACTIVITY_HOME = "/activity/HomeActivity"
     const val PATH_ACTIVITY_INTRODUCE = "/activity/IntroduceActivity"
     const val PATH_ACTIVITY_LAUNCH = "/activity/LaunchActivity"
     const val PATH_ACTIVITY_PERMISSION = "/activity/PermissionActivity"

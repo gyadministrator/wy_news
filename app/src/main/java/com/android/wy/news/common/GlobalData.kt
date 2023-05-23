@@ -37,4 +37,6 @@ object GlobalData {
     var CSRF_TOKEN = ""
     val lrcTypeChange = MutableLiveData<Int>()
     val playUrlChange = MutableLiveData<String>()
+    val indexChange = MutableLiveData<Int>()
+    val doubleClickChange = MutableLiveData<Int>()
 }

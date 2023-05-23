@@ -81,7 +81,8 @@ ext {
             'com.google.accompanist:accompanist-systemuicontroller': '0.17.0',
             'org.greenrobot:eventbus'                              : '3.1.1',
             'com.alibaba:arouter-api'                              : '1.5.2',
-            'com.alibaba:arouter-compiler'                         : '1.5.2'
+            'com.alibaba:arouter-compiler'                         : '1.5.2',
+            'me.majiajie:pager-bottom-tab-strip'                   : '2.4.0'
 
     ]
 
@@ -140,6 +141,7 @@ ext {
             accompanistSystemUiController: "com.google.accompanist:accompanist-systemuicontroller:${versions['com.google.accompanist:accompanist-systemuicontroller']}",
             eventbus                     : "org.greenrobot:eventbus:${versions["org.greenrobot:eventbus"]}",
             arouterApi                   : "com.alibaba:arouter-api:${versions["com.alibaba:arouter-api"]}",
-            arouterCompiler              : "com.alibaba:arouter-compiler:${versions["com.alibaba:arouter-compiler"]}"
+            arouterCompiler              : "com.alibaba:arouter-compiler:${versions["com.alibaba:arouter-compiler"]}",
+            pagerBottomTabStrip          : "me.majiajie:pager-bottom-tab-strip:${versions["me.majiajie:pager-bottom-tab-strip"]}"
     ]
 }
