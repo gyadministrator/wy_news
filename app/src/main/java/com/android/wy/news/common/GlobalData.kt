@@ -29,6 +29,9 @@ object GlobalData {
     }
 
     /*-----------------全局数据----------------------*/
+    var isLock: Boolean = false
+    const val MUSIC_NOTIFY_ID = 100
+    var isPlaying: Boolean = false
     const val LOCATION_KEY = "7f0d79866211bd1622b599d4ffae5a73"
     val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
     val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
@@ -39,4 +42,5 @@ object GlobalData {
     val playUrlChange = MutableLiveData<String>()
     val indexChange = MutableLiveData<Int>()
     val doubleClickChange = MutableLiveData<Int>()
+    val cityChange = MutableLiveData<String>()
 }

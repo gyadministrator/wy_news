@@ -1,7 +1,9 @@
 package com.android.wy.news.service
 
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -20,6 +22,8 @@ import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.music.MusicState
+import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.util.AppUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -39,7 +43,7 @@ class MusicNotifyService : Service() {
     private var timer: Timer? = null
 
     companion object {
-        private const val notifyID = 100
+        private const val notifyID = GlobalData.MUSIC_NOTIFY_ID
         private const val CHANNEL_ID = "wy_news_music_channel_id"
         private const val CHANNEL_NAME = "wy_news_music_channel_name"
         private const val CHANNEL_DESCRIPTION = "wy_news_music_channel_description"
@@ -51,6 +55,7 @@ class MusicNotifyService : Service() {
         const val MUSIC_STATE_ACTION = "service.action.state"
         const val MUSIC_PREPARE_ACTION = "service.action.prepare"
         const val MUSIC_CLOSE_ACTION = "service.action.close"
+        const val MUSIC_LOCK_ACTION = "service.action.lock"
         const val MUSIC_INFO_KEY = "music.info.key"
         const val MUSIC_URL_KEY = "music.url.key"
     }
@@ -125,6 +130,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onPauseState() {
+                GlobalData.isPlaying = false
                 Logger.i("onPauseState: ")
                 EventBus.getDefault().postSticky(PlayEvent())
                 startMusicForeground(musicInfo)
@@ -136,6 +142,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onPlayingState() {
+                GlobalData.isPlaying = true
                 Logger.i("onPlayingState: ")
                 EventBus.getDefault().postSticky(PlayEvent())
                 startMusicForeground(musicInfo)
@@ -147,6 +154,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onCompleteState() {
+                GlobalData.isPlaying = false
                 Logger.i("onCompleteState: ")
                 GlobalData.currentLrcData.clear()
                 timer?.cancel()
@@ -160,6 +168,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onErrorState(what: Int, extra: Int) {
+                GlobalData.isPlaying = false
                 Logger.i("onErrorState: what:$what  extra:$extra")
             }
         })
@@ -204,8 +213,18 @@ class MusicNotifyService : Service() {
             closeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
         notifyLayout?.setOnClickPendingIntent(R.id.iv_close, closePendingIntent)
+
+        val lockIntent = Intent(this, MusicPlayService::class.java)
+        lockIntent.action = MUSIC_LOCK_ACTION
+        val lockPendingIntent = PendingIntent.getService(
+            this,
+            4,
+            lockIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        notifyLayout?.setOnClickPendingIntent(R.id.iv_lock, lockPendingIntent)
     }
 
     /**
@@ -213,21 +232,36 @@ class MusicNotifyService : Service() {
      * @param musicInfo musicInfo
      */
     private fun startMusicForeground(musicInfo: MusicInfo) {
+        val background = AppUtil.isBackground(this)
         Logger.i("startMusicForeground start...")
         mNotifyHelper?.createChannel(
             CHANNEL_ID, CHANNEL_NAME, CHANNEL_DESCRIPTION
         )
 
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val builder: NotificationCompat.Builder? =
             mNotifyHelper?.createForeNotification(CHANNEL_ID, notifyLayout)
+
         if (mediaHelper!!.isPlaying()) {
             notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_play)
         } else {
             notifyLayout?.setImageViewResource(R.id.iv_play, R.mipmap.music_pause)
         }
+
+        if (GlobalData.isLock) {
+            notifyLayout?.setImageViewResource(R.id.iv_lock, R.mipmap.lock)
+        } else {
+            notifyLayout?.setImageViewResource(R.id.iv_lock, R.mipmap.unlock)
+        }
+
         notifyLayout?.setTextViewText(R.id.tv_title, musicInfo.artist)
         notifyLayout?.setTextViewText(R.id.tv_desc, musicInfo.name)
-        startForeground(notifyID, builder?.build())
+        if (background) {
+            notificationManager.notify(notifyID, builder?.build())
+        } else {
+            startForeground(notifyID, builder?.build())
+        }
 
         Glide.with(this).asBitmap().load(musicInfo.pic)
             .apply(RequestOptions.bitmapTransform(RoundedCorners(4)))
@@ -238,7 +272,11 @@ class MusicNotifyService : Service() {
                     resource: Bitmap, transition: Transition<in Bitmap?>?
                 ) {
                     notifyLayout?.setImageViewBitmap(R.id.iv_cover, resource)
-                    startForeground(notifyID, builder?.build())
+                    if (background) {
+                        notificationManager.notify(notifyID, builder?.build())
+                    } else {
+                        startForeground(notifyID, builder?.build())
+                    }
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {

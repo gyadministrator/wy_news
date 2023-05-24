@@ -1,5 +1,6 @@
 package com.android.wy.news.activity
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
@@ -67,7 +68,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private var firstTime: Long = 0
     private lateinit var marqueeTextView: MarqueeTextView
     private lateinit var rlSetting: RelativeLayout
-    private lateinit var rlSearch: RelativeLayout
+    private lateinit var rlSearchEdit: RelativeLayout
+    private lateinit var rlSearch: LinearLayout
     private val list = ArrayList<String>()
     private var selectColor: Int = 0
     private var cityPicker: CityPicker? = null
@@ -94,7 +96,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         tvCity = mBinding.tvCity
         marqueeTextView = mBinding.marqueeTextView
         rlSetting = mBinding.rlSetting
-        rlSearch = mBinding.rlSearchTop
+        rlSearchEdit = mBinding.rlSearchEdit
+        rlSearch = mBinding.rlSearch
         playBarView = mBinding.playBarView
     }
 
@@ -110,6 +113,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
         initBottomBar()
         setMessagePoint(3, true)
+        setMessagePoint(2, true)
         TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
@@ -187,7 +191,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlSetting.setOnClickListener {
             SettingActivity.startSettingActivity(this)
         }
-        rlSearch.setOnClickListener {
+        rlSearchEdit.setOnClickListener {
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
         tvCity.setOnClickListener {
@@ -219,10 +223,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             val noticeStatus = SpTools.getBoolean(GlobalData.SpKey.NOTICE_STATUS)
             if (noticeStatus == true) {
                 TaskUtil.runOnUiThread({
-                    WebActivity.startActivity(this, url = url)
+                    WebActivity.startActivity(this, url)
                 }, 500)
             } else {
-                WebActivity.startActivity(this, url = url)
+                WebActivity.startActivity(this, url)
             }
         }
     }
@@ -249,6 +253,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             ?.show()
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private fun checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //判断是否需要开启通知栏功能
@@ -303,6 +308,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             marqueeTextView.setList(list)
             marqueeTextView.startScroll()
         }
+
+        GlobalData.cityChange.observe(this) {
+            tvCity.text = it
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -330,12 +339,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     }
 
     private fun hideSearch() {
-        val rlSearch = findViewById<LinearLayout>(R.id.rl_search)
         rlSearch.visibility = View.GONE
     }
 
     private fun showSearch() {
-        val rlSearch = findViewById<LinearLayout>(R.id.rl_search)
         rlSearch.visibility = View.VISIBLE
     }
 
@@ -345,10 +352,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     fun getSelectPosition(): Int {
         return currentSelectPosition
-    }
-
-    fun updateCity(city: String) {
-        tvCity.text = city
     }
 
     override fun onSelected(index: Int, old: Int) {
@@ -397,7 +400,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     override fun onPick(position: Int, data: City?) {
         tvCity.text = data?.name
-        EventBus.getDefault().post(data?.name)
+        GlobalData.cityChange.postValue(data?.name)
         Logger.i("选中的城市: " + data?.name)
     }
 

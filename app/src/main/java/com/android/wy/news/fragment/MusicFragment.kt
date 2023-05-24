@@ -34,7 +34,9 @@ import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.Lrc
+import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.service.MusicNotifyService
+import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
@@ -199,20 +201,17 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             if (isLoading) {
                 refreshLayout.finishLoadMore()
             }
-            if (filterMusicList != null) {
-                if (filterMusicList.size == 0) {
-                    if (isLoading) {
-                        refreshLayout.setNoMoreData(true)
-                    }
-                } else {
-                    if (isRefresh) {
-                        musicAdapter.refreshData(filterMusicList)
-                    } else {
-                        musicAdapter.loadMoreData(filterMusicList)
-                    }
+
+            if (filterMusicList.size == 0) {
+                if (isLoading) {
+                    refreshLayout.setNoMoreData(true)
                 }
             } else {
-                refreshLayout.setNoMoreData(true)
+                if (isRefresh) {
+                    musicAdapter.refreshData(filterMusicList)
+                } else {
+                    musicAdapter.loadMoreData(filterMusicList)
+                }
             }
 
             val musicListEvent = MusicListEvent(musicAdapter.getDataList())
@@ -275,7 +274,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun getLrc() {
         val musicId = this.currentMusicInfo?.musicrid
-        if (musicId!!.contains("_")) {
+        if (musicId != null && musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
             MusicRepository.getMusicLrc(mid).observe(this) {
                 val musicLrcEntity = it.getOrNull()
@@ -307,6 +306,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             filter.addAction(MusicNotifyService.MUSIC_COMPLETE_ACTION)
             filter.addAction(MusicNotifyService.MUSIC_STATE_ACTION)
             filter.addAction(MusicNotifyService.MUSIC_CLOSE_ACTION)
+            filter.addAction(MusicNotifyService.MUSIC_LOCK_ACTION)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 mActivity.registerReceiver(musicReceiver, filter, Context.RECEIVER_EXPORTED)
             } else {
@@ -528,8 +528,18 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     }
 
                     MusicNotifyService.MUSIC_CLOSE_ACTION -> {
+                        val background =
+                            this.musicFragment?.mActivity?.let { AppUtil.isBackground(it) }
+                        if (background != null && background == true) {
+                            NotificationHelper.cancelNotification(GlobalData.MUSIC_NOTIFY_ID)
+                        }
                         //关闭音乐服务
                         this.musicFragment?.stopMusicService()
+                    }
+
+                    MusicNotifyService.MUSIC_LOCK_ACTION -> {
+                        GlobalData.isLock = !GlobalData.isLock
+                        this.musicFragment?.startMusicService()
                     }
 
                     else -> {

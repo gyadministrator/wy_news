@@ -3,6 +3,8 @@ package com.android.wy.news.manager
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -12,6 +14,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.wy.news.R
 import com.android.wy.news.app.App
@@ -20,7 +24,9 @@ import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.LayoutDesktopLrcBinding
+import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import java.lang.ref.WeakReference
 
@@ -39,10 +45,8 @@ object LrcDesktopManager {
     private var mStartX = 0f
     private var mStartY = 0f
     private var mTitleHeight = 0
-    private var isLock = false
     private var hasAddView = false
     private var mActivity: WeakReference<Activity>? = null
-    private var currentLrc: String? = null
 
 
     /**
@@ -54,13 +58,11 @@ object LrcDesktopManager {
     fun showDesktopLrc(activity: Activity, time: Long) {
         val background = AppUtil.isBackground(activity)
         val isShowDesktop = SpTools.getBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC)
-        if (!background || isShowDesktop == null || isShowDesktop == false) return
-        currentLrc = CommonTools.getLrcText(GlobalData.currentLrcData, time)
+        if (!background || isShowDesktop == null || isShowDesktop == false || !GlobalData.isPlaying) return
         if (hasAddView) {
-            val tvLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_lrc)
-            tvLrc?.text = currentLrc
-            mParams?.let { mContentView?.get()?.let { it1 -> updateView(it1, it) } }
-            Logger.i("showDesktopLrc---->>>update--->>>lrc:$currentLrc")
+            val tvCurrentLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_current_lrc)
+            val tvNextLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_next_lrc)
+            updateLrc(tvCurrentLrc, tvNextLrc, time)
         } else {
             val view =
                 LayoutInflater.from(App.app).inflate(R.layout.layout_desktop_lrc, null)
@@ -87,11 +89,20 @@ object LrcDesktopManager {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             mContentView = WeakReference(view)
             mActivity = WeakReference(activity)
-            initView(binding)
             windowManager.addView(view, mParams)
             hasAddView = true
+            initView(binding, time)
             Logger.i("showDesktopLrc--->>>add")
         }
+    }
+
+    private fun updateLrc(tvCurrentLrc: TextView?, tvNextLrc: TextView?, time: Long) {
+        val lrcTextList = CommonTools.getLrcTextList(GlobalData.currentLrcData, time)
+        tvCurrentLrc?.visibility = View.VISIBLE
+        tvCurrentLrc?.text = lrcTextList[0]
+        tvNextLrc?.text = lrcTextList[1]
+        mParams?.let { mContentView?.get()?.let { it1 -> updateView(it1, it) } }
+        Logger.i("showDesktopLrc---->>>updateLrc--->>>lrc:$lrcTextList")
     }
 
     private fun getTitleHeight(activity: Activity): Int {
@@ -124,19 +135,61 @@ object LrcDesktopManager {
         windowManager.updateViewLayout(view, params)
     }
 
+    private fun hideBg(
+        llContent: LinearLayout,
+        ivIcon: ImageView,
+        ivLock: ImageView,
+        ivClose: ImageView,
+        delay: Long
+    ) {
+        TaskUtil.runOnUiThread({
+            llContent.setBackgroundColor(Color.TRANSPARENT)
+            ivIcon.visibility = View.GONE
+            ivLock.visibility = View.GONE
+            ivClose.visibility = View.GONE
+        }, delay)
+    }
+
+    private fun showBg(
+        llContent: LinearLayout,
+        ivIcon: ImageView,
+        ivLock: ImageView,
+        ivClose: ImageView
+    ) {
+        llContent.setBackgroundResource(R.drawable.bg_over)
+        ivIcon.visibility = View.VISIBLE
+        ivLock.visibility = View.VISIBLE
+        ivClose.visibility = View.VISIBLE
+    }
+
     @SuppressLint("ClickableViewAccessibility")
-    private fun initView(binding: LayoutDesktopLrcBinding) {
+    private fun initView(binding: LayoutDesktopLrcBinding, time: Long) {
         val ivLock = binding.ivLock
         val ivClose = binding.ivClose
-        val tvLrc = binding.tvLrc
-        tvLrc.text = currentLrc
+        val tvCurrentLrc = binding.tvCurrentLrc
+        val tvNextLrc = binding.tvNextLrc
+        val llContent = binding.llContent
+        val ivIcon = binding.ivIcon
+
+        updateLrc(tvCurrentLrc, tvNextLrc, time)
+        if (GlobalData.isLock) {
+            hideBg(llContent, ivIcon, ivLock, ivClose, 0)
+        } else {
+            hideBg(llContent, ivIcon, ivLock, ivClose, 3000)
+        }
+        setLockState(ivLock)
+
         ivLock.setOnClickListener {
-            isLock = !isLock
-            if (isLock) {
-                ivLock.setImageResource(R.mipmap.lock)
-            } else {
+            if (GlobalData.isLock) {
                 ivLock.setImageResource(R.mipmap.unlock)
+                ToastUtil.show("桌面歌词已解锁")
+            } else {
+                ivLock.setImageResource(R.mipmap.lock)
+                ToastUtil.show("桌面歌词已锁定,如需解锁,请下拉通知栏再打开")
             }
+            val receiverIntent = Intent()
+            receiverIntent.action = MusicNotifyService.MUSIC_LOCK_ACTION
+            AppUtil.sendBroadCast(receiverIntent)
         }
         ivClose.setOnClickListener {
             removeView()
@@ -144,7 +197,7 @@ object LrcDesktopManager {
             ToastUtil.show("桌面歌词已关闭,如需要,请在设置中再打开")
         }
         binding.root.setOnTouchListener { _, event ->
-            if (!isLock) {
+            if (!GlobalData.isLock) {
                 if (mTitleHeight == 0) {
                     mTitleHeight = mActivity?.get()?.let { getTitleHeight(it) }!!
                 }
@@ -154,6 +207,8 @@ object LrcDesktopManager {
                     MotionEvent.ACTION_DOWN -> {
                         mStartX = event.x
                         mStartY = event.y
+                        showBg(llContent, ivIcon, ivLock, ivClose)
+                        setLockState(ivLock)
                     }
 
                     MotionEvent.ACTION_MOVE -> {
@@ -162,10 +217,19 @@ object LrcDesktopManager {
 
                     MotionEvent.ACTION_UP -> {
                         updateLrcWindow()
+                        hideBg(llContent, ivIcon, ivLock, ivClose, 3000)
                     }
                 }
             }
             true
+        }
+    }
+
+    private fun setLockState(ivLock: ImageView) {
+        if (GlobalData.isLock) {
+            ivLock.setImageResource(R.mipmap.lock)
+        } else {
+            ivLock.setImageResource(R.mipmap.unlock)
         }
     }
 }

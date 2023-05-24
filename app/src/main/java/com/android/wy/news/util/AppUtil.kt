@@ -183,8 +183,16 @@ object AppUtil {
         context.startActivity(launchIntent)
     }
 
-    fun getColor(context: Context,@ColorRes id: Int): Int {
+    fun getColor(context: Context, @ColorRes id: Int): Int {
         //return ContextCompat.getColor(App.app, id)
         return context.resources.getColor(id)
+    }
+
+    fun getString(context: Context, id: Int): String {
+        return context.getString(id)
+    }
+
+    fun sendBroadCast(intent: Intent) {
+        App.app.sendBroadcast(intent)
     }
 }

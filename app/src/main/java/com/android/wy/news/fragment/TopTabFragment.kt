@@ -37,9 +37,6 @@ import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.youth.banner.config.IndicatorConfig.Direction
 import com.youth.banner.listener.OnBannerListener
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<TopEntity> {
@@ -75,9 +72,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun initEvent() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
         initLocation()
         getTopData()
         getBannerData()
@@ -92,9 +86,7 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             LocationHelper.startLocation(mActivity, object : OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
                     currentCity = aMapLocation.city
-                    if (mActivity is HomeActivity) {
-                        (mActivity as HomeActivity).updateCity(currentCity)
-                    }
+                    GlobalData.cityChange.postValue(currentCity)
                     getCityData()
                 }
 
@@ -114,14 +106,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         mViewModel.getCityNews(currentCity)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEvent(o: Any) {
-        if (o is String) {
-            currentCity = o
-            getCityData()
-        }
-    }
-
     override fun getViewBinding(): FragmentTabTopBinding {
         return FragmentTabTopBinding.inflate(layoutInflater)
     }
@@ -131,7 +115,6 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
     }
 
     override fun onClear() {
-        EventBus.getDefault().unregister(this)
     }
 
     override fun onNotifyDataChanged() {
@@ -204,6 +187,11 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
             if (it == 0) {
                 refreshLayout.autoRefresh()
             }
+        }
+
+        GlobalData.cityChange.observe(this) {
+            currentCity = it
+            getCityData()
         }
     }
 

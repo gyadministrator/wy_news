@@ -13,10 +13,13 @@ import android.widget.ImageView
 import androidx.annotation.IdRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.android.wy.news.R
+import com.android.wy.news.app.App
 import com.android.wy.news.entity.*
 import com.android.wy.news.entity.music.Lrclist
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.lrc.Lrc
+import com.android.wy.news.util.AppUtil
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
@@ -488,7 +491,7 @@ object CommonTools {
         return videoList
     }
 
-    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo>? {
+    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo> {
         val dataList = ArrayList<MusicInfo>()
         if (musicList != null && musicList.size > 0) {
             for (i in 0 until musicList.size) {
@@ -553,7 +556,7 @@ object CommonTools {
         val lrcCount = lrcList.size
         if (lrcCount == 0) {
             list.add("")
-            list.add("暂无歌词")
+            list.add(AppUtil.getString(App.app, R.string.loading_lrc))
             return list
         }
         for (i in 0 until lrcCount) {

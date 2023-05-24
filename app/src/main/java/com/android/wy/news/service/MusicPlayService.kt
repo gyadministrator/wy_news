@@ -36,6 +36,11 @@ class MusicPlayService : Service() {
                     receiverIntent.action = MusicNotifyService.MUSIC_CLOSE_ACTION
                     sendBroadcast(receiverIntent)
                 }
+
+                MusicNotifyService.MUSIC_LOCK_ACTION -> {
+                    receiverIntent.action = MusicNotifyService.MUSIC_LOCK_ACTION
+                    sendBroadcast(receiverIntent)
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
