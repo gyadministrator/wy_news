@@ -43,4 +43,5 @@ object GlobalData {
     val indexChange = MutableLiveData<Int>()
     val doubleClickChange = MutableLiveData<Int>()
     val cityChange = MutableLiveData<String>()
+    val playPageChange = MutableLiveData<Int>()
 }

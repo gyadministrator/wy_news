@@ -8,6 +8,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
@@ -30,10 +31,10 @@ import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.service.MusicPlayService
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.RoundProgressBar
 import com.android.wy.news.viewmodel.PlayMusicSongViewModel
-import com.google.gson.Gson
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -59,6 +60,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var ivNext: ImageView? = null
     private var ivMusicMode: ImageView? = null
     private var ivMusicList: ImageView? = null
+    private var llLrcContent: LinearLayout? = null
     private var isDragSeek = false
 
     private var ivPlay: ImageView? = null
@@ -130,8 +132,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             }
             tvStart?.text = LrcHelper.formatTime(o.time.toFloat())
         } else if (o is MusicInfoEvent) {
-            val gson = Gson()
-            currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
+            currentMusicInfo = JsonUtil.parseJsonToObject(o.musicJson, MusicInfo::class.java)
             setMusic()
         } else if (o is PlayEvent) {
             if (TextUtils.isEmpty(currentPlayUrl)) {
@@ -174,11 +175,15 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         ivMusicList = mBinding.ivMusicList
         tvCurrentLrc = mBinding.tvCurrentLrc
         tvNextLrc = mBinding.tvNextLrc
+        llLrcContent = mBinding.llLrcContent
 
         ivPlay = mBinding.ivPlay
         rlPlay = mBinding.rlPlay
         roundProgressBar = mBinding.roundProgressBar
 
+        llLrcContent?.setOnClickListener {
+            GlobalData.playPageChange.postValue(2)
+        }
         ivMusicList?.setOnClickListener {
             showMusicList()
         }
@@ -285,8 +290,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             currentPlayUrl = args.getString(MUSIC_URL_KEY)
             val s = args.getString(MUSIC_INFO_KEY)
             if (!TextUtils.isEmpty(s)) {
-                val gson = Gson()
-                currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
+                currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
                 setLrcText(0)
             }
         }

@@ -6,7 +6,7 @@ import com.android.wy.news.entity.RollHotWord
 import com.android.wy.news.entity.RollingWordEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
-import com.google.gson.Gson
+import com.android.wy.news.util.JsonUtil
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,8 +32,8 @@ class HomeViewModel : BaseViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
                 try {
-                    val gson = Gson()
-                    val rollingWordEntity = gson.fromJson(s, RollingWordEntity::class.java)
+                    val rollingWordEntity =
+                        JsonUtil.parseJsonToObject(s, RollingWordEntity::class.java)
                     if (rollingWordEntity != null) {
                         val data = rollingWordEntity.data
                         val rollHotWordList = data.rollHotWordList

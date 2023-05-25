@@ -1,5 +1,6 @@
 package com.android.wy.news.activity
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.text.TextUtils
 import android.view.View
@@ -39,13 +40,13 @@ import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.BatteryManageUtil
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.PermissionCheckUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MainViewModel
-import com.google.gson.Gson
 import com.gyf.immersionbar.ImmersionBar
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -242,6 +243,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
             }).show()
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private fun checkNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //判断是否需要开启通知栏功能
@@ -315,9 +317,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(),
         if (position != 3) {
             playBarView.visibility = View.GONE
         } else {
-            val gson = Gson()
             val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
-            val musicInfo = gson.fromJson(s, MusicInfo::class.java)
+            val musicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
             if (musicInfo != null) {
                 playBarView.visibility = View.VISIBLE
             }

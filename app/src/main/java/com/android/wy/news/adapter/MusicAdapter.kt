@@ -6,12 +6,19 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
+import com.android.wy.news.activity.MusicMvActivity
+import com.android.wy.news.activity.VideoFullActivity
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
+import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.MusicState
+import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.util.TaskUtil
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /*
@@ -33,6 +40,8 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         var ivStateLoading = mBinding.ivStateLoading
         var ivStatePlay = mBinding.ivStatePlay
         var viewLine = mBinding.viewLine
+        var tvLossless = mBinding.tvLossless
+        var tvMv = mBinding.tvMv
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -52,8 +61,29 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
     override fun onBindData(holder: ViewHolder, position: Int, data: MusicInfo) {
         holder.tvTitle.text = data.artist
         holder.tvDesc.text = data.name
+        val hasMv = data.hasmv
+        if (hasMv == 1) {
+            holder.tvMv.visibility = View.VISIBLE
+        } else {
+            holder.tvMv.visibility = View.GONE
+        }
+        if (data.hasLossless) {
+            holder.tvLossless.visibility = View.VISIBLE
+        } else {
+            holder.tvLossless.visibility = View.GONE
+        }
+        holder.tvMv.tag = data
+        holder.tvMv.setOnClickListener(onMvClickListener)
         CommonTools.loadImage(data.pic, holder.ivCover)
         checkState(holder, position)
+    }
+
+    private val onMvClickListener = View.OnClickListener { p0 ->
+        val tag = p0?.tag
+        if (tag is MusicInfo) {
+            val s = JsonUtil.parseObjectToJson(tag)
+            p0.context?.let { MusicMvActivity.startMv(it, s) }
+        }
     }
 
     private fun checkState(holder: ViewHolder, position: Int) {

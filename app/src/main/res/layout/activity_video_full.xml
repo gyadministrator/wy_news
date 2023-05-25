@@ -31,6 +31,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="15dp"
+                android:background="@drawable/bg_common_back_press"
                 android:src="@mipmap/white_back"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>

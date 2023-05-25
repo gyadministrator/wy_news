@@ -3,8 +3,7 @@ package com.android.wy.news.music.lrc
 import com.android.wy.news.lrc.impl.LrcRow
 import com.android.wy.news.lrc.listener.ILrcBuilder
 import com.android.wy.news.music.MediaPlayerHelper
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.android.wy.news.util.JsonUtil
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -18,12 +17,8 @@ class LrcBuilder(mediaPlayerHelper: MediaPlayerHelper) : ILrcBuilder {
     override fun getLrcRows(rawLrc: String?): ArrayList<LrcRow> {
         val lrcRowList = ArrayList<LrcRow>()
         try {
-            val gson = Gson()
-            val dataList = gson.fromJson<ArrayList<Lrc>>(
-                rawLrc,
-                object : TypeToken<ArrayList<Lrc>>() {}.type
-            )
-            if (dataList != null && dataList.size > 0) {
+            val dataList = JsonUtil.parseJsonToList<Lrc>(rawLrc)
+            if (dataList.size > 0) {
                 for (i in 0 until dataList.size) {
                     val lrc = dataList[i]
                     val endTime: Long = if (i < dataList.size - 1) {

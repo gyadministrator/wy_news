@@ -37,11 +37,11 @@ import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
-import com.google.gson.Gson
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
@@ -111,9 +111,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     private fun initPlayBar() {
-        val gson = Gson()
         val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
-        this.currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
+        this.currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
         if (this.currentMusicInfo != null) {
             showPlayBar()
         } else {
@@ -327,10 +326,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             mServiceIntent = Intent(mActivity, MusicNotifyService::class.java)
         }
         mServiceIntent?.action = MusicNotifyService.MUSIC_PREPARE_ACTION
-        val gson = Gson()
         mServiceIntent?.putExtra(
             MusicNotifyService.MUSIC_INFO_KEY,
-            gson.toJson(this.currentMusicInfo)
+            this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
         )
         mServiceIntent?.putExtra(MusicNotifyService.MUSIC_URL_KEY, this.currentPlayUrl)
         mActivity.startService(mServiceIntent)
@@ -393,14 +391,17 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             this.currentMusicInfo = musicInfo
             this.currentMusicInfo?.state = MusicState.STATE_PREPARE
 
-            val gson = Gson()
-            val musicInfoEvent = MusicInfoEvent(gson.toJson(this.currentMusicInfo))
+            val musicInfoEvent = MusicInfoEvent(JsonUtil.parseObjectToJson(this.currentMusicInfo!!))
             EventBus.getDefault().postSticky(musicInfoEvent)
 
             musicAdapter.setSelectedIndex(currentPosition)
             mViewModel.requestMusicUrl(musicInfo)
 
-            SpTools.putString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, gson.toJson(currentMusicInfo))
+            SpTools.putString(
+                GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, JsonUtil.parseObjectToJson(
+                    currentMusicInfo!!
+                )
+            )
         }
     }
 
@@ -438,10 +439,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             ft = fragmentManager.beginTransaction()
         }
         ft?.addToBackStack(null)
-        val gson = Gson()
-        val s = gson.toJson(this.currentMusicInfo)
-        val playMusicFragment = PlayMusicFragment.newInstance(currentPosition, s, currentPlayUrl)
-        ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
+        val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
+        val playMusicFragment =
+            s?.let { PlayMusicFragment.newInstance(currentPosition, it, currentPlayUrl) }
+        if (playMusicFragment != null) {
+            ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
+        }
     }
 
     private fun showPlayBar() {

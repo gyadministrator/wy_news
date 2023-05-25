@@ -10,9 +10,8 @@ import com.android.wy.news.databinding.ActivityPermissionBinding
 import com.android.wy.news.databinding.LayoutPermissionItemBinding
 import com.android.wy.news.entity.PermissionEntity
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.viewmodel.PermissionViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 @Route(path = RouteManager.PATH_ACTIVITY_PERMISSION)
 class PermissionActivity : BaseActivity<ActivityPermissionBinding, PermissionViewModel>() {
@@ -48,10 +47,7 @@ class PermissionActivity : BaseActivity<ActivityPermissionBinding, PermissionVie
     override fun initData() {
         val permissionList = ArrayList<PermissionEntity>()
         val content = CommonTools.getAssertContent(this, "permission.json")
-        val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<PermissionEntity>>(
-            content, object : TypeToken<ArrayList<PermissionEntity>>() {}.type
-        )
+        val dataList = JsonUtil.parseJsonToList<PermissionEntity>(content)
         permissionList.addAll(dataList)
         addPermissionContent(permissionList)
     }

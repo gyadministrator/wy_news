@@ -10,8 +10,8 @@ import com.android.wy.news.entity.TopEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
-import com.google.gson.Gson
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +24,10 @@ class TopViewModel : BaseViewModel() {
 
     fun getTopNews(pageStart: Int) {
         val apiService =
-            HttpManager.mInstance.getApiService(GlobalConstant.BASE_HEAD_URL, IApiService::class.java)
+            HttpManager.mInstance.getApiService(
+                GlobalConstant.BASE_HEAD_URL,
+                IApiService::class.java
+            )
         val headerNews = apiService.getTopNews(pageStart)
         headerNews.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -47,16 +50,14 @@ class TopViewModel : BaseViewModel() {
         headerNews.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
-                val gson = Gson()
-                val cityNewsEntity = gson.fromJson(s, CityNewsEntity::class.java)
-                val house = cityNewsEntity.house
+                val cityNewsEntity = JsonUtil.parseJsonToObject(s, CityNewsEntity::class.java)
+                val house = cityNewsEntity?.house
                 house.let { cityNewsList.postValue(it) }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.message?.let { msg.postValue(it) }
             }
-
         })
     }
 

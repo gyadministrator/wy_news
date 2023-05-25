@@ -82,6 +82,9 @@ interface IApiService {
     @GET("/api/v1/www/music/playUrl?type=music&httpsStatus=1&reqId=1b936721-e4d7-11ed-952f-9f227639ff35")
     fun getMusicUrl(@Query("mid") mid: String): Call<MusicUrlEntity>
 
+    @GET("/api/v1/www/music/playUrl?type=mv&httpsStatus=1&reqId=1b936721-e4d7-11ed-952f-9f227639ff35")
+    fun getMusicMv(@Query("mid") mid: String): Call<MusicUrlEntity>
+
     @GET("/newh5/singles/songinfoandlrc?httpsStatus=1&reqId=7719bb30-e4d7-11ed-84ef-3374439f9c6a")
     fun getMusicLrc(@Query("musicId") musicId: String): Call<MusicLrcEntity>
 }

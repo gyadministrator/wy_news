@@ -17,10 +17,9 @@ import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.manager.VideoLayoutManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.viewmodel.VideoFullViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.gyf.immersionbar.ImmersionBar
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
@@ -47,8 +46,7 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             videoInfoList: ArrayList<ScreenVideoEntity>, context: Context
         ) {
             val intent = Intent(context, VideoFullActivity::class.java)
-            val gson = Gson()
-            intent.putExtra(VIDEO_LIST, gson.toJson(videoInfoList))
+            intent.putExtra(VIDEO_LIST, JsonUtil.parseObjectToJson(videoInfoList))
             context.startActivity(intent)
             val activity = context as Activity
             activity.overridePendingTransition(R.anim.zoomin, R.anim.zoomout)
@@ -88,24 +86,18 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun initData() {
-        val gson = Gson()
         val intent = intent
         val videoListJson = intent.getStringExtra(VIDEO_LIST)
-        val dataList = gson.fromJson<ArrayList<ScreenVideoEntity>>(
-            videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
-        )
+        val dataList = JsonUtil.parseJsonToList<ScreenVideoEntity>(videoListJson)
         screenVideoAdapter.refreshData(dataList)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent != null) {
-            val gson = Gson()
             val videoListJson = intent.getStringExtra(VIDEO_LIST)
-            val dataList = gson.fromJson<ArrayList<ScreenVideoEntity>>(
-                videoListJson, object : TypeToken<ArrayList<ScreenVideoEntity>>() {}.type
-            )
-            screenVideoAdapter.refreshData(dataList)
+            val dataList = JsonUtil.parseJsonToList<ScreenVideoEntity>(videoListJson)
+           screenVideoAdapter.refreshData(dataList)
         }
 
     }

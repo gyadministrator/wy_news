@@ -11,8 +11,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/bg_common_press"
         android:ellipsize="end"
         android:maxLines="1"
+        android:padding="3dp"
         android:textColor="@color/main_title"
         android:textSize="16sp"
         tools:text="1234554545454542112454512455445" />
@@ -23,15 +25,18 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/divider_bg_color" />
+        android:background="@color/divider_bg_color"
+        android:padding="3dp" />
 
     <TextView
         android:id="@+id/tv_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@drawable/bg_common_press"
         android:ellipsize="end"
         android:maxLines="1"
+        android:padding="3dp"
         android:textColor="@color/main_title"
         android:textSize="16sp"
         tools:text="1234554545454542112454512455445" />

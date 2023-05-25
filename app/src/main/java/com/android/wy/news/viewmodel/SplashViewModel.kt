@@ -14,9 +14,8 @@ import com.android.wy.news.entity.music.MusicTypeEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,9 +47,8 @@ class SplashViewModel : BaseViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
                 if (!TextUtils.isEmpty(s)) {
-                    val gson = Gson()
-                    val splashEntity = gson.fromJson(s, SplashEntity::class.java)
-                    val data = splashEntity.images
+                    val splashEntity = JsonUtil.parseJsonToObject(s, SplashEntity::class.java)
+                    val data = splashEntity?.images
                     if (!data.isNullOrEmpty()) {
                         val image = data[0]
                         val url = GlobalConstant.SPLASH_URL + image.url
@@ -74,10 +72,7 @@ class SplashViewModel : BaseViewModel() {
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
-                val gson = Gson()
-                val dataList = gson.fromJson<ArrayList<LiveClassifyEntity>>(
-                    s, object : TypeToken<ArrayList<LiveClassifyEntity>>() {}.type
-                )
+                val dataList = JsonUtil.parseJsonToList<LiveClassifyEntity>(s)
                 GlobalData.mNewsLiveTitleList.clear()
                 GlobalData.mNewsLiveTitleList.addAll(dataList)
             }
@@ -91,10 +86,7 @@ class SplashViewModel : BaseViewModel() {
 
     private fun readNewsTitle(context: Context) {
         val content = CommonTools.getAssertContent(context, "title.json")
-        val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<NewsClassifyEntity>>(
-            content, object : TypeToken<ArrayList<NewsClassifyEntity>>() {}.type
-        )
+        val dataList = JsonUtil.parseJsonToList<NewsClassifyEntity>(content)
         GlobalData.mNewsTitleList.clear()
         GlobalData.mNewsTitleList.addAll(dataList)
         readMusicTitle(context)
@@ -102,10 +94,7 @@ class SplashViewModel : BaseViewModel() {
 
     private fun readMusicTitle(context: Context) {
         val content = CommonTools.getAssertContent(context, "music_type.json")
-        val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<MusicTypeEntity>>(
-            content, object : TypeToken<ArrayList<MusicTypeEntity>>() {}.type
-        )
+        val dataList = JsonUtil.parseJsonToList<MusicTypeEntity>(content)
         GlobalData.mMusicTitleList.clear()
         GlobalData.mMusicTitleList.addAll(dataList)
         isReadFinish.postValue(true)

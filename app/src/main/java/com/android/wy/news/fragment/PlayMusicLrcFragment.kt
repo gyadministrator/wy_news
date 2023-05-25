@@ -22,8 +22,8 @@ import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.lrc.LrcBuilder
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.viewmodel.PlayMusicLrcViewModel
-import com.google.gson.Gson
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -64,8 +64,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
         if (args != null) {
             val s = args.getString(MUSIC_INFO_KEY)
             if (!TextUtils.isEmpty(s)) {
-                val gson = Gson()
-                currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
+                currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
             }
         }
         setMusicInfo()
@@ -99,8 +98,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
             }
 
             is MusicInfoEvent -> {
-                val gson = Gson()
-                currentMusicInfo = gson.fromJson(o.musicJson, MusicInfo::class.java)
+                currentMusicInfo = JsonUtil.parseJsonToObject(o.musicJson, MusicInfo::class.java)
                 setMusicInfo()
             }
 
@@ -121,8 +119,7 @@ class PlayMusicLrcFragment : BaseFragment<FragmentPlayMusicLrcBinding, PlayMusic
 
     private fun setLrcInfo() {
         val lrcBuilder = mediaHelper?.let { LrcBuilder(it) }
-        val gson = Gson()
-        val s = gson.toJson(GlobalData.currentLrcData)
+        val s = JsonUtil.parseObjectToJson(GlobalData.currentLrcData)
         val lrcRows = lrcBuilder?.getLrcRows(s)
         lrcView?.setNormalLrcColor(AppUtil.getColor(mActivity, R.color.main_title))
             ?.setSelectLrcColor(AppUtil.getColor(mActivity, R.color.text_select_color))

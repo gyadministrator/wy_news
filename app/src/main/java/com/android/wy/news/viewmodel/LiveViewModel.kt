@@ -7,7 +7,7 @@ import com.android.wy.news.entity.LiveEntity
 import com.android.wy.news.entity.LiveReview
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
-import com.google.gson.Gson
+import com.android.wy.news.util.JsonUtil
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,8 +26,7 @@ class LiveViewModel : BaseViewModel() {
                 if (TextUtils.isEmpty(s)){
                     dataList.postValue(ArrayList())
                 }
-                val gson = Gson()
-                val liveEntity = gson.fromJson(s, LiveEntity::class.java)
+                val liveEntity = JsonUtil.parseJsonToObject(s, LiveEntity::class.java)
                 if (liveEntity != null) {
                     dataList.postValue(liveEntity.live_review)
                 }

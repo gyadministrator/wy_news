@@ -1,5 +1,6 @@
 package com.android.wy.news.fragment
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -18,12 +19,13 @@ import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.R
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
 import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.util.JsonUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.Gson
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
@@ -107,8 +109,7 @@ class PlayMusicFragment : DialogFragment() {
             currentPlayUrl = args.getString(MUSIC_URL_KEY)
             val s = args.getString(MUSIC_INFO_KEY)
             if (!TextUtils.isEmpty(s)) {
-                val gson = Gson()
-                currentMusicInfo = gson.fromJson(s, MusicInfo::class.java)
+                currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
             }
         }
         initTab()
@@ -120,15 +121,17 @@ class PlayMusicFragment : DialogFragment() {
 
     private fun initTab() {
         val fragments = ArrayList<Fragment>()
-        val mTitles = arrayListOf("歌曲", "歌词")
-        val gson = Gson()
-        val s = gson.toJson(this.currentMusicInfo)
+        val mTitles = arrayListOf("推荐", "歌曲", "歌词")
+        val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
+        val playRecommendFragment =
+            s?.let { PlayRecommendFragment.newInstance(currentPosition, it, currentPlayUrl) }
         val playMusicSongFragment =
-            PlayMusicSongFragment.newInstance(currentPosition, s, currentPlayUrl)
+            s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl) }
         val playMusicLrcFragment =
-            PlayMusicLrcFragment.newInstance(currentPosition, s, currentPlayUrl)
-        fragments.add(playMusicSongFragment)
-        fragments.add(playMusicLrcFragment)
+            s?.let { PlayMusicLrcFragment.newInstance(currentPosition, it, currentPlayUrl) }
+        playRecommendFragment?.let { fragments.add(it) }
+        playMusicSongFragment?.let { fragments.add(it) }
+        playMusicLrcFragment?.let { fragments.add(it) }
         viewPager?.offscreenPageLimit = mTitles.size
         viewPager?.adapter =
             FragmentPageAdapter(childFragmentManager, fragments, mTitles.toTypedArray())
@@ -136,6 +139,7 @@ class PlayMusicFragment : DialogFragment() {
         tabLayout?.initLayout()
         viewPager?.isSaveEnabled = false
         tabLayout?.setSelectedTabIndicatorHeight(0)
+        viewPager?.currentItem = 1
     }
 
     override fun onStart() {
@@ -156,6 +160,12 @@ class PlayMusicFragment : DialogFragment() {
             window.setLayout(width, height /*- ScreenUtil.getStatusBarHeight(requireActivity())*/)
             window.setWindowAnimations(mAnimStyle)
         }
+
+        GlobalData.playPageChange.observe(this) {
+            if (it < 3) {
+                viewPager?.currentItem = it
+            }
+        }
     }
 
     private fun hideNavigationBar() {
@@ -165,6 +175,7 @@ class PlayMusicFragment : DialogFragment() {
     }
 
     //测量宽高
+    @SuppressLint("ObsoleteSdkInt")
     private fun measure() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val dm = DisplayMetrics()

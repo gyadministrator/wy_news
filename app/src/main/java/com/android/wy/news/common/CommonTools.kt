@@ -20,14 +20,13 @@ import com.android.wy.news.entity.music.Lrclist
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.viewmodel.BaseViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -82,11 +81,7 @@ object CommonTools {
                 if (content.contains("[") && content.endsWith("]}")) {
                     val realContent =
                         content.substring(content.indexOf("["), content.length - 1)
-                    val gson = Gson()
-                    dataList = gson.fromJson(
-                        realContent,
-                        object : TypeToken<ArrayList<RecommendVideoEntity>>() {}.type
-                    )
+                    dataList = JsonUtil.parseJsonToList(realContent)
                 }
             }
         }
@@ -101,10 +96,7 @@ object CommonTools {
                 if (content.contains("[") && content.endsWith("]}")) {
                     val realContent =
                         content.substring(content.indexOf("["), content.length - 1)
-                    val gson = Gson()
-                    dataList = gson.fromJson(
-                        realContent, object : TypeToken<ArrayList<NewsEntity>>() {}.type
-                    )
+                    dataList = JsonUtil.parseJsonToList<NewsEntity>(realContent)
                 }
             }
         }
@@ -116,8 +108,7 @@ object CommonTools {
         if (data != null && !TextUtils.isEmpty(data)) {
             if (data.contains("(") && data.endsWith(")")) {
                 val content = data.substring(data.indexOf("(") + 1, data.length - 1)
-                val gson = Gson()
-                adEntity = gson.fromJson(content, AdEntity::class.java)
+                adEntity = JsonUtil.parseJsonToObject(content, AdEntity::class.java)
             }
         }
         return adEntity
@@ -129,10 +120,7 @@ object CommonTools {
             if (data.startsWith("{") && data.endsWith("}")) {
                 if (data.contains("[{")) {
                     val realContent = data.substring(data.indexOf("[{"), data.length - 1)
-                    val gson = Gson()
-                    dataList = gson.fromJson(
-                        realContent, object : TypeToken<ArrayList<VideoEntity>>() {}.type
-                    )
+                    dataList = JsonUtil.parseJsonToList(realContent)
                 }
             }
         }
@@ -144,12 +132,10 @@ object CommonTools {
         if (data != null && !TextUtils.isEmpty(data)) {
             if (data.contains("[") && data.endsWith("]}")) {
                 val realContent = data.substring(data.indexOf("["), data.length - 1)
-                val gson = Gson()
-                dataList = gson.fromJson(
-                    realContent, object : TypeToken<ArrayList<TopEntity>>() {}.type
-                )
+                dataList = JsonUtil.parseJsonToList(realContent)
             }
         }
+        Logger.i("dataList:$dataList")
         return dataList
     }
 
@@ -354,8 +340,6 @@ object CommonTools {
         stringName: List<String>, stringCode: List<String>
     ): List<CityInfo> {
         val provinceList: MutableList<CityInfo> = ArrayList()
-
-
         //获取省
         for (i in stringCode.indices) {
             val provinceName = stringName[i]

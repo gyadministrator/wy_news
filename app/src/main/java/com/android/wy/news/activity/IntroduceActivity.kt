@@ -10,9 +10,8 @@ import com.android.wy.news.databinding.ActivityIntroduceBinding
 import com.android.wy.news.databinding.LayoutPermissionItemBinding
 import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.viewmodel.IntroduceViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 @Route(path = RouteManager.PATH_ACTIVITY_INTRODUCE)
 class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewModel>() {
@@ -48,10 +47,7 @@ class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewMo
     override fun initData() {
         val updateList = ArrayList<UpdateEntity>()
         val content = CommonTools.getAssertContent(this, "updateInfo.json")
-        val gson = Gson()
-        val dataList = gson.fromJson<ArrayList<UpdateEntity>>(
-            content, object : TypeToken<ArrayList<UpdateEntity>>() {}.type
-        )
+        val dataList = JsonUtil.parseJsonToList<UpdateEntity>(content)
         updateList.addAll(dataList)
         addUpdateContent(updateList)
     }

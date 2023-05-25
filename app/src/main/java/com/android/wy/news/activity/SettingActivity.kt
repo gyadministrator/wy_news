@@ -27,10 +27,9 @@ import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.update.OnUpdateManagerListener
 import com.android.wy.news.update.UpdateManager
+import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.SettingViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -225,10 +224,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         override fun onSuccess(s: String) {
             if (!TextUtils.isEmpty(s)) {
                 try {
-                    val gson = Gson()
-                    val dataList = gson.fromJson<ArrayList<UpdateEntity>>(
-                        s, object : TypeToken<ArrayList<UpdateEntity>>() {}.type
-                    )
+                    val dataList = JsonUtil.parseJsonToList<UpdateEntity>(s)
                     if (dataList.isNotEmpty()) {
                         val updateEntity: UpdateEntity = dataList[0]
                         showUpdateDialog(updateEntity)

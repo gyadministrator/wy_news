@@ -4,18 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/play_bar_color"
     android:orientation="horizontal">
-
-    <View
-        android:layout_width="10dp"
-        android:layout_height="match_parent"
-        android:background="@color/bg_item_color" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_cover"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:layout_marginStart="6dp"
         android:layout_marginTop="-8dp"
         android:clipChildren="false"
         android:scaleType="centerCrop"

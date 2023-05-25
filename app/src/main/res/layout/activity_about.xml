@@ -58,7 +58,7 @@
         android:id="@+id/rl_introduce"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/bg_item_color"
+        android:background="@drawable/bg_common_press"
         android:gravity="center_vertical"
         android:paddingStart="6dp"
         android:paddingEnd="6dp">
@@ -87,7 +87,7 @@
         android:id="@+id/rl_complaint"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/bg_item_color"
+        android:background="@drawable/bg_common_press"
         android:gravity="center_vertical"
         android:paddingStart="6dp"
         android:paddingEnd="6dp">

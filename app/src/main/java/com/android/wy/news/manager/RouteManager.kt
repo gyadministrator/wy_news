@@ -21,6 +21,7 @@ object RouteManager {
     const val PATH_ACTIVITY_SPLASH = "/activity/SplashActivity"
     const val PATH_ACTIVITY_THIRD = "/activity/ThirdActivity"
     const val PATH_ACTIVITY_VIDEO_FULL = "/activity/VideoFullActivity"
+    const val PATH_ACTIVITY_MUSIC_MV = "/activity/MusicMvActivity"
     const val PATH_ACTIVITY_WEB = "/activity/WebActivity"
 
     fun go(path: String) {

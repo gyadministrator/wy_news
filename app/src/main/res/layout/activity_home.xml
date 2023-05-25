@@ -80,13 +80,25 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.android.wy.news.view.PlayBarView
-        android:id="@+id/play_bar_view"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/bg_item_color"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:visibility="gone" />
+        android:paddingEnd="20dp"
+        tools:ignore="RtlSymmetry">
+
+        <com.android.wy.news.view.PlayBarView
+            android:id="@+id/play_bar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_play_bar"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <me.majiajie.pagerbottomtabstrip.PageNavigationView
         android:id="@+id/page_navigation_view"

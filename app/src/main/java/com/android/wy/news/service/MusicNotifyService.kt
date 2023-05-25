@@ -22,8 +22,8 @@ import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.JsonUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -31,7 +31,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.gson.Gson
 import org.greenrobot.eventbus.EventBus
 import java.util.Timer
 import java.util.TimerTask
@@ -96,9 +95,8 @@ class MusicNotifyService : Service() {
                     val s = intent.getStringExtra(MUSIC_INFO_KEY)
                     val url = intent.getStringExtra(MUSIC_URL_KEY)
                     if (!TextUtils.isEmpty(s)) {
-                        val gson = Gson()
-                        val musicInfo = gson.fromJson(s, MusicInfo::class.java)
-                        setMusic(musicInfo, url)
+                        val musicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
+                        musicInfo?.let { setMusic(it, url) }
                     }
                 }
 

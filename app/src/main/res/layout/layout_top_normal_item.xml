@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginTop="6dp"
-    android:background="@drawable/bg_item"
+    android:background="@drawable/bg_common_press_radius"
     android:orientation="horizontal"
     android:padding="6dp">
 

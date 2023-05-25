@@ -43,4 +43,6 @@
     <string name="lrc_type">歌词模式</string>
     <string name="line_highligh">逐行高亮</string>
     <string name="word_highligh">逐字高亮(卡拉OK)</string>
+    <string name="lossless">无损</string>
+    <string name="mv">MV</string>
 </resources>
