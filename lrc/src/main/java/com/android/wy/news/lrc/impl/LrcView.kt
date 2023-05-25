@@ -330,7 +330,7 @@ class LrcView : View, ILrcView {
                 mPaint?.color = mNormalRowColor
                 mPaint?.textSize = mLrcFontSize.toFloat()
                 mPaint?.textAlign = Align.CENTER
-                mHighLightRow = 0
+                //mHighLightRow = 0
                 canvas?.drawText(mLoadingLrcTip!!, width / 2f, height / 2f - mLrcFontSize, mPaint!!)
             }
             return
