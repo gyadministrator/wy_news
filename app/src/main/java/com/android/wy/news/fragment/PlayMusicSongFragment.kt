@@ -24,6 +24,7 @@ import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.PlayEvent
+import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicPlayMode
@@ -69,14 +70,25 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var index = 0
     private var musicListDialog: MusicListDialog? = null
     private var currentPlayUrl: String? = null
+    private var pageChangeListener: IPageChangeListener? = null
+
+    fun setPageListener(pageChangeListener: IPageChangeListener) {
+        this.pageChangeListener = pageChangeListener
+    }
 
     companion object {
         private const val POSITION_KEY = "position_key"
         private const val MUSIC_INFO_KEY = "music_info_key"
         private const val MUSIC_URL_KEY = "music_url_key"
 
-        fun newInstance(position: Int, musicInfoJson: String, url: String?): PlayMusicSongFragment {
+        fun newInstance(
+            position: Int,
+            musicInfoJson: String,
+            url: String?,
+            pageChangeListener: IPageChangeListener
+        ): PlayMusicSongFragment {
             val fragment = PlayMusicSongFragment()
+            fragment.setPageListener(pageChangeListener)
             val args = Bundle()
             args.putInt(POSITION_KEY, position)
             args.putString(MUSIC_INFO_KEY, musicInfoJson)
@@ -182,7 +194,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         roundProgressBar = mBinding.roundProgressBar
 
         llLrcContent?.setOnClickListener {
-            GlobalData.playPageChange.postValue(2)
+            pageChangeListener?.changePage(2)
         }
         ivMusicList?.setOnClickListener {
             showMusicList()

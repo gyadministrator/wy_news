@@ -23,6 +23,7 @@ import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
 import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.util.JsonUtil
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -31,7 +32,7 @@ import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
-class PlayMusicFragment : DialogFragment() {
+class PlayMusicFragment : DialogFragment(), IPageChangeListener {
     private var mContentView: View? = null
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
@@ -126,7 +127,7 @@ class PlayMusicFragment : DialogFragment() {
         val playRecommendFragment =
             s?.let { PlayRecommendFragment.newInstance(currentPosition, it, currentPlayUrl) }
         val playMusicSongFragment =
-            s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl) }
+            s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl, this) }
         val playMusicLrcFragment =
             s?.let { PlayMusicLrcFragment.newInstance(currentPosition, it, currentPlayUrl) }
         playRecommendFragment?.let { fragments.add(it) }
@@ -160,12 +161,6 @@ class PlayMusicFragment : DialogFragment() {
             window.setLayout(width, height /*- ScreenUtil.getStatusBarHeight(requireActivity())*/)
             window.setWindowAnimations(mAnimStyle)
         }
-
-        GlobalData.playPageChange.observe(this) {
-            if (it < 3) {
-                viewPager?.currentItem = it
-            }
-        }
     }
 
     private fun hideNavigationBar() {
@@ -186,6 +181,12 @@ class PlayMusicFragment : DialogFragment() {
             val dm = resources.displayMetrics
             height = dm.heightPixels
             width = dm.widthPixels
+        }
+    }
+
+    override fun changePage(page: Int) {
+        if (page < 3) {
+            viewPager?.currentItem = page
         }
     }
 }
