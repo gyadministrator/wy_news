@@ -22,7 +22,7 @@ import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.ActivityHomeBinding
 import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
-import com.android.wy.news.fragment.LiveTabFragment
+import com.android.wy.news.fragment.MineTabFragment
 import com.android.wy.news.fragment.MusicTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
@@ -67,8 +67,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private lateinit var tvCity: TextView
     private var firstTime: Long = 0
     private lateinit var marqueeTextView: MarqueeTextView
-    private lateinit var rlSetting: RelativeLayout
     private lateinit var rlSearchEdit: RelativeLayout
+    private lateinit var rlIdentify: RelativeLayout
     private lateinit var rlSearch: LinearLayout
     private val list = ArrayList<String>()
     private var selectColor: Int = 0
@@ -95,9 +95,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         pageNavigationView = mBinding.pageNavigationView
         tvCity = mBinding.tvCity
         marqueeTextView = mBinding.marqueeTextView
-        rlSetting = mBinding.rlSetting
         rlSearchEdit = mBinding.rlSearchEdit
         rlSearch = mBinding.rlSearch
+        rlIdentify = mBinding.rlIdentify
         playBarView = mBinding.playBarView
     }
 
@@ -113,7 +113,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
         initBottomBar()
         setMessagePoint(3, true)
-        setMessagePoint(2, true)
+        setMessagePoint(4, true)
         TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
@@ -146,9 +146,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
                 selectColor
             )
             ?.addItem(
-                R.mipmap.live,
-                R.mipmap.live_p,
-                "直播",
+                R.mipmap.my,
+                R.mipmap.my_p,
+                "我的",
                 selectColor
             )
             ?.setDefaultColor(AppUtil.getColor(this, R.color.second_title)) //未选中状态的颜色
@@ -161,7 +161,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             ClassifyTabFragment.newInstance(),
             VideoTabFragment.newInstance(),
             MusicTabFragment.newInstance(),
-            LiveTabFragment.newInstance()
+            MineTabFragment.newInstance()
         )
         viewPager?.adapter = BottomPagerAdapter(supportFragmentManager, fragmentList)
         // 自动适配ViewPager页面切换
@@ -184,13 +184,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         }
         UiModeManager.onUiModeChange(this)
 
+        rlIdentify.setOnClickListener {
+            identifyMusic()
+        }
+
         list.add("热词加载中...")
         marqueeTextView.setList(list)
         marqueeTextView.startScroll()
 
-        rlSetting.setOnClickListener {
-            SettingActivity.startSettingActivity(this)
-        }
         rlSearchEdit.setOnClickListener {
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
@@ -201,6 +202,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         TaskUtil.runOnUiThread({
             checkNotification()
         }, 1000)
+    }
+
+    private fun identifyMusic() {
+
     }
 
     /**
@@ -359,8 +364,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         GlobalData.indexChange.postValue(index)
 
         currentSelectPosition = index
-        if (index == 2) {
+        if (index == 2 || index == 4) {
             hideSearch()
+        } else {
+            showSearch()
+        }
+        if (index == 2) {
             ImmersionBar.with(this).statusBarColor(R.color.black)
                 .navigationBarColor(R.color.black)
                 .statusBarDarkFont(false).keyboardEnable(false).init()
@@ -372,7 +381,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             )
         } else {
             Jzvd.releaseAllVideos()
-            showSearch()
             UiModeManager.onUiModeChange(this)
             pageNavigationView?.setBackgroundColor(
                 AppUtil.getColor(

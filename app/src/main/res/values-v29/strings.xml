@@ -45,4 +45,10 @@
     <string name="lossless">无损</string>
     <string name="mv">MV</string>
     <string name="vip">VIP</string>
+    <string name="local_music">本地</string>
+    <string name="download_music">已下载</string>
+    <string name="live">直播</string>
+    <string name="record">记录</string>
+    <string name="recent_play">最近播放</string>
+    <string name="played_music">已播歌曲</string>
 </resources>
