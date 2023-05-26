@@ -1,15 +1,16 @@
 package com.android.wy.news.fragment
 
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import com.android.wy.news.activity.SettingActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentTabMineBinding
+import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.viewmodel.MineTabViewModel
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>() {
     private lateinit var llSetting: LinearLayout
     private lateinit var llLive: LinearLayout
+    private lateinit var llLocal: LinearLayout
 
     companion object {
         fun newInstance() = MineTabFragment()
@@ -18,6 +19,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     override fun initView() {
         llSetting = mBinding.llSetting
         llLive = mBinding.llLive
+        llLocal = mBinding.llLocal
     }
 
     override fun initData() {
@@ -30,6 +32,9 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         }
         llLive.setOnClickListener {
 
+        }
+        llLocal.setOnClickListener {
+            RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_DOWNLOAD)
         }
     }
 

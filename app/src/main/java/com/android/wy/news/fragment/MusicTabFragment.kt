@@ -7,7 +7,6 @@ import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabMusicBinding
-import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.viewmodel.MusicTabViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -55,7 +54,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     private fun goDownloadPage() {
-        RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_DOWNLOAD)
+
     }
 
     override fun getViewBinding(): FragmentTabMusicBinding {

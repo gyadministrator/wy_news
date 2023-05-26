@@ -33,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/mine"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/main_title"
                     android:textSize="22sp"
                     tools:ignore="RelativeOverlap" />

@@ -50,6 +50,6 @@
         app:elevation="6dp"
         app:fabSize="mini"
         app:pressedTranslationZ="6dp"
-        app:rippleColor="@color/text_select_color"
+        app:rippleColor="@color/play_bar_color"
         tools:ignore="ContentDescription" />
 </FrameLayout>
