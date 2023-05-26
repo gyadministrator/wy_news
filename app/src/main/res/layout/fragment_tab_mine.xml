@@ -25,17 +25,26 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 tools:ignore="UselessParent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/mine"
+                    android:textColor="@color/main_title"
+                    android:textSize="22sp"
+                    tools:ignore="RelativeOverlap" />
 
                 <LinearLayout
                     android:id="@+id/ll_setting"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_margin="20dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    tools:ignore="UselessParent">
+                    tools:ignore="UseCompoundDrawables,UselessParent">
 
                     <ImageView
                         android:id="@+id/iv_setting"
@@ -44,13 +53,6 @@
                         android:src="@mipmap/setting"
                         app:tint="@color/main_title"
                         tools:ignore="ContentDescription" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/setting"
-                        android:textColor="@color/main_title"
-                        android:textSize="14sp" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -212,27 +214,14 @@
                     tools:ignore="ContentDescription" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="6dp">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/music_default"
-                    app:riv_corner_radius="4dp" />
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentBottom="true"
-                    android:src="@mipmap/music_pause"
-                    app:tint="@color/main_title"
-                    tools:ignore="ContentDescription" />
-            </RelativeLayout>
+                android:layout_marginTop="6dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
+                app:riv_corner_radius="4dp" />
 
             <TextView
                 android:layout_width="wrap_content"
