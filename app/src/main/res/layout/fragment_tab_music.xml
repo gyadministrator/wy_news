@@ -1,32 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_bg_color"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
-    <com.android.tablib.view.CustomTabLayout
-        android:id="@+id/tab_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:background="@drawable/bg_item_top"
-        android:paddingBottom="6dp"
-        app:normalTextColor="@color/text_normal_color"
-        app:normalTextSize="9sp"
-        app:selectTextColor="@color/text_select_color"
-        app:selectTextSize="10sp"
-        app:tabIndicatorColor="@color/text_select_color"
-        app:tabIndicatorFullWidth="false"
-        app:tabMaxWidth="0dp"
-        app:tabMode="auto"
-        app:tabRippleColor="@null" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <com.android.tablib.view.CustomTabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_item_top"
+            android:paddingBottom="6dp"
+            app:normalTextColor="@color/text_normal_color"
+            app:normalTextSize="9sp"
+            app:selectTextColor="@color/text_select_color"
+            app:selectTextSize="10sp"
+            app:tabIndicatorColor="@color/text_select_color"
+            app:tabIndicatorFullWidth="false"
+            app:tabMaxWidth="0dp"
+            app:tabMode="auto"
+            app:tabRippleColor="@null" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="60dp"
+        android:src="@mipmap/download"
+        android:tint="@color/main_title"
+        app:backgroundTint="@color/play_bar_color"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="mini"
+        app:pressedTranslationZ="6dp"
+        app:rippleColor="@color/text_select_color"
+        tools:ignore="ContentDescription" />
+</FrameLayout>

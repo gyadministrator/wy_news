@@ -66,18 +66,29 @@ class TopAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindData(holder: ViewHolder, position: Int, data: TopEntity) {
-        if (holder is NormalViewHolder) {
-            holder.tvTitle.text = data.title
-            holder.tvSource.text = data.source
+        val title = data.title
+        val source = data.source
+        val time = CommonTools.getTimeDiff(data.ptime)
+        val replyCount = data.replyCount
 
-            val time = CommonTools.getTimeDiff(data.ptime)
+        if (holder is NormalViewHolder) {
+            if (!TextUtils.isEmpty(title)) {
+                holder.tvTitle.visibility = View.VISIBLE
+                holder.tvTitle.text = title
+            }
+            if (!TextUtils.isEmpty(source)) {
+                holder.tvSource.visibility = View.VISIBLE
+                holder.tvSource.text = source
+            }
+
             if (!TextUtils.isEmpty(time)) {
+                holder.tvTime.visibility = View.VISIBLE
                 holder.tvTime.text = time
             } else {
+                holder.tvTime.visibility = View.VISIBLE
                 holder.tvTime.text = data.ptime
             }
 
-            val replyCount = data.replyCount
             if (replyCount > 0) {
                 if (replyCount > 10000) {
                     val fl = replyCount / 10000f
@@ -85,21 +96,33 @@ class TopAdapter(
                 } else {
                     holder.tvRead.text = replyCount.toString() + "评论"
                 }
+                holder.tvRead.visibility = View.VISIBLE
             }
             CommonTools.loadImage(data.imgsrc, holder.ivCover)
         } else if (holder is VideoViewHolder) {
-            holder.tvTitle.text = data.title
-            holder.tvSource.text = data.source
+            if (!TextUtils.isEmpty(title)) {
+                holder.tvTitle.visibility = View.VISIBLE
+                holder.tvTitle.text = title
+            }
+            if (!TextUtils.isEmpty(source)) {
+                holder.tvSource.visibility = View.VISIBLE
+                holder.tvSource.text = source
+            }
 
-            val time = CommonTools.getTimeDiff(data.ptime)
             if (!TextUtils.isEmpty(time)) {
+                holder.tvTime.visibility = View.VISIBLE
                 holder.tvTime.text = time
             } else {
+                holder.tvTime.visibility = View.VISIBLE
                 holder.tvTime.text = data.ptime
             }
-            holder.tvCategory.text = data.category
 
-            val replyCount = data.replyCount
+            val category = data.category
+            if (!TextUtils.isEmpty(category)) {
+                holder.tvCategory.visibility = View.VISIBLE
+                holder.tvCategory.text = category
+            }
+
             if (replyCount > 0) {
                 if (replyCount > 10000) {
                     val fl = replyCount / 10000f
@@ -107,6 +130,7 @@ class TopAdapter(
                 } else {
                     holder.tvPlay.text = replyCount.toString() + "次播放"
                 }
+                holder.tvPlay.visibility = View.VISIBLE
             }
             val videoInfo = data.videoinfo
             if (videoInfo != null) {

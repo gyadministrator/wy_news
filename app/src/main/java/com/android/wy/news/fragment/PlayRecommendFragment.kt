@@ -1,8 +1,13 @@
 package com.android.wy.news.fragment
 
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayRecommendBinding
+import com.android.wy.news.entity.music.MusicRecommendEntity
+import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.viewmodel.PlayRecommendViewModel
 
 /*     
@@ -12,6 +17,8 @@ import com.android.wy.news.viewmodel.PlayRecommendViewModel
   * @Description:    
  */
 class PlayRecommendFragment : BaseFragment<FragmentPlayRecommendBinding, PlayRecommendViewModel>() {
+    private var ivCover: ImageView? = null
+    private var tvTitle: TextView? = null
 
     companion object {
         private const val POSITION_KEY = "position_key"
@@ -30,11 +37,24 @@ class PlayRecommendFragment : BaseFragment<FragmentPlayRecommendBinding, PlayRec
     }
 
     override fun initView() {
-
+        ivCover = mBinding.ivCover
+        tvTitle = mBinding.tvTitle
     }
 
     override fun initData() {
+        MusicRepository.getRecommendMusic().observe(this) {
+            Logger.i("getRecommendMusic--->>>$it")
+            setContent(it)
+        }
+    }
 
+    private fun setContent(it: Result<MusicRecommendEntity>?) {
+        val musicRecommendEntity = it?.getOrNull()
+        if (musicRecommendEntity != null) {
+            val data = musicRecommendEntity.data
+            ivCover?.let { it1 -> CommonTools.loadImage(data.img, it1) }
+            tvTitle?.text = data.name
+        }
     }
 
     override fun initEvent() {

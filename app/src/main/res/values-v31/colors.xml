@@ -4,6 +4,6 @@
     <color name="bg_over_color">#40000000</color>
     <color name="desktop_lrc_color">#E6ff5757</color>
     <color name="tip_toast_color">#B3000000</color>
-    <color name="play_bar_color">@color/main_bg_color</color>
+    <color name="play_bar_color">#FAFAFA</color>
     <color name="bg_seek_color">#80FFFFFF</color>
 </resources>

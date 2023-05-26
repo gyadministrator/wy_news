@@ -6,7 +6,7 @@
     <string name="review">回顾</string>
     <string name="search_hint">搜索想要看的新闻</string>
     <string name="search_news">搜索</string>
-    <string name="clear_all">全部清除</string>
+    <string name="clear_all">清空历史</string>
     <string name="search_history">搜索历史</string>
     <string name="splash_ad">封面广告</string>
     <string name="dark_type">深色模式</string>
@@ -44,4 +44,5 @@
     <string name="word_highligh">逐字高亮(卡拉OK)</string>
     <string name="lossless">无损</string>
     <string name="mv">MV</string>
+    <string name="vip">VIP</string>
 </resources>

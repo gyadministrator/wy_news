@@ -227,6 +227,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
                 } else {
                     tvComment.text = comment
                 }
+                val s = tvComment.text.toString()
+                if (!TextUtils.isEmpty(s)) {
+                    tvComment.visibility = View.VISIBLE
+                }
                 tvSource.text = hotNewsEntity.source
 
                 val root = cityItemBinding.root

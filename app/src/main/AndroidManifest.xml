@@ -52,6 +52,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.MusicDownloadActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".activity.MusicMvActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false"

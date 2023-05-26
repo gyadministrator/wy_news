@@ -3,6 +3,7 @@ package com.android.wy.news.http
 import com.android.wy.news.entity.HotEntity
 import com.android.wy.news.entity.music.MusicListEntity
 import com.android.wy.news.entity.music.MusicLrcEntity
+import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.MusicUrlEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -87,4 +88,7 @@ interface IApiService {
 
     @GET("/newh5/singles/songinfoandlrc?httpsStatus=1&reqId=7719bb30-e4d7-11ed-84ef-3374439f9c6a")
     fun getMusicLrc(@Query("musicId") musicId: String): Call<MusicLrcEntity>
+
+    @GET("/api/www/playlist/playListInfo?pid=1082685104&pn=1&rn=20&httpsStatus=1&reqId=e49439b0-fb9d-11ed-82c5-3d80c089fb7d")
+    fun getRecommendMusic(): Call<MusicRecommendEntity>
 }

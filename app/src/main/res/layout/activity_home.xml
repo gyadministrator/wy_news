@@ -1,92 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:id="@+id/rl_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/status_bar_color"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_city"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="@string/location_now"
-            android:textColor="@color/main_title"
-            android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+        <LinearLayout
+            android:id="@+id/rl_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/status_bar_color"
+            android:orientation="horizontal">
 
-        <RelativeLayout
-            android:id="@+id/rl_search_edit"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_search">
-
-            <ImageView
-                android:id="@+id/iv_search"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:src="@mipmap/search"
-                tools:ignore="ContentDescription" />
-
-            <com.android.wy.news.view.MarqueeTextView
-                android:id="@+id/marqueeTextView"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/iv_search"
-                android:gravity="center_vertical" />
-        </RelativeLayout>
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/location_now"
+                android:textColor="@color/main_title"
+                android:textSize="14sp"
+                tools:ignore="RtlSymmetry" />
 
-        <RelativeLayout
-            android:id="@+id/rl_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            <RelativeLayout
+                android:id="@+id/rl_search_edit"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_search">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/setting"
-                app:tint="@color/main_title"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:src="@mipmap/search"
+                    tools:ignore="ContentDescription" />
+
+                <com.android.wy.news.view.MarqueeTextView
+                    android:id="@+id/marqueeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/iv_search"
+                    android:gravity="center_vertical" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/setting"
+                    app:tint="@color/main_title"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <me.majiajie.pagerbottomtabstrip.PageNavigationView
+            android:id="@+id/page_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/default_status_bar_color" />
     </LinearLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_item_color"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="56dp"
+        android:background="@android:color/transparent"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingEnd="20dp"
         tools:ignore="RtlSymmetry">
 
         <com.android.wy.news.view.PlayBarView
@@ -97,12 +110,5 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:visibility="gone" />
-
     </RelativeLayout>
-
-    <me.majiajie.pagerbottomtabstrip.PageNavigationView
-        android:id="@+id/page_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/default_status_bar_color" />
-</LinearLayout>
+</FrameLayout>

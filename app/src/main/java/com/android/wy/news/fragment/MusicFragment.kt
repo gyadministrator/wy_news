@@ -191,7 +191,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
             val musicList = musicListData?.musicList
-            val filterMusicList = CommonTools.filterMusicList(musicList)
+            //val filterMusicList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -201,15 +201,17 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 refreshLayout.finishLoadMore()
             }
 
-            if (filterMusicList.size == 0) {
-                if (isLoading) {
-                    refreshLayout.setNoMoreData(true)
-                }
-            } else {
-                if (isRefresh) {
-                    musicAdapter.refreshData(filterMusicList)
+            if (musicList != null) {
+                if (musicList.size == 0) {
+                    if (isLoading) {
+                        refreshLayout.setNoMoreData(true)
+                    }
                 } else {
-                    musicAdapter.loadMoreData(filterMusicList)
+                    if (isRefresh) {
+                        musicAdapter.refreshData(musicList)
+                    } else {
+                        musicAdapter.loadMoreData(musicList)
+                    }
                 }
             }
 
@@ -388,7 +390,15 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (position < dataList.size) {
             currentPosition = position
             val musicInfo = dataList[currentPosition]
+
             this.currentMusicInfo = musicInfo
+            val listenFee = musicInfo.isListenFee
+            if (listenFee) {
+                ToastUtil.show("目前VIP歌曲暂不支持免费播放")
+                playBarView?.showLoading(false)
+                return
+            }
+
             this.currentMusicInfo?.state = MusicState.STATE_PREPARE
 
             val musicInfoEvent = MusicInfoEvent(JsonUtil.parseObjectToJson(this.currentMusicInfo!!))

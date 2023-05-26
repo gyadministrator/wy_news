@@ -357,6 +357,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     override fun onSelected(index: Int, old: Int) {
         Logger.i("onSelected: $index old: $old")
         GlobalData.indexChange.postValue(index)
+
         currentSelectPosition = index
         if (index == 2) {
             hideSearch()

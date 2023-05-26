@@ -42,6 +42,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         var viewLine = mBinding.viewLine
         var tvLossless = mBinding.tvLossless
         var tvMv = mBinding.tvMv
+        var tvVip = mBinding.tvVip
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -71,6 +72,11 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
             holder.tvLossless.visibility = View.VISIBLE
         } else {
             holder.tvLossless.visibility = View.GONE
+        }
+        if (data.isListenFee) {
+            holder.tvVip.visibility = View.VISIBLE
+        } else {
+            holder.tvVip.visibility = View.GONE
         }
         holder.tvMv.tag = data
         holder.tvMv.setOnClickListener(onMvClickListener)

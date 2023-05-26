@@ -72,15 +72,20 @@ class NewsAdapter(
                     } else {
                         holder.tvComment.text = commentCount.toString() + "评论"
                     }
-                } else {
-                    holder.tvComment.visibility = View.GONE
+                    holder.tvComment.visibility = View.VISIBLE
                 }
-                holder.tvSource.text = data.source
+                val source = data.source
+                if (!TextUtils.isEmpty(source)) {
+                    holder.tvSource.visibility = View.VISIBLE
+                    holder.tvSource.text = source
+                }
 
                 val time = CommonTools.getTimeDiff(data.ptime)
                 if (!TextUtils.isEmpty(time)) {
+                    holder.tvTime.visibility = View.VISIBLE
                     holder.tvTime.text = time
                 } else {
+                    holder.tvTime.visibility = View.VISIBLE
                     holder.tvTime.text = data.ptime
                 }
             }
@@ -129,13 +134,20 @@ class NewsAdapter(
             } else {
                 tvComment.text = commentCount.toString() + "评论"
             }
+            tvComment.visibility = View.VISIBLE
         }
-        tvSource.text = newsEntity.source
+        val source = newsEntity.source
+        if (!TextUtils.isEmpty(source)) {
+            tvSource.visibility = View.VISIBLE
+            tvSource.text = source
+        }
 
         val time = CommonTools.getTimeDiff(newsEntity.ptime)
         if (!TextUtils.isEmpty(time)) {
+            tvTime.visibility = View.VISIBLE
             tvTime.text = time
         } else {
+            tvTime.visibility = View.VISIBLE
             tvTime.text = newsEntity.ptime
         }
     }

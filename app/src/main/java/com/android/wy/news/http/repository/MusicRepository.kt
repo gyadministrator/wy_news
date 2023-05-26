@@ -29,6 +29,12 @@ object MusicRepository : BaseRepository() {
         else Result.failure(RuntimeException("getMusicMv is error"))
     }
 
+    fun getRecommendMusic() = getData(Dispatchers.IO) {
+        val musicRecommendEntity = NetworkRequest.getRecommendMusic()
+        if (musicRecommendEntity.code == 200) Result.success(musicRecommendEntity)
+        else Result.failure(RuntimeException("getMusicMv is error"))
+    }
+
     fun getMusicLrc(musicId: String) = getData(Dispatchers.IO) {
         val musicLrcEntity = NetworkRequest.getMusicLrc(musicId)
         if (musicLrcEntity.data != null) Result.success(musicLrcEntity)

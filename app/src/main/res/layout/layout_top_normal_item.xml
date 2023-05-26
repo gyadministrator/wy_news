@@ -34,37 +34,43 @@
 
             <TextView
                 android:id="@+id/tv_source"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="5dp"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="@color/second_title"
                 android:textSize="12sp"
+                android:visibility="gone"
                 tools:text="即可新闻" />
 
             <TextView
                 android:id="@+id/tv_read"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="5dp"
+                android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:textColor="@color/second_title"
                 android:textSize="12sp"
+                android:visibility="gone"
                 tools:text="1000评论" />
 
             <TextView
                 android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:layout_weight="1"
                 android:textColor="@color/second_title"
                 android:textSize="12sp"
+                android:visibility="gone"
                 tools:text="2023-03-21" />
         </LinearLayout>
     </RelativeLayout>
