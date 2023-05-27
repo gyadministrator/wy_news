@@ -24,6 +24,7 @@ object RouteManager {
     const val PATH_ACTIVITY_MUSIC_MV = "/activity/MusicMvActivity"
     const val PATH_ACTIVITY_WEB = "/activity/WebActivity"
     const val PATH_ACTIVITY_MUSIC_DOWNLOAD = "/activity/MusicDownloadActivity"
+    const val PATH_ACTIVITY_RECOGNITION = "/activity/RecognitionActivity"
 
     fun go(path: String) {
         ARouter.getInstance().build(path).navigation()

@@ -2,40 +2,26 @@ package com.android.wy.news.entity.music
 
 /*     
   * @Author:         gao_yun@leapmotor.com
-  * @CreateDate:     2023/5/26 16:24
+  * @CreateDate:     2023/5/27 14:46
   * @Version:        1.0
   * @Description:    
  */
-data class MusicRecommendEntity(
+data class SearchMusicEntity(
     val code: Int,
     val curTime: Long,
-    val `data`: MusicRecommendData,
+    val `data`: SearchMusicData,
     val msg: String,
     val profileId: String,
     val reqId: String,
     val tId: String
 )
 
-data class MusicRecommendData(
-    val desc: String,
-    val id: Int,
-    val img: String,
-    val img300: String,
-    val img500: String,
-    val img700: String,
-    val info: String,
-    val isOfficial: Int,
-    val listencnt: Int,
-    val musicList: ArrayList<MusicInfo>,
-    val name: String,
-    val tag: String,
-    val total: Int,
-    val uPic: String,
-    val uname: String,
-    val userName: String
+data class SearchMusicData(
+    val list: ArrayList<SearchMusicItem>,
+    val total: String
 )
 
-data class Music(
+data class SearchMusicItem(
     val ad_subtype: String,
     val ad_type: String,
     val album: String,
@@ -51,12 +37,13 @@ data class Music(
     val isListenFee: Boolean,
     val isstar: Int,
     val musicrid: String,
-    val mvpayinfo: MusicRecommendMvPayInfo,
+    val mvpayinfo: SearchMusicMvPayInfo,
     val name: String,
+    val nationid: String,
     val online: Int,
     val originalsongtype: Int,
     val pay: String,
-    val payInfo: MusicRecommendPayInfo,
+    val payInfo: SearchMusicPayInfo,
     val pic: String,
     val pic120: String,
     val releaseDate: String,
@@ -67,18 +54,18 @@ data class Music(
     val track: Int
 )
 
-data class MusicRecommendMvPayInfo(
+data class SearchMusicMvPayInfo(
     val down: Int,
     val play: Int,
     val vid: Int
 )
 
-data class MusicRecommendPayInfo(
+data class SearchMusicPayInfo(
     val cannotDownload: Int,
     val cannotOnlinePlay: Int,
     val down: String,
     val download: String,
-    val feeType: MusicRecommendFeeType,
+    val feeType: SearchMusicFeeType,
     val limitfree: Int,
     val listen_fragment: String,
     val local_encrypt: String,
@@ -86,18 +73,18 @@ data class MusicRecommendPayInfo(
     val nplay: String,
     val overseas_ndown: String,
     val overseas_nplay: String,
-    val paytagindex: MusicRecommendPayTagIndex,
+    val paytagindex: SearchMusicPayTagIndex,
     val play: String,
     val refrain_end: Int,
     val refrain_start: Int
 )
 
-data class MusicRecommendFeeType(
+data class SearchMusicFeeType(
     val song: String,
     val vip: String
 )
 
-data class MusicRecommendPayTagIndex(
+data class SearchMusicPayTagIndex(
     val AR501: Int,
     val DB: Int,
     val F: Int,

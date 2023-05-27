@@ -43,6 +43,9 @@ object NetworkRequest {
     suspend fun getRecommendMusic() =
         musicService.getRecommendMusic().await()
 
+    suspend fun getMusicByKey(key: String) =
+        musicService.getMusicByKey(key).await()
+
     suspend fun getMusicLrc(musicId: String) =
         musicService.getMusicLrc(musicId).await()
 

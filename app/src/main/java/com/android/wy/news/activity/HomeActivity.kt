@@ -205,7 +205,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     }
 
     private fun identifyMusic() {
-
+        RouteManager.go(RouteManager.PATH_ACTIVITY_RECOGNITION)
     }
 
     /**

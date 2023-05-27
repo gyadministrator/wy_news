@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
   * @Version:        1.0
   * @Description:    
  */
-class CustomRecyclerView : RecyclerView {
+open class CustomRecyclerView : RecyclerView {
     private var mContext: Context?
 
     constructor(context: Context) : this(context, null)
@@ -29,7 +29,7 @@ class CustomRecyclerView : RecyclerView {
         (itemAnimator as SimpleItemAnimator).changeDuration = 0
         val recycledViewPool = RecycledViewPool()
         recycledViewPool.setMaxRecycledViews(0, 10)
-        setRecycledViewPool(recycledViewPool)
+        this.setRecycledViewPool(recycledViewPool)
         initListener()
     }
 

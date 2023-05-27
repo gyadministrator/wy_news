@@ -53,4 +53,7 @@
     <string name="recent_play">最近播放</string>
     <string name="played_music">已播歌曲</string>
     <string name="mine">我的</string>
+    <string name="start_listen">开始识别</string>
+    <string name="stop_listen">停止识别</string>
+    <string name="listen_tip">外界安静，靠近音源，识别更准确</string>
 </resources>

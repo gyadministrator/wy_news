@@ -23,7 +23,8 @@ object PermissionHelper {
         Permission.WRITE_EXTERNAL_STORAGE,*/
         Permission.ACCESS_FINE_LOCATION,
         Permission.ACCESS_COARSE_LOCATION,
-        Permission.READ_PHONE_STATE
+        Permission.READ_PHONE_STATE,
+        Permission.RECORD_AUDIO
     )
 
     fun requestPermission(activity: Activity, permission: String) {

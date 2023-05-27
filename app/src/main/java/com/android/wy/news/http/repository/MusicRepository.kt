@@ -32,7 +32,13 @@ object MusicRepository : BaseRepository() {
     fun getRecommendMusic() = getData(Dispatchers.IO) {
         val musicRecommendEntity = NetworkRequest.getRecommendMusic()
         if (musicRecommendEntity.code == 200) Result.success(musicRecommendEntity)
-        else Result.failure(RuntimeException("getMusicMv is error"))
+        else Result.failure(RuntimeException("getRecommendMusic is error"))
+    }
+
+    fun getMusicByKey(key: String) = getData(Dispatchers.IO) {
+        val searchMusicEntity = NetworkRequest.getMusicByKey(key)
+        if (searchMusicEntity.code == 200) Result.success(searchMusicEntity)
+        else Result.failure(RuntimeException("getMusicByKey is error"))
     }
 
     fun getMusicLrc(musicId: String) = getData(Dispatchers.IO) {
