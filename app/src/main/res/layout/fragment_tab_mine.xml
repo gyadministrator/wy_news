@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_item_color"
+    android:background="@color/default_status_bar_color"
     android:fitsSystemWindows="true">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/bg_item_top" />
+        android:layout_height="200dp" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -32,8 +31,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/mine"
                     android:layout_marginStart="10dp"
+                    android:text="@string/mine"
                     android:textColor="@color/main_title"
                     android:textSize="22sp"
                     tools:ignore="RelativeOverlap" />
@@ -60,19 +59,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_marginTop="120dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/ll_local"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_common_press_radius"
+                    android:background="@drawable/bg_common_press"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="6dp"
                     tools:ignore="UselessParent">
 
                     <ImageView
@@ -93,19 +91,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-
                 <LinearLayout
                     android:id="@+id/ll_download"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_common_press_radius"
+                    android:background="@drawable/bg_common_press"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="6dp"
                     tools:ignore="UselessParent">
 
                     <ImageView
@@ -126,19 +120,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-
                 <LinearLayout
                     android:id="@+id/ll_record"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_common_press_radius"
+                    android:background="@drawable/bg_common_press"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="6dp"
                     tools:ignore="UselessParent">
 
                     <ImageView
@@ -159,19 +149,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent" />
-
                 <LinearLayout
                     android:id="@+id/ll_live"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_common_press_radius"
+                    android:background="@drawable/bg_common_press"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="6dp"
                     tools:ignore="UselessParent">
 
                     <ImageView
@@ -197,6 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/bg_common_press"
                 android:padding="15dp">
 
                 <TextView
