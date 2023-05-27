@@ -58,15 +58,15 @@
 
                 <com.android.wy.news.view.RoundProgressBar
                     android:id="@+id/round_progress_bar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
                     android:layout_centerInParent="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     app:max="100"
                     app:roundColor="@color/main_title"
                     app:roundProgressColor="@color/text_select_color"
-                    app:roundWidth="2dp"
+                    app:roundWidth="1dp"
                     app:style="STROKE"
                     app:textIsDisplayable="false" />
             </RelativeLayout>
@@ -79,8 +79,8 @@
 
                 <com.wang.avi.AVLoadingIndicatorView
                     android:id="@+id/iv_state_loading"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
