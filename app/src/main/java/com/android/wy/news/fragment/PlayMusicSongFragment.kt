@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
@@ -68,9 +69,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var rlPlay: RelativeLayout? = null
     private var roundProgressBar: RoundProgressBar? = null
     private var index = 0
-    private var musicListDialog: MusicListDialog? = null
     private var currentPlayUrl: String? = null
     private var pageChangeListener: IPageChangeListener? = null
+    private var currentDataList = ArrayList<MusicInfo>()
 
     fun setPageListener(pageChangeListener: IPageChangeListener) {
         this.pageChangeListener = pageChangeListener
@@ -158,7 +159,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         } else if (o is MusicListEvent) {
             val dataList = o.dataList
             Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
-            musicListDialog?.setData(dataList)
+            currentDataList.addAll(dataList)
         }
     }
 
@@ -232,7 +233,17 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun showMusicList() {
-        musicListDialog?.show()
+        val musicListDialog = MusicListDialog()
+        val bundle = Bundle()
+        bundle.putString(
+            MusicListDialog.MUSIC_LIST_KEY,
+            JsonUtil.parseObjectToJson(currentDataList)
+        )
+        musicListDialog.arguments = bundle
+        musicListDialog.show(
+            (context as AppCompatActivity).supportFragmentManager,
+            "music_list_dialog"
+        )
     }
 
     private fun setMusicMode() {
@@ -327,7 +338,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     override fun initEvent() {
-        musicListDialog = context?.let { MusicListDialog(it, R.style.BottomSheetDialog) }
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }

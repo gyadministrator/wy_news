@@ -7,20 +7,17 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
-import com.android.wy.news.R
-import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
+import com.android.wy.news.dialog.BaseBottomSheetFragment
 import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.listener.IPageChangeListener
@@ -32,8 +29,7 @@ import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
-class PlayMusicFragment : DialogFragment(), IPageChangeListener {
-    private var mContentView: View? = null
+class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), IPageChangeListener {
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var height = 0
@@ -41,12 +37,9 @@ class PlayMusicFragment : DialogFragment(), IPageChangeListener {
     private var ivBg: ImageView? = null
     private var rlDown: RelativeLayout? = null
     private var rlMore: RelativeLayout? = null
-    private var mAnimStyle: Int =
-        com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
     private var currentPlayUrl: String? = null
     private var tabLayout: CustomTabLayout? = null
     private var viewPager: ViewPager? = null
-    private var lrcTypeDialog: LrcTypeDialog? = null
 
     companion object {
         const val POSITION_KEY = "position_key"
@@ -65,45 +58,7 @@ class PlayMusicFragment : DialogFragment(), IPageChangeListener {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, com.android.wy.news.locationselect.R.style.CityPickerStyle)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        mContentView = inflater.inflate(R.layout.fragment_play_music, container, false)
-        return mContentView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val binding = mContentView?.let { FragmentPlayMusicBinding.bind(it) }
-        lrcTypeDialog = context?.let { LrcTypeDialog(it, R.style.BottomSheetDialog) }
-        initView(binding)
-        initData()
-    }
-
-    private fun initView(binding: FragmentPlayMusicBinding?) {
-        ivBg = binding?.ivBg
-        rlDown = binding?.rlDown
-        rlMore = binding?.rlMore
-        viewPager = binding?.viewPager
-        tabLayout = binding?.tabLayout
-        rlDown?.setOnClickListener {
-            dismiss()
-        }
-        rlMore?.setOnClickListener {
-            showMore()
-        }
-    }
-
-    private fun showMore() {
-        lrcTypeDialog?.show()
-    }
-
-    private fun initData() {
+    override fun initData() {
         val args = arguments
         if (args != null) {
             currentPosition = args.getInt(POSITION_KEY)
@@ -118,6 +73,29 @@ class PlayMusicFragment : DialogFragment(), IPageChangeListener {
             Glide.with(this).load(this.currentMusicInfo?.pic)
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
         }
+    }
+
+    override fun initView() {
+        ivBg = mBinding.ivBg
+        rlDown = mBinding.rlDown
+        rlMore = mBinding.rlMore
+        viewPager = mBinding.viewPager
+        tabLayout = mBinding.tabLayout
+        rlDown?.setOnClickListener {
+            dismiss()
+        }
+        rlMore?.setOnClickListener {
+            showMore()
+        }
+    }
+
+    override fun getViewBinding(): FragmentPlayMusicBinding {
+        return FragmentPlayMusicBinding.inflate(layoutInflater)
+    }
+
+    private fun showMore() {
+        val dialog = LrcTypeDialog()
+        dialog.show((context as AppCompatActivity).supportFragmentManager, "lrc_type_dialog")
     }
 
     private fun initTab() {
@@ -143,7 +121,7 @@ class PlayMusicFragment : DialogFragment(), IPageChangeListener {
         viewPager?.currentItem = 1
     }
 
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
         hideNavigationBar()
         val dialog = dialog
@@ -158,10 +136,10 @@ class PlayMusicFragment : DialogFragment(), IPageChangeListener {
         if (window != null) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             window.setGravity(Gravity.BOTTOM)
-            window.setLayout(width, height /*- ScreenUtil.getStatusBarHeight(requireActivity())*/)
-            window.setWindowAnimations(mAnimStyle)
+            window.setLayout(width, height *//*- ScreenUtil.getStatusBarHeight(requireActivity())*//*)
+            //window.setWindowAnimations(mAnimStyle)
         }
-    }
+    }*/
 
     private fun hideNavigationBar() {
         val mImmersionBar = ImmersionBar.with(this)

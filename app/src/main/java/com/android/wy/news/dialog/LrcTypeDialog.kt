@@ -1,18 +1,14 @@
 package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.android.wy.news.R
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.LrcType
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.LrcTypeDialogBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.gyf.immersionbar.ImmersionBar
 
 
 /*
@@ -22,7 +18,7 @@ import com.gyf.immersionbar.ImmersionBar
   * @Description:    
  */
 @SuppressLint("InflateParams")
-class LrcTypeDialog(context: Context, theme: Int) : BottomSheetDialog(context, theme) {
+class LrcTypeDialog : BaseBottomSheetFragment<LrcTypeDialogBinding>() {
     private var tvTitle: TextView? = null
     private var ivLine: ImageView? = null
     private var ivWord: ImageView? = null
@@ -30,22 +26,13 @@ class LrcTypeDialog(context: Context, theme: Int) : BottomSheetDialog(context, t
     private var rlLine: RelativeLayout? = null
     private var rlWord: RelativeLayout? = null
 
-    init {
-        val view = layoutInflater.inflate(R.layout.lrc_type_dialog, null)
-        val binding = LrcTypeDialogBinding.bind(view)
-        initView(binding)
-        this.setContentView(view)
-        setCanceledOnTouchOutside(true)
-        setCancelable(true)
-    }
-
-    private fun initView(binding: LrcTypeDialogBinding) {
-        tvTitle = binding.tvTitle
-        ivLine = binding.ivLine
-        ivWord = binding.ivWord
-        rlClose = binding.rlClose
-        rlLine = binding.rlLine
-        rlWord = binding.rlWord
+    override fun initView() {
+        tvTitle = mBinding.tvTitle
+        ivLine = mBinding.ivLine
+        ivWord = mBinding.ivWord
+        rlClose = mBinding.rlClose
+        rlLine = mBinding.rlLine
+        rlWord = mBinding.rlWord
         rlClose?.setOnClickListener {
             dismiss()
         }
@@ -64,6 +51,14 @@ class LrcTypeDialog(context: Context, theme: Int) : BottomSheetDialog(context, t
         checkType()
     }
 
+    override fun getViewBinding(): LrcTypeDialogBinding {
+        return LrcTypeDialogBinding.inflate(layoutInflater)
+    }
+
+    override fun initData() {
+
+    }
+
     private fun checkType() {
         val lrcType = SpTools.getInt(GlobalData.SpKey.LRC_TYPE)
         if (lrcType == LrcType.LRC_TYPE_KALAOK) {
@@ -73,16 +68,5 @@ class LrcTypeDialog(context: Context, theme: Int) : BottomSheetDialog(context, t
             ivLine?.visibility = View.VISIBLE
             ivWord?.visibility = View.GONE
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setBarColor()
-    }
-
-    private fun setBarColor() {
-        val mImmersionBar = ownerActivity?.let { ImmersionBar.with(it) }
-        mImmersionBar?.navigationBarColor(R.color.default_status_bar_color)
-        mImmersionBar?.init()
     }
 }
