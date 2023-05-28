@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_item_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.RecognitionActivity">
@@ -23,11 +24,13 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:id="@+id/iv_listen"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="100dp"
-                android:src="@mipmap/music_default"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/listen"
                 app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
 
