@@ -6,6 +6,7 @@ import com.android.wy.news.entity.music.MusicLrcEntity
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.MusicUrlEntity
 import com.android.wy.news.entity.music.SearchMusicEntity
+import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -75,7 +76,14 @@ interface IApiService {
      */
     @Streaming
     @GET("/gyadministrator/wy_news/releases/download/v1.0/updateInfo.json")
-    fun download(/*@Url fileUrl: String*/): Call<ResponseBody>
+    fun update(): Call<ResponseBody>
+
+    /**
+     * 下载文件
+     */
+    @Streaming
+    @GET
+    fun downloadFile(@Url fileUrl: String): ResponseBody
 
     /*-------------------------------------------以下是音乐相关---------------------------------------*/
     @GET("/api/www/bang/bang/musicList?rn=20&httpsStatus=1&reqId=18c21420-e4d6-11ed-952f-9f227639ff35")

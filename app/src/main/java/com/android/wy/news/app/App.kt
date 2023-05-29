@@ -15,6 +15,8 @@ import com.android.wy.news.shortcut.ShortCutHelper
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.AppFrontBack
 import com.android.wy.news.util.AppFrontBackListener
+import com.liulishuo.filedownloader.FileDownloader
+import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
 
 
 /*
@@ -44,6 +46,20 @@ class App : Application() {
         initShortCut()
         appFrontBackRegister()
         initRoute()
+        initDownload()
+    }
+
+    private fun initDownload() {
+        FileDownloader.setupOnApplicationOnCreate(this)
+            .connectionCreator(
+                FileDownloadUrlConnection
+                    .Creator(
+                        FileDownloadUrlConnection.Configuration()
+                            .connectTimeout(15_000)
+                            .readTimeout(15_000)
+                    )
+            )
+            .commit()
     }
 
     private fun initRoute() {

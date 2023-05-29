@@ -1,16 +1,10 @@
 package com.android.wy.news.dialog
 
-import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.view.LayoutInflater
-import android.view.View
+import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
-import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutDialogBinding
 
@@ -21,7 +15,7 @@ import com.android.wy.news.databinding.LayoutDialogBinding
   * @Version:        1.0
   * @Description:    
  */
-class ConfirmDialogFragment : DialogFragment() {
+class ConfirmDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
     private var tvTitle: TextView? = null
     private var tvContent: TextView? = null
     private var tvSure: TextView? = null
@@ -53,36 +47,11 @@ class ConfirmDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val bundle = arguments
-        titleText = bundle?.getString(DIALOG_TITLE)
-        contentText = bundle?.getString(DIALOG_CONTENT)
-        sureText = bundle?.getString(DIALOG_SURE)
-        cancelText = bundle?.getString(DIALOG_CANCEL)
-    }
-
-    @SuppressLint("InflateParams")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        //必须设置dialog的window背景为透明颜色，不然圆角无效或者是系统默认的颜色
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val view = layoutInflater.inflate(R.layout.layout_dialog, null)
-        val binding = LayoutDialogBinding.bind(view)
-        initView(binding)
-        setTitleText(titleText)
-        setContentText(contentText)
-        setSureText(sureText)
-        setCancelText(cancelText)
-        return view
-    }
-
-    private fun initView(binding: LayoutDialogBinding) {
-        tvTitle = binding.tvTitle
-        tvContent = binding.tvContent
-        tvSure = binding.tvSure
-        tvCancel = binding.tvCancel
+    override fun initView() {
+        tvTitle = mBinding.tvTitle
+        tvContent = mBinding.tvContent
+        tvSure = mBinding.tvSure
+        tvCancel = mBinding.tvCancel
         this.dialog?.setCanceledOnTouchOutside(false)
         this.dialog?.setCancelable(false)
         //设置该句使文本的超连接起作用
@@ -97,6 +66,51 @@ class ConfirmDialogFragment : DialogFragment() {
             this.dismiss()
             dialogFragmentListener?.onClickCancel()
         }
+
+        setTitleText(titleText)
+        setContentText(contentText)
+        setSureText(sureText)
+        setCancelText(cancelText)
+    }
+
+    override fun initData() {
+
+    }
+
+    override fun initEvent() {
+
+    }
+
+    override fun getViewBinding(): LayoutDialogBinding {
+        return LayoutDialogBinding.inflate(layoutInflater)
+    }
+
+    override fun onClear() {
+
+    }
+
+    override fun initIntent() {
+        val bundle = arguments
+        titleText = bundle?.getString(DIALOG_TITLE)
+        contentText = bundle?.getString(DIALOG_CONTENT)
+        sureText = bundle?.getString(DIALOG_SURE)
+        cancelText = bundle?.getString(DIALOG_CANCEL)
+    }
+
+    override fun getLayoutHeight(): Int {
+        return ViewGroup.LayoutParams.WRAP_CONTENT
+    }
+
+    override fun getLayoutWidth(): Int {
+        return (CommonTools.getScreenWidth() * 0.9).toInt()
+    }
+
+    override fun setFragmentStyle() {
+
+    }
+
+    override fun getGravityLocation(): Int {
+        return Gravity.BOTTOM
     }
 
     private fun setTitleText(titleText: String?) {
@@ -123,25 +137,5 @@ class ConfirmDialogFragment : DialogFragment() {
         fun onClickSure()
 
         fun onClickCancel()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        resizeDialogFragment()
-    }
-
-    private fun resizeDialogFragment() {
-        val dialog = dialog
-        if (null != dialog) {
-            val window = dialog.window
-            val lp = window?.attributes
-            val screenWidth = CommonTools.getScreenWidth()
-            if (lp != null) {
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                lp.width = (screenWidth * 0.9).toInt()
-                window.setLayout(lp.width, lp.height)
-            }
-        }
-
     }
 }

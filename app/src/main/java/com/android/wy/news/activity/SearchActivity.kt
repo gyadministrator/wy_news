@@ -414,4 +414,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         scrollView.visibility = View.VISIBLE
         llContent.visibility = View.VISIBLE
     }
+
+    override fun onItemLongClickListener(view: View, data: SearchResult) {
+
+    }
 }

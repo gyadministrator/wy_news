@@ -24,16 +24,11 @@ import com.android.wy.news.dialog.UpdateDialogFragment
 import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.manager.RouteManager
-import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.update.OnUpdateManagerListener
 import com.android.wy.news.update.UpdateManager
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.SettingViewModel
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 @Route(path = RouteManager.PATH_ACTIVITY_SETTING)
 class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>() {
@@ -308,50 +303,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
     private fun stop() {
         //初始化版本控制
         DownloadController.unRegisterReceiver(this)
-    }
-
-
-    private fun goDownload(apkUrl: String) {
-        try {
-            //设置进度条操作
-            val url = URL(apkUrl)
-            //打开和URL之间的连接
-            val connection = url.openConnection() as HttpURLConnection
-            //设置网络请求为get请求
-            connection.requestMethod = "GET"
-            //开始读取服务器端数据，到了指定时间还没有读到数据，则报超时异常
-            connection.readTimeout = 50000
-            //建立实际的连接
-            connection.connect()
-            Thread {
-                var totalLength = 0
-                try {
-                    if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                        val inputStream: InputStream = connection.inputStream
-                        //获取文件流大小，更新进度
-                        val buffer = ByteArray(1024)
-                        var len: Int
-                        var progress: Int
-                        val fileLength: Long = connection.contentLength.toLong()
-                        while (inputStream.read(buffer).also { len = it } != -1) {
-                            totalLength += len
-                            if (fileLength > 0) {
-                                progress =
-                                    (totalLength / fileLength.toFloat() * 100).toInt() //进度条传递进度
-                                NotificationHelper.sendProgressNotification(this, progress, false)
-                            }
-                        }
-                        NotificationHelper.sendProgressNotification(this, 0, true)
-                        //关闭资源
-                        inputStream.close()
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }.start()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     override fun getViewBinding(): ActivitySettingBinding {

@@ -218,4 +218,8 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
             }
         }
     }
+
+    override fun onItemLongClickListener(view: View, data: ScreenVideoEntity) {
+
+    }
 }

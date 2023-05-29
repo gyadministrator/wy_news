@@ -34,7 +34,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
 
         }
         llLocal.setOnClickListener {
-            RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_DOWNLOAD)
+            RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_LOCAL)
         }
     }
 

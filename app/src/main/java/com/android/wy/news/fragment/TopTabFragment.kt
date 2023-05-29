@@ -310,4 +310,8 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
         }
     }
 
+    override fun onItemLongClickListener(view: View, data: TopEntity) {
+
+    }
+
 }

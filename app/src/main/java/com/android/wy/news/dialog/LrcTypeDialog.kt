@@ -1,10 +1,13 @@
 package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.LrcType
 import com.android.wy.news.common.SpTools
@@ -25,6 +28,18 @@ class LrcTypeDialog : BaseBottomSheetFragment<LrcTypeDialogBinding>() {
     private var rlClose: RelativeLayout? = null
     private var rlLine: RelativeLayout? = null
     private var rlWord: RelativeLayout? = null
+
+    override fun getLayoutHeight(): Int {
+        return ViewGroup.LayoutParams.WRAP_CONTENT
+    }
+
+    override fun getLayoutWidth(): Int {
+        return CommonTools.getScreenWidth()
+    }
+
+    override fun getGravityLocation(): Int {
+        return Gravity.BOTTOM
+    }
 
     override fun initView() {
         tvTitle = mBinding.tvTitle
@@ -55,7 +70,19 @@ class LrcTypeDialog : BaseBottomSheetFragment<LrcTypeDialogBinding>() {
         return LrcTypeDialogBinding.inflate(layoutInflater)
     }
 
+    override fun onClear() {
+
+    }
+
+    override fun initIntent() {
+
+    }
+
     override fun initData() {
+
+    }
+
+    override fun initEvent() {
 
     }
 

@@ -216,4 +216,8 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     override fun onItemClickListener(view: View, data: RecommendVideoEntity) {
 
     }
+
+    override fun onItemLongClickListener(view: View, data: RecommendVideoEntity) {
+
+    }
 }

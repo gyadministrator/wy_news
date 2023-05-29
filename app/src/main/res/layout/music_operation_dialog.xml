@@ -11,12 +11,13 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
+        android:layout_marginStart="16dp"
         android:gravity="center"
+        android:text="@string/music_operation"
         android:textColor="@color/main_title"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="当前播放列表(0)" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:id="@+id/rl_close"
@@ -35,16 +36,33 @@
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
-    <!--
-    设置RecyclerView最大高度
-    app:layout_constraintHeight_default="wrap"
-        app:layout_constraintHeight_max="400dp"
-        android:layout_height="0dp"-->
-    <com.android.wy.news.view.CustomRecyclerView
-        android:id="@+id/rv_content"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@id/rl_close">
+
+        <RelativeLayout
+            android:id="@+id/rl_download"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/bg_item_color"
+            android:gravity="center_vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/download"
+                android:textColor="@color/main_title"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

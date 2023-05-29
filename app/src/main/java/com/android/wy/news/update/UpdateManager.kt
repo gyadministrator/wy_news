@@ -19,7 +19,7 @@ object UpdateManager {
                 GlobalConstant.APP_UPDATE_BASE_URL,
                 IApiService::class.java
             )
-        val observable = apiService.download()
+        val observable = apiService.update()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(
                 call: Call<ResponseBody>,

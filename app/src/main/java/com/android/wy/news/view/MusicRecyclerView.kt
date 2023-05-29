@@ -46,4 +46,8 @@ class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListe
     override fun onItemClickListener(view: View, data: MusicInfo) {
 
     }
+
+    override fun onItemLongClickListener(view: View, data: MusicInfo) {
+
+    }
 }

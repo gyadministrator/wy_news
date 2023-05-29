@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
     private var itemAdapterListener: OnItemAdapterListener<V>
-) : RecyclerView.Adapter<H>(), View.OnClickListener {
+) : RecyclerView.Adapter<H>(), View.OnClickListener, View.OnLongClickListener {
     private var currentPage = 0
 
     protected var mDataList = ArrayList<V>()
@@ -38,10 +38,16 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         onBindData(holder, position, data)
         holder.itemView.tag = position
         holder.itemView.setOnClickListener(this)
+        holder.itemView.setOnLongClickListener(this)
     }
 
     override fun onClick(p0: View?) {
         p0?.let { onItemClickListener(it) }
+    }
+
+    override fun onLongClick(p0: View?): Boolean {
+        p0?.let { onItemLongClickListener(it) }
+        return true
     }
 
     private fun onItemClickListener(view: View) {
@@ -52,8 +58,18 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
         }
     }
 
+    private fun onItemLongClickListener(view: View) {
+        val tag = view.tag
+        if (tag is Int) {
+            val data = mDataList[tag]
+            itemAdapterListener.onItemLongClickListener(view, data)
+        }
+    }
+
     interface OnItemAdapterListener<V> {
         fun onItemClickListener(view: View, data: V)
+
+        fun onItemLongClickListener(view: View, data: V)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -83,5 +99,4 @@ abstract class BaseNewsAdapter<H : RecyclerView.ViewHolder, V>(
     fun getView(parent: ViewGroup, resId: Int): View {
         return LayoutInflater.from(parent.context).inflate(resId, parent, false)
     }
-
 }

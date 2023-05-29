@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!--录音权限-->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!-- Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission -->
+    <!-- 录音权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 安装应用权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 读取图片权限 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- 读取视频权限 -->
@@ -54,11 +53,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.DownloadActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".activity.RecognitionActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activity.MusicDownloadActivity"
+            android:name=".activity.MusicLocalActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity

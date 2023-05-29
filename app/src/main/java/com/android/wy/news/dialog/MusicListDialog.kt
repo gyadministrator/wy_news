@@ -1,6 +1,7 @@
 package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
+import android.view.Gravity
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
+import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.MusicListDialogBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.util.JsonUtil
@@ -33,6 +35,18 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
         const val MUSIC_LIST_KEY = "music_list_key"
     }
 
+    override fun getLayoutHeight(): Int {
+        return (CommonTools.getScreenHeight() * 0.75).toInt()
+    }
+
+    override fun getLayoutWidth(): Int {
+        return CommonTools.getScreenWidth()
+    }
+
+    override fun getGravityLocation(): Int {
+        return Gravity.BOTTOM
+    }
+
     override fun initView() {
         tvTitle = mBinding.tvTitle
         rvContent = mBinding.rvContent
@@ -44,6 +58,14 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
 
     override fun getViewBinding(): MusicListDialogBinding {
         return MusicListDialogBinding.inflate(layoutInflater)
+    }
+
+    override fun onClear() {
+
+    }
+
+    override fun initIntent() {
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -62,7 +84,15 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
         tvTitle?.text = "当前播放列表(" + list.size + ")"
     }
 
+    override fun initEvent() {
+
+    }
+
     override fun onItemClickListener(view: View, data: MusicInfo) {
+
+    }
+
+    override fun onItemLongClickListener(view: View, data: MusicInfo) {
 
     }
 }

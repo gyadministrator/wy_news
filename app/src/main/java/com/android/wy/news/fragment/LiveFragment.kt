@@ -137,4 +137,8 @@ class LiveFragment : BaseFragment<FragmentLiveBinding, LiveViewModel>(), OnRefre
         WebActivity.startActivity(mActivity, url)
     }
 
+    override fun onItemLongClickListener(view: View, data: LiveReview) {
+
+    }
+
 }

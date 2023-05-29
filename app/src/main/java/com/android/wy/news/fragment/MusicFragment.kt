@@ -22,6 +22,7 @@ import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
+import com.android.wy.news.dialog.MusicOperationDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
@@ -30,6 +31,7 @@ import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.event.PlayFinishEvent
 import com.android.wy.news.http.repository.MusicRepository
+import com.android.wy.news.listener.IDownloadListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
@@ -37,6 +39,7 @@ import com.android.wy.news.music.lrc.Lrc
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.util.AppUtil
+import com.android.wy.news.util.DownloadFileUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.PlayBarView
@@ -50,6 +53,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+
 /**
  * {
  *     "title": "畅听榜",
@@ -58,7 +62,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
     OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicInfo>,
-    PlayBarView.OnPlayBarListener {
+    PlayBarView.OnPlayBarListener, IDownloadListener {
     private var pageStart = 1
     private var categoryId: Int = 0
     private lateinit var rvContent: RecyclerView
@@ -71,10 +75,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var playBarView: PlayBarView? = null
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
+    private var currentDownloadMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
     private var musicReceiver: MusicReceiver? = null
     private var mediaHelper: MediaPlayerHelper? = null
     private var currentLrcList: ArrayList<Lrc>? = null
+    private var isLongClick = false
 
     companion object {
         private const val mKey: String = "category_id"
@@ -268,6 +274,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun playMusic(it: String?) {
         this.currentPlayUrl = it
+        if (isLongClick) {
+            it?.let { it1 -> startDownload(it1) }
+            return
+        }
         GlobalData.playUrlChange.postValue(it)
         startMusicService()
         getLrc()
@@ -377,6 +387,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onItemClickListener(view: View, data: MusicInfo) {
+        isLongClick = false
         val i = view.tag as Int
         prepareMusic(i)
     }
@@ -416,6 +427,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onClickPlay(position: Int) {
+        isLongClick = false
         Logger.i("onClickPlay--->>>position:$position")
         if (mediaHelper != null) {
             if (mediaHelper!!.isPlaying()) {
@@ -561,5 +573,37 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 }
             }
         }
+    }
+
+    override fun onItemLongClickListener(view: View, data: MusicInfo) {
+        isLongClick = true
+        val musicOperationDialog = MusicOperationDialog(this, data)
+        musicOperationDialog.show(
+            (mActivity as AppCompatActivity).supportFragmentManager,
+            "music_operation_dialog"
+        )
+    }
+
+    override fun goDownload(musicInfo: MusicInfo) {
+        currentDownloadMusicInfo=musicInfo
+        mViewModel.requestMusicUrl(musicInfo)
+    }
+
+    private fun startDownload(url: String) {
+        if (TextUtils.isEmpty(url)){
+            ToastUtil.show("下载地址为空")
+            return
+        }
+        val stringBuilder = StringBuilder()
+        val name = this.currentDownloadMusicInfo?.name
+        val artist = this.currentDownloadMusicInfo?.artist
+        if (!TextUtils.isEmpty(artist)) {
+            stringBuilder.append(artist)
+        }
+        if (!TextUtils.isEmpty(name)) {
+            stringBuilder.append("-")
+            stringBuilder.append(name)
+        }
+        DownloadFileUtil.download(stringBuilder.toString(), url)
     }
 }

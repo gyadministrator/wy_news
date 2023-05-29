@@ -13,6 +13,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
+import com.android.wy.news.activity.DownloadActivity
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalConstant
@@ -338,19 +339,33 @@ object NotificationHelper {
         }
     }
 
-    fun sendProgressNotification(context: Context, progress: Int, isFinish: Boolean) {
+    fun sendProgressNotification(
+        context: Context,
+        content: String,
+        progress: Int,
+        isFinish: Boolean
+    ) {
         initNotificationManager(context)
+        val intent = Intent(context, DownloadActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            getNotifyId(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val builder = NotificationCompat.Builder(context, CHANNEL_ID).setOngoing(true)
             .setSmallIcon(R.mipmap.ic_launcher) //小图标
             .setContentTitle("正在下载...")  //通知标题
-            //.setContentIntent(pendingIntent) //点击通知栏跳转到指定页面
+            .setContentText(content)
+            .setContentIntent(pendingIntent) //点击通知栏跳转到指定页面
             .setAutoCancel(true)    //点击通知后关闭通知
             .setOnlyAlertOnce(true); //设置提示音只响一次
 
-        val id = getNotifyId()
+        val id = 101
         if (isFinish) {
-            builder.setContentText("下载完成")
+            builder.setContentTitle("下载完成")
             notificationManager?.notify(id, builder.build())
+            notificationManager?.cancel(id)
         } else {
             builder.setProgress(100, progress, false)
             builder.setContentText("下载$progress%")

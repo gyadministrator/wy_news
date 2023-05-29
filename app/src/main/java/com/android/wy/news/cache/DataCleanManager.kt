@@ -249,7 +249,7 @@ object DataCleanManager {
      * @param size
      * @return String
      */
-    private fun getFormatSize(size: Double): String {
+    fun getFormatSize(size: Double): String {
         val kiloByte = size / 1024
         if (kiloByte < 1) {
             return size.toString() + "B"

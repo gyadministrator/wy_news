@@ -1,20 +1,16 @@
 package com.android.wy.news.dialog
 
-import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.DialogFragment
 import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
@@ -28,7 +24,7 @@ import com.android.wy.news.databinding.LayoutDialogBinding
   * @Version:        1.0
   * @Description:    
  */
-class PrivacyDialogFragment : DialogFragment() {
+class PrivacyDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
     private var tvTitle: TextView? = null
     private var tvContent: TextView? = null
     private var tvSure: TextView? = null
@@ -46,9 +42,49 @@ class PrivacyDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initView() {
+        tvTitle = mBinding.tvTitle
+        tvContent = mBinding.tvContent
+        tvSure = mBinding.tvSure
+        tvCancel = mBinding.tvCancel
+        this.dialog?.setCanceledOnTouchOutside(false)
+        this.dialog?.setCancelable(false)
+        //设置该句使文本的超连接起作用
+        tvContent?.movementMethod = LinkMovementMethod.getInstance()
 
+        tvSure?.setOnClickListener {
+            this.dismiss()
+            dialogFragmentListener?.onClickSure()
+        }
+
+        tvCancel?.setOnClickListener {
+            this.dismiss()
+            dialogFragmentListener?.onClickCancel()
+        }
+
+        setTitleText(titleText)
+        setContentText(contentText)
+        setSureText(sureText)
+        setCancelText(cancelText)
+    }
+
+    override fun initData() {
+
+    }
+
+    override fun initEvent() {
+
+    }
+
+    override fun getViewBinding(): LayoutDialogBinding {
+        return LayoutDialogBinding.inflate(layoutInflater)
+    }
+
+    override fun onClear() {
+
+    }
+
+    override fun initIntent() {
         val s = activity?.getString(R.string.app_name)
         val spannable =
             SpannableStringBuilder("亲，感谢您对\"${s}\"一直以来的信任！我们依据最新的监管要求更新了\"${s}\"软件\n《隐私政策》和《用户协议》，特向广大用户说明如下信息\n1.为向您提供相关基本功能，我们会收集、使用必要的信息；\n2.基于您的明示授权，我们可能会获取您的位置（为您提供附近城市的新闻、视频及资讯等）等信息，您有权拒绝或取消授权；\n3.我们会采取业界先进的安全措施保护您的信息安全；\n4.未经您同意，我们不会从第三方处获取、共享或向提供您的信息；\n")
@@ -87,41 +123,20 @@ class PrivacyDialogFragment : DialogFragment() {
         cancelText = "不同意"
     }
 
-    @SuppressLint("InflateParams")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        //必须设置dialog的window背景为透明颜色，不然圆角无效或者是系统默认的颜色
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val view = layoutInflater.inflate(R.layout.layout_dialog, null)
-        val binding = LayoutDialogBinding.bind(view)
-        initView(binding)
-        setTitleText(titleText)
-        setContentText(contentText)
-        setSureText(sureText)
-        setCancelText(cancelText)
-        return view
+    override fun getLayoutHeight(): Int {
+        return ViewGroup.LayoutParams.WRAP_CONTENT
     }
 
-    private fun initView(binding: LayoutDialogBinding) {
-        tvTitle = binding.tvTitle
-        tvContent = binding.tvContent
-        tvSure = binding.tvSure
-        tvCancel = binding.tvCancel
-        this.dialog?.setCanceledOnTouchOutside(false)
-        this.dialog?.setCancelable(false)
-        //设置该句使文本的超连接起作用
-        tvContent?.movementMethod = LinkMovementMethod.getInstance()
+    override fun getLayoutWidth(): Int {
+        return (CommonTools.getScreenWidth() * 0.9).toInt()
+    }
 
-        tvSure?.setOnClickListener {
-            this.dismiss()
-            dialogFragmentListener?.onClickSure()
-        }
+    override fun setFragmentStyle() {
 
-        tvCancel?.setOnClickListener {
-            this.dismiss()
-            dialogFragmentListener?.onClickCancel()
-        }
+    }
+
+    override fun getGravityLocation(): Int {
+        return Gravity.BOTTOM
     }
 
     private fun setTitleText(titleText: String?) {
@@ -148,25 +163,5 @@ class PrivacyDialogFragment : DialogFragment() {
         fun onClickSure()
 
         fun onClickCancel()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        resizeDialogFragment()
-    }
-
-    private fun resizeDialogFragment() {
-        val dialog = dialog
-        if (null != dialog) {
-            val window = dialog.window
-            val lp = window?.attributes
-            val screenWidth = CommonTools.getScreenWidth()
-            if (lp != null) {
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                lp.width = (screenWidth * 0.9).toInt()
-                window.setLayout(lp.width, lp.height)
-            }
-        }
-
     }
 }

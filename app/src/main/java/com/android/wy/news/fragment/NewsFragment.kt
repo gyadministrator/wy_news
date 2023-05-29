@@ -141,4 +141,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding, NewsViewModel>(), OnRefre
         val url = GlobalConstant.WEB_URL + data.docid + ".html"
         WebActivity.startActivity(mActivity, url)
     }
+
+    override fun onItemLongClickListener(view: View, data: NewsEntity) {
+
+    }
 }

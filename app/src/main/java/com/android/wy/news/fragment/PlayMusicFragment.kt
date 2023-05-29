@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.KeyEvent
-import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -16,8 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.android.tablib.adapter.FragmentPageAdapter
 import com.android.tablib.view.CustomTabLayout
+import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
-import com.android.wy.news.dialog.BaseBottomSheetFragment
+import com.android.wy.news.dialog.BaseDialogFragment
 import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.listener.IPageChangeListener
@@ -29,7 +29,7 @@ import com.gyf.immersionbar.ImmersionBar
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 
-class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), IPageChangeListener {
+class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageChangeListener {
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var height = 0
@@ -37,6 +37,8 @@ class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), I
     private var ivBg: ImageView? = null
     private var rlDown: RelativeLayout? = null
     private var rlMore: RelativeLayout? = null
+    private var mAnimStyle: Int =
+        com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
     private var currentPlayUrl: String? = null
     private var tabLayout: CustomTabLayout? = null
     private var viewPager: ViewPager? = null
@@ -58,6 +60,25 @@ class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), I
         }
     }
 
+    override fun initView() {
+        ivBg = mBinding.ivBg
+        rlDown = mBinding.rlDown
+        rlMore = mBinding.rlMore
+        viewPager = mBinding.viewPager
+        tabLayout = mBinding.tabLayout
+        rlDown?.setOnClickListener {
+            dismiss()
+        }
+        rlMore?.setOnClickListener {
+            showMore()
+        }
+    }
+
+    private fun showMore() {
+        val dialog = LrcTypeDialog()
+        dialog.show((context as AppCompatActivity).supportFragmentManager, "lrc_type_dialog")
+    }
+
     override fun initData() {
         val args = arguments
         if (args != null) {
@@ -75,27 +96,36 @@ class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), I
         }
     }
 
-    override fun initView() {
-        ivBg = mBinding.ivBg
-        rlDown = mBinding.rlDown
-        rlMore = mBinding.rlMore
-        viewPager = mBinding.viewPager
-        tabLayout = mBinding.tabLayout
-        rlDown?.setOnClickListener {
-            dismiss()
-        }
-        rlMore?.setOnClickListener {
-            showMore()
-        }
+    override fun initEvent() {
+
     }
 
     override fun getViewBinding(): FragmentPlayMusicBinding {
         return FragmentPlayMusicBinding.inflate(layoutInflater)
     }
 
-    private fun showMore() {
-        val dialog = LrcTypeDialog()
-        dialog.show((context as AppCompatActivity).supportFragmentManager, "lrc_type_dialog")
+    override fun onClear() {
+
+    }
+
+    override fun initIntent() {
+
+    }
+
+    override fun getLayoutHeight(): Int {
+        return CommonTools.getScreenHeight()
+    }
+
+    override fun getLayoutWidth(): Int {
+        return CommonTools.getScreenWidth()
+    }
+
+    override fun setFragmentStyle() {
+        setStyle(STYLE_NORMAL, com.android.wy.news.locationselect.R.style.CityPickerStyle)
+    }
+
+    override fun getGravityLocation(): Int {
+        return Gravity.BOTTOM
     }
 
     private fun initTab() {
@@ -121,7 +151,12 @@ class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), I
         viewPager?.currentItem = 1
     }
 
-    /*override fun onStart() {
+    override fun onResume() {
+        super.onResume()
+        hideNavigationBar()
+    }
+
+    override fun onStart() {
         super.onStart()
         hideNavigationBar()
         val dialog = dialog
@@ -136,10 +171,10 @@ class PlayMusicFragment : BaseBottomSheetFragment<FragmentPlayMusicBinding>(), I
         if (window != null) {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             window.setGravity(Gravity.BOTTOM)
-            window.setLayout(width, height *//*- ScreenUtil.getStatusBarHeight(requireActivity())*//*)
-            //window.setWindowAnimations(mAnimStyle)
+            window.setLayout(width, height)
+            window.setWindowAnimations(mAnimStyle)
         }
-    }*/
+    }
 
     private fun hideNavigationBar() {
         val mImmersionBar = ImmersionBar.with(this)

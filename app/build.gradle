@@ -203,6 +203,8 @@ dependencies {
     implementation rootProject.ext.dependencies.arouterApi
     kapt rootProject.ext.dependencies.arouterCompiler
     implementation rootProject.ext.dependencies.pagerBottomTabStrip
+    implementation rootProject.ext.dependencies.rxAndroid
+    implementation rootProject.ext.dependencies.fileDownloader
 }
 
 gradle.addBuildListener(new BuildListener() {

@@ -2,12 +2,12 @@ package com.android.wy.news.activity
 
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.databinding.ActivityMusicDownloadBinding
+import com.android.wy.news.databinding.ActivityLocalMusicBinding
 import com.android.wy.news.manager.RouteManager
-import com.android.wy.news.viewmodel.MusicDownloadViewModel
+import com.android.wy.news.viewmodel.MusicLocalViewModel
 
-@Route(path = RouteManager.PATH_ACTIVITY_MUSIC_DOWNLOAD)
-class MusicDownloadActivity : BaseActivity<ActivityMusicDownloadBinding, MusicDownloadViewModel>() {
+@Route(path = RouteManager.PATH_ACTIVITY_MUSIC_LOCAL)
+class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalViewModel>() {
     override fun setDefaultImmersionBar(): Boolean {
         return true
     }
@@ -36,12 +36,12 @@ class MusicDownloadActivity : BaseActivity<ActivityMusicDownloadBinding, MusicDo
 
     }
 
-    override fun getViewBinding(): ActivityMusicDownloadBinding {
-        return ActivityMusicDownloadBinding.inflate(layoutInflater)
+    override fun getViewBinding(): ActivityLocalMusicBinding {
+        return ActivityLocalMusicBinding.inflate(layoutInflater)
     }
 
-    override fun getViewModel(): MusicDownloadViewModel {
-        return CommonTools.getViewModel(this, MusicDownloadViewModel::class.java)
+    override fun getViewModel(): MusicLocalViewModel {
+        return CommonTools.getViewModel(this, MusicLocalViewModel::class.java)
     }
 
     override fun onClear() {
