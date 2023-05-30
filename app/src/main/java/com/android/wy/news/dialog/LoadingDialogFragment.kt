@@ -14,7 +14,7 @@ import com.android.wy.news.view.LoadingView
   * @Version:        1.0
   * @Description:    
  */
-class LoadingDialogFragment : BaseBottomSheetFragment<LayoutLoadingDialogBinding>() {
+class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     private var loadingView: LoadingView? = null
     private var tvTitle: TextView? = null
     private var title:String?=null
@@ -58,7 +58,11 @@ class LoadingDialogFragment : BaseBottomSheetFragment<LayoutLoadingDialogBinding
     }
 
     override fun getLayoutWidth(): Int {
-        return (CommonTools.getScreenWidth() * 0.8).toInt()
+        return (CommonTools.getScreenWidth() * 0.9).toInt()
+    }
+
+    override fun setFragmentStyle() {
+
     }
 
     override fun getGravityLocation(): Int {
