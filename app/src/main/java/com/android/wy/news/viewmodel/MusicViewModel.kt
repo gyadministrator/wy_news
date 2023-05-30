@@ -34,7 +34,7 @@ class MusicViewModel : BaseViewModel() {
         }
     }
 
-    fun requestMusicUrl(musicInfo: MusicInfo) {
+    /*fun requestMusicUrl(musicInfo: MusicInfo) {
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -74,7 +74,7 @@ class MusicViewModel : BaseViewModel() {
                 }
             })
         }
-    }
+    }*/
 
 
     override fun clear() {

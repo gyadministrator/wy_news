@@ -7,18 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.MusicMvActivity
-import com.android.wy.news.activity.VideoFullActivity
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
-import com.android.wy.news.entity.ScreenVideoEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.util.JsonUtil
-import com.android.wy.news.util.TaskUtil
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /*
@@ -36,9 +31,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         var tvTitle = mBinding.tvTitle
         var tvDesc = mBinding.tvDesc
         var ivCover = mBinding.ivCover
-        var ivPlay = mBinding.ivPlay
-        var ivStateLoading = mBinding.ivStateLoading
-        var ivStatePlay = mBinding.ivStatePlay
         var viewLine = mBinding.viewLine
         var tvLossless = mBinding.tvLossless
         var tvMv = mBinding.tvMv
@@ -97,12 +89,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         if (selectedPosition == position) {
             when (result.state) {
                 MusicState.STATE_PREPARE -> {
-                    holder.ivPlay.setImageResource(R.mipmap.music_pause)
-                    holder.ivStateLoading.visibility = View.VISIBLE
-                    holder.ivStateLoading.show()
-
-                    holder.ivStatePlay.visibility = View.GONE
-                    holder.ivStatePlay.hide()
                     holder.viewLine.visibility = View.INVISIBLE
                     holder.tvTitle.setTextColor(
                         ContextCompat.getColor(
@@ -119,9 +105,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                 }
 
                 MusicState.STATE_PLAY -> {
-                    holder.ivPlay.setImageResource(R.mipmap.music_play)
-                    holder.ivStatePlay.visibility = View.VISIBLE
-                    holder.ivStatePlay.show()
                     holder.viewLine.visibility = View.VISIBLE
                     holder.tvTitle.setTextColor(
                         ContextCompat.getColor(
@@ -135,17 +118,9 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                             R.color.text_select_color
                         )
                     )
-
-                    holder.ivStateLoading.visibility = View.GONE
-                    holder.ivStateLoading.hide()
                 }
 
                 MusicState.STATE_PAUSE -> {
-                    holder.ivPlay.setImageResource(R.mipmap.music_pause)
-                    holder.ivStateLoading.visibility = View.GONE
-                    holder.ivStateLoading.hide()
-                    holder.ivStatePlay.visibility = View.GONE
-                    holder.ivStatePlay.hide()
                     holder.viewLine.visibility = View.INVISIBLE
                     holder.tvTitle.setTextColor(
                         ContextCompat.getColor(
@@ -162,11 +137,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                 }
 
                 MusicState.STATE_ERROR -> {
-                    holder.ivPlay.setImageResource(R.mipmap.music_pause)
-                    holder.ivStateLoading.visibility = View.GONE
-                    holder.ivStateLoading.hide()
-                    holder.ivStatePlay.visibility = View.GONE
-                    holder.ivStatePlay.hide()
                     holder.viewLine.visibility = View.INVISIBLE
                     holder.tvTitle.setTextColor(
                         ContextCompat.getColor(
@@ -183,11 +153,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                 }
 
                 else -> {
-                    holder.ivPlay.setImageResource(R.mipmap.music_pause)
-                    holder.ivStateLoading.visibility = View.GONE
-                    holder.ivStateLoading.hide()
-                    holder.ivStatePlay.visibility = View.GONE
-                    holder.ivStatePlay.hide()
                     holder.viewLine.visibility = View.INVISIBLE
                     holder.tvTitle.setTextColor(
                         ContextCompat.getColor(
@@ -204,11 +169,6 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                 }
             }
         } else {
-            holder.ivPlay.setImageResource(R.mipmap.music_pause)
-            holder.ivStateLoading.visibility = View.GONE
-            holder.ivStateLoading.hide()
-            holder.ivStatePlay.visibility = View.GONE
-            holder.ivStatePlay.hide()
             holder.viewLine.visibility = View.INVISIBLE
             holder.tvTitle.setTextColor(
                 ContextCompat.getColor(

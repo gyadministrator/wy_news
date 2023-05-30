@@ -40,7 +40,7 @@
     app:layout_constraintHeight_default="wrap"
         app:layout_constraintHeight_max="400dp"
         android:layout_height="0dp"-->
-    <com.android.wy.news.view.CustomRecyclerView
+    <com.android.wy.news.view.MusicRecyclerView
         android:id="@+id/rv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

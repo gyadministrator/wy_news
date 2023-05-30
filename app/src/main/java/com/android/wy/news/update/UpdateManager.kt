@@ -1,6 +1,6 @@
 package com.android.wy.news.update
 
-import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.common.Logger
 import com.android.wy.news.dialog.LoadingDialog
@@ -12,8 +12,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object UpdateManager {
-    fun checkUpdate(context: Context, onUpdateManagerListener: OnUpdateManagerListener?) {
-        LoadingDialog.show(context, "检查更新中...")
+    fun checkUpdate(activity: AppCompatActivity, onUpdateManagerListener: OnUpdateManagerListener?) {
+        LoadingDialog.show(activity, "检查更新中...")
         val apiService =
             HttpManager.mInstance.getApiService(
                 GlobalConstant.APP_UPDATE_BASE_URL,

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.listener.IMusicItemChangeListener
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -16,6 +17,7 @@ import com.android.wy.news.entity.music.MusicInfo
  */
 class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListener<MusicInfo> {
     private var musicAdapter: MusicAdapter? = null
+    private var musicItemListener: IMusicItemChangeListener? = null
 
     init {
         musicAdapter = MusicAdapter(this)
@@ -43,11 +45,23 @@ class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListe
         return musicAdapter?.getDataList()
     }
 
-    override fun onItemClickListener(view: View, data: MusicInfo) {
+    fun updatePosition(position: Int) {
+        musicAdapter?.setSelectedIndex(position)
+    }
 
+    fun getMusicAdapter(): MusicAdapter? {
+        return musicAdapter
+    }
+
+    fun seItemListener(musicItemListener: IMusicItemChangeListener) {
+        this.musicItemListener = musicItemListener
+    }
+
+    override fun onItemClickListener(view: View, data: MusicInfo) {
+        musicItemListener?.onItemClick(view, data)
     }
 
     override fun onItemLongClickListener(view: View, data: MusicInfo) {
-
+        musicItemListener?.onItemLongClick(view, data)
     }
 }

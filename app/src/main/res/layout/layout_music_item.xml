@@ -24,27 +24,13 @@
             android:background="@color/text_select_color"
             android:visibility="invisible" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/iv_cover"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:scaleType="centerCrop"
-                app:riv_corner_radius="4dp"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
-                android:id="@+id/iv_play"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/music_pause"
-                app:tint="@color/main_title"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="4dp"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -65,7 +51,7 @@
                     android:id="@+id/tv_vip"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_vip"
                     android:gravity="center"
                     android:paddingStart="6dp"
@@ -80,7 +66,7 @@
                     android:id="@+id/tv_lossless"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_lossless"
                     android:gravity="center"
                     android:paddingStart="6dp"
@@ -95,7 +81,7 @@
                     android:id="@+id/tv_mv"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
                     android:background="@drawable/bg_mv"
                     android:gravity="center"
                     android:paddingStart="6dp"
@@ -110,7 +96,6 @@
                     android:id="@+id/tv_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -121,7 +106,7 @@
 
             <TextView
                 android:id="@+id/tv_desc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="27.5dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
@@ -130,35 +115,6 @@
                 android:textSize="14sp"
                 tools:text="1天前1天前" />
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-            <com.wang.avi.AVLoadingIndicatorView
-                android:id="@+id/iv_state_loading"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:visibility="gone"
-                app:indicatorColor="@color/main_title"
-                app:indicatorName="LineSpinFadeLoaderIndicator" />
-
-            <com.wang.avi.AVLoadingIndicatorView
-                android:id="@+id/iv_state_play"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:visibility="gone"
-                app:indicatorColor="@color/main_title"
-                app:indicatorName="LineScalePartyIndicator" />
-        </RelativeLayout>
     </LinearLayout>
 
     <View style="@style/dividerItemStyle" />

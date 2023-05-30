@@ -1,21 +1,12 @@
 package com.android.wy.news.fragment
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.HomeActivity
-import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
@@ -24,24 +15,19 @@ import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.dialog.MusicOperationDialog
 import com.android.wy.news.entity.music.MusicInfo
-import com.android.wy.news.event.LrcChangeEvent
 import com.android.wy.news.event.MusicEvent
-import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.MusicUrlEvent
-import com.android.wy.news.event.PlayFinishEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.listener.IDownloadListener
+import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.music.lrc.Lrc
-import com.android.wy.news.notification.NotificationHelper
-import com.android.wy.news.service.MusicNotifyService
-import com.android.wy.news.util.AppUtil
-import com.android.wy.news.util.DownloadFileUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
+import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
@@ -61,26 +47,19 @@ import org.greenrobot.eventbus.ThreadMode
  *   }
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
-    OnLoadMoreListener, BaseNewsAdapter.OnItemAdapterListener<MusicInfo>,
-    PlayBarView.OnPlayBarListener, IDownloadListener {
+    OnLoadMoreListener,
+    PlayBarView.OnPlayBarListener, IDownloadListener, IMusicItemChangeListener {
     private var pageStart = 1
     private var categoryId: Int = 0
-    private lateinit var rvContent: RecyclerView
+    private lateinit var rvContent: MusicRecyclerView
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
-    private lateinit var musicAdapter: MusicAdapter
+    private var musicAdapter: MusicAdapter? = null
     private var isRefresh = false
     private var isLoading = false
-    private var mServiceIntent: Intent? = null
     private lateinit var refreshLayout: SmartRefreshLayout
     private var playBarView: PlayBarView? = null
-    private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
-    private var currentDownloadMusicInfo: MusicInfo? = null
-    private var currentPlayUrl: String? = ""
-    private var musicReceiver: MusicReceiver? = null
     private var mediaHelper: MediaPlayerHelper? = null
-    private var currentLrcList: ArrayList<Lrc>? = null
-    private var isLongClick = false
 
     companion object {
         private const val mKey: String = "category_id"
@@ -101,6 +80,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
+        rvContent.seItemListener(this)
     }
 
     override fun initData() {
@@ -108,12 +88,18 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
-        musicAdapter = MusicAdapter(this)
-        rvContent.layoutManager = LinearLayoutManager(mActivity)
-        rvContent.adapter = musicAdapter
+        musicAdapter = rvContent.getMusicAdapter()
 
         initPlayBar()
-        getLrc()
+        playBarView?.let {
+            musicAdapter?.let { it1 ->
+                PlayMusicManager.initMusicInfo(
+                    mActivity, rvContent,
+                    it, this, it1
+                )
+            }
+        }
+        PlayMusicManager.getLrc()
     }
 
     private fun initPlayBar() {
@@ -137,8 +123,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     override fun onDestroyView() {
         super.onDestroyView()
         EventBus.getDefault().unregister(this)
-        unRegisterMusicReceiver()
-        stopMusicService()
+        PlayMusicManager.unRegisterMusicReceiver()
+        PlayMusicManager.stopMusicService()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -146,37 +132,21 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
             if (GlobalData.currentLrcData.size == 0) {
-                getLrc()
+                PlayMusicManager.getLrc()
             }
             playBarView?.updateProgress(o.time)
             LrcDesktopManager.showDesktopLrc(mActivity, o.time.toLong())
-            val lrc = currentLrcList?.get(getTimeLinePosition(o.time.toLong()))
-            lrc?.let { playBarView?.setTitle(lrc.text) }
+            val position =
+                CommonTools.lrcTime2Position(GlobalData.currentLrcData, o.time.toLong())
+            val lrc = GlobalData.currentLrcData[position]
+            playBarView?.setTitle(lrc.text)
         } else if (o is MusicUrlEvent) {
-            playMusic(o.url)
+            PlayMusicManager.playMusic(o.url)
         }
-    }
-
-    private fun getTimeLinePosition(time: Long): Int {
-        //注意 time 单位为ms lrc.time 为s
-        var linePos = 0
-        val lrcCount = currentLrcList?.size
-        for (i in 0 until lrcCount!!) {
-            val lrc = currentLrcList!![i]
-            if (time >= (lrc.time) * 1000) {
-                if (i == lrcCount - 1) {
-                    linePos = lrcCount - 1
-                } else if (time < (currentLrcList!![i + 1].time) * 1000) {
-                    linePos = i
-                    break
-                }
-            }
-        }
-        return linePos
     }
 
     override fun initEvent() {
-        registerMusicReceiver()
+        PlayMusicManager.registerMusicReceiver()
         val arguments = arguments
         if (arguments != null) {
             categoryId = arguments.getInt(mKey)
@@ -197,7 +167,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
             val musicList = musicListData?.musicList
-            //val filterMusicList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -214,14 +183,14 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                     }
                 } else {
                     if (isRefresh) {
-                        musicAdapter.refreshData(musicList)
+                        rvContent.refreshData(musicList)
                     } else {
-                        musicAdapter.loadMoreData(musicList)
+                        rvContent.loadData(musicList)
                     }
                 }
             }
 
-            val musicListEvent = MusicListEvent(musicAdapter.getDataList())
+            val musicListEvent = musicAdapter?.getDataList()?.let { it1 -> MusicListEvent(it1) }
             EventBus.getDefault().postSticky(musicListEvent)
 
             shimmerRecyclerView.hideShimmerAdapter()
@@ -240,7 +209,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onNotifyDataChanged() {
         mViewModel.musicUrl.observe(this) {
-            playMusic(it)
+            PlayMusicManager.playMusic(it)
         }
 
         mViewModel.isSuccess.observe(this) {
@@ -263,112 +232,13 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
         GlobalData.indexChange.observe(this) {
             if (it == 3) {
-                registerMusicReceiver()
+                PlayMusicManager.registerMusicReceiver()
                 if (!EventBus.getDefault().isRegistered(this)) {
                     EventBus.getDefault().register(this)
                 }
                 initPlayBar()
             }
         }
-    }
-
-    private fun playMusic(it: String?) {
-        this.currentPlayUrl = it
-        if (isLongClick) {
-            it?.let { it1 -> startDownload(it1) }
-            return
-        }
-        GlobalData.playUrlChange.postValue(it)
-        startMusicService()
-        getLrc()
-    }
-
-    private fun getLrc() {
-        val musicId = this.currentMusicInfo?.musicrid
-        if (musicId != null && musicId.contains("_")) {
-            val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
-            MusicRepository.getMusicLrc(mid).observe(this) {
-                val musicLrcEntity = it.getOrNull()
-                if (musicLrcEntity != null) {
-                    val musicLrcData = musicLrcEntity.data
-                    if (musicLrcData != null) {
-                        val lrcList = musicLrcData.lrclist
-                        if (lrcList.isNotEmpty()) {
-                            currentLrcList = CommonTools.parseLrc(lrcList)
-                            GlobalData.currentLrcData.clear()
-                            GlobalData.currentLrcData.addAll(currentLrcList!!)
-                            EventBus.getDefault().postSticky(LrcChangeEvent())
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    private fun registerMusicReceiver() {
-        if (musicReceiver == null) {
-            musicReceiver = MusicReceiver(this)
-            val filter = IntentFilter()
-            filter.addAction(MusicNotifyService.MUSIC_PLAY_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_PAUSE_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_NEXT_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_PRE_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_COMPLETE_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_STATE_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_CLOSE_ACTION)
-            filter.addAction(MusicNotifyService.MUSIC_LOCK_ACTION)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                mActivity.registerReceiver(musicReceiver, filter, Context.RECEIVER_EXPORTED)
-            } else {
-                mActivity.registerReceiver(musicReceiver, filter)
-            }
-        }
-    }
-
-    private fun unRegisterMusicReceiver() {
-        if (musicReceiver != null) {
-            mActivity.unregisterReceiver(musicReceiver)
-            musicReceiver = null
-        }
-    }
-
-    private fun startMusicService() {
-        if (mServiceIntent == null) {
-            mServiceIntent = Intent(mActivity, MusicNotifyService::class.java)
-        }
-        mServiceIntent?.action = MusicNotifyService.MUSIC_PREPARE_ACTION
-        mServiceIntent?.putExtra(
-            MusicNotifyService.MUSIC_INFO_KEY,
-            this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
-        )
-        mServiceIntent?.putExtra(MusicNotifyService.MUSIC_URL_KEY, this.currentPlayUrl)
-        mActivity.startService(mServiceIntent)
-    }
-
-    private fun stopMusicService() {
-        if (mServiceIntent != null) {
-            mActivity.stopService(mServiceIntent)
-        }
-    }
-
-    private fun playNext() {
-        Logger.i("playNext: ")
-        val dataList = musicAdapter.getDataList()
-        if (currentPosition + 1 > dataList.size - 1) currentPosition = dataList.size - 2
-        //滑动到播放的歌曲
-        rvContent.scrollToPosition(currentPosition + 1)
-        //下一曲
-        prepareMusic(currentPosition + 1)
-    }
-
-    private fun playPre() {
-        Logger.i("playPre: ")
-        if (currentPosition - 1 < 0) currentPosition = 1
-        //滑动到播放的歌曲
-        rvContent.scrollToPosition(currentPosition - 1)
-        //上一曲
-        prepareMusic(currentPosition - 1)
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
@@ -384,64 +254,24 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onClear() {
-    }
 
-    override fun onItemClickListener(view: View, data: MusicInfo) {
-        isLongClick = false
-        val i = view.tag as Int
-        prepareMusic(i)
-    }
-
-    private fun prepareMusic(position: Int) {
-        if (currentPosition == position) return
-        playBarView?.showLoading(true)
-        val dataList = musicAdapter.getDataList()
-        if (position < 0) currentPosition = 0
-        if (position > dataList.size) currentPosition = dataList.size - 1
-        if (position < dataList.size) {
-            currentPosition = position
-            val musicInfo = dataList[currentPosition]
-
-            this.currentMusicInfo = musicInfo
-            val listenFee = musicInfo.isListenFee
-            if (listenFee) {
-                ToastUtil.show("目前VIP歌曲暂不支持免费播放")
-                playBarView?.showLoading(false)
-                return
-            }
-
-            this.currentMusicInfo?.state = MusicState.STATE_PREPARE
-
-            val musicInfoEvent = MusicInfoEvent(JsonUtil.parseObjectToJson(this.currentMusicInfo!!))
-            EventBus.getDefault().postSticky(musicInfoEvent)
-
-            musicAdapter.setSelectedIndex(currentPosition)
-            mViewModel.requestMusicUrl(musicInfo)
-
-            SpTools.putString(
-                GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, JsonUtil.parseObjectToJson(
-                    currentMusicInfo!!
-                )
-            )
-        }
     }
 
     override fun onClickPlay(position: Int) {
-        isLongClick = false
+        this.currentMusicInfo?.let { PlayMusicManager.setClickMusicInfo(it) }
         Logger.i("onClickPlay--->>>position:$position")
         if (mediaHelper != null) {
             if (mediaHelper!!.isPlaying()) {
                 mediaHelper?.pause()
                 this.currentMusicInfo?.state = MusicState.STATE_PAUSE
-                musicAdapter.setSelectedIndex(position)
+                rvContent.updatePosition(position)
             } else {
-                if (!TextUtils.isEmpty(currentPlayUrl)) {
+                if (!TextUtils.isEmpty(PlayMusicManager.getPlayUrl())) {
                     mediaHelper?.start()
                     this.currentMusicInfo?.state = MusicState.STATE_PLAY
-                    musicAdapter.setSelectedIndex(position)
+                    rvContent.updatePosition(position)
                 } else {
-                    playBarView?.showLoading(true)
-                    this.currentMusicInfo?.let { mViewModel.requestMusicUrl(it) }
+                    currentMusicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
                 }
             }
         }
@@ -463,7 +293,13 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         ft?.addToBackStack(null)
         val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
         val playMusicFragment =
-            s?.let { PlayMusicFragment.newInstance(currentPosition, it, currentPlayUrl) }
+            s?.let {
+                PlayMusicFragment.newInstance(
+                    PlayMusicManager.getPlayPosition(),
+                    it,
+                    PlayMusicManager.getPlayUrl()
+                )
+            }
         if (playMusicFragment != null) {
             ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
         }
@@ -486,7 +322,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             currentMusicInfo?.pic?.let {
                 currentMusicInfo?.duration?.let { it1 ->
                     playBarView?.setCover(it)?.setTitle(stringBuilder.toString())
-                        ?.setPosition(currentPosition)?.setDuration(duration = it1 * 1000)
+                        ?.setPosition(PlayMusicManager.getPlayPosition())
+                        ?.setDuration(duration = it1 * 1000)
                         ?.showPlayContainer(true)
                         ?.addListener(this)
                 }
@@ -494,116 +331,22 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    class MusicReceiver(musicFragment: MusicFragment) : BroadcastReceiver() {
-        private var musicFragment: MusicFragment? = null
-
-        init {
-            this.musicFragment = musicFragment
-        }
-
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1 != null) {
-                val action = p1.action
-                Logger.i("onReceive---->>>action:$action")
-                when (action) {
-                    MusicNotifyService.MUSIC_STATE_ACTION -> {
-                        this.musicFragment?.playBarView?.getPlayContainer()?.performClick()
-                    }
-
-                    MusicNotifyService.MUSIC_PLAY_ACTION -> {
-                        this.musicFragment?.playBarView?.showLoading(false)
-                        this.musicFragment?.playBarView?.setPlay(true)
-                        this.musicFragment?.currentMusicInfo?.state = MusicState.STATE_PLAY
-                        this.musicFragment?.currentPosition?.let {
-                            this.musicFragment?.musicAdapter?.setSelectedIndex(
-                                it
-                            )
-                        }
-                        this.musicFragment?.showPlayBar()
-                    }
-
-                    MusicNotifyService.MUSIC_PAUSE_ACTION -> {
-                        this.musicFragment?.currentMusicInfo?.state = MusicState.STATE_PAUSE
-                        this.musicFragment?.playBarView?.setPlay(false)
-                        this.musicFragment?.currentPosition?.let {
-                            this.musicFragment?.musicAdapter?.setSelectedIndex(
-                                it
-                            )
-                        }
-                    }
-
-                    MusicNotifyService.MUSIC_PRE_ACTION -> {
-                        this.musicFragment?.playPre()
-                    }
-
-                    MusicNotifyService.MUSIC_NEXT_ACTION -> {
-                        this.musicFragment?.playNext()
-                    }
-
-                    MusicNotifyService.MUSIC_COMPLETE_ACTION -> {
-                        EventBus.getDefault().postSticky(PlayFinishEvent())
-                        //最后一首播放完，播放第一首
-                        val dataList = this.musicFragment?.musicAdapter?.getDataList()
-                        if (dataList != null) {
-                            if (this.musicFragment?.currentPosition!! + 1 > dataList.size - 1) {
-                                this.musicFragment?.currentPosition = 0
-                            }
-                        }
-                        this.musicFragment?.playNext()
-                    }
-
-                    MusicNotifyService.MUSIC_CLOSE_ACTION -> {
-                        val background =
-                            this.musicFragment?.mActivity?.let { AppUtil.isBackground(it) }
-                        if (background != null && background == true) {
-                            NotificationHelper.cancelNotification(GlobalData.MUSIC_NOTIFY_ID)
-                        }
-                        //关闭音乐服务
-                        this.musicFragment?.stopMusicService()
-                    }
-
-                    MusicNotifyService.MUSIC_LOCK_ACTION -> {
-                        GlobalData.isLock = !GlobalData.isLock
-                        this.musicFragment?.startMusicService()
-                    }
-
-                    else -> {
-
-                    }
-                }
-            }
-        }
+    override fun goDownload(musicInfo: MusicInfo) {
+        PlayMusicManager.requestMusicInfo(musicInfo)
     }
 
-    override fun onItemLongClickListener(view: View, data: MusicInfo) {
-        isLongClick = true
+    override fun onItemClick(view: View, data: MusicInfo) {
+        PlayMusicManager.setClickMusicInfo(data)
+        val i = view.tag as Int
+        PlayMusicManager.prepareMusic(i)
+    }
+
+    override fun onItemLongClick(view: View, data: MusicInfo) {
+        PlayMusicManager.setLongClickMusicInfo(data)
         val musicOperationDialog = MusicOperationDialog(this, data)
         musicOperationDialog.show(
             (mActivity as AppCompatActivity).supportFragmentManager,
             "music_operation_dialog"
         )
-    }
-
-    override fun goDownload(musicInfo: MusicInfo) {
-        currentDownloadMusicInfo=musicInfo
-        mViewModel.requestMusicUrl(musicInfo)
-    }
-
-    private fun startDownload(url: String) {
-        if (TextUtils.isEmpty(url)){
-            ToastUtil.show("下载地址为空")
-            return
-        }
-        val stringBuilder = StringBuilder()
-        val name = this.currentDownloadMusicInfo?.name
-        val artist = this.currentDownloadMusicInfo?.artist
-        if (!TextUtils.isEmpty(artist)) {
-            stringBuilder.append(artist)
-        }
-        if (!TextUtils.isEmpty(name)) {
-            stringBuilder.append("-")
-            stringBuilder.append(name)
-        }
-        DownloadFileUtil.download(stringBuilder.toString(), url)
     }
 }

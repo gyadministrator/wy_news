@@ -12,7 +12,9 @@ import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.MusicListDialogBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.view.MusicRecyclerView
 
 
 /*
@@ -26,9 +28,9 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
     BaseNewsAdapter.OnItemAdapterListener<MusicInfo> {
 
     private var tvTitle: TextView? = null
-    private var rvContent: RecyclerView? = null
+    private var rvContent: MusicRecyclerView? = null
     private var rlClose: RelativeLayout? = null
-    private lateinit var musicAdapter: MusicAdapter
+    private var musicAdapter: MusicAdapter? = null
     private var dataList = ArrayList<MusicInfo>()
 
     companion object {
@@ -75,13 +77,23 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
             val s = arguments.getString(MUSIC_LIST_KEY)
             dataList = JsonUtil.parseJsonToList(s)
         }
-        musicAdapter = MusicAdapter(this)
-        rvContent?.layoutManager = LinearLayoutManager(this.context)
-        rvContent?.adapter = musicAdapter
-
-        musicAdapter.refreshData(dataList)
-        val list = musicAdapter.getDataList()
-        tvTitle?.text = "当前播放列表(" + list.size + ")"
+        musicAdapter = rvContent?.getMusicAdapter()
+        rvContent?.refreshData(dataList)
+        val list = musicAdapter?.getDataList()
+        if (list != null) {
+            tvTitle?.text = "当前播放列表(" + list.size + ")"
+        }
+        activity?.let {
+            rvContent?.let { it1 ->
+                musicAdapter?.let { it2 ->
+                    PlayMusicManager.initMusicInfo(
+                        it,
+                        it1, null, this, it2
+                    )
+                }
+            }
+        }
+        rvContent?.updatePosition(PlayMusicManager.getPlayPosition())
     }
 
     override fun initEvent() {
