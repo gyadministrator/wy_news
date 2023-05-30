@@ -5,13 +5,11 @@ import android.view.Gravity
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.MusicListDialogBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.view.MusicRecyclerView
@@ -25,7 +23,7 @@ import com.android.wy.news.view.MusicRecyclerView
  */
 @SuppressLint("InflateParams")
 class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
-    BaseNewsAdapter.OnItemAdapterListener<MusicInfo> {
+    IMusicItemChangeListener {
 
     private var tvTitle: TextView? = null
     private var rvContent: MusicRecyclerView? = null
@@ -53,6 +51,7 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
         tvTitle = mBinding.tvTitle
         rvContent = mBinding.rvContent
         rlClose = mBinding.rlClose
+        rvContent?.seItemListener(this)
         rlClose?.setOnClickListener {
             dismiss()
         }
@@ -100,11 +99,14 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
 
     }
 
-    override fun onItemClickListener(view: View, data: MusicInfo) {
-
+    override fun onItemClick(view: View, data: MusicInfo) {
+        val tag = view.tag
+        if (tag is Int) {
+            PlayMusicManager.prepareMusic(tag)
+        }
     }
 
-    override fun onItemLongClickListener(view: View, data: MusicInfo) {
+    override fun onItemLongClick(view: View, data: MusicInfo) {
 
     }
 }
