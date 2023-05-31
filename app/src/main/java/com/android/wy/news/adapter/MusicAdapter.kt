@@ -1,6 +1,7 @@
 package com.android.wy.news.adapter
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -35,6 +36,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         var tvLossless = mBinding.tvLossless
         var tvMv = mBinding.tvMv
         var tvVip = mBinding.tvVip
+        var tvPath = mBinding.tvPath
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -69,6 +71,13 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
             holder.tvVip.visibility = View.VISIBLE
         } else {
             holder.tvVip.visibility = View.GONE
+        }
+        val localPath = data.localPath
+        if (!TextUtils.isEmpty(localPath)) {
+            holder.tvPath.visibility = View.VISIBLE
+            holder.tvPath.text = localPath
+        } else {
+            holder.tvPath.visibility = View.GONE
         }
         holder.tvMv.tag = data
         holder.tvMv.setOnClickListener(onMvClickListener)

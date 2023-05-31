@@ -12,7 +12,7 @@ class SearchHistoryRepository(context: Context) {
     private var searchHistoryController: SearchHistoryController
 
     init {
-        searchHistoryController = SearchHistoryDataBase.getInstance(context).getSearchHistoryDao()
+        searchHistoryController = NewsDataBase.getInstance(context).getSearchHistoryDao()
     }
 
     fun getSearchHistoryList(): ArrayList<SearchHistoryEntity> {

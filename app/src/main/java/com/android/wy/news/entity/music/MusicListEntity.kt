@@ -56,7 +56,8 @@ data class MusicInfo(
     val tme_musician_adtype: String,
     val track: Int,
     val trend: String,
-    var state: Int
+    var state: Int,
+    var localPath: String?
 )
 
 data class Mvpayinfo(

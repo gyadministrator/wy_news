@@ -11,6 +11,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     private lateinit var llSetting: LinearLayout
     private lateinit var llLive: LinearLayout
     private lateinit var llLocal: LinearLayout
+    private lateinit var llDownload: LinearLayout
 
     companion object {
         fun newInstance() = MineTabFragment()
@@ -20,6 +21,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         llSetting = mBinding.llSetting
         llLive = mBinding.llLive
         llLocal = mBinding.llLocal
+        llDownload = mBinding.llDownload
     }
 
     override fun initData() {
@@ -35,6 +37,9 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         }
         llLocal.setOnClickListener {
             RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_LOCAL)
+        }
+        llDownload.setOnClickListener {
+            RouteManager.go(RouteManager.PATH_ACTIVITY_DOWNLOAD)
         }
     }
 

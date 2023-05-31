@@ -12,9 +12,9 @@
     <com.android.wy.news.view.TitleBarView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="下载任务" />
+        app:title="已下载" />
 
-    <com.android.wy.news.view.CustomRecyclerView
+    <com.android.wy.news.view.MusicRecyclerView
         android:id="@+id/rv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

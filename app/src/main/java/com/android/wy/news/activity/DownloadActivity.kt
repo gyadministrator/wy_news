@@ -10,15 +10,23 @@ import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityDownloadBinding
+import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.sql.DownloadMusicEntity
+import com.android.wy.news.sql.DownloadMusicRepository
+import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.util.TaskUtil
+import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.viewmodel.DownloadViewModel
 import java.io.File
 
 @Route(path = RouteManager.PATH_ACTIVITY_DOWNLOAD)
 class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel>(),
     BaseNewsAdapter.OnItemAdapterListener<File> {
-    private var rvContent: RecyclerView? = null
-    private var downloadAdapter: DownloadAdapter? = null
+    private var rvContent: MusicRecyclerView? = null
+    private var downloadMusicRepository: DownloadMusicRepository? = null
+    private val downloadMusicList = ArrayList<DownloadMusicEntity>()
+    private val dataList = ArrayList<MusicInfo>()
 
     override fun setDefaultImmersionBar(): Boolean {
         return true
@@ -41,26 +49,24 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
     }
 
     override fun initData() {
-        downloadAdapter = DownloadAdapter(this)
-        rvContent?.layoutManager = LinearLayoutManager(this)
-        rvContent?.adapter = downloadAdapter
-        getDownloadFile()
-    }
-
-    private fun getDownloadFile() {
-        val file = App.app.externalCacheDir
-        val path = file?.absolutePath + File.separator + "downloads" + File.separator
-        Logger.i("getDownloadFile downloadPath--->>>$path")
-        val content = File(path)
-        if (content.exists()) {
-            val listFiles = content.listFiles()
-            val dataList = ArrayList<File>()
-            for (i in listFiles!!.indices) {
-                val itemFile = listFiles[i]
-                dataList.add(itemFile)
-                Logger.i("initEvent--->>>${itemFile.name}")
+        downloadMusicRepository = DownloadMusicRepository(this.applicationContext)
+        TaskUtil.runOnThread {
+            val list = downloadMusicRepository?.getDownloadMusicList()
+            list?.let { downloadMusicList.addAll(it) }
+            if (downloadMusicList.size > 0) {
+                for (i in 0 until downloadMusicList.size) {
+                    val downloadMusicEntity = downloadMusicList[i]
+                    val json = downloadMusicEntity.musicInfoJson
+                    val musicInfo = JsonUtil.parseJsonToObject(json, MusicInfo::class.java)
+                    musicInfo?.localPath=downloadMusicEntity.localPath
+                    musicInfo?.let { dataList.add(it) }
+                }
+                TaskUtil.runOnUiThread {
+                    if (dataList.size > 0) {
+                        rvContent?.refreshData(dataList)
+                    }
+                }
             }
-            downloadAdapter?.refreshData(dataList)
         }
     }
 

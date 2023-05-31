@@ -1,9 +1,13 @@
 package com.android.wy.news.util
 
+import android.text.TextUtils
 import com.android.wy.news.app.App
 import com.android.wy.news.common.Logger
 import com.android.wy.news.entity.DownloadEntity
+import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.sql.DownloadMusicEntity
+import com.android.wy.news.sql.DownloadMusicRepository
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadListener
 import com.liulishuo.filedownloader.FileDownloader
@@ -25,7 +29,7 @@ object DownloadFileUtil {
     private val fileDownloader = FileDownloader.getImpl()
     private val saveFolder =
         FileDownloadUtils.getDefaultSaveRootPath() + File.separator + "downloads"
-    val taskList = ArrayList<Int>()
+    private val taskList = ArrayList<Int>()
 
     /**
      * 文件下载
@@ -75,10 +79,31 @@ object DownloadFileUtil {
         }
     }.await()
 
-    fun download(fileName: String, url: String) {
+    fun download(musicInfo: MusicInfo, url: String) {
         Logger.i("startDownload--->>>$url")
+        var isDownload = false
+        val stringBuilder = StringBuilder()
+        val name = musicInfo.name
+        val artist = musicInfo.artist
+        if (!TextUtils.isEmpty(artist)) {
+            stringBuilder.append(artist)
+        }
+        if (!TextUtils.isEmpty(name)) {
+            stringBuilder.append("-")
+            stringBuilder.append(name)
+        }
+        val fileName = stringBuilder.toString()
         val path =
             saveFolder + File.separator + fileName + ".mp3"
+        val downloadMusicRepository = DownloadMusicRepository(App.app.applicationContext)
+        TaskUtil.runOnThread {
+            val entity = downloadMusicRepository.getDownloadMusicByPath(path)
+            if (entity != null) {
+                ToastUtil.show("该歌曲已下载,位置:$path")
+                isDownload = true
+            }
+        }
+        if (isDownload) return
         val taskId = fileDownloader.create(url)
             .setPath(path, false)
             .setCallbackProgressTimes(300)
@@ -111,6 +136,11 @@ object DownloadFileUtil {
                 override fun completed(task: BaseDownloadTask?) {
                     Logger.i("startDownload--->>>completed: " + task?.targetFilePath)
                     ToastUtil.show("下载成功,保存到 " + task?.targetFilePath)
+                    if (!isDownload) {
+                        TaskUtil.runOnThread {
+                            saveToDb(musicInfo, task?.targetFilePath, task?.id)
+                        }
+                    }
                     NotificationHelper.sendProgressNotification(
                         App.app,
                         fileName,
@@ -135,6 +165,23 @@ object DownloadFileUtil {
 
             }).start()
         taskList.add(taskId)
+    }
+
+    private fun saveToDb(musicInfo: MusicInfo, targetFilePath: String?, taskId: Int?) {
+        val downloadMusicRepository = DownloadMusicRepository(App.app.applicationContext)
+        if (!TextUtils.isEmpty(targetFilePath)) {
+            val json = JsonUtil.parseObjectToJson(musicInfo)
+            val downloadMusicEntity = targetFilePath?.let {
+                taskId?.let { it1 ->
+                    DownloadMusicEntity(
+                        0,
+                        it, it1, json
+                    )
+                }
+            }
+            downloadMusicEntity?.let { downloadMusicRepository.addDownloadMusic(it) }
+            Logger.i("保存 taskId:$taskId, path:$targetFilePath  成功")
+        }
     }
 
     fun pauseTask(taskId: Int) {

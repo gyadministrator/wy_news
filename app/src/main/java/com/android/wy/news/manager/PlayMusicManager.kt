@@ -232,17 +232,7 @@ object PlayMusicManager {
             ToastUtil.show("下载地址为空")
             return
         }
-        val stringBuilder = StringBuilder()
-        val name = this.currentDownloadMusicInfo?.name
-        val artist = this.currentDownloadMusicInfo?.artist
-        if (!TextUtils.isEmpty(artist)) {
-            stringBuilder.append(artist)
-        }
-        if (!TextUtils.isEmpty(name)) {
-            stringBuilder.append("-")
-            stringBuilder.append(name)
-        }
-        DownloadFileUtil.download(stringBuilder.toString(), url)
+        this.currentDownloadMusicInfo?.let { DownloadFileUtil.download(it, url) }
     }
 
     class MusicReceiver : BroadcastReceiver() {

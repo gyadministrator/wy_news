@@ -130,15 +130,15 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
 
     private fun initTab() {
         val fragments = ArrayList<Fragment>()
-        val mTitles = arrayListOf("推荐", "歌曲", "歌词")
+        val mTitles = arrayListOf(/*"推荐", */"歌曲", "歌词")
         val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
-        val playRecommendFragment =
-            s?.let { PlayRecommendFragment.newInstance(currentPosition, it, currentPlayUrl) }
+        /*val playRecommendFragment =
+            s?.let { PlayRecommendFragment.newInstance(currentPosition, it, currentPlayUrl) }*/
         val playMusicSongFragment =
             s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl, this) }
         val playMusicLrcFragment =
             s?.let { PlayMusicLrcFragment.newInstance(currentPosition, it, currentPlayUrl) }
-        playRecommendFragment?.let { fragments.add(it) }
+        //playRecommendFragment?.let { fragments.add(it) }
         playMusicSongFragment?.let { fragments.add(it) }
         playMusicLrcFragment?.let { fragments.add(it) }
         viewPager?.offscreenPageLimit = mTitles.size

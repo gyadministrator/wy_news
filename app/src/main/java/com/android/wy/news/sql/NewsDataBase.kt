@@ -12,18 +12,19 @@ import androidx.room.RoomDatabase
   * @Description:    
  */
 @Database(
-    entities = [SearchHistoryEntity::class],
+    entities = [SearchHistoryEntity::class, DownloadMusicEntity::class],
     version = 1,
     exportSchema = false
 )
-abstract class SearchHistoryDataBase : RoomDatabase() {
+abstract class NewsDataBase : RoomDatabase() {
     abstract fun getSearchHistoryDao(): SearchHistoryController
+    abstract fun getDownloadMusicDao(): DownloadMusicController
 
     companion object {
         @Volatile
-        private var INSTANCE: SearchHistoryDataBase? = null
+        private var INSTANCE: NewsDataBase? = null
 
-        fun getInstance(context: Context): SearchHistoryDataBase {
+        fun getInstance(context: Context): NewsDataBase {
             if (INSTANCE != null) {
                 return INSTANCE!!
             }
@@ -31,7 +32,7 @@ abstract class SearchHistoryDataBase : RoomDatabase() {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                         context,
-                        SearchHistoryDataBase::class.java,
+                        NewsDataBase::class.java,
                         "wy_news_db"
                     ).build()
                 }
