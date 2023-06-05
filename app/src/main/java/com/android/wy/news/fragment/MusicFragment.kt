@@ -165,7 +165,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 super.onScrolled(recyclerView, dx, dy)
                 if (!rvContent.canScrollVertically(1)) {
                     //滑动到底部
-                    floatingBtn.visibility = View.VISIBLE
+                    val playPosition = PlayMusicManager.getPlayPosition()
+                    if (playPosition >= 0) {
+                        floatingBtn.visibility = View.VISIBLE
+                    }
                 }
                 if (!rvContent.canScrollVertically(-1)) {
                     //滑动到顶部
@@ -180,7 +183,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     private fun scrollPosition() {
         val playPosition = PlayMusicManager.getPlayPosition()
-        rvContent.smoothScrollToPosition(playPosition)
+        if (playPosition >= 0) {
+            rvContent.smoothScrollToPosition(playPosition)
+        }
     }
 
     private fun getCookie() {
