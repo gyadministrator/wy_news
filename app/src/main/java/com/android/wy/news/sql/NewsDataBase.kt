@@ -12,13 +12,14 @@ import androidx.room.RoomDatabase
   * @Description:    
  */
 @Database(
-    entities = [SearchHistoryEntity::class, DownloadMusicEntity::class],
+    entities = [SearchHistoryEntity::class, DownloadMusicEntity::class, RecordMusicEntity::class],
     version = 1,
     exportSchema = false
 )
 abstract class NewsDataBase : RoomDatabase() {
     abstract fun getSearchHistoryDao(): SearchHistoryController
     abstract fun getDownloadMusicDao(): DownloadMusicController
+    abstract fun getRecordMusicDao(): RecordMusicController
 
     companion object {
         @Volatile

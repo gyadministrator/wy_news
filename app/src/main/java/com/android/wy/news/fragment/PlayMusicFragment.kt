@@ -148,7 +148,7 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
         tabLayout?.initLayout()
         viewPager?.isSaveEnabled = false
         tabLayout?.setSelectedTabIndicatorHeight(0)
-        viewPager?.currentItem = 1
+        viewPager?.currentItem = 0
     }
 
     override fun onResume() {

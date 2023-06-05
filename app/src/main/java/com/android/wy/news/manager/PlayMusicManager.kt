@@ -27,9 +27,12 @@ import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.service.MusicNotifyService
+import com.android.wy.news.sql.RecordMusicEntity
+import com.android.wy.news.sql.RecordMusicRepository
 import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.DownloadFileUtil
 import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.PlayBarView
 import org.greenrobot.eventbus.EventBus
@@ -106,8 +109,11 @@ object PlayMusicManager {
 
                 this.currentMusicInfo?.state = MusicState.STATE_PREPARE
 
+                val json = JsonUtil.parseObjectToJson(
+                    currentMusicInfo!!
+                )
                 val musicInfoEvent =
-                    MusicInfoEvent(JsonUtil.parseObjectToJson(this.currentMusicInfo!!))
+                    MusicInfoEvent(json)
                 EventBus.getDefault().postSticky(musicInfoEvent)
 
                 musicAdapter?.setSelectedIndex(currentPosition)
@@ -115,10 +121,18 @@ object PlayMusicManager {
                 requestMusicInfo(musicInfo)
 
                 SpTools.putString(
-                    GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, JsonUtil.parseObjectToJson(
-                        currentMusicInfo!!
-                    )
+                    GlobalData.SpKey.LAST_PLAY_MUSIC_KEY, json
                 )
+
+                TaskUtil.runOnThread {
+                    val recordMusicRepository = RecordMusicRepository(App.app.applicationContext)
+                    val mid = currentMusicInfo?.musicrid
+                    val entity = mid?.let { recordMusicRepository.getRecordMusicByMid(it) }
+                    if (entity == null) {
+                        val recordMusicEntity = mid?.let { RecordMusicEntity(0, it, json) }
+                        recordMusicEntity?.let { recordMusicRepository.addRecordMusic(it) }
+                    }
+                }
             }
         }
     }

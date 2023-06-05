@@ -11,7 +11,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="-10dp"
+        android:layout_marginTop="-5dp"
         android:clipChildren="false"
         android:scaleType="centerCrop"
         app:riv_corner_radius="4dp"
@@ -19,7 +19,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:orientation="horizontal">

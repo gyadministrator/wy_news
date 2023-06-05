@@ -195,7 +195,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         roundProgressBar = mBinding.roundProgressBar
 
         llLrcContent?.setOnClickListener {
-            pageChangeListener?.changePage(2)
+            pageChangeListener?.changePage(1)
         }
         ivMusicList?.setOnClickListener {
             showMusicList()

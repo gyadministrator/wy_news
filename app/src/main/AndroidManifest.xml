@@ -53,6 +53,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.RecordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.LiveActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DownloadActivity"
             android:exported="false"
             android:launchMode="singleTop" />

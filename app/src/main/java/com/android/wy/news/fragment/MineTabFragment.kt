@@ -1,10 +1,21 @@
 package com.android.wy.news.fragment
 
+import android.annotation.SuppressLint
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.android.wy.news.activity.SettingActivity
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.GlobalData
+import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabMineBinding
+import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.sql.RecordMusicRepository
+import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.viewmodel.MineTabViewModel
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>() {
@@ -12,6 +23,10 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     private lateinit var llLive: LinearLayout
     private lateinit var llLocal: LinearLayout
     private lateinit var llDownload: LinearLayout
+    private lateinit var llRecord: LinearLayout
+    private lateinit var ivCover: ImageView
+    private lateinit var rlRecentPlay: RelativeLayout
+    private lateinit var tvPlay: TextView
 
     companion object {
         fun newInstance() = MineTabFragment()
@@ -22,10 +37,38 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         llLive = mBinding.llLive
         llLocal = mBinding.llLocal
         llDownload = mBinding.llDownload
+        ivCover = mBinding.ivCover
+        tvPlay = mBinding.tvPlay
+        rlRecentPlay = mBinding.rlRecentPlay
+        llRecord = mBinding.llRecord
     }
 
     override fun initData() {
+        showRecentPlay()
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun showRecentPlay() {
+        val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
+        val currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
+        currentMusicInfo?.pic?.let { CommonTools.loadImage(it, ivCover) }
+
+        val recordMusicRepository = RecordMusicRepository(mActivity.applicationContext)
+        TaskUtil.runOnThread {
+            val recordMusicList = recordMusicRepository.getRecordMusicList()
+            if (recordMusicList.size > 0) {
+                TaskUtil.runOnUiThread {
+                    tvPlay.text = "已播歌曲 ${recordMusicList.size}"
+                }
+            }
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            showRecentPlay()
+        }
     }
 
     override fun initEvent() {
@@ -33,7 +76,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
             SettingActivity.startSettingActivity(mActivity)
         }
         llLive.setOnClickListener {
-
+            RouteManager.go(RouteManager.PATH_ACTIVITY_LIVE)
         }
         llLocal.setOnClickListener {
             RouteManager.go(RouteManager.PATH_ACTIVITY_MUSIC_LOCAL)
@@ -41,6 +84,16 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         llDownload.setOnClickListener {
             RouteManager.go(RouteManager.PATH_ACTIVITY_DOWNLOAD)
         }
+        llRecord.setOnClickListener {
+            goRecentPlayPage()
+        }
+        rlRecentPlay.setOnClickListener {
+            goRecentPlayPage()
+        }
+    }
+
+    private fun goRecentPlayPage() {
+        RouteManager.go(RouteManager.PATH_ACTIVITY_RECORD)
     }
 
     override fun getViewBinding(): FragmentTabMineBinding {
