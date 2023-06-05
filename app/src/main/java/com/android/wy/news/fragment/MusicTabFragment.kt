@@ -7,13 +7,13 @@ import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabMusicBinding
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.viewmodel.MusicTabViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel>() {
     private lateinit var tabLayout: CustomTabLayout
     private lateinit var viewPager: ViewPager
-    private lateinit var floatingBtn: FloatingActionButton
 
     companion object {
         fun newInstance() = MusicTabFragment()
@@ -22,7 +22,6 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     override fun initView() {
         tabLayout = mBinding.tabLayout
         viewPager = mBinding.viewPager
-        floatingBtn = mBinding.floatingBtn
     }
 
     override fun initData() {
@@ -48,12 +47,6 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     override fun initEvent() {
-        floatingBtn.setOnClickListener {
-            goDownloadPage()
-        }
-    }
-
-    private fun goDownloadPage() {
 
     }
 

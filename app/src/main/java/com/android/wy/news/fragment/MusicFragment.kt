@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
@@ -31,6 +32,7 @@ import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
@@ -60,6 +62,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var playBarView: PlayBarView? = null
     private var currentMusicInfo: MusicInfo? = null
     private var mediaHelper: MediaPlayerHelper? = null
+    private lateinit var floatingBtn: FloatingActionButton
 
     companion object {
         private const val mKey: String = "category_id"
@@ -73,6 +76,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initView() {
+        floatingBtn = mBinding.floatingBtn
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
         rvContent = mBinding.rvContent
@@ -156,6 +160,27 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         } else {
             getCookie()
         }
+        rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!rvContent.canScrollVertically(1)) {
+                    //滑动到底部
+                    floatingBtn.visibility = View.VISIBLE
+                }
+                if (!rvContent.canScrollVertically(-1)) {
+                    //滑动到顶部
+                    floatingBtn.visibility = View.GONE
+                }
+            }
+        })
+        floatingBtn.setOnClickListener {
+            scrollPosition()
+        }
+    }
+
+    private fun scrollPosition() {
+        val playPosition = PlayMusicManager.getPlayPosition()
+        rvContent.smoothScrollToPosition(playPosition)
     }
 
     private fun getCookie() {
