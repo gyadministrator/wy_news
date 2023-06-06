@@ -36,6 +36,10 @@ class MusicOperationDialog(private var downloadListener: IDownloadListener,priva
         return Gravity.BOTTOM
     }
 
+    override fun isTouchDismiss(): Boolean {
+        return true
+    }
+
     override fun initView() {
         tvTitle = mBinding.tvTitle
         rlClose = mBinding.rlClose

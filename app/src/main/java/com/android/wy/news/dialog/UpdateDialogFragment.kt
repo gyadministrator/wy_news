@@ -113,6 +113,10 @@ class UpdateDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
         return Gravity.BOTTOM
     }
 
+    override fun isTouchDismiss(): Boolean {
+        return false
+    }
+
     private fun setTitleText(titleText: String?) {
         tvTitle?.text = titleText
     }

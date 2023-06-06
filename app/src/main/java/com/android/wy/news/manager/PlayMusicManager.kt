@@ -344,6 +344,7 @@ object PlayMusicManager {
     }
 
     fun getPlayPosition(): Int {
+        Logger.i("getPlayPosition--->>>$currentPosition")
         return currentPosition
     }
 

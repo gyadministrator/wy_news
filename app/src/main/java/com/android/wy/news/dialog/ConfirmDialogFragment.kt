@@ -52,8 +52,7 @@ class ConfirmDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
         tvContent = mBinding.tvContent
         tvSure = mBinding.tvSure
         tvCancel = mBinding.tvCancel
-        this.dialog?.setCanceledOnTouchOutside(false)
-        this.dialog?.setCancelable(false)
+
         //设置该句使文本的超连接起作用
         tvContent?.movementMethod = LinkMovementMethod.getInstance()
 
@@ -111,6 +110,10 @@ class ConfirmDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
 
     override fun getGravityLocation(): Int {
         return Gravity.BOTTOM
+    }
+
+    override fun isTouchDismiss(): Boolean {
+        return false
     }
 
     private fun setTitleText(titleText: String?) {

@@ -50,6 +50,8 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment(), IBaseDial
             window.setLayout(getLayoutWidth(), getLayoutHeight())
             window.setWindowAnimations(com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation)
         }
+        dialog?.setCanceledOnTouchOutside(isTouchDismiss())
+        dialog?.setCancelable(isTouchDismiss())
     }
 
     override fun onCreateView(

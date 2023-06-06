@@ -41,6 +41,10 @@ class LrcTypeDialog : BaseBottomSheetFragment<LrcTypeDialogBinding>() {
         return Gravity.BOTTOM
     }
 
+    override fun isTouchDismiss(): Boolean {
+        return true
+    }
+
     override fun initView() {
         tvTitle = mBinding.tvTitle
         ivLine = mBinding.ivLine

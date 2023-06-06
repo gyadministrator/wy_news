@@ -66,6 +66,10 @@ class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     }
 
     override fun getGravityLocation(): Int {
-        return Gravity.BOTTOM
+        return Gravity.CENTER
+    }
+
+    override fun isTouchDismiss(): Boolean {
+        return false
     }
 }

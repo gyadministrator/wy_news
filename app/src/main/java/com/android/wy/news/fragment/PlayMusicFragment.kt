@@ -128,6 +128,10 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
         return Gravity.BOTTOM
     }
 
+    override fun isTouchDismiss(): Boolean {
+        return false
+    }
+
     private fun initTab() {
         val fragments = ArrayList<Fragment>()
         val mTitles = arrayListOf(/*"推荐", */"歌曲", "歌词")

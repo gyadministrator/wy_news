@@ -6,8 +6,11 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.listener.IMusicItemChangeListener
+import com.android.wy.news.manager.PlayMusicManager
+import com.android.wy.news.music.MusicState
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -35,18 +38,31 @@ class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListe
 
     fun refreshData(dataList: ArrayList<MusicInfo>) {
         musicAdapter?.refreshData(dataList)
+        val playPosition = PlayMusicManager.getPlayPosition()
+        updatePosition(playPosition)
     }
 
     fun loadData(dataList: ArrayList<MusicInfo>) {
         musicAdapter?.loadMoreData(dataList)
+        val playPosition = PlayMusicManager.getPlayPosition()
+        updatePosition(playPosition)
     }
 
-    fun getDataList(): ArrayList<MusicInfo>? {
+    private fun getDataList(): ArrayList<MusicInfo>? {
         return musicAdapter?.getDataList()
     }
 
     fun updatePosition(position: Int) {
-        musicAdapter?.setSelectedIndex(position)
+        val dataList = getDataList()
+        if (dataList != null && dataList.size > 0) {
+            if (position >= 0 && position < dataList.size) {
+                val musicInfo = dataList[position]
+                if (GlobalData.isPlaying) {
+                    musicInfo.state = MusicState.STATE_PLAY
+                    musicAdapter?.setSelectedIndex(position)
+                }
+            }
+        }
     }
 
     fun getMusicAdapter(): MusicAdapter? {

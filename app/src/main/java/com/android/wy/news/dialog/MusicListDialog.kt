@@ -47,6 +47,10 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
         return Gravity.BOTTOM
     }
 
+    override fun isTouchDismiss(): Boolean {
+        return true
+    }
+
     override fun initView() {
         tvTitle = mBinding.tvTitle
         rvContent = mBinding.rvContent

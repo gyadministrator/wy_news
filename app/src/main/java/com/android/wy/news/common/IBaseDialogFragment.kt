@@ -19,4 +19,5 @@ interface IBaseDialogFragment<V : ViewBinding> {
     fun getLayoutWidth(): Int
     fun setFragmentStyle()
     fun getGravityLocation(): Int
+    fun isTouchDismiss(): Boolean
 }

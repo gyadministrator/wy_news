@@ -1,5 +1,6 @@
 package com.android.wy.news.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -27,6 +28,7 @@ import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.util.JsonUtil
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
@@ -149,6 +151,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun initEvent() {
         PlayMusicManager.registerMusicReceiver()
         val arguments = arguments
@@ -160,10 +163,37 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         } else {
             getCookie()
         }
+        /*rvContent.setOnTouchListener { _, p1 ->
+            if (p1 != null) {
+                when (p1.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        TaskUtil.removeUiThreadCallback(runnable)
+                        val playPosition = PlayMusicManager.getPlayPosition()
+                        if (playPosition >= 0) {
+                            floatingBtn.visibility = View.VISIBLE
+                        }
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        TaskUtil.runOnUiThread({
+                            runnable
+                        }, 3000)
+                    }
+                }
+            }
+            true
+        }*/
         rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!rvContent.canScrollVertically(1)) {
+                val playPosition = PlayMusicManager.getPlayPosition()
+                if (playPosition >= 0) {
+                    floatingBtn.visibility = View.VISIBLE
+                    TaskUtil.runOnUiThread({
+                        floatingBtn.visibility = View.GONE
+                    }, 3000)
+                }
+                /*if (!rvContent.canScrollVertically(1)) {
                     //滑动到底部
                     val playPosition = PlayMusicManager.getPlayPosition()
                     if (playPosition >= 0) {
@@ -173,7 +203,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 if (!rvContent.canScrollVertically(-1)) {
                     //滑动到顶部
                     floatingBtn.visibility = View.GONE
-                }
+                }*/
             }
         })
         floatingBtn.setOnClickListener {
