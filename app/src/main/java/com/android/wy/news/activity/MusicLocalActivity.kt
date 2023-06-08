@@ -125,9 +125,12 @@ class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalVie
     }
 
     override fun onItemClickListener(view: View, data: LocalMusic) {
-        mediaPlayer?.setPath(data.path)
+        mediaPlayer?.setLocalPath(data.path)
+        mediaPlayer?.start()
         val tag = view.tag
         if (tag is Int) {
+            val localMusic = dataList[tag]
+            localMusic.state = MusicState.STATE_PLAY
             localMusicAdapter?.setSelectedIndex(tag)
         }
     }

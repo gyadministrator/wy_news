@@ -63,7 +63,28 @@ class MediaPlayerHelper(context: Context) : MusicListener() {
         }
         try {
             mediaPlayer?.reset()
-            context?.let { mediaPlayer!!.setDataSource(it, Uri.parse(path)) }
+            context?.let { mediaPlayer?.setDataSource(it, Uri.parse(path)) }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        mediaPlayer?.prepareAsync()
+        initListener()
+    }
+
+    /**
+     * 当播放本地uri中音时调用
+     * @param path path
+     */
+    fun setLocalPath(path: String?) {
+        currentPath = path
+        if (path == null) {
+            ToastUtil.show("获取播放地址错误,已为你跳过")
+            onMediaHelperListener?.onCompleteState()
+            return
+        }
+        try {
+            mediaPlayer?.reset()
+            mediaPlayer?.setDataSource(path)
         } catch (e: IOException) {
             e.printStackTrace()
         }
