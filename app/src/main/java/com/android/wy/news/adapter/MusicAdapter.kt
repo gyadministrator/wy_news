@@ -12,6 +12,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.util.JsonUtil
 import java.util.*
@@ -72,13 +73,13 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         } else {
             holder.tvVip.visibility = View.GONE
         }
-        val localPath = data.localPath
+       /* val localPath = data.localPath
         if (!TextUtils.isEmpty(localPath)) {
             holder.tvPath.visibility = View.VISIBLE
             holder.tvPath.text = localPath
         } else {
             holder.tvPath.visibility = View.GONE
-        }
+        }*/
         holder.tvMv.tag = data
         holder.tvMv.setOnClickListener(onMvClickListener)
         CommonTools.loadImage(data.pic, holder.ivCover)
@@ -95,7 +96,8 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
 
     private fun checkState(holder: ViewHolder, position: Int) {
         val result = mDataList[position]
-        if (selectedPosition == position) {
+        val playMusicInfo = PlayMusicManager.getPlayMusicInfo()
+        if (selectedPosition == position && playMusicInfo != null && playMusicInfo.musicrid == result.musicrid) {
             when (result.state) {
                 MusicState.STATE_PREPARE -> {
                     holder.viewLine.visibility = View.INVISIBLE

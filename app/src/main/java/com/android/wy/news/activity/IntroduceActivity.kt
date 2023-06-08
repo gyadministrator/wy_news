@@ -37,7 +37,7 @@ class IntroduceActivity : BaseActivity<ActivityIntroduceBinding, IntroduceViewMo
     }
 
     override fun isFollowNightMode(): Boolean {
-        return false
+        return true
     }
 
     override fun initView() {

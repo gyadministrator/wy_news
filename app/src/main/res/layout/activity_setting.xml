@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         app:title="@string/setting" />
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -383,8 +382,6 @@
                     android:src="@mipmap/arrow"
                     app:tint="@color/main_title" />
             </RelativeLayout>
-
-            <View style="@style/dividerItemStyle" />
 
             <RelativeLayout
                 android:id="@+id/rl_cache"

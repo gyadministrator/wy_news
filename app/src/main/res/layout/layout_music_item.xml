@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_common_press"
-    android:orientation="vertical">
+    android:layout_marginTop="6dp"
+    android:background="@drawable/bg_common_press_radius"
+    android:orientation="vertical"
+    android:padding="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="6dp"
-        android:paddingEnd="6dp"
-        android:paddingBottom="6dp"
         tools:ignore="RtlSymmetry">
 
         <View
@@ -132,5 +131,7 @@
         tools:ignore="SmallSp"
         tools:text="1天前1天前1天前1天前1天前1天前" />
 
-    <View style="@style/dividerItemStyle" />
+    <View
+        style="@style/dividerItemStyle"
+        android:visibility="gone" />
 </LinearLayout>

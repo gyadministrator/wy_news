@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.IntroduceActivity">
@@ -15,8 +16,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_item_color">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/ll_content"

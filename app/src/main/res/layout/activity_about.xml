@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/bg_item_color"
         android:orientation="vertical"
         android:paddingTop="80dp"
         android:paddingBottom="20dp">
@@ -110,13 +109,10 @@
             app:tint="@color/main_title" />
     </RelativeLayout>
 
-    <View style="@style/dividerItemStyle" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:background="@color/bg_item_color"
         android:gravity="bottom|center_horizontal"
         android:paddingBottom="30dp"
         android:text="@string/copyright_2023_news_all_rights_reserved"

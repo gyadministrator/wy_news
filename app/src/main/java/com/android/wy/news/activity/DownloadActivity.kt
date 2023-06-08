@@ -11,6 +11,8 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityDownloadBinding
 import com.android.wy.news.entity.music.MusicInfo
+import com.android.wy.news.listener.IMusicItemChangeListener
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.sql.DownloadMusicEntity
 import com.android.wy.news.sql.DownloadMusicRepository
@@ -22,7 +24,7 @@ import java.io.File
 
 @Route(path = RouteManager.PATH_ACTIVITY_DOWNLOAD)
 class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel>(),
-    BaseNewsAdapter.OnItemAdapterListener<File> {
+    IMusicItemChangeListener {
     private var rvContent: MusicRecyclerView? = null
     private var downloadMusicRepository: DownloadMusicRepository? = null
     private val downloadMusicList = ArrayList<DownloadMusicEntity>()
@@ -46,6 +48,7 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
 
     override fun initView() {
         rvContent = mBinding.rvContent
+        rvContent?.seItemListener(this)
     }
 
     override fun initData() {
@@ -58,7 +61,7 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
                     val downloadMusicEntity = downloadMusicList[i]
                     val json = downloadMusicEntity.musicInfoJson
                     val musicInfo = JsonUtil.parseJsonToObject(json, MusicInfo::class.java)
-                    musicInfo?.localPath=downloadMusicEntity.localPath
+                    musicInfo?.localPath = downloadMusicEntity.localPath
                     musicInfo?.let { dataList.add(it) }
                 }
                 TaskUtil.runOnUiThread {
@@ -71,7 +74,14 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
     }
 
     override fun initEvent() {
-
+        rvContent?.let {
+            rvContent?.getMusicAdapter()?.let { it1 ->
+                PlayMusicManager.initMusicInfo(
+                    this,
+                    it, null, this, it1
+                )
+            }
+        }
     }
 
     override fun getViewBinding(): ActivityDownloadBinding {
@@ -90,11 +100,14 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
 
     }
 
-    override fun onItemClickListener(view: View, data: File) {
-
+    override fun onItemClick(view: View, data: MusicInfo) {
+        val tag = view.tag
+        if (tag is Int) {
+            PlayMusicManager.prepareMusic(tag)
+        }
     }
 
-    override fun onItemLongClickListener(view: View, data: File) {
+    override fun onItemLongClick(view: View, data: MusicInfo) {
 
     }
 

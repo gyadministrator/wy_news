@@ -50,10 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="6dp"
-            android:background="@color/bg_item_color"
-            android:gravity="center_vertical"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp">
+            android:background="@drawable/bg_item"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
