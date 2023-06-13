@@ -53,6 +53,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.CrashActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".activity.RecordActivity"
             android:exported="false" />
         <activity

@@ -2,14 +2,18 @@ package com.android.wy.news.app
 
 import android.app.Activity
 import android.app.Application
+import cat.ereza.customactivityoncrash.config.CaocConfig
 import com.alibaba.android.arouter.launcher.ARouter
 import com.amap.api.location.AMapLocationClient
 import com.android.wy.news.BuildConfig
 import com.android.wy.news.R
+import com.android.wy.news.activity.CrashActivity
+import com.android.wy.news.activity.SplashActivity
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.listener.CustomEventListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.shortcut.ShortCutHelper
 import com.android.wy.news.skin.UiModeManager
@@ -41,12 +45,36 @@ class App : Application() {
         if (BuildConfig.isShowLog) {
             //CrashHandler.mInstance.init(this)
             Logger.setDebug(true)
+            initCrashConfig()
         }
         initSkin()
         initShortCut()
         appFrontBackRegister()
         initRoute()
         initDownload()
+    }
+
+    private fun initCrashConfig() {
+        /**
+        //此方法定义当应用程序在后台崩溃时是否应启动错误活动。共有三种模式：
+        //CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM：即使应用程序在后台运行，也会启动错误活动。
+        //CaocConfig.BACKGROUND_MODE_CRASH：当应用程序在后台运行时，启动默认系统错误。
+        //CaocConfig.BACKGROUND_MODE_SILENT：当应用程序在后台运行时，它会以静默方式崩溃。
+        //默认值为CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM。
+         */
+        CaocConfig.Builder.create()
+            .backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM) //default: CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM
+            .enabled(true) //是否启用 default: true
+            .showErrorDetails(true) //default: true 隐藏错误活动中的“错误详细信息”按钮
+            .showRestartButton(true) //default: true 是否可以重启页面
+            .logErrorOnRestart(true) //default: true
+            .trackActivities(true) //default: false
+            .minTimeBetweenCrashesMs(2000) //default: 3000
+            .errorDrawable(cat.ereza.customactivityoncrash.R.drawable.customactivityoncrash_error_image) //default: bug image
+            .restartActivity(SplashActivity::class.java) //默认程序崩溃时重启的的activity default: null (your app's launch activity)
+            .errorActivity(CrashActivity::class.java) //默认程序崩溃时跳转的activity default: null (default error activity)
+            .eventListener(CustomEventListener()) //default: null
+            .apply()
     }
 
     private fun initDownload() {

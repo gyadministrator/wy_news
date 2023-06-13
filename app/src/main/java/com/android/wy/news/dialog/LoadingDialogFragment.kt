@@ -58,7 +58,7 @@ class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     }
 
     override fun getLayoutWidth(): Int {
-        return (CommonTools.getScreenWidth() * 0.9).toInt()
+        return (CommonTools.getScreenWidth() * 0.5).toInt()
     }
 
     override fun setFragmentStyle() {

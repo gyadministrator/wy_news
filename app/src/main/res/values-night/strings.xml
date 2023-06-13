@@ -57,4 +57,13 @@
     <string name="listen_tip">外界安静，靠近音源，识别更准确</string>
     <string name="download">下载</string>
     <string name="music_operation">音乐操作</string>
+    <string name="error_occurred">抱歉,程序出现异常</string>
+    <string name="restart_app">重启程序</string>
+    <string name="close_app">关闭程序</string>
+    <string name="print_error_info">打印异常信息</string>
+    <string name="error_tip">温馨提示:\n长按错误日志可复制</string>
+    <string name="ring">铃声</string>
+    <string name="call_ring">来电铃声</string>
+    <string name="alarm_ring">闹钟铃声</string>
+    <string name="notify_ring">通知铃声</string>
 </resources>

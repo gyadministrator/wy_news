@@ -20,13 +20,17 @@ import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicSongBinding
 import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.dialog.MusicListDialog
+import com.android.wy.news.dialog.MusicOperationDialog
+import com.android.wy.news.dialog.RingTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.PlayEvent
+import com.android.wy.news.listener.IDownloadListener
 import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicPlayMode
 import com.android.wy.news.music.MusicState
@@ -41,7 +45,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMusicSongViewModel>() {
+class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMusicSongViewModel>(),
+    IDownloadListener {
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var ivCover: ImageView? = null
@@ -67,6 +72,10 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
 
     private var ivPlay: ImageView? = null
     private var rlPlay: RelativeLayout? = null
+    private var rlDownload: RelativeLayout? = null
+    private var rlSinger: RelativeLayout? = null
+    private var rlRing: RelativeLayout? = null
+    private var rlAlbum: RelativeLayout? = null
     private var roundProgressBar: RoundProgressBar? = null
     private var index = 0
     private var currentPlayUrl: String? = null
@@ -192,6 +201,10 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
 
         ivPlay = mBinding.ivPlay
         rlPlay = mBinding.rlPlay
+        rlDownload = mBinding.rlDownload
+        rlSinger = mBinding.rlSinger
+        rlRing = mBinding.rlRing
+        rlAlbum = mBinding.rlAlbum
         roundProgressBar = mBinding.roundProgressBar
 
         llLrcContent?.setOnClickListener {
@@ -211,6 +224,22 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         }
         ivNext?.setOnClickListener {
             playNext()
+        }
+        rlDownload?.setOnClickListener {
+            this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
+            val musicOperationDialog =
+                this.currentMusicInfo?.let { it1 -> MusicOperationDialog(this, it1) }
+            musicOperationDialog?.show(
+                (mActivity as AppCompatActivity).supportFragmentManager,
+                "music_operation_dialog"
+            )
+        }
+        rlRing?.setOnClickListener {
+            val ringTypeDialog = this.currentMusicInfo?.let { it1 -> RingTypeDialog(it1) }
+            ringTypeDialog?.show(
+                (mActivity as AppCompatActivity).supportFragmentManager,
+                "ring_type_dialog"
+            )
         }
 
         mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim)
@@ -359,5 +388,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             currentPlayUrl = it
             LoadingDialog.hide()
         }
+    }
+
+    override fun goDownload(musicInfo: MusicInfo) {
+        PlayMusicManager.requestMusicInfo(musicInfo)
     }
 }

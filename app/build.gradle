@@ -205,6 +205,8 @@ dependencies {
     implementation rootProject.ext.dependencies.pagerBottomTabStrip
     implementation rootProject.ext.dependencies.rxAndroid
     implementation rootProject.ext.dependencies.fileDownloader
+    //崩溃处理依赖
+    implementation rootProject.ext.dependencies.customCrash
 }
 
 gradle.addBuildListener(new BuildListener() {

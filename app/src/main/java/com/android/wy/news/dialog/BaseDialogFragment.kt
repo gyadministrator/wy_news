@@ -30,11 +30,13 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment(), IBaseDial
     override fun onStart() {
         super.onStart()
         val dialog = dialog
-        dialog?.setOnKeyListener { _, keyCode, _ ->
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                dismiss()
+        if (isTouchDismiss()) {
+            dialog?.setOnKeyListener { _, keyCode, _ ->
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    dismiss()
+                }
+                false
             }
-            false
         }
         /*dialog?.window?.setDimAmount(0f) //设置透明度
         val viewRoot: FrameLayout =

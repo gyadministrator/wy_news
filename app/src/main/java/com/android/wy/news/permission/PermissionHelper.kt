@@ -24,7 +24,8 @@ object PermissionHelper {
         Permission.ACCESS_FINE_LOCATION,
         Permission.ACCESS_COARSE_LOCATION,
         Permission.READ_PHONE_STATE,
-        Permission.RECORD_AUDIO
+        Permission.RECORD_AUDIO,
+        Permission.WRITE_SETTINGS
     )
 
     fun requestPermission(activity: Activity, permission: String) {

@@ -28,6 +28,7 @@ object RouteManager {
     const val PATH_ACTIVITY_DOWNLOAD = "/activity/DownloadActivity"
     const val PATH_ACTIVITY_LIVE = "/activity/LiveActivity"
     const val PATH_ACTIVITY_RECORD = "/activity/RecordActivity"
+    const val PATH_ACTIVITY_CRASH = "/activity/CrashActivity"
 
     fun go(path: String) {
         ARouter.getInstance().build(path).navigation()

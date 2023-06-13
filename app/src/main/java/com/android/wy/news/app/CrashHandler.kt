@@ -1,11 +1,17 @@
 package com.android.wy.news.app
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
-import android.os.Process
+import android.os.Looper
+import com.android.wy.news.activity.SplashActivity
+import com.android.wy.news.util.TaskUtil
+import com.android.wy.news.util.ToastUtil
 import java.io.File
 import java.io.FileWriter
 import java.io.PrintWriter
@@ -41,6 +47,11 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
 
     private fun handleException(ex: Throwable?): Boolean {
         if (ex == null) return false
+        TaskUtil.runOnThread {
+            Looper.prepare()
+            ToastUtil.show("很抱歉,程序出现异常,即将重启.")
+            Looper.loop()
+        }
         collectDeviceInfo(mContext)
         saveCrashInfo2File(ex)
         return true
@@ -137,17 +148,25 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
     override fun uncaughtException(p0: Thread, p1: Throwable) {
         if (!handleException(p1) && mDefaultHandler != null) {
             // 如果用户没有处理则让系统默认的异常处理器来处理
-            mDefaultHandler!!.uncaughtException(p0, p1)
+            mDefaultHandler?.uncaughtException(p0, p1)
         } else {
             try {
                 Thread.sleep(3000)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-            // 退出程序
-            Process.killProcess(Process.myPid())
+            val intent = Intent(App.app.applicationContext, SplashActivity::class.java)
+            val restartIntent = PendingIntent.getActivity(
+                App.app.applicationContext, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            //退出程序
+            val alarmManager = App.app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            //1秒钟后重启应用
+            alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent)
+            //退出程序
+            android.os.Process.killProcess(android.os.Process.myPid())
             exitProcess(1)
         }
-
     }
 }
