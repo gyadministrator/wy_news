@@ -1,6 +1,7 @@
 package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -18,11 +19,15 @@ import com.android.wy.news.listener.IDownloadListener
   * @Description:    
  */
 @SuppressLint("InflateParams")
-class MusicOperationDialog(private var downloadListener: IDownloadListener,private var musicInfo: MusicInfo) :
+class MusicOperationDialog(
+    private var downloadListener: IDownloadListener,
+    private var musicInfo: MusicInfo
+) :
     BaseBottomSheetFragment<MusicOperationDialogBinding>() {
     private var tvTitle: TextView? = null
     private var rlClose: RelativeLayout? = null
     private var rlDownload: RelativeLayout? = null
+    private var rlCancel: RelativeLayout? = null
 
     override fun getLayoutHeight(): Int {
         return ViewGroup.LayoutParams.WRAP_CONTENT
@@ -44,13 +49,26 @@ class MusicOperationDialog(private var downloadListener: IDownloadListener,priva
         tvTitle = mBinding.tvTitle
         rlClose = mBinding.rlClose
         rlDownload = mBinding.rlDownload
+        rlCancel = mBinding.rlCancel
         rlClose?.setOnClickListener {
+            dismiss()
+        }
+        rlCancel?.setOnClickListener {
             dismiss()
         }
         rlDownload?.setOnClickListener {
             downloadListener.goDownload(musicInfo)
             dismiss()
         }
+
+        val stringBuilder = StringBuilder()
+        val album = musicInfo.name
+        val artist = musicInfo.artist
+        stringBuilder.append(artist)
+        if (!TextUtils.isEmpty(album)) {
+            stringBuilder.append("-$album")
+        }
+        tvTitle?.text = stringBuilder.toString()
     }
 
     override fun getViewBinding(): MusicOperationDialogBinding {
