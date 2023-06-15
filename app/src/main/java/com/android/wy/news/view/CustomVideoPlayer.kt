@@ -10,7 +10,8 @@ import cn.jzvd.JzvdStd
 import cn.jzvd.R
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
-import com.android.wy.news.dialog.ConfirmDialogFragment
+import com.android.wy.news.dialog.CommonConfirmDialog
+import com.android.wy.news.dialog.CommonConfirmDialogFragment
 import com.android.wy.news.util.ToastUtil
 
 class CustomVideoPlayer : JzvdStd {
@@ -107,30 +108,25 @@ class CustomVideoPlayer : JzvdStd {
         } else {
             //弹框提醒
             if (isWifiNoticeDialog != null && isWifiNoticeDialog == false) {
-                val dialogFragment = ConfirmDialogFragment.newInstance(
-                    "温馨提示",
+                val activity = context as AppCompatActivity
+                CommonConfirmDialog.show(activity, false, "温馨提示",
                     "当前不是WiFi环境下,已为你暂停播放视频,你是否需要继续播放视频？",
                     "确定",
-                    "取消"
-                )
-                val activity = context as AppCompatActivity
-                dialogFragment.show(activity.supportFragmentManager, "wy_no_wifi")
-                dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
-                    override fun onClickSure() {
-                        SpTools.putBoolean(GlobalData.SpKey.NO_WIFI_PLAY, true)
-                        ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
-                        SpTools.putBoolean(GlobalData.SpKey.IS_WIFI_NOTICE_DIALOG, true)
-                        if (state == STATE_PAUSE) {
-                            startButton.performClick()
-                        } else {
-                            play()
+                    "取消",
+                    object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                        override fun onClickBtn(view: View, isClickSure: Boolean) {
+                            if (isClickSure) {
+                                SpTools.putBoolean(GlobalData.SpKey.NO_WIFI_PLAY, true)
+                                ToastUtil.show("当前不是WiFi环境下,请注意流量使用")
+                                SpTools.putBoolean(GlobalData.SpKey.IS_WIFI_NOTICE_DIALOG, true)
+                                if (state == STATE_PAUSE) {
+                                    startButton.performClick()
+                                } else {
+                                    play()
+                                }
+                            }
                         }
-                    }
-
-                    override fun onClickCancel() {
-
-                    }
-                })
+                    })
             }
         }
     }

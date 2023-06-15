@@ -355,4 +355,8 @@ object PlayMusicManager {
     fun getPlayMusicInfo(): MusicInfo? {
         return currentMusicInfo
     }
+
+    fun getDownloadMusicInfo(): MusicInfo? {
+        return currentDownloadMusicInfo
+    }
 }

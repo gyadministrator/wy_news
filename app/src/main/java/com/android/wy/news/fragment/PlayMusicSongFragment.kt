@@ -1,6 +1,7 @@
 package com.android.wy.news.fragment
 
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -14,20 +15,21 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.wy.news.R
+import com.android.wy.news.adapter.BaseNewsAdapter
+import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicSongBinding
+import com.android.wy.news.dialog.CommonOperationDialog
 import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.dialog.MusicListDialog
-import com.android.wy.news.dialog.MusicOperationDialog
-import com.android.wy.news.dialog.RingTypeDialog
+import com.android.wy.news.entity.OperationItemEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.PlayEvent
-import com.android.wy.news.listener.IDownloadListener
 import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
@@ -37,6 +39,7 @@ import com.android.wy.news.music.MusicState
 import com.android.wy.news.music.lrc.LrcHelper
 import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.service.MusicPlayService
+import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.RoundProgressBar
@@ -45,8 +48,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMusicSongViewModel>(),
-    IDownloadListener {
+class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMusicSongViewModel>() {
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var ivCover: ImageView? = null
@@ -227,19 +229,88 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         }
         rlDownload?.setOnClickListener {
             this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
-            val musicOperationDialog =
-                this.currentMusicInfo?.let { it1 -> MusicOperationDialog(this, it1) }
-            musicOperationDialog?.show(
-                (mActivity as AppCompatActivity).supportFragmentManager,
-                "music_operation_dialog"
-            )
+            val stringBuilder = StringBuilder()
+            val album = this.currentMusicInfo?.name
+            val artist = this.currentMusicInfo?.artist
+            stringBuilder.append(artist)
+            if (!TextUtils.isEmpty(album)) {
+                stringBuilder.append("-$album")
+            }
+            val activity = mActivity as AppCompatActivity
+            val list = arrayListOf(OperationItemEntity(R.mipmap.download, "下载"))
+            CommonOperationDialog.show(
+                activity,
+                stringBuilder.toString(),
+                list,
+                object : BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
+                    override fun onItemClickListener(view: View, data: OperationItemEntity) {
+                        val tag = view.tag
+                        if (tag is Int) {
+                            when (tag) {
+                                0 -> {
+                                    PlayMusicManager.getDownloadMusicInfo()
+                                        ?.let { PlayMusicManager.requestMusicInfo(it) }
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
+
+                    }
+                })
         }
         rlRing?.setOnClickListener {
-            val ringTypeDialog = this.currentMusicInfo?.let { it1 -> RingTypeDialog(it1) }
-            ringTypeDialog?.show(
-                (mActivity as AppCompatActivity).supportFragmentManager,
-                "ring_type_dialog"
+            this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
+            val stringBuilder = StringBuilder()
+            val album = this.currentMusicInfo?.name
+            val artist = this.currentMusicInfo?.artist
+            stringBuilder.append(artist)
+            if (!TextUtils.isEmpty(album)) {
+                stringBuilder.append("-$album")
+            }
+            val activity = mActivity as AppCompatActivity
+            val list = arrayListOf(
+                OperationItemEntity(R.mipmap.call, AppUtil.getString(App.app, R.string.call_ring)),
+                OperationItemEntity(R.mipmap.alarm, AppUtil.getString(App.app, R.string.alarm_ring)),
+                OperationItemEntity(R.mipmap.notice, AppUtil.getString(App.app, R.string.notify_ring))
             )
+            CommonOperationDialog.show(
+                activity,
+                stringBuilder.toString(),
+                list,
+                object : BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
+                    override fun onItemClickListener(view: View, data: OperationItemEntity) {
+                        val tag = view.tag
+                        if (tag is Int) {
+                            when (tag) {
+                                0 -> {
+                                    setCall()
+                                }
+
+                                1 -> {
+                                    setAlarm()
+                                }
+
+                                2 -> {
+                                    setNotice()
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
+
+                    }
+                })
         }
 
         mPlayMusicAnim = AnimationUtils.loadAnimation(context, R.anim.play_music_anim)
@@ -285,6 +356,27 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         MusicPlayMode.setMode(index)
         ToastUtil.show("已切换到$s")
         initMusicMode()
+    }
+
+    private fun setNotice() {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "设置通知铃声")
+        startActivityForResult(intent, 3)
+    }
+
+    private fun setAlarm() {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "设置闹钟铃声")
+        startActivityForResult(intent, 2)
+    }
+
+    private fun setCall() {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE)
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "设置来电铃声")
+        startActivityForResult(intent, 1)
     }
 
     private fun initMusicMode() {
@@ -388,9 +480,5 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             currentPlayUrl = it
             LoadingDialog.hide()
         }
-    }
-
-    override fun goDownload(musicInfo: MusicInfo) {
-        PlayMusicManager.requestMusicInfo(musicInfo)
     }
 }

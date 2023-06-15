@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import android.view.View
 import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.widget.RelativeLayout
@@ -19,8 +20,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.cache.DataCleanManager
 import com.android.wy.news.common.*
 import com.android.wy.news.databinding.ActivitySettingBinding
-import com.android.wy.news.dialog.ConfirmDialogFragment
-import com.android.wy.news.dialog.UpdateDialogFragment
+import com.android.wy.news.dialog.CommonConfirmDialog
+import com.android.wy.news.dialog.CommonConfirmDialogFragment
 import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.manager.RouteManager
@@ -168,20 +169,20 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             WebActivity.startActivity(this, GlobalConstant.userUrl)
         }
         rlCache.setOnClickListener {
-            val dialogFragment = ConfirmDialogFragment.newInstance(
-                "温馨提示", "你确定要清除缓存吗？清除缓存后，之前缓存的视频将会被删除", "确定", "取消"
-            )
-            dialogFragment.show(supportFragmentManager, "wy_cache")
-            dialogFragment.addListener(object : ConfirmDialogFragment.OnDialogFragmentListener {
-                override fun onClickSure() {
-                    clearCache()
-                }
-
-                override fun onClickCancel() {
-
-                }
-
-            })
+            CommonConfirmDialog.show(
+                this,
+                false,
+                "温馨提示",
+                "你确定要清除缓存吗？清除缓存后，之前缓存的视频将会被删除",
+                "确定",
+                "取消",
+                object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                    override fun onClickBtn(view: View, isClickSure: Boolean) {
+                        if (isClickSure) {
+                            clearCache()
+                        }
+                    }
+                })
         }
         scPlay.setOnCheckedChangeListener(object : OnCheckedChangeListener {
             override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
@@ -242,22 +243,23 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
             ToastUtil.show("当前已经是最新版本")
             return
         }
-        val dialogFragment = UpdateDialogFragment.newInstance(
-            updateEntity.title, updateEntity.content, "下载", "忽略更新"
-        )
         downloadAppUrl = updateEntity.url
-        dialogFragment.show(supportFragmentManager, "update_dialog")
-        dialogFragment.addListener(object : UpdateDialogFragment.OnDialogFragmentListener {
-            override fun onClickSure() {
-                //NotificationHelper.sendProgressNotification(this@SettingActivity, 0, false)
-                //goDownload(Constants.TEST_APK_URL)
-                openSetting()
-            }
-
-            override fun onClickCancel() {
-
-            }
-        })
+        CommonConfirmDialog.show(
+            this,
+            false,
+            updateEntity.title,
+            updateEntity.content,
+            "下载",
+            "忽略更新",
+            object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                override fun onClickBtn(view: View, isClickSure: Boolean) {
+                    if (isClickSure) {
+                        //NotificationHelper.sendProgressNotification(this@SettingActivity, 0, false)
+                        //goDownload(Constants.TEST_APK_URL)
+                        openSetting()
+                    }
+                }
+            })
     }
 
     private fun initActivityResult() {
@@ -326,5 +328,4 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
         //重新获取一次缓存大小
         getCacheSize()
     }
-
 }

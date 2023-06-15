@@ -15,7 +15,7 @@ import com.android.wy.news.R
 import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalConstant
-import com.android.wy.news.databinding.LayoutDialogBinding
+import com.android.wy.news.databinding.LayoutCommonConfirmDialogBinding
 
 
 /*
@@ -24,7 +24,7 @@ import com.android.wy.news.databinding.LayoutDialogBinding
   * @Version:        1.0
   * @Description:    
  */
-class PrivacyDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
+class PrivacyDialogFragment : BaseDialogFragment<LayoutCommonConfirmDialogBinding>() {
     private var tvTitle: TextView? = null
     private var tvContent: TextView? = null
     private var tvSure: TextView? = null
@@ -76,8 +76,8 @@ class PrivacyDialogFragment : BaseDialogFragment<LayoutDialogBinding>() {
 
     }
 
-    override fun getViewBinding(): LayoutDialogBinding {
-        return LayoutDialogBinding.inflate(layoutInflater)
+    override fun getViewBinding(): LayoutCommonConfirmDialogBinding {
+        return LayoutCommonConfirmDialogBinding.inflate(layoutInflater)
     }
 
     override fun onClear() {

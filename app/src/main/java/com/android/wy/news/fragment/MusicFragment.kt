@@ -8,20 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
-import com.android.wy.news.dialog.MusicOperationDialog
+import com.android.wy.news.dialog.CommonOperationDialog
+import com.android.wy.news.entity.OperationItemEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicListEvent
 import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.repository.MusicRepository
-import com.android.wy.news.listener.IDownloadListener
 import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
@@ -52,7 +54,8 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
     OnLoadMoreListener,
-    PlayBarView.OnPlayBarListener, IDownloadListener, IMusicItemChangeListener {
+    PlayBarView.OnPlayBarListener, IMusicItemChangeListener,
+    BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
     private var pageStart = 1
     private var categoryId: Int = 0
     private lateinit var rvContent: MusicRecyclerView
@@ -391,10 +394,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    override fun goDownload(musicInfo: MusicInfo) {
-        PlayMusicManager.requestMusicInfo(musicInfo)
-    }
-
     override fun onItemClick(view: View, data: MusicInfo) {
         PlayMusicManager.setClickMusicInfo(data)
         val i = view.tag as Int
@@ -403,10 +402,34 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     override fun onItemLongClick(view: View, data: MusicInfo) {
         PlayMusicManager.setLongClickMusicInfo(data)
-        val musicOperationDialog = MusicOperationDialog(this, data)
-        musicOperationDialog.show(
-            (mActivity as AppCompatActivity).supportFragmentManager,
-            "music_operation_dialog"
-        )
+        val stringBuilder = StringBuilder()
+        val album = data.name
+        val artist = data.artist
+        stringBuilder.append(artist)
+        if (!TextUtils.isEmpty(album)) {
+            stringBuilder.append("-$album")
+        }
+        val activity = mActivity as AppCompatActivity
+        val list = arrayListOf(OperationItemEntity(R.mipmap.download, "下载"))
+        CommonOperationDialog.show(activity, stringBuilder.toString(), list, this)
+    }
+
+    override fun onItemClickListener(view: View, data: OperationItemEntity) {
+        val tag = view.tag
+        if (tag is Int) {
+            when (tag) {
+                0 -> {
+                    PlayMusicManager.getDownloadMusicInfo()
+                        ?.let { PlayMusicManager.requestMusicInfo(it) }
+                }
+                else->{
+
+                }
+            }
+        }
+    }
+
+    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
+
     }
 }

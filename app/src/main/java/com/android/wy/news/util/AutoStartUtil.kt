@@ -6,8 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.android.wy.news.dialog.TipDialogFragment
+import com.android.wy.news.dialog.CommonConfirmDialog
+import com.android.wy.news.dialog.CommonConfirmDialogFragment
 import java.util.Locale
 
 
@@ -106,19 +108,19 @@ object AutoStartUtil {
             context.startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
-            val dialogFragment = TipDialogFragment.newInstance(
-                "温馨提示",
-                "为了您更好体验听歌服务,请设置App自启动,便于音乐播放期间,锁屏展示音乐歌曲信息。",
-                "确定"
-            )
             val activity = context as AppCompatActivity
-            dialogFragment.show(activity.supportFragmentManager, "tip_dialog")
-            dialogFragment.addListener(object : TipDialogFragment.OnDialogFragmentListener {
-                override fun onClickSure() {
-                    intent = Intent(Settings.ACTION_SETTINGS)
-                    context.startActivity(intent)
-                }
-            })
+            CommonConfirmDialog.show(activity, true, "温馨提示",
+                "为了您更好体验听歌服务,请设置App自启动,便于音乐播放期间,锁屏展示音乐歌曲信息。",
+                "确定",
+                "取消",
+                object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                    override fun onClickBtn(view: View, isClickSure: Boolean) {
+                        if (isClickSure) {
+                            intent = Intent(Settings.ACTION_SETTINGS)
+                            context.startActivity(intent)
+                        }
+                    }
+                })
         }
     }
 }
