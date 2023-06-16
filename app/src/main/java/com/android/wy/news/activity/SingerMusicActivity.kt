@@ -30,13 +30,16 @@ class SingerMusicActivity : BaseActivity<ActivitySingerMusicBinding, SingerMusic
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var page = 1
     private var artistId = ""
+    private var typeId = 0
     private var artistMusicAdapter: MusicAdapter? = null
 
     companion object {
         private const val ARTIST_ID = "artist_id"
-        fun startActivity(context: Context, artistId: String) {
+        private const val TYPE_ID = "type_id"
+        fun startActivity(context: Context, artistId: String, typeId: Int) {
             val intent = Intent(context, SingerMusicActivity::class.java)
             intent.putExtra(ARTIST_ID, artistId)
+            intent.putExtra(TYPE_ID, typeId)
             context.startActivity(intent)
         }
     }
@@ -73,6 +76,7 @@ class SingerMusicActivity : BaseActivity<ActivitySingerMusicBinding, SingerMusic
 
     override fun initData() {
         artistId = intent.getStringExtra(ARTIST_ID).toString()
+        typeId = intent.getIntExtra(TYPE_ID, 0)
         shimmerRecyclerView.showShimmerAdapter()
         getData()
     }
@@ -104,24 +108,49 @@ class SingerMusicActivity : BaseActivity<ActivitySingerMusicBinding, SingerMusic
     }
 
     private fun getData() {
-        MusicRepository.getArtistMusic(artistId, page).observe(this) {
-            shimmerRecyclerView.hideShimmerAdapter()
-            if (isLoading) {
-                refreshLayout.finishLoadMore()
-            } else {
-                refreshLayout.finishRefresh()
-            }
-            val artistMusicEntity = it.getOrNull()
-            if (artistMusicEntity != null) {
-                val data = artistMusicEntity.data
-                val dataList = data.list
-                if (dataList.size == 0) {
-                    refreshLayout.setNoMoreData(true)
+        if (typeId == 0) {
+            MusicRepository.getArtistMusic(artistId, page).observe(this) {
+                shimmerRecyclerView.hideShimmerAdapter()
+                if (isLoading) {
+                    refreshLayout.finishLoadMore()
                 } else {
-                    if (isLoading) {
-                        artistMusicAdapter?.loadMoreData(dataList)
+                    refreshLayout.finishRefresh()
+                }
+                val artistMusicEntity = it.getOrNull()
+                if (artistMusicEntity != null) {
+                    val data = artistMusicEntity.data
+                    val dataList = data.list
+                    if (dataList.size == 0) {
+                        refreshLayout.setNoMoreData(true)
                     } else {
-                        artistMusicAdapter?.refreshData(dataList)
+                        if (isLoading) {
+                            artistMusicAdapter?.loadMoreData(dataList)
+                        } else {
+                            artistMusicAdapter?.refreshData(dataList)
+                        }
+                    }
+                }
+            }
+        } else {
+            MusicRepository.getAlbumInfo(artistId, page).observe(this) {
+                shimmerRecyclerView.hideShimmerAdapter()
+                if (isLoading) {
+                    refreshLayout.finishLoadMore()
+                } else {
+                    refreshLayout.finishRefresh()
+                }
+                val artistAlbumInfoEntity = it.getOrNull()
+                if (artistAlbumInfoEntity != null) {
+                    val data = artistAlbumInfoEntity.data
+                    val dataList = data.musicList
+                    if (dataList.size == 0) {
+                        refreshLayout.setNoMoreData(true)
+                    } else {
+                        if (isLoading) {
+                            artistMusicAdapter?.loadMoreData(dataList)
+                        } else {
+                            artistMusicAdapter?.refreshData(dataList)
+                        }
                     }
                 }
             }

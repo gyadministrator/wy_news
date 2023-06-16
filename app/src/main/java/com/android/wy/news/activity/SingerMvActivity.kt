@@ -2,6 +2,7 @@ package com.android.wy.news.activity
 
 import android.content.Context
 import android.content.Intent
+import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -133,7 +134,22 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
     }
 
     override fun onItemClickListener(view: View, data: Mvlist) {
-
+        val stringBuilder = StringBuilder()
+        val name = data.name
+        val artist = data.artist
+        if (!TextUtils.isEmpty(name)) {
+            stringBuilder.append(name)
+        }
+        if (!TextUtils.isEmpty(artist)) {
+            stringBuilder.append("-")
+            stringBuilder.append(artist)
+        }
+        MusicMvActivity.startMv(
+            this,
+            stringBuilder.toString(),
+            data.pic,
+            data.id
+        )
     }
 
     override fun onItemLongClickListener(view: View, data: Mvlist) {

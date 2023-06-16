@@ -14,7 +14,6 @@ import com.android.wy.news.databinding.LayoutMusicItemBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.util.JsonUtil
 import java.util.*
 
 
@@ -73,13 +72,13 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         } else {
             holder.tvVip.visibility = View.GONE
         }
-       /* val localPath = data.localPath
-        if (!TextUtils.isEmpty(localPath)) {
-            holder.tvPath.visibility = View.VISIBLE
-            holder.tvPath.text = localPath
-        } else {
-            holder.tvPath.visibility = View.GONE
-        }*/
+        /* val localPath = data.localPath
+         if (!TextUtils.isEmpty(localPath)) {
+             holder.tvPath.visibility = View.VISIBLE
+             holder.tvPath.text = localPath
+         } else {
+             holder.tvPath.visibility = View.GONE
+         }*/
         holder.tvMv.tag = data
         holder.tvMv.setOnClickListener(onMvClickListener)
         CommonTools.loadImage(data.pic, holder.ivCover)
@@ -89,8 +88,24 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
     private val onMvClickListener = View.OnClickListener { p0 ->
         val tag = p0?.tag
         if (tag is MusicInfo) {
-            val s = JsonUtil.parseObjectToJson(tag)
-            p0.context?.let { MusicMvActivity.startMv(it, s) }
+            val stringBuilder = StringBuilder()
+            val name = tag.name
+            val artist = tag.artist
+            if (!TextUtils.isEmpty(name)) {
+                stringBuilder.append(name)
+            }
+            if (!TextUtils.isEmpty(artist)) {
+                stringBuilder.append("-")
+                stringBuilder.append(artist)
+            }
+            p0.context?.let {
+                MusicMvActivity.startMv(
+                    it,
+                    stringBuilder.toString(),
+                    tag.pic,
+                    tag.musicrid
+                )
+            }
         }
     }
 

@@ -1,11 +1,13 @@
 package com.android.wy.news.adapter
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
+import com.android.wy.news.common.CommonTools
+import com.android.wy.news.databinding.LayoutSingerMvItemBinding
 import com.android.wy.news.entity.music.Album
-import com.android.wy.news.entity.music.Mvlist
 
 
 /*     
@@ -15,20 +17,30 @@ import com.android.wy.news.entity.music.Mvlist
   * @Description:    
  */
 class SingerAlbumAdapter(itemAdapterListener: OnItemAdapterListener<Album>) :
-    BaseNewsAdapter<SingerAlbumAdapter.SingerMvHolder, Album>(
+    BaseNewsAdapter<SingerAlbumAdapter.SingerAlbumHolder, Album>(
         itemAdapterListener
     ) {
 
-    class SingerMvHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    class SingerAlbumHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val mBinding = LayoutSingerMvItemBinding.bind(itemView)
+        var ivCover = mBinding.ivCover
+        var llPlayCount = mBinding.llPlayCount
+        var tvPlayCount = mBinding.tvPlayCount
+        var tvTime = mBinding.tvTime
+        var tvDesc = mBinding.tvDesc
+        var tvTitle = mBinding.tvTitle
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): SingerMvHolder {
-        val view = getView(parent, R.layout.layout_singer_album_item)
-        return SingerMvHolder(view)
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): SingerAlbumHolder {
+        val view = getView(parent, R.layout.layout_singer_mv_item)
+        return SingerAlbumHolder(view)
     }
 
-    override fun onBindData(holder: SingerMvHolder, position: Int, data: Album) {
-
+    @SuppressLint("SetTextI18n")
+    override fun onBindData(holder: SingerAlbumHolder, position: Int, data: Album) {
+        CommonTools.loadImage(data.pic, holder.ivCover)
+        holder.llPlayCount.visibility = View.GONE
+        holder.tvTitle.text = data.album
+        holder.tvDesc.text = data.albuminfo
     }
 }

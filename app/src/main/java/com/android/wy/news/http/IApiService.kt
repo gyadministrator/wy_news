@@ -2,6 +2,7 @@ package com.android.wy.news.http
 
 import com.android.wy.news.entity.HotEntity
 import com.android.wy.news.entity.music.ArtistAlbumEntity
+import com.android.wy.news.entity.music.ArtistAlbumInfoEntity
 import com.android.wy.news.entity.music.ArtistMusicEntity
 import com.android.wy.news.entity.music.ArtistMvEntity
 import com.android.wy.news.entity.music.MusicListEntity
@@ -9,7 +10,6 @@ import com.android.wy.news.entity.music.MusicLrcEntity
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.MusicUrlEntity
 import com.android.wy.news.entity.music.SearchMusicEntity
-import io.reactivex.Observable
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -124,4 +124,10 @@ interface IApiService {
         @Query("artistid") artistid: String,
         @Query("pn") pn: Int
     ): Call<ArtistMvEntity>
+
+    @GET("/api/www/album/albumInfo?rn=20&httpsStatus=1&reqId=49f442a0-0c47-11ee-ad5a-f30693997240")
+    fun getAlbumInfo(
+        @Query("albumId") albumId: String,
+        @Query("pn") pn: Int
+    ): Call<ArtistAlbumInfoEntity>
 }

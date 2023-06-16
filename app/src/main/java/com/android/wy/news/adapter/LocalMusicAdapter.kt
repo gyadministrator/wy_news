@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -17,7 +18,6 @@ import com.android.wy.news.databinding.LayoutMusicItemBinding
 import com.android.wy.news.entity.music.LocalMusic
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.util.JsonUtil
 import java.io.FileDescriptor
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -90,8 +90,24 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
     private val onMvClickListener = View.OnClickListener { p0 ->
         val tag = p0?.tag
         if (tag is MusicInfo) {
-            val s = JsonUtil.parseObjectToJson(tag)
-            p0.context?.let { MusicMvActivity.startMv(it, s) }
+            val stringBuilder = StringBuilder()
+            val name = tag.name
+            val artist = tag.artist
+            if (!TextUtils.isEmpty(name)) {
+                stringBuilder.append(name)
+            }
+            if (!TextUtils.isEmpty(artist)) {
+                stringBuilder.append("-")
+                stringBuilder.append(artist)
+            }
+            p0.context?.let {
+                MusicMvActivity.startMv(
+                    it,
+                    stringBuilder.toString(),
+                    tag.pic,
+                    tag.musicrid
+                )
+            }
         }
     }
 

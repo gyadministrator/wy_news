@@ -64,4 +64,10 @@ object MusicRepository : BaseRepository() {
         if (artistMvEntity.code == 200) Result.success(artistMvEntity)
         else Result.failure(RuntimeException("getArtistMv is error"))
     }
+
+    fun getAlbumInfo(albumId: String, pn: Int) = getData(Dispatchers.IO) {
+        val artistMvEntity = NetworkRequest.getAlbumInfo(albumId, pn)
+        if (artistMvEntity.code == 200) Result.success(artistMvEntity)
+        else Result.failure(RuntimeException("getAlbumInfo is error"))
+    }
 }

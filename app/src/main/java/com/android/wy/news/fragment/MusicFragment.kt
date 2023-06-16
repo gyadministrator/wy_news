@@ -445,7 +445,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 }
 
                 3 -> {
-                    SingerMusicActivity.startActivity(mActivity, artistId.toString())
+                    SingerMusicActivity.startActivity(mActivity, artistId.toString(), 0)
                 }
 
                 4 -> {
