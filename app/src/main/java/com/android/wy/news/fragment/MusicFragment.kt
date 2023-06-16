@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.SingerAlbumActivity
 import com.android.wy.news.activity.SingerMusicActivity
 import com.android.wy.news.activity.SingerMvActivity
 import com.android.wy.news.activity.WebFragmentActivity
@@ -440,7 +441,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 }
 
                 2 -> {
-
+                    SingerAlbumActivity.startActivity(mActivity, artistId.toString())
                 }
 
                 3 -> {

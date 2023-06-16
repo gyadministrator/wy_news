@@ -32,7 +32,7 @@
                 android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
                 android:src="@mipmap/video"
-                app:tint="@color/main_title"
+                app:tint="@color/white"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
-                android:textColor="@color/main_title"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 tools:text="123" />
         </LinearLayout>
@@ -51,9 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="6dp"
-            android:layout_marginStart="3dp"
-            android:textColor="@color/main_title"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:textColor="@color/white"
             android:textSize="14sp"
             tools:text="00:00" />
     </RelativeLayout>

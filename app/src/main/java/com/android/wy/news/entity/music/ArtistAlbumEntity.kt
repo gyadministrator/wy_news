@@ -18,7 +18,7 @@ data class ArtistAlbumEntity(
 )
 
 data class ArtistAlbumData(
-    val albumList: List<Album>,
+    val albumList: ArrayList<Album>,
     val total: String
 )
 

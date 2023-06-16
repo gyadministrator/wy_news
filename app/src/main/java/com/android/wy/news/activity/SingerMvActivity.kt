@@ -15,6 +15,7 @@ import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.SingerMvViewModel
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
@@ -26,7 +27,7 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
     private lateinit var rvContent: RecyclerView
     private var isLoading = false
     private lateinit var refreshLayout: SmartRefreshLayout
-    private lateinit var loadingView: CustomLoadingView
+    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var page = 1
     private var artistId = ""
     private var singerMvAdapter: SingerMvAdapter? = null
@@ -59,7 +60,7 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
     override fun initView() {
         rvContent = mBinding.rvContent
         refreshLayout = mBinding.refreshLayout
-        loadingView = mBinding.loadingView
+        shimmerRecyclerView = mBinding.shimmerRecyclerView
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setOnRefreshListener(this)
 
@@ -70,6 +71,7 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
 
     override fun initData() {
         artistId = intent.getStringExtra(ARTIST_ID).toString()
+        shimmerRecyclerView.showShimmerAdapter()
         getData()
     }
 
@@ -101,7 +103,7 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
 
     private fun getData() {
         MusicRepository.getArtistMv(artistId, page).observe(this) {
-            loadingView.visibility = View.GONE
+            shimmerRecyclerView.hideShimmerAdapter()
             if (isLoading) {
                 refreshLayout.finishLoadMore()
             } else {
@@ -111,11 +113,11 @@ class SingerMvActivity : BaseActivity<ActivitySingerMvBinding, SingerMvViewModel
             if (artistMvEntity != null) {
                 val data = artistMvEntity.data
                 val mvList = data.mvlist
-                if (isLoading) {
-                    singerMvAdapter?.loadMoreData(mvList)
+                if (mvList.size == 0) {
+                    refreshLayout.setNoMoreData(true)
                 } else {
-                    if (mvList.size == 0) {
-                        refreshLayout.setNoMoreData(true)
+                    if (isLoading) {
+                        singerMvAdapter?.loadMoreData(mvList)
                     } else {
                         singerMvAdapter?.refreshData(mvList)
                     }

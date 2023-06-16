@@ -48,7 +48,8 @@ data class ArtistMusicItem(
     val rid: Int,
     val score100: String,
     val songTimeMinutes: String,
-    val track: Int
+    val track: Int,
+    var state:Int
 )
 
 data class ArtistMusicMvPayInfo(

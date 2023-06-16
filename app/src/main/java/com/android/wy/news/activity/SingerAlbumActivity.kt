@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivitySingerAlbumBinding
+import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.view.CustomLoadingView
 import com.android.wy.news.viewmodel.SingerAlbumViewModel
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
@@ -20,7 +22,7 @@ class SingerAlbumActivity : BaseActivity<ActivitySingerAlbumBinding, SingerAlbum
     private lateinit var rvContent: RecyclerView
     private var isLoading = false
     private lateinit var refreshLayout: SmartRefreshLayout
-    private lateinit var loadingView: CustomLoadingView
+    private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var page = 1
     private var artistId = ""
 
@@ -52,13 +54,14 @@ class SingerAlbumActivity : BaseActivity<ActivitySingerAlbumBinding, SingerAlbum
     override fun initView() {
         rvContent = mBinding.rvContent
         refreshLayout = mBinding.refreshLayout
-        loadingView = mBinding.loadingView
+        shimmerRecyclerView = mBinding.shimmerRecyclerView
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setOnRefreshListener(this)
     }
 
     override fun initData() {
         artistId = intent.getStringExtra(ARTIST_ID).toString()
+        shimmerRecyclerView.showShimmerAdapter()
         getData()
     }
 
@@ -89,7 +92,28 @@ class SingerAlbumActivity : BaseActivity<ActivitySingerAlbumBinding, SingerAlbum
     }
 
     private fun getData() {
-
+        MusicRepository.getArtistAlbum(artistId, page).observe(this) {
+            shimmerRecyclerView.hideShimmerAdapter()
+            if (isLoading) {
+                refreshLayout.finishLoadMore()
+            } else {
+                refreshLayout.finishRefresh()
+            }
+            val artistAlbumEntity = it.getOrNull()
+            if (artistAlbumEntity != null) {
+                val data = artistAlbumEntity.data
+                val albumList = data.albumList
+                if (albumList.size == 0) {
+                    refreshLayout.setNoMoreData(true)
+                } else {
+                    if (isLoading) {
+                        //singerMvAdapter?.loadMoreData(albumList)
+                    } else {
+                        //singerMvAdapter?.refreshData(albumList)
+                    }
+                }
+            }
+        }
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
