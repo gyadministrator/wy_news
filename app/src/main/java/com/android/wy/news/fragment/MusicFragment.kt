@@ -10,8 +10,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.SingerMusicActivity
+import com.android.wy.news.activity.SingerMvActivity
+import com.android.wy.news.activity.WebFragmentActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
+import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
@@ -29,6 +33,7 @@ import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
+import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
@@ -410,19 +415,43 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             stringBuilder.append("-$album")
         }
         val activity = mActivity as AppCompatActivity
-        val list = arrayListOf(OperationItemEntity(R.mipmap.download, "下载"))
+        val list = arrayListOf(
+            OperationItemEntity(R.mipmap.download, AppUtil.getString(App.app, R.string.download)),
+            OperationItemEntity(R.mipmap.singer, AppUtil.getString(App.app, R.string.singer)),
+            OperationItemEntity(R.mipmap.album, AppUtil.getString(App.app, R.string.album)),
+            OperationItemEntity(R.mipmap.state_one, AppUtil.getString(App.app, R.string.single)),
+            OperationItemEntity(R.mipmap.video, AppUtil.getString(App.app, R.string.mv)),
+        )
         CommonOperationDialog.show(activity, stringBuilder.toString(), list, this)
     }
 
     override fun onItemClickListener(view: View, data: OperationItemEntity) {
         val tag = view.tag
+        val musicInfo = PlayMusicManager.getDownloadMusicInfo()
+        val artistId = musicInfo?.artistid
         if (tag is Int) {
             when (tag) {
                 0 -> {
-                    PlayMusicManager.getDownloadMusicInfo()
-                        ?.let { PlayMusicManager.requestMusicInfo(it) }
+                    musicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
                 }
-                else->{
+
+                1 -> {
+                    WebFragmentActivity.startActivity(mActivity, artistId.toString())
+                }
+
+                2 -> {
+
+                }
+
+                3 -> {
+                    SingerMusicActivity.startActivity(mActivity, artistId.toString())
+                }
+
+                4 -> {
+                    SingerMvActivity.startActivity(mActivity, artistId.toString())
+                }
+
+                else -> {
 
                 }
             }

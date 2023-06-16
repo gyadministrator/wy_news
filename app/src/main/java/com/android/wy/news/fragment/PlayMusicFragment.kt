@@ -129,7 +129,7 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
     }
 
     override fun isTouchDismiss(): Boolean {
-        return false
+        return true
     }
 
     private fun initTab() {

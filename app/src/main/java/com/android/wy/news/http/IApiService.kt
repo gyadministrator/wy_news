@@ -1,6 +1,9 @@
 package com.android.wy.news.http
 
 import com.android.wy.news.entity.HotEntity
+import com.android.wy.news.entity.music.ArtistAlbumEntity
+import com.android.wy.news.entity.music.ArtistMusicEntity
+import com.android.wy.news.entity.music.ArtistMvEntity
 import com.android.wy.news.entity.music.MusicListEntity
 import com.android.wy.news.entity.music.MusicLrcEntity
 import com.android.wy.news.entity.music.MusicRecommendEntity
@@ -103,4 +106,22 @@ interface IApiService {
 
     @GET("/api/www/search/searchMusicBykeyWord?pn=1&rn=20&httpsStatus=1&reqId=68698c70-fc59-11ed-954a-a3d1cc5fccea")
     fun getMusicByKey(@Query("key") key: String): Call<SearchMusicEntity>
+
+    @GET("/api/www/artist/artistMusic?rn=20&httpsStatus=1&reqId=b9776740-0bf4-11ee-ade6-61977d2fc615")
+    fun getArtistMusic(
+        @Query("artistid") artistid: String,
+        @Query("pn") pn: Int
+    ): Call<ArtistMusicEntity>
+
+    @GET("/api/www/artist/artistAlbum?rn=20&httpsStatus=1&reqId=928ca4b0-0c03-11ee-a659-2b1d887490e2")
+    fun getArtistAlbum(
+        @Query("artistid") artistid: String,
+        @Query("pn") pn: Int
+    ): Call<ArtistAlbumEntity>
+
+    @GET("/api/www/artist/artistMv?rn=20&httpsStatus=1&reqId=d44bd9c0-0c03-11ee-a659-2b1d887490e2")
+    fun getArtistMv(
+        @Query("artistid") artistid: String,
+        @Query("pn") pn: Int
+    ): Call<ArtistMvEntity>
 }

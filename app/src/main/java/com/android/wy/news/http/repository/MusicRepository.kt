@@ -46,4 +46,22 @@ object MusicRepository : BaseRepository() {
         if (musicLrcEntity.data != null) Result.success(musicLrcEntity)
         else Result.failure(RuntimeException("getMusicLrc is error"))
     }
+
+    fun getArtistMusic(artistId: String, pn: Int) = getData(Dispatchers.IO) {
+        val artistMusicEntity = NetworkRequest.getArtistMusic(artistId, pn)
+        if (artistMusicEntity.code == 200) Result.success(artistMusicEntity)
+        else Result.failure(RuntimeException("getArtistMusic is error"))
+    }
+
+    fun getArtistAlbum(artistId: String, pn: Int) = getData(Dispatchers.IO) {
+        val artistAlbumEntity = NetworkRequest.getArtistAlbum(artistId, pn)
+        if (artistAlbumEntity.code == 200) Result.success(artistAlbumEntity)
+        else Result.failure(RuntimeException("getArtistAlbum is error"))
+    }
+
+    fun getArtistMv(artistId: String, pn: Int) = getData(Dispatchers.IO) {
+        val artistMvEntity = NetworkRequest.getArtistMv(artistId, pn)
+        if (artistMvEntity.code == 200) Result.success(artistMvEntity)
+        else Result.failure(RuntimeException("getArtistMv is error"))
+    }
 }

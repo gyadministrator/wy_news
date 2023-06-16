@@ -19,7 +19,7 @@
     <string name="play_and_download">缓存视频</string>
     <string name="clean_cache">清除缓存</string>
     <string name="about_software">关于软件</string>
-    <string name="album">态度封面</string>
+    <string name="album">专辑</string>
     <string name="news_tip">热点头条新闻抢先看</string>
     <string name="app_permission">权限列表</string>
     <string name="reply_and_help">反馈与帮助</string>
@@ -66,4 +66,6 @@
     <string name="call_ring">来电铃声</string>
     <string name="alarm_ring">闹钟铃声</string>
     <string name="notify_ring">通知铃声</string>
+    <string name="singer">歌手</string>
+    <string name="single">单曲</string>
 </resources>

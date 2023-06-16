@@ -15,6 +15,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.wy.news.R
+import com.android.wy.news.activity.WebFragmentActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
@@ -227,42 +228,14 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         ivNext?.setOnClickListener {
             playNext()
         }
+        rlSinger?.setOnClickListener {
+            val artistId = this.currentMusicInfo?.artistid
+            WebFragmentActivity.startActivity(mActivity, artistId.toString())
+        }
         rlDownload?.setOnClickListener {
             this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
-            val stringBuilder = StringBuilder()
-            val album = this.currentMusicInfo?.name
-            val artist = this.currentMusicInfo?.artist
-            stringBuilder.append(artist)
-            if (!TextUtils.isEmpty(album)) {
-                stringBuilder.append("-$album")
-            }
-            val activity = mActivity as AppCompatActivity
-            val list = arrayListOf(OperationItemEntity(R.mipmap.download, "下载"))
-            CommonOperationDialog.show(
-                activity,
-                stringBuilder.toString(),
-                list,
-                object : BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
-                    override fun onItemClickListener(view: View, data: OperationItemEntity) {
-                        val tag = view.tag
-                        if (tag is Int) {
-                            when (tag) {
-                                0 -> {
-                                    PlayMusicManager.getDownloadMusicInfo()
-                                        ?.let { PlayMusicManager.requestMusicInfo(it) }
-                                }
-
-                                else -> {
-
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
-
-                    }
-                })
+            PlayMusicManager.getDownloadMusicInfo()
+                ?.let { PlayMusicManager.requestMusicInfo(it) }
         }
         rlRing?.setOnClickListener {
             this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
@@ -276,8 +249,14 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             val activity = mActivity as AppCompatActivity
             val list = arrayListOf(
                 OperationItemEntity(R.mipmap.call, AppUtil.getString(App.app, R.string.call_ring)),
-                OperationItemEntity(R.mipmap.alarm, AppUtil.getString(App.app, R.string.alarm_ring)),
-                OperationItemEntity(R.mipmap.notice, AppUtil.getString(App.app, R.string.notify_ring))
+                OperationItemEntity(
+                    R.mipmap.alarm,
+                    AppUtil.getString(App.app, R.string.alarm_ring)
+                ),
+                OperationItemEntity(
+                    R.mipmap.notice,
+                    AppUtil.getString(App.app, R.string.notify_ring)
+                )
             )
             CommonOperationDialog.show(
                 activity,

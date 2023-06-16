@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activity.SingerMvActivity">
+
+    <com.android.wy.news.view.TitleBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="歌手专辑" />
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_bg_color"
+        app:srlEnablePreviewInEditMode="true"
+        app:srlPrimaryColor="@color/main_bg_color">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <com.android.wy.news.view.CustomRecyclerView
+                android:id="@+id/rv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.android.wy.news.view.CustomLoadingView
+                android:id="@+id/loading_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:loadingSize="16sp"
+                app:loadingText="@string/loading_more" />
+        </FrameLayout>
+
+        <com.android.wy.news.refresh.CustomRefreshFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srlPrimaryColor="@color/main_bg_color"
+            app:textFooterTipColor="@color/main_bg_color" />
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+</LinearLayout>

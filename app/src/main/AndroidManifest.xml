@@ -53,6 +53,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activity.SingerMusicActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SingerAlbumActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SingerMvActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.WebFragmentActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".activity.CrashActivity"
             android:exported="false"
             android:launchMode="singleTop" />
@@ -197,12 +210,11 @@
             <intent-filter>
                 <action android:name="wy_notification_action" />
             </intent-filter>
-        </receiver>
-        <!--设备策略管理器-->
+        </receiver> <!-- 设备策略管理器 -->
         <receiver
             android:name=".receiver.DeviceReceiver"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin" />
@@ -213,9 +225,7 @@
 
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
-        </receiver>
-
-        <!-- 声明provider -->
+        </receiver> <!-- 声明provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.android.wy.news.fileprovider"

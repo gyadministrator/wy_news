@@ -22,6 +22,32 @@ import java.io.IOException
  */
 object JsoupManager {
 
+    fun getWebContent(url: String): String {
+        try {
+            val document: Document? = Jsoup.connect(url).get()
+            if (document != null) {
+                return document.body().toString()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
+    }
+
+    fun getSingerInfo(url: String): String {
+        try {
+            val document: Document? = Jsoup.connect(url)
+                .cookie("kw_token",GlobalData.CSRF_TOKEN).get()
+            if (document != null) {
+                val element = document.getElementsByClass("child_view")
+                return element.toString()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
+    }
+
     fun getTopNews(url: String): ArrayList<HotNewsEntity> {
         val dataList = ArrayList<HotNewsEntity>()
         try {

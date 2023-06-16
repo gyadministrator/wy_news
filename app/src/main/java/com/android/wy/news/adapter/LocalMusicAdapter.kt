@@ -6,19 +6,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.MusicMvActivity
-import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutMusicItemBinding
 import com.android.wy.news.entity.music.LocalMusic
 import com.android.wy.news.entity.music.MusicInfo
-import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.util.JsonUtil
 import java.io.FileDescriptor
@@ -81,9 +78,11 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
         holder.tvMv.tag = data
         holder.tvMv.setOnClickListener(onMvClickListener)
         //CommonTools.loadImage(data.pic, holder.ivCover)
-        val bitmap = getArtwork(holder.ivCover.context, data.id, data.albumId, true, true)
+        val bitmap = getArtwork(holder.ivCover.context, data.id, data.albumId, true, false)
         if (bitmap != null) {
             holder.ivCover.setImageBitmap(bitmap)
+        } else {
+            holder.ivCover.setImageResource(R.mipmap.ic_launcher)
         }
         checkState(holder, position)
     }
@@ -206,7 +205,7 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
      * @param small small
      * @return
      */
-    fun getArtwork(
+    private fun getArtwork(
         context: Context,
         songId: Long,
         albumId: Long,
@@ -275,28 +274,28 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
     /**
      * 从文件当中获取专辑封面位图
      * @param context
-     * @param songid
-     * @param albumid
+     * @param songId songId
+     * @param albumId albumId
      * @return
      */
     @SuppressLint("Recycle")
-    private fun getArtworkFromFile(context: Context, songid: Long, albumid: Long): Bitmap? {
+    private fun getArtworkFromFile(context: Context, songId: Long, albumId: Long): Bitmap? {
         var bm: Bitmap? = null
-        require(!(albumid < 0 && songid < 0)) { "Must specify an album or a song id" }
+        require(!(albumId < 0 && songId < 0)) { "Must specify an album or a song id" }
         try {
             val options = BitmapFactory.Options()
             var fd: FileDescriptor? = null
-            if (albumid < 0) {
+            if (albumId < 0) {
                 val uri = Uri.parse(
                     "content://media/external/audio/media/"
-                            + songid + "/albumart"
+                            + songId + "/albumart"
                 )
                 val pfd = context.contentResolver.openFileDescriptor(uri, "r")
                 if (pfd != null) {
                     fd = pfd.fileDescriptor
                 }
             } else {
-                val uri = ContentUris.withAppendedId(albumArtUri, albumid)
+                val uri = ContentUris.withAppendedId(albumArtUri, albumId)
                 val pfd = context.contentResolver.openFileDescriptor(uri, "r")
                 if (pfd != null) {
                     fd = pfd.fileDescriptor
@@ -326,7 +325,7 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
     /**
      * 获取默认专辑图片
      * @param context
-     * @return
+     * @return Bitmap
      */
     private fun getDefaultArtwork(context: Context, small: Boolean): Bitmap? {
         val opts = BitmapFactory.Options()

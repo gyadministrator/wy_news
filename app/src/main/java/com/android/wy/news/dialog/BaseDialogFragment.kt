@@ -11,8 +11,10 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.viewbinding.ViewBinding
 import com.android.wy.news.common.IBaseDialogFragment
+import com.gyf.immersionbar.ImmersionBar
 
-/*     
+
+/*
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/5/29 13:10
   * @Version:        1.0
@@ -75,6 +77,19 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment(), IBaseDial
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Android 全屏界面 DialogFragment 弹出时底部导航栏闪烁
+        //这样弹出来的DialogFragment就不会获取到系统焦点,也就不会显示底部导航拉了
+        //但是这会引起一个问题, 就是点击DialogFragment的周围,他不会自动dismiss消失
+        dialog?.window?.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        //在DialogFragment显示后,去掉这个FLAG_NOT_FOCUSABLE.去掉这个标志后,
+        // DialogFragment重新获取到焦点,所以点击周围可以关闭掉他.
+        // 同时,底部导航栏这个时候又会显示出来, 所以要在DialogFragment显示的onShow()的时候,
+        // 再次调用设置全屏的方法,设置为全屏.
+        dialog?.setOnShowListener {
+            dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+            //清除FLAG后,部分手机会再次显示底部导航栏,所以需要再次设置为全屏
+            ImmersionBar.with(this).fullScreen(true).init()
+        }
         initData()
         initEvent()
     }

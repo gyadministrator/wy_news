@@ -3,6 +3,7 @@ package com.android.wy.news.dialog
 import android.annotation.SuppressLint
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.android.wy.news.adapter.MusicAdapter
@@ -36,7 +37,7 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
     }
 
     override fun getLayoutHeight(): Int {
-        return (CommonTools.getScreenHeight() * 0.75).toInt()
+        return ViewGroup.LayoutParams.WRAP_CONTENT
     }
 
     override fun getLayoutWidth(): Int {

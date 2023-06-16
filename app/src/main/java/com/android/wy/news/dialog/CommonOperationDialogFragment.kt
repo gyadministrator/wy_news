@@ -89,7 +89,7 @@ class CommonOperationDialogFragment(var itemAdapterListener: BaseNewsAdapter.OnI
     }
 
     override fun isTouchDismiss(): Boolean {
-        return false
+        return true
     }
 
     override fun onItemClickListener(view: View, data: OperationItemEntity) {

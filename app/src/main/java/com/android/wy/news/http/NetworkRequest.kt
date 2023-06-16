@@ -49,6 +49,15 @@ object NetworkRequest {
     suspend fun getMusicLrc(musicId: String) =
         musicService.getMusicLrc(musicId).await()
 
+    suspend fun getArtistMusic(artistId: String, pn: Int) =
+        musicService.getArtistMusic(artistId, pn).await()
+
+    suspend fun getArtistAlbum(artistId: String, pn: Int) =
+        musicService.getArtistAlbum(artistId, pn).await()
+
+    suspend fun getArtistMv(artistId: String, pn: Int) =
+        musicService.getArtistMv(artistId, pn).await()
+
     /**
      * Retrofit网络返回处理
      */
