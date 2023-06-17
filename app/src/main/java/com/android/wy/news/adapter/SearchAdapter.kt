@@ -10,7 +10,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.entity.SearchResult
 
 class SearchAdapter(itemAdapterListener: OnItemAdapterListener<SearchResult>) :
-    BaseNewsAdapter<ViewHolder, SearchResult>(
+    BaseNewsAdapter<SearchResult>(
         itemAdapterListener
     ) {
 

@@ -2,6 +2,8 @@ package com.android.wy.news.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.bumptech.glide.Glide
@@ -48,6 +50,7 @@ open class CustomRecyclerView : RecyclerView {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+
                 SCROLL_STATE_DRAGGING ->
                     try {
                         //当屏幕滚动且用户使用的触碰或手指还在屏幕上，停止加载图片
@@ -55,6 +58,7 @@ open class CustomRecyclerView : RecyclerView {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+
                 SCROLL_STATE_SETTLING ->
                     try {
                         //由于用户的操作，屏幕产生惯性滑动，停止加载图片

@@ -24,10 +24,10 @@ import java.util.*
   * @Description:    
  */
 class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
-    BaseNewsAdapter<MusicAdapter.ViewHolder, MusicInfo>(itemAdapterListener) {
+    BaseNewsAdapter<MusicInfo>(itemAdapterListener) {
     private var selectedPosition = -5
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MusicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutMusicItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
         var tvDesc = mBinding.tvDesc
@@ -47,42 +47,44 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         notifyDataSetChanged()
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = getView(parent, R.layout.layout_music_item)
-        return ViewHolder(view)
+        return MusicViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: MusicInfo) {
-        holder.tvTitle.text = data.artist
-        holder.tvDesc.text = data.name
-        val hasMv = data.hasmv
-        if (hasMv == 1) {
-            holder.tvMv.visibility = View.VISIBLE
-        } else {
-            holder.tvMv.visibility = View.GONE
-        }
-        if (data.hasLossless) {
-            holder.tvLossless.visibility = View.VISIBLE
-        } else {
-            holder.tvLossless.visibility = View.GONE
-        }
-        if (data.isListenFee) {
-            holder.tvVip.visibility = View.VISIBLE
-        } else {
-            holder.tvVip.visibility = View.GONE
-        }
-        /* val localPath = data.localPath
+    override fun onBindData(holder: RecyclerView.ViewHolder, position: Int, data: MusicInfo) {
+        if (holder is MusicViewHolder) {
+            holder.tvTitle.text = data.artist
+            holder.tvDesc.text = data.name
+            val hasMv = data.hasmv
+            if (hasMv == 1) {
+                holder.tvMv.visibility = View.VISIBLE
+            } else {
+                holder.tvMv.visibility = View.GONE
+            }
+            if (data.hasLossless) {
+                holder.tvLossless.visibility = View.VISIBLE
+            } else {
+                holder.tvLossless.visibility = View.GONE
+            }
+            if (data.isListenFee) {
+                holder.tvVip.visibility = View.VISIBLE
+            } else {
+                holder.tvVip.visibility = View.GONE
+            }
+            /* val localPath = data.localPath
          if (!TextUtils.isEmpty(localPath)) {
              holder.tvPath.visibility = View.VISIBLE
              holder.tvPath.text = localPath
          } else {
              holder.tvPath.visibility = View.GONE
          }*/
-        holder.tvMv.tag = data
-        holder.tvMv.setOnClickListener(onMvClickListener)
-        CommonTools.loadImage(data.pic, holder.ivCover)
-        checkState(holder, position)
+            holder.tvMv.tag = data
+            holder.tvMv.setOnClickListener(onMvClickListener)
+            CommonTools.loadImage(data.pic, holder.ivCover)
+            checkState(holder, position)
+        }
     }
 
     private val onMvClickListener = View.OnClickListener { p0 ->
@@ -109,7 +111,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
         }
     }
 
-    private fun checkState(holder: ViewHolder, position: Int) {
+    private fun checkState(holder: MusicViewHolder, position: Int) {
         val result = mDataList[position]
         val playMusicInfo = PlayMusicManager.getPlayMusicInfo()
         if (selectedPosition == position && playMusicInfo != null && playMusicInfo.musicrid == result.musicrid) {

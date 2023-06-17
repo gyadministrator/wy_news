@@ -22,7 +22,7 @@ import com.android.wy.news.entity.TopEntity
  */
 class TopAdapter(
     itemAdapterListener: OnItemAdapterListener<TopEntity>
-) : BaseNewsAdapter<ViewHolder, TopEntity>(itemAdapterListener) {
+) : BaseNewsAdapter<TopEntity>(itemAdapterListener) {
     private val videoList = ArrayList<ScreenVideoEntity>()
 
     companion object {

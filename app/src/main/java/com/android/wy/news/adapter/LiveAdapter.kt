@@ -20,9 +20,9 @@ import java.util.*
  */
 class LiveAdapter(
     itemAdapterListener: OnItemAdapterListener<LiveReview>
-) : BaseNewsAdapter<LiveAdapter.ViewHolder, LiveReview>(itemAdapterListener) {
+) : BaseNewsAdapter<LiveReview>(itemAdapterListener) {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class LiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutLiveItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
         var tvRead = mBinding.tvRead
@@ -31,41 +31,43 @@ class LiveAdapter(
         var ivCover = mBinding.ivCover
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = getView(parent, R.layout.layout_live_item)
-        return ViewHolder(view)
+        return LiveViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: LiveReview) {
-        holder.tvTitle.text = data.roomName
-        val playCount = data.userCount
-        if (playCount > 0) {
-            if (playCount > 10000) {
-                val fl = playCount / 10000f
-                holder.tvRead.text = "%.1f".format(fl) + "w人已看"
+    override fun onBindData(holder: RecyclerView.ViewHolder, position: Int, data: LiveReview) {
+        if (holder is LiveViewHolder) {
+            holder.tvTitle.text = data.roomName
+            val playCount = data.userCount
+            if (playCount > 0) {
+                if (playCount > 10000) {
+                    val fl = playCount / 10000f
+                    holder.tvRead.text = "%.1f".format(fl) + "w人已看"
+                } else {
+                    holder.tvRead.text = playCount.toString() + "人已看"
+                }
+            }
+            holder.tvSource.text = data.source
+
+            val time = CommonTools.getTimeDiff(data.startTime)
+            if (!TextUtils.isEmpty(time)) {
+                holder.tvTime.text = "直播时间: $time"
             } else {
-                holder.tvRead.text = playCount.toString() + "人已看"
+                holder.tvTime.text = "直播时间: " + data.startTime
             }
-        }
-        holder.tvSource.text = data.source
 
-        val time = CommonTools.getTimeDiff(data.startTime)
-        if (!TextUtils.isEmpty(time)) {
-            holder.tvTime.text = "直播时间: $time"
-        } else {
-            holder.tvTime.text = "直播时间: " + data.startTime
-        }
-
-        val pcImage = data.pcImage
-        var url: String = pcImage
-        if (!TextUtils.isEmpty(pcImage)) {
-            if (pcImage.contains("\"")) {
-                url = pcImage.replace("\"", "")
+            val pcImage = data.pcImage
+            var url: String = pcImage
+            if (!TextUtils.isEmpty(pcImage)) {
+                if (pcImage.contains("\"")) {
+                    url = pcImage.replace("\"", "")
+                }
             }
-        }
-        if (!TextUtils.isEmpty(url)) {
-            CommonTools.loadImage(url, holder.ivCover)
+            if (!TextUtils.isEmpty(url)) {
+                CommonTools.loadImage(url, holder.ivCover)
+            }
         }
     }
 }

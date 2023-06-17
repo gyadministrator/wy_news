@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.LayoutSingerMvItemBinding
@@ -18,7 +19,7 @@ import com.android.wy.news.entity.music.Mvlist
   * @Description:    
  */
 class SingerMvAdapter(itemAdapterListener: OnItemAdapterListener<Mvlist>) :
-    BaseNewsAdapter<SingerMvAdapter.SingerMvHolder, Mvlist>(
+    BaseNewsAdapter<Mvlist>(
         itemAdapterListener
     ) {
 
@@ -32,29 +33,31 @@ class SingerMvAdapter(itemAdapterListener: OnItemAdapterListener<Mvlist>) :
         var tvTitle = mBinding.tvTitle
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): SingerMvHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = getView(parent, R.layout.layout_singer_mv_item)
         return SingerMvHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: SingerMvHolder, position: Int, data: Mvlist) {
-        CommonTools.loadImage(data.pic, holder.ivCover)
-        val duration = data.duration
-        val time = CommonTools.second2Time(duration.toLong())
-        holder.tvTime.text = time
-        val mvPlayCnt = data.mvPlayCnt
-        if (mvPlayCnt > 0) {
-            if (mvPlayCnt > 10000) {
-                val fl = mvPlayCnt / 10000f
-                holder.tvPlayCount.text = "%.1f".format(fl) + "w播放"
+    override fun onBindData(holder: ViewHolder, position: Int, data: Mvlist) {
+        if (holder is SingerMvHolder) {
+            CommonTools.loadImage(data.pic, holder.ivCover)
+            val duration = data.duration
+            val time = CommonTools.second2Time(duration.toLong())
+            holder.tvTime.text = time
+            val mvPlayCnt = data.mvPlayCnt
+            if (mvPlayCnt > 0) {
+                if (mvPlayCnt > 10000) {
+                    val fl = mvPlayCnt / 10000f
+                    holder.tvPlayCount.text = "%.1f".format(fl) + "w播放"
+                } else {
+                    holder.tvPlayCount.text = mvPlayCnt.toString() + "播放"
+                }
             } else {
-                holder.tvPlayCount.text = mvPlayCnt.toString() + "播放"
+                holder.llPlayCount.visibility = View.GONE
             }
-        } else {
-            holder.llPlayCount.visibility = View.GONE
+            holder.tvTitle.text = data.name
+            holder.tvDesc.text = data.artist
         }
-        holder.tvTitle.text = data.name
-        holder.tvDesc.text = data.artist
     }
 }

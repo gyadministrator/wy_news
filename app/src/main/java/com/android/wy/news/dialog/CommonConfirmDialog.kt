@@ -26,9 +26,12 @@ object CommonConfirmDialog {
             isSingleBtn, titleText, contentText, sureText, cancelText
         )
         confirmDialogFragment.addListener(listener)
-        confirmDialogFragment.show(
-            activity.supportFragmentManager,
-            "common_confirm__dialog"
-        )
+        val supportFragmentManager = activity.supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            confirmDialogFragment.show(
+                supportFragmentManager,
+                "common_confirm__dialog"
+            )
+        }
     }
 }

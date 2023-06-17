@@ -32,7 +32,7 @@ import com.bumptech.glide.request.transition.Transition
  */
 class NewsAdapter(
     itemAdapterListener: OnItemAdapterListener<NewsEntity>
-) : BaseNewsAdapter<ViewHolder, NewsEntity>(itemAdapterListener) {
+) : BaseNewsAdapter<NewsEntity>(itemAdapterListener) {
     override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         return when (viewType) {
             ITEM_TYPE_IMAGE -> {

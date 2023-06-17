@@ -18,22 +18,24 @@ import java.util.*
   * @Description:    
  */
 class DownloadAdapter(itemAdapterListener: OnItemAdapterListener<File>) :
-    BaseNewsAdapter<DownloadAdapter.ViewHolder, File>(itemAdapterListener) {
+    BaseNewsAdapter<File>(itemAdapterListener) {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class DownloadViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutDownloadItemBinding.bind(itemView)
         var tvName = mBinding.tvName
         var tvSize = mBinding.tvSize
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = getView(parent, R.layout.layout_download_item)
-        return ViewHolder(view)
+        return DownloadViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: File) {
-        holder.tvName.text = data.name
-        holder.tvSize.text = DataCleanManager.getFormatSize(data.length().toDouble())
+    override fun onBindData(holder: RecyclerView.ViewHolder, position: Int, data: File) {
+        if (holder is DownloadViewHolder) {
+            holder.tvName.text = data.name
+            holder.tvSize.text = DataCleanManager.getFormatSize(data.length().toDouble())
+        }
     }
 }

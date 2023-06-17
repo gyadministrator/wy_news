@@ -47,7 +47,7 @@ class BannerImgAdapter(dataList: ArrayList<House>) :
         if (holder != null) {
             if (data != null) {
                 val picInfo = data.picInfo
-                if (picInfo != null && picInfo.isNotEmpty()) {
+                if (!picInfo.isNullOrEmpty()) {
                     val info = picInfo[0]
                     info?.let { CommonTools.loadImage(it.url, holder.ivCover) }
                 }

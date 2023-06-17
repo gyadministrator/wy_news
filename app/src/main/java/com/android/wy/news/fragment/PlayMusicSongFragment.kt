@@ -319,10 +319,13 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             JsonUtil.parseObjectToJson(currentDataList)
         )
         musicListDialog.arguments = bundle
-        musicListDialog.show(
-            (context as AppCompatActivity).supportFragmentManager,
-            "music_list_dialog"
-        )
+        val supportFragmentManager = (context as AppCompatActivity).supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            musicListDialog.show(
+                supportFragmentManager,
+                "music_list_dialog"
+            )
+        }
     }
 
     private fun setMusicMode() {

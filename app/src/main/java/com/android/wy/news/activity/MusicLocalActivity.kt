@@ -16,6 +16,7 @@ import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
 import com.android.wy.news.viewmodel.MusicLocalViewModel
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 
 
 @Route(path = RouteManager.PATH_ACTIVITY_MUSIC_LOCAL)
@@ -23,6 +24,7 @@ class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalVie
     BaseNewsAdapter.OnItemAdapterListener<LocalMusic> {
     private val dataList = ArrayList<LocalMusic>()
     private var rvContent: RecyclerView? = null
+    private var shimmerRecyclerView: ShimmerRecyclerView? = null
     private var localMusicAdapter: LocalMusicAdapter? = null
     private var mediaPlayer: MediaPlayerHelper? = null
 
@@ -44,6 +46,7 @@ class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalVie
 
     override fun initView() {
         rvContent = mBinding.rvContent
+        shimmerRecyclerView = mBinding.shimmerRecyclerView
         localMusicAdapter = LocalMusicAdapter(this)
         rvContent?.layoutManager = LinearLayoutManager(this)
         rvContent?.adapter = localMusicAdapter
@@ -55,6 +58,7 @@ class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalVie
     }
 
     private fun getLocalMusic() {
+        shimmerRecyclerView?.showShimmerAdapter()
         val cursor: Cursor? = contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             null,
@@ -101,6 +105,7 @@ class MusicLocalActivity : BaseActivity<ActivityLocalMusicBinding, MusicLocalVie
         }
         cursor?.close()
         Logger.i("getLocalMusic---$dataList")
+        shimmerRecyclerView?.hideShimmerAdapter()
         localMusicAdapter?.refreshData(dataList)
     }
 

@@ -3,6 +3,7 @@ package com.android.wy.news.adapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.databinding.LayoutOperationItemBinding
 import com.android.wy.news.entity.OperationItemEntity
@@ -15,21 +16,23 @@ import com.android.wy.news.entity.OperationItemEntity
   * @Description:    
  */
 class OperationAdapter(itemAdapterListener: OnItemAdapterListener<OperationItemEntity>) :
-    BaseNewsAdapter<OperationAdapter.OperationViewHolder, OperationItemEntity>(itemAdapterListener) {
+    BaseNewsAdapter<OperationItemEntity>(itemAdapterListener) {
 
-    class OperationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class OperationViewHolder(itemView: View) : ViewHolder(itemView) {
         private val mBinding = LayoutOperationItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
         var ivIcon = mBinding.ivIcon
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): OperationViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = getView(parent, R.layout.layout_operation_item)
         return OperationViewHolder(view)
     }
 
-    override fun onBindData(holder: OperationViewHolder, position: Int, data: OperationItemEntity) {
-        holder.ivIcon.setImageResource(data.icon)
-        holder.tvTitle.text = data.title
+    override fun onBindData(holder: ViewHolder, position: Int, data: OperationItemEntity) {
+        if (holder is OperationViewHolder) {
+            holder.ivIcon.setImageResource(data.icon)
+            holder.tvTitle.text = data.title
+        }
     }
 }

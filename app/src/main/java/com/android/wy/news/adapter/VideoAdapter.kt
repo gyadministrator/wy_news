@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.databinding.LayoutVideoFullListBinding
 import com.android.wy.news.entity.RecommendVideoEntity
@@ -20,7 +21,7 @@ class VideoAdapter(
     itemAdapterListener: OnItemAdapterListener<RecommendVideoEntity>,
     private var videoListener: OnVideoListener
 ) :
-    BaseNewsAdapter<VideoAdapter.VideoViewHolder, RecommendVideoEntity>(itemAdapterListener),
+    BaseNewsAdapter<RecommendVideoEntity>(itemAdapterListener),
     ScreenVideoView.OnScreenVideoListener {
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,25 +29,27 @@ class VideoAdapter(
         var playVideo = mBinding.playVideo
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): VideoViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = getView(parent, R.layout.layout_video_full_list)
         return VideoViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: VideoViewHolder, position: Int, data: RecommendVideoEntity) {
-        holder.playVideo.setPlayState(data.isPlaying)
-        holder.playVideo.tag = data.vid
-        holder.playVideo
-            .setTitle(data.title)
-            .setPlayCount(data.playCount.toLong())
-            .setSource(data.topicName)
-            .setTime(data.ptime)
-            .setUser(data.topicName)
-            .setUserSource(data.topicDesc)
-            .setUserCover("")
-            .setUp(data.mp4_url, data.cover, true)
-            .addOnScreenVideoListener(this)
+    override fun onBindData(holder: ViewHolder, position: Int, data: RecommendVideoEntity) {
+        if (holder is VideoViewHolder) {
+            holder.playVideo.setPlayState(data.isPlaying)
+            holder.playVideo.tag = data.vid
+            holder.playVideo
+                .setTitle(data.title)
+                .setPlayCount(data.playCount.toLong())
+                .setSource(data.topicName)
+                .setTime(data.ptime)
+                .setUser(data.topicName)
+                .setUserSource(data.topicDesc)
+                .setUserCover("")
+                .setUp(data.mp4_url, data.cover, true)
+                .addOnScreenVideoListener(this)
+        }
     }
 
     interface OnVideoListener {

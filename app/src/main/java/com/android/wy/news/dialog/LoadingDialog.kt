@@ -25,10 +25,13 @@ object LoadingDialog {
         val bundle = Bundle()
         bundle.putString(LoadingDialogFragment.TITLE_KEY, title)
         loadingDialogFragment.arguments = bundle
-        loadingDialogFragment.show(
-            activity.supportFragmentManager,
-            "loading_dialog"
-        )
+        val supportFragmentManager = activity.supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            loadingDialogFragment.show(
+                supportFragmentManager,
+                "loading_dialog"
+            )
+        }
     }
 
     fun hide() {

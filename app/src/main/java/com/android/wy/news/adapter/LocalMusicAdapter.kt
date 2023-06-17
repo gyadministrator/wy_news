@@ -33,13 +33,13 @@ import kotlin.math.max
   * @Description:    
  */
 class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) :
-    BaseNewsAdapter<LocalMusicAdapter.ViewHolder, LocalMusic>(itemAdapterListener) {
+    BaseNewsAdapter<LocalMusic>(itemAdapterListener) {
     private var selectedPosition = -5
 
     //获取专辑封面的Uri
     private val albumArtUri = Uri.parse("content://media/external/audio/albumart")
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class LocalMusicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val mBinding = LayoutMusicItemBinding.bind(itemView)
         var tvTitle = mBinding.tvTitle
         var tvDesc = mBinding.tvDesc
@@ -59,32 +59,34 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
         notifyDataSetChanged()
     }
 
-    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onViewHolderCreate(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = getView(parent, R.layout.layout_music_item)
-        return ViewHolder(view)
+        return LocalMusicViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: LocalMusic) {
-        holder.tvTitle.text = data.song
-        holder.tvDesc.text = data.singer
-        /*val localPath = data.path
+    override fun onBindData(holder: RecyclerView.ViewHolder, position: Int, data: LocalMusic) {
+        if (holder is LocalMusicViewHolder) {
+            holder.tvTitle.text = data.song
+            holder.tvDesc.text = data.singer
+            /*val localPath = data.path
         if (!TextUtils.isEmpty(localPath)) {
             holder.tvPath.visibility = View.VISIBLE
             holder.tvPath.text = localPath
         } else {
             holder.tvPath.visibility = View.GONE
         }*/
-        holder.tvMv.tag = data
-        holder.tvMv.setOnClickListener(onMvClickListener)
-        //CommonTools.loadImage(data.pic, holder.ivCover)
-        val bitmap = getArtwork(holder.ivCover.context, data.id, data.albumId, true, false)
-        if (bitmap != null) {
-            holder.ivCover.setImageBitmap(bitmap)
-        } else {
-            holder.ivCover.setImageResource(R.mipmap.ic_launcher)
+            holder.tvMv.tag = data
+            holder.tvMv.setOnClickListener(onMvClickListener)
+            //CommonTools.loadImage(data.pic, holder.ivCover)
+            val bitmap = getArtwork(holder.ivCover.context, data.id, data.albumId, true, false)
+            if (bitmap != null) {
+                holder.ivCover.setImageBitmap(bitmap)
+            } else {
+                holder.ivCover.setImageResource(R.mipmap.ic_launcher)
+            }
+            checkState(holder, position)
         }
-        checkState(holder, position)
     }
 
     private val onMvClickListener = View.OnClickListener { p0 ->
@@ -111,7 +113,7 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
         }
     }
 
-    private fun checkState(holder: ViewHolder, position: Int) {
+    private fun checkState(holder: LocalMusicViewHolder, position: Int) {
         val result = mDataList[position]
         if (selectedPosition == position) {
             when (result.state) {

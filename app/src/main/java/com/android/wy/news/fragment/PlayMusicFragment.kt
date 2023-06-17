@@ -76,7 +76,10 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
 
     private fun showMore() {
         val dialog = LrcTypeDialog()
-        dialog.show((context as AppCompatActivity).supportFragmentManager, "lrc_type_dialog")
+        val supportFragmentManager = (context as AppCompatActivity).supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            dialog.show(supportFragmentManager, "lrc_type_dialog")
+        }
     }
 
     override fun initData() {

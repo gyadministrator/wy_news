@@ -239,7 +239,10 @@ object LocationHelper {
                 exitProcess(0)
             }
         })
-        fragment.show(activity.supportFragmentManager, "news_dialog")
+        val supportFragmentManager = activity.supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            fragment.show(supportFragmentManager, "news_dialog")
+        }
     }
 
 

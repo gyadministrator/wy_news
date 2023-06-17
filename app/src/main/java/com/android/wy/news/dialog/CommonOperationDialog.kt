@@ -29,9 +29,12 @@ object CommonOperationDialog {
             JsonUtil.parseObjectToJson(dataList)
         )
         commonOperationDialogFragment.arguments = bundle
-        commonOperationDialogFragment.show(
-            activity.supportFragmentManager,
-            "common_operation_dialog"
-        )
+        val supportFragmentManager = activity.supportFragmentManager
+        if (!supportFragmentManager.isDestroyed) {
+            commonOperationDialogFragment.show(
+                supportFragmentManager,
+                "common_operation_dialog"
+            )
+        }
     }
 }
