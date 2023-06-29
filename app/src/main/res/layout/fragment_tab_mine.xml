@@ -23,12 +23,7 @@
             app:layout_collapseParallaxMultiplier="0.7"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <!--<com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                app:riv_corner_radius="4dp" />-->
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
         <!--悬停部分-->
         <RelativeLayout
@@ -82,10 +77,18 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/iv_recommend_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="6dp"
+                    android:scaleType="centerCrop"
+                    app:riv_corner_radius="4dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="120dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -249,6 +252,32 @@
                     android:text="@string/played_music"
                     android:textColor="@color/main_title"
                     android:textSize="16sp" />
+
+                <!--推荐音乐-->
+                <RelativeLayout
+                    android:id="@+id/rl_recommend_play"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_common_press"
+                    android:padding="15dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recommend_music"
+                        android:textColor="@color/main_title"
+                        android:textSize="18sp"
+                        tools:ignore="RelativeOverlap" />
+                </RelativeLayout>
+
+                <com.android.wy.news.view.MusicRecyclerView
+                    android:id="@+id/rv_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
