@@ -1,6 +1,8 @@
 package com.android.wy.news.http
 
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.util.ToastUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,35 +33,35 @@ object NetworkRequest {
 
     /*---------------------------------以下是音乐相关----------------------------------*/
     private val musicService = HttpManager.mInstance.createMusic(IApiService::class.java)
-    suspend fun getMusicList(bangId: Int, pn: Int) =
-        musicService.getMusicList(bangId, pn).await()
+    suspend fun getMusicList(map: MutableMap<String, Any>) =
+        musicService.getMusicList(map).await()
 
-    suspend fun getMusicUrl(mid: String) =
-        musicService.getMusicUrl(mid).await()
+    suspend fun getMusicUrl(map: MutableMap<String, Any>) =
+        musicService.getMusicUrl(map).await()
 
-    suspend fun getMusicMv(mid: String) =
-        musicService.getMusicMv(mid).await()
+    suspend fun getMusicMv(map: MutableMap<String, Any>) =
+        musicService.getMusicUrl(map).await()
 
-    suspend fun getRecommendMusic() =
-        musicService.getRecommendMusic().await()
+    suspend fun getRecommendMusic(map: MutableMap<String, Any>) =
+        musicService.getRecommendMusic(map).await()
 
-    suspend fun getMusicByKey(key: String) =
-        musicService.getMusicByKey(key).await()
+    suspend fun getMusicByKey(map: MutableMap<String, Any>) =
+        musicService.getMusicByKey(map).await()
 
-    suspend fun getMusicLrc(musicId: String) =
-        musicService.getMusicLrc(musicId).await()
+    suspend fun getMusicLrc(map: MutableMap<String, Any>) =
+        musicService.getMusicLrc(map).await()
 
-    suspend fun getArtistMusic(artistId: String, pn: Int) =
-        musicService.getArtistMusic(artistId, pn).await()
+    suspend fun getArtistMusic(map: MutableMap<String, Any>) =
+        musicService.getArtistMusic(map).await()
 
-    suspend fun getArtistAlbum(artistId: String, pn: Int) =
-        musicService.getArtistAlbum(artistId, pn).await()
+    suspend fun getArtistAlbum(map: MutableMap<String, Any>) =
+        musicService.getArtistAlbum(map).await()
 
-    suspend fun getArtistMv(artistId: String, pn: Int) =
-        musicService.getArtistMv(artistId, pn).await()
+    suspend fun getArtistMv(map: MutableMap<String, Any>) =
+        musicService.getArtistMv(map).await()
 
-    suspend fun getAlbumInfo(albumId: String, pn: Int) =
-        musicService.getAlbumInfo(albumId, pn).await()
+    suspend fun getAlbumInfo(map: MutableMap<String, Any>) =
+        musicService.getAlbumInfo(map).await()
 
     /**
      * Retrofit网络返回处理
@@ -77,6 +79,7 @@ object NetworkRequest {
             //异常返回
             override fun onFailure(call: Call<T>, t: Throwable) {
                 it.resumeWithException(t)
+                t.message?.let { it1 -> ToastUtil.show(it1) }
                 Logger.e("onFailure=" + t.message)
             }
         })

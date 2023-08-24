@@ -24,7 +24,6 @@ object GlobalData {
         const val PRIVACY_STATUS = "privacy_status"
         const val NOTICE_STATUS = "notice_status"
         var LAST_PLAY_MUSIC_KEY = "last_play_music_key"
-        var CSRF_TOKEN_KEY = "csrf_token_key"
         var LRC_TYPE = "lrc_type"
     }
 
@@ -37,10 +36,21 @@ object GlobalData {
     val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
     val mMusicTitleList = arrayListOf<MusicTypeEntity>()
     val currentLrcData = arrayListOf<Lrc>()
-    var CSRF_TOKEN = ""
     val lrcTypeChange = MutableLiveData<Int>()
     val playUrlChange = MutableLiveData<String>()
     val indexChange = MutableLiveData<Int>()
     val doubleClickChange = MutableLiveData<Int>()
     val cityChange = MutableLiveData<String>()
+
+    /*--------------------音乐请求Header---------------------*/
+    private var headerCookie: String =
+        "_ga=GA1.2.1097867330.1688692040; _gid=GA1.2.527365140.1692754772; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1692754772,1692840272; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1692844674; _ga_ETPBRPM9ML=GS1.2.1692843852.7.1.1692844675.57.0.0; Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=Amw8eXExKca8yPtiknQbXsQwPiMxj2ty"
+    private var headerSecret: String =
+        "61d468f39ca361123093b36890c97bc2718f6d7d6f14203b932c42eb40c41c16027cf490"
+    var musicHeader: HashMap<String, String> =
+        hashMapOf("Cookie" to headerCookie, "Secret" to headerSecret)
+    val musicCommonRequestParams: Map<String, Any> = mapOf(
+        "httpsStatus" to 1, "reqId" to "18c21420-e4d6-11ed-952f-9f227639ff35", "plat" to "web_www",
+        "from" to ""
+    )
 }

@@ -167,11 +167,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (arguments != null) {
             categoryId = arguments.getInt(mKey)
         }
-        if (!TextUtils.isEmpty(GlobalData.CSRF_TOKEN)) {
-            getMusicList()
-        } else {
-            getCookie()
-        }
+        getMusicList()
         /*rvContent.setOnTouchListener { _, p1 ->
             if (p1 != null) {
                 when (p1.action) {
@@ -227,10 +223,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    private fun getCookie() {
-        mViewModel.getCookie()
-    }
-
     private fun getMusicList() {
         MusicRepository.getMusicList(categoryId, pageStart).observe(this) {
             val musicListEntity = it.getOrNull()
@@ -277,16 +269,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onNotifyDataChanged() {
-        mViewModel.musicUrl.observe(this) {
-            PlayMusicManager.playMusic(it)
-        }
-
-        mViewModel.isSuccess.observe(this) {
-            if (it) {
-                getMusicList()
-            }
-        }
-
         mViewModel.msg.observe(this) {
             ToastUtil.show(it)
             refreshLayout.setEnableLoadMore(false)

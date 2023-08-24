@@ -15,6 +15,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
@@ -46,14 +47,8 @@ interface IApiService {
     @GET("api/v1/pc-wap/rolling-word")
     fun getRollingWord(): Call<ResponseBody>
 
-    @GET("/locate/api/getLocByIp")
-    fun getCityByIp(): Call<ResponseBody>
-
     @GET("/bj/api/indexCmsNews?")
     fun getCurrentCityNewsList(@Query("city") city: String): Call<ResponseBody>
-
-    @GET("/q?c=homepage&t=wap_float&l=1&app=314EA67F&nt=4G&os=null&location=100&source=other&usergroup=2&cb=callback_1679819101384")
-    fun getAdInfo(): Call<ResponseBody>
 
     @GET("/nc/api/v1/pc-wap/search?size=20&from=wap&needPcUrl=true")
     fun getFirstSearch(@Query("query") query: String): Call<ResponseBody>
@@ -82,52 +77,61 @@ interface IApiService {
     fun update(): Call<ResponseBody>
 
     /**
-     * 下载文件
+     * 获取音乐请求Header
      */
     @Streaming
-    @GET
-    fun downloadFile(@Url fileUrl: String): ResponseBody
+    @GET("/gyadministrator/wy_news/releases/download/v1.0/musicHeader.json")
+    fun requestMusicHeader(): Call<ResponseBody>
 
     /*-------------------------------------------以下是音乐相关---------------------------------------*/
-    @GET("/api/www/bang/bang/musicList?rn=20&httpsStatus=1&reqId=18c21420-e4d6-11ed-952f-9f227639ff35")
-    fun getMusicList(@Query("bangId") bangId: Int, @Query("pn") pn: Int): Call<MusicListEntity>
+    @GET("/api/www/bang/bang/musicList")
+    fun getTestMusicList(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<ResponseBody>
 
-    @GET("/api/v1/www/music/playUrl?type=music&httpsStatus=1&reqId=1b936721-e4d7-11ed-952f-9f227639ff35")
-    fun getMusicUrl(@Query("mid") mid: String): Call<MusicUrlEntity>
 
-    @GET("/api/v1/www/music/playUrl?type=mv&httpsStatus=1&reqId=1b936721-e4d7-11ed-952f-9f227639ff35")
-    fun getMusicMv(@Query("mid") mid: String): Call<MusicUrlEntity>
+    @GET("/api/www/bang/bang/musicList")
+    fun getMusicList(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<MusicListEntity>
 
-    @GET("/newh5/singles/songinfoandlrc?httpsStatus=1&reqId=7719bb30-e4d7-11ed-84ef-3374439f9c6a")
-    fun getMusicLrc(@Query("musicId") musicId: String): Call<MusicLrcEntity>
+    @GET("/api/v1/www/music/playUrl")
+    fun getMusicUrl(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<MusicUrlEntity>
 
-    @GET("/api/www/playlist/playListInfo?pid=1082685104&pn=1&rn=20&httpsStatus=1&reqId=e49439b0-fb9d-11ed-82c5-3d80c089fb7d")
-    fun getRecommendMusic(): Call<MusicRecommendEntity>
+    @GET("/newh5/singles/songinfoandlrc")
+    fun getMusicLrc(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<MusicLrcEntity>
 
-    @GET("/api/www/search/searchMusicBykeyWord?pn=1&rn=20&httpsStatus=1&reqId=68698c70-fc59-11ed-954a-a3d1cc5fccea")
-    fun getMusicByKey(@Query("key") key: String): Call<SearchMusicEntity>
+    @GET("/api/www/playlist/playListInfo")
+    fun getRecommendMusic(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<MusicRecommendEntity>
 
-    @GET("/api/www/artist/artistMusic?rn=20&httpsStatus=1&reqId=b9776740-0bf4-11ee-ade6-61977d2fc615")
+    @GET("/api/www/search/searchMusicBykeyWord")
+    fun getMusicByKey(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<SearchMusicEntity>
+
+    @GET("/api/www/artist/artistMusic")
     fun getArtistMusic(
-        @Query("artistid") artistid: String,
-        @Query("pn") pn: Int
+        @QueryMap queryMap: MutableMap<String, Any>
     ): Call<ArtistMusicEntity>
 
-    @GET("/api/www/artist/artistAlbum?rn=20&httpsStatus=1&reqId=928ca4b0-0c03-11ee-a659-2b1d887490e2")
+    @GET("/api/www/artist/artistAlbum")
     fun getArtistAlbum(
-        @Query("artistid") artistid: String,
-        @Query("pn") pn: Int
+        @QueryMap queryMap: MutableMap<String, Any>
     ): Call<ArtistAlbumEntity>
 
-    @GET("/api/www/artist/artistMv?rn=20&httpsStatus=1&reqId=d44bd9c0-0c03-11ee-a659-2b1d887490e2")
+    @GET("/api/www/artist/artistMv")
     fun getArtistMv(
-        @Query("artistid") artistid: String,
-        @Query("pn") pn: Int
+        @QueryMap queryMap: MutableMap<String, Any>
     ): Call<ArtistMvEntity>
 
-    @GET("/api/www/album/albumInfo?rn=20&httpsStatus=1&reqId=49f442a0-0c47-11ee-ad5a-f30693997240")
+    @GET("/api/www/album/albumInfo")
     fun getAlbumInfo(
-        @Query("albumId") albumId: String,
-        @Query("pn") pn: Int
+        @QueryMap queryMap: MutableMap<String, Any>
     ): Call<ArtistAlbumInfoEntity>
 }

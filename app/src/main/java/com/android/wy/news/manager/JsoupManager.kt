@@ -4,7 +4,6 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
-import com.android.wy.news.common.SpTools
 import com.android.wy.news.entity.CityInfo
 import com.android.wy.news.entity.HotNewsEntity
 import org.jsoup.Jsoup
@@ -22,22 +21,11 @@ import java.io.IOException
  */
 object JsoupManager {
 
-    fun getWebContent(url: String): String {
-        try {
-            val document: Document? = Jsoup.connect(url).get()
-            if (document != null) {
-                return document.body().toString()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
-    }
-
     fun getSingerInfo(url: String): String {
         try {
             val document: Document? = Jsoup.connect(url)
-                .cookie("kw_token",GlobalData.CSRF_TOKEN).get()
+                .headers(GlobalData.musicHeader)
+                .get()
             if (document != null) {
                 val element = document.getElementsByClass("child_view")
                 return element.toString()
@@ -142,37 +130,5 @@ object JsoupManager {
             e.printStackTrace()
         }
         return realUrl
-    }
-
-    fun getCookie(): Boolean {
-        /* val s = SpTools.getString(Constants.CSRF_TOKEN_KEY)
-         if (s != null && s.contains("_")) {
-             val saveTime = s.substring(s.indexOf("_") + 1, s.length)
-             val l = saveTime.toLong()
-             Logger.i("saveTime:$saveTime")
-             val diff = System.currentTimeMillis() - l
-             val days = TimeUnit.MILLISECONDS.toDays(diff)
-             Logger.i("saveTime--->>>days:$days")
-             if (days < 1) {
-                 return
-             }
-         }*/
-        try {
-            val response = Jsoup.connect("http://www.kuwo.cn/playlists")
-                .execute()
-            val cookies = response.cookies()
-            if (cookies.contains("kw_token")) {
-                GlobalData.CSRF_TOKEN = cookies["kw_token"] + ""
-                SpTools.putString(
-                    GlobalData.SpKey.CSRF_TOKEN_KEY,
-                    GlobalData.CSRF_TOKEN + "_" + System.currentTimeMillis()
-                )
-            }
-            Logger.i("getCookie: $cookies")
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
-        }
     }
 }

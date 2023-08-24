@@ -2,6 +2,7 @@ package com.android.wy.news.http.repository
 
 import androidx.lifecycle.liveData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.util.ToastUtil
 import kotlin.coroutines.CoroutineContext
 
 /*     
@@ -22,9 +23,15 @@ open class BaseRepository {
             val result = try {
                 block()
             } catch (e: Exception) {
+                e.message?.let { ToastUtil.show(it) }
+                Logger.i("getData--->>>e:" + e.message)
                 Result.failure(e)
             }
-            Logger.i("getData=" + result.getOrNull())
+            val t = result.getOrNull();
+            Logger.i("getData=$t")
+            if (t == null) {
+                ToastUtil.show("解析数据失败")
+            }
             //通知数据变化
             emit(result)
         }

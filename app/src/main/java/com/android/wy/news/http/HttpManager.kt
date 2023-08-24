@@ -1,7 +1,9 @@
 package com.android.wy.news.http
 
+import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.common.GlobalData
+import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
@@ -32,18 +34,18 @@ class HttpManager {
         builder.proxy(Proxy.NO_PROXY)
     }
 
-    fun <T> getMusicApiService(url: String, clazz: Class<T>): T {
+    private fun <T> getMusicApiService(clazz: Class<T>): T {
+        val musicHeaders = CommonTools.getMusicHeaders();
         builder.addInterceptor { chain ->
             val request: Request = chain.request()
                 .newBuilder()
-                .addHeader("csrf", GlobalData.CSRF_TOKEN)
-                .addHeader("cookie", "kw_token=" + GlobalData.CSRF_TOKEN)
+                .headers(musicHeaders)
                 .build()
             chain.proceed(request)
         }
         val retrofit = Retrofit.Builder()
             .client(builder.build())
-            .baseUrl(url)
+            .baseUrl(GlobalConstant.MUSIC_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
@@ -51,6 +53,37 @@ class HttpManager {
     }
 
     fun <T> getApiService(url: String, clazz: Class<T>): T {
+        val retrofit = Retrofit.Builder()
+            .client(builder.build())
+            .baseUrl(url)
+            //.addConverterFactory(GsonConverterFactory.create())
+            //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        return retrofit.create(clazz)
+    }
+
+    fun <T> getTestApiService(url: String, clazz: Class<T>): T {
+        builder.addInterceptor { chain ->
+            val request: Request = chain.request()
+                .newBuilder()
+                //.addHeader("Accept", "application/json, text/plain, */*")
+                //.addHeader("Accept-Encoding", "gzip, deflate")
+                //.addHeader("Accept-Language", "en-US,en;q=0.9")
+                //.addHeader("Connection", "keep-alive")
+                .addHeader(
+                    "Cookie",
+                    "_ga=GA1.2.1097867330.1688692040; _gid=GA1.2.527365140.1692754772; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1692754772,1692840272; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1692844674; _ga_ETPBRPM9ML=GS1.2.1692843852.7.1.1692844675.57.0.0; Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=Amw8eXExKca8yPtiknQbXsQwPiMxj2ty"
+                )
+                //.addHeader("Host", "www.kuwo.cn")
+                //.addHeader("Referer", "http://www.kuwo.cn/rankList")
+                .addHeader(
+                    "Secret",
+                    "61d468f39ca361123093b36890c97bc2718f6d7d6f14203b932c42eb40c41c16027cf490"
+                )
+                //.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
+                .build()
+            chain.proceed(request)
+        }
         val retrofit = Retrofit.Builder()
             .client(builder.build())
             .baseUrl(url)
@@ -82,5 +115,5 @@ class HttpManager {
 
     /*------------------------------------------以下是音乐相关-------------------------------------------------------*/
     fun <T> createMusic(serviceClass: Class<T>): T =
-        getMusicApiService(GlobalConstant.MUSIC_BASE_URL, serviceClass)
+        getMusicApiService(serviceClass)
 }

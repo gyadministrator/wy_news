@@ -27,6 +27,7 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import okhttp3.Headers
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -580,5 +581,17 @@ object CommonTools {
             list.add(lrcList[linePos + 1].text)
         }
         return list
+    }
+
+    fun getMusicHeaders(): Headers {
+        val headersBuilder = Headers.Builder()
+        val musicHeader = GlobalData.musicHeader
+        if (musicHeader.isNotEmpty()) {
+            for ((k, v) in musicHeader) {
+                Logger.i("getMusicHeaders--->>>k:$k,v:$v")
+                headersBuilder.add(k, v)
+            }
+        }
+        return headersBuilder.build()
     }
 }
