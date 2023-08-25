@@ -8,12 +8,9 @@ import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
-import com.android.wy.news.dialog.LoadingDialog
-import com.android.wy.news.entity.HeaderEntity
 import com.android.wy.news.entity.LiveClassifyEntity
 import com.android.wy.news.entity.NewsClassifyEntity
 import com.android.wy.news.entity.SplashEntity
-import com.android.wy.news.entity.UpdateEntity
 import com.android.wy.news.entity.music.MusicTypeEntity
 import com.android.wy.news.http.HttpManager
 import com.android.wy.news.http.IApiService
@@ -71,13 +68,12 @@ class SplashViewModel : BaseViewModel() {
 
     private fun parseHeader(s: String?) {
         if (!TextUtils.isEmpty(s)) {
-            val dataList = JsonUtil.parseJsonToList<HeaderEntity>(s)
-            Logger.i("parseHeader--->>>dataList:" + JsonUtil.parseObjectToJson(dataList))
-            if (dataList.size > 0) {
+            val dataList = JsonUtil.parseJsonToMap(s)
+            Logger.i("parseHeader--->>>dataList:" + dataList?.let { JsonUtil.parseObjectToJson(it) })
+            if (dataList != null && dataList.size > 0) {
                 GlobalData.musicHeader.clear()
-                for (i in 0 until dataList.size) {
-                    val headerEntity = dataList[i]
-                    GlobalData.musicHeader[headerEntity.key] = headerEntity.value
+                for ((k, v) in dataList) {
+                    GlobalData.musicHeader[k] = v
                 }
             }
         }

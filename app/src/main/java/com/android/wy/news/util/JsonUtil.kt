@@ -54,9 +54,9 @@ object JsonUtil {
      * @param json json
      * @return HashMap
      */
-    fun parseJsonToMap(json: String?): HashMap<String?, Any?>? {
-        val type: Type = object : TypeToken<HashMap<String?, Any?>?>() {}.type
-        var map: HashMap<String?, Any?>? = null
+    fun parseJsonToMap(json: String?): HashMap<String, String>? {
+        val type: Type = object : TypeToken<HashMap<String, String>?>() {}.type
+        var map: HashMap<String, String>? = null
         try {
             map = gson.fromJson(json, type)
         } catch (e: Exception) {
@@ -70,7 +70,6 @@ object JsonUtil {
      * params: new TypeToken<List></List><yourbean>>(){}.getType(),
      *
      * @param json
-     * @param type  new TypeToken<List></List><yourbean>>(){}.getType()
      * @return ArrayList
      * */
     inline fun <reified T> parseJsonToList(
