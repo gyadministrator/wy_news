@@ -15,6 +15,7 @@
         android:layout_height="wrap_content" />
 
     <FrameLayout
+        android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -53,6 +54,15 @@
             app:pressedTranslationZ="6dp"
             app:rippleColor="@color/play_bar_color"
             tools:ignore="ContentDescription" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_anim"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="6dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:riv_corner_radius="4dp" />
     </FrameLayout>
 
     <com.android.wy.news.refresh.CustomRefreshFooter

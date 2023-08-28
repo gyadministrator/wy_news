@@ -35,6 +35,7 @@ import com.android.wy.news.locationselect.model.HotCity
 import com.android.wy.news.locationselect.model.LocateState
 import com.android.wy.news.locationselect.model.LocatedCity
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.notification.NotificationUtil
 import com.android.wy.news.skin.UiModeManager
 import com.android.wy.news.util.AppUtil
@@ -336,6 +337,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             //exitProcess(0)
         }
         //super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        NotificationHelper.cancelAll()
     }
 
     override fun onPause() {

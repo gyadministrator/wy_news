@@ -1,15 +1,24 @@
 package com.android.wy.news.fragment
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.graphics.Path
+import android.graphics.PathMeasure
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
+import com.android.wy.news.activity.MainActivity
 import com.android.wy.news.activity.SingerAlbumActivity
 import com.android.wy.news.activity.SingerMusicActivity
 import com.android.wy.news.activity.SingerMvActivity
@@ -168,52 +177,37 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             categoryId = arguments.getInt(mKey)
         }
         getMusicList()
-        /*rvContent.setOnTouchListener { _, p1 ->
-            if (p1 != null) {
-                when (p1.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        TaskUtil.removeUiThreadCallback(runnable)
-                        val playPosition = PlayMusicManager.getPlayPosition()
-                        if (playPosition >= 0) {
-                            floatingBtn.visibility = View.VISIBLE
-                        }
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        TaskUtil.runOnUiThread({
-                            runnable
-                        }, 3000)
-                    }
-                }
-            }
-            true
-        }*/
+        
         rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val playPosition = PlayMusicManager.getPlayPosition()
                 if (playPosition >= 0) {
                     floatingBtn.visibility = View.VISIBLE
+                    startFloatAnim()
                     TaskUtil.runOnUiThread({
-                        floatingBtn.visibility = View.GONE
+                        stopFloatAnim()
                     }, 3000)
                 }
-                /*if (!rvContent.canScrollVertically(1)) {
-                    //滑动到底部
-                    val playPosition = PlayMusicManager.getPlayPosition()
-                    if (playPosition >= 0) {
-                        floatingBtn.visibility = View.VISIBLE
-                    }
-                }
-                if (!rvContent.canScrollVertically(-1)) {
-                    //滑动到顶部
-                    floatingBtn.visibility = View.GONE
-                }*/
             }
         })
         floatingBtn.setOnClickListener {
             scrollPosition()
         }
+    }
+
+    private fun startFloatAnim() {
+        val alpha = ObjectAnimator.ofFloat(floatingBtn, "alpha", 0f, 1f)
+        alpha.duration = 1000
+        alpha.interpolator = LinearInterpolator()
+        alpha.start()
+    }
+
+    private fun stopFloatAnim() {
+        val alpha = ObjectAnimator.ofFloat(floatingBtn, "alpha", 1f, 0f)
+        alpha.duration = 1000
+        alpha.interpolator = LinearInterpolator()
+        alpha.start()
     }
 
     private fun scrollPosition() {
@@ -386,6 +380,59 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         PlayMusicManager.setClickMusicInfo(data)
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
+        startAnim(view, data.pic)
+    }
+
+    private fun startAnim(view: View, pic: String) {
+        val startA = IntArray(2)
+        view.getLocationInWindow(startA)
+        val change = FloatArray(2)
+        val ivAnim = mBinding.ivAnim
+        CommonTools.loadImage(pic, ivAnim)
+        ivAnim.visibility = View.VISIBLE
+        val parentC = IntArray(2)
+        mBinding.flContent.getLocationInWindow(parentC)
+
+        val playContainer = playBarView?.getPlayContainer()
+        val endB = IntArray(2)
+        playContainer?.getLocationInWindow(endB)
+
+        val startX = startA[0] - parentC[0]
+        val startY = startA[1] - parentC[1]
+        val toX = endB[0] - parentC[0]
+        val toY = endB[1] - parentC[1]
+        val path = Path()
+        path.moveTo(startX.toFloat(), startY.toFloat())
+        path.quadTo(
+            (startX + toX) / 2f, startY.toFloat(), toX.toFloat(),
+            toY.toFloat()
+        )
+        val pathMeasure = PathMeasure(path, false)
+        val valueAnimator = ValueAnimator.ofFloat(0f, pathMeasure.length)
+        valueAnimator.duration = 1000
+        valueAnimator.interpolator = LinearInterpolator()
+        valueAnimator.addUpdateListener { p0 ->
+            val i = p0.animatedValue as Float
+            pathMeasure.getPosTan(i, change, null)
+            ivAnim.translationX = change[0]
+            ivAnim.translationY = change[1]
+        }
+        valueAnimator.start()
+
+        valueAnimator.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(p0: Animator) {
+            }
+
+            override fun onAnimationEnd(p0: Animator) {
+                ivAnim.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(p0: Animator) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator) {
+            }
+        })
     }
 
     override fun onItemLongClick(view: View, data: MusicInfo) {

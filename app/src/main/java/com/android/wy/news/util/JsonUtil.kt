@@ -70,6 +70,7 @@ object JsonUtil {
      * params: new TypeToken<List></List><yourbean>>(){}.getType(),
      *
      * @param json
+     * @param type  new TypeToken<List></List><yourbean>>(){}.getType()
      * @return ArrayList
      * */
     inline fun <reified T> parseJsonToList(
