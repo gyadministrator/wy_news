@@ -10,8 +10,7 @@
         android:id="@+id/iv_cover"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="-5dp"
+        android:layout_marginTop="-10dp"
         android:clipChildren="false"
         android:scaleType="centerCrop"
         app:riv_corner_radius="4dp"
@@ -19,9 +18,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -35,41 +33,36 @@
             android:textColor="@color/main_title"
             android:textSize="14sp" />
 
-        <FrameLayout
+        <RelativeLayout
+            android:id="@+id/rl_play"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-            <RelativeLayout
-                android:id="@+id/rl_play"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+            <ImageView
+                android:id="@+id/iv_play"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@mipmap/music_pause"
+                app:tint="@color/main_title"
+                tools:ignore="ContentDescription" />
 
-                <ImageView
-                    android:id="@+id/iv_play"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@mipmap/music_pause"
-                    app:tint="@color/main_title"
-                    tools:ignore="ContentDescription" />
-
-                <com.android.wy.news.view.RoundProgressBar
-                    android:id="@+id/round_progress_bar"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    app:max="100"
-                    app:roundColor="@color/main_title"
-                    app:roundProgressColor="@color/text_select_color"
-                    app:roundWidth="1dp"
-                    app:style="STROKE"
-                    app:textIsDisplayable="false" />
-            </RelativeLayout>
-        </FrameLayout>
+            <com.android.wy.news.view.RoundProgressBar
+                android:id="@+id/round_progress_bar"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:max="100"
+                app:roundColor="@color/main_title"
+                app:roundProgressColor="@color/text_select_color"
+                app:roundWidth="1dp"
+                app:style="STROKE"
+                app:textIsDisplayable="false" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

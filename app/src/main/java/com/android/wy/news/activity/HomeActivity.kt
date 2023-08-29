@@ -44,7 +44,6 @@ import com.android.wy.news.util.PermissionCheckUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
-import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.HomeViewModel
 import com.gyf.immersionbar.ImmersionBar
 import me.majiajie.pagerbottomtabstrip.NavigationController
@@ -64,7 +63,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private var navigationController: NavigationController? = null
     private var materialBuilder: MaterialBuilder? = null
     private var currentSelectPosition = 0
-    private lateinit var playBarView: PlayBarView
     private lateinit var tvCity: TextView
     private var firstTime: Long = 0
     private lateinit var marqueeTextView: MarqueeTextView
@@ -99,7 +97,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlSearchEdit = mBinding.rlSearchEdit
         rlSearch = mBinding.rlSearch
         rlIdentify = mBinding.rlIdentify
-        playBarView = mBinding.playBarView
     }
 
     private fun newItem(drawable: Int, checkedDrawable: Int, text: String): NormalItemView {
@@ -357,10 +354,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlSearch.visibility = View.VISIBLE
     }
 
-    fun getPlayBarView(): PlayBarView {
-        return playBarView
-    }
-
     fun getSelectPosition(): Int {
         return currentSelectPosition
     }
@@ -398,9 +391,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         if (index == 0) {
             setMessageNum(0, 0)
         }
-        if (index != 3) {
-            playBarView.visibility = View.GONE
-        } else {
+        if (index == 3) {
             setMessagePoint(3, false)
         }
     }

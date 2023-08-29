@@ -56,7 +56,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@mipmap/setting"
-                    app:tint="@color/main_title"
+                    app:tint="@color/select_indicator_color"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
         </RelativeLayout>
@@ -107,7 +107,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@mipmap/local"
-                            app:tint="@color/main_title"
+                            app:tint="@color/select_indicator_color"
                             tools:ignore="ContentDescription" />
 
                         <TextView
@@ -136,7 +136,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@mipmap/download"
-                            app:tint="@color/main_title"
+                            app:tint="@color/select_indicator_color"
                             tools:ignore="ContentDescription" />
 
                         <TextView
@@ -165,7 +165,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@mipmap/record"
-                            app:tint="@color/main_title"
+                            app:tint="@color/select_indicator_color"
                             tools:ignore="ContentDescription" />
 
                         <TextView
@@ -194,7 +194,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:src="@mipmap/live"
-                            app:tint="@color/main_title"
+                            app:tint="@color/select_indicator_color"
                             tools:ignore="ContentDescription" />
 
                         <TextView

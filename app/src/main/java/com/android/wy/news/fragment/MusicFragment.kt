@@ -1,6 +1,7 @@
 package com.android.wy.news.fragment
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -9,16 +10,12 @@ import android.graphics.PathMeasure
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
-import com.android.wy.news.activity.HomeActivity
-import com.android.wy.news.activity.MainActivity
 import com.android.wy.news.activity.SingerAlbumActivity
 import com.android.wy.news.activity.SingerMusicActivity
 import com.android.wy.news.activity.SingerMvActivity
@@ -50,6 +47,7 @@ import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
+import com.bumptech.glide.Glide
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -79,7 +77,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var isRefresh = false
     private var isLoading = false
     private lateinit var refreshLayout: SmartRefreshLayout
-    private var playBarView: PlayBarView? = null
+    private lateinit var playBarView: PlayBarView
     private var currentMusicInfo: MusicInfo? = null
     private var mediaHelper: MediaPlayerHelper? = null
     private lateinit var floatingBtn: FloatingActionButton
@@ -96,6 +94,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initView() {
+        playBarView = mBinding.playBarView
         floatingBtn = mBinding.floatingBtn
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
@@ -115,13 +114,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         musicAdapter = rvContent.getMusicAdapter()
 
         initPlayBar()
-        playBarView?.let {
-            musicAdapter?.let { it1 ->
-                PlayMusicManager.initMusicInfo(
-                    mActivity, rvContent,
-                    it, this, it1
-                )
-            }
+        musicAdapter?.let { it1 ->
+            PlayMusicManager.initMusicInfo(
+                mActivity, rvContent,
+                playBarView, this, it1
+            )
         }
         PlayMusicManager.getLrc()
     }
@@ -131,16 +128,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         this.currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
         if (this.currentMusicInfo != null) {
             showPlayBar()
-        } else {
-            hidePlayBar()
-        }
-    }
-
-    private fun hidePlayBar() {
-        if (mActivity is HomeActivity) {
-            val homeActivity = mActivity as HomeActivity
-            playBarView = homeActivity.getPlayBarView()
-            playBarView?.visibility = View.GONE
         }
     }
 
@@ -158,12 +145,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             if (GlobalData.currentLrcData.size == 0) {
                 PlayMusicManager.getLrc()
             }
-            playBarView?.updateProgress(o.time)
+            playBarView.updateProgress(o.time)
             LrcDesktopManager.showDesktopLrc(mActivity, o.time.toLong())
             val position =
                 CommonTools.lrcTime2Position(GlobalData.currentLrcData, o.time.toLong())
             val lrc = GlobalData.currentLrcData[position]
-            playBarView?.setTitle(lrc.text)
+            playBarView.setTitle(lrc.text)
         } else if (o is MusicUrlEvent) {
             PlayMusicManager.playMusic(o.url)
         }
@@ -177,16 +164,16 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             categoryId = arguments.getInt(mKey)
         }
         getMusicList()
-        
+
         rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val playPosition = PlayMusicManager.getPlayPosition()
                 if (playPosition >= 0) {
                     floatingBtn.visibility = View.VISIBLE
-                    startFloatAnim()
+                    startFloatAnim(0f, 1f)
                     TaskUtil.runOnUiThread({
-                        stopFloatAnim()
+                        startFloatAnim(1f, 0f)
                     }, 3000)
                 }
             }
@@ -196,15 +183,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
     }
 
-    private fun startFloatAnim() {
-        val alpha = ObjectAnimator.ofFloat(floatingBtn, "alpha", 0f, 1f)
-        alpha.duration = 1000
-        alpha.interpolator = LinearInterpolator()
-        alpha.start()
-    }
-
-    private fun stopFloatAnim() {
-        val alpha = ObjectAnimator.ofFloat(floatingBtn, "alpha", 1f, 0f)
+    private fun startFloatAnim(start: Float, end: Float) {
+        val alpha = ObjectAnimator.ofFloat(floatingBtn, "alpha", start, end)
         alpha.duration = 1000
         alpha.interpolator = LinearInterpolator()
         alpha.start()
@@ -281,7 +261,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 if (!EventBus.getDefault().isRegistered(this)) {
                     EventBus.getDefault().register(this)
                 }
-                initPlayBar()
+                //initPlayBar()
             }
         }
     }
@@ -358,22 +338,52 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (!TextUtils.isEmpty(album)) {
             stringBuilder.append("-$album")
         }
-        if (mActivity is HomeActivity) {
-            val homeActivity = mActivity as HomeActivity
-            playBarView = homeActivity.getPlayBarView()
-            val selectPosition = homeActivity.getSelectPosition()
-            if (selectPosition != 3) return
-            playBarView?.visibility = View.VISIBLE
-            currentMusicInfo?.pic?.let {
-                currentMusicInfo?.duration?.let { it1 ->
-                    playBarView?.setCover(it)?.setTitle(stringBuilder.toString())
-                        ?.setPosition(PlayMusicManager.getPlayPosition())
-                        ?.setDuration(duration = it1 * 1000)
-                        ?.showPlayContainer(true)
-                        ?.addListener(this)
-                }
+        playBarView.visibility = View.VISIBLE
+        currentMusicInfo?.pic?.let {
+            currentMusicInfo?.duration?.let { it1 ->
+                playBarView.setCover(it).setTitle(stringBuilder.toString())
+                    .setPosition(PlayMusicManager.getPlayPosition())
+                    .setDuration(duration = it1 * 1000)
+                    .showPlayContainer(true)
+                    .addListener(this)
             }
         }
+
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 1000
+        animatorSet.interpolator = LinearInterpolator()
+        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 0f, 1f)
+        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
+        animatorSet.playTogether(alpha, translationY)
+        animatorSet.start()
+    }
+
+    private fun hidePlayBar() {
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 1000
+        animatorSet.interpolator = LinearInterpolator()
+        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 1f, 0f)
+        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
+        animatorSet.playTogether(alpha, translationY)
+        animatorSet.start()
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(p0: Animator) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator) {
+                playBarView.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(p0: Animator) {
+
+            }
+
+            override fun onAnimationRepeat(p0: Animator) {
+
+            }
+
+        })
     }
 
     override fun onItemClick(view: View, data: MusicInfo) {
@@ -393,9 +403,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         val parentC = IntArray(2)
         mBinding.flContent.getLocationInWindow(parentC)
 
-        val playContainer = playBarView?.getPlayContainer()
+        val playContainer = playBarView.getPlayContainer()
         val endB = IntArray(2)
-        playContainer?.getLocationInWindow(endB)
+        playContainer.getLocationInWindow(endB)
 
         val startX = startA[0] - parentC[0]
         val startY = startA[1] - parentC[1]
