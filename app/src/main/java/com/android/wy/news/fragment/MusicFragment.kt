@@ -261,7 +261,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 if (!EventBus.getDefault().isRegistered(this)) {
                     EventBus.getDefault().register(this)
                 }
-                //initPlayBar()
+                initData()
             }
         }
     }
