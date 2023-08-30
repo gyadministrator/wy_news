@@ -89,7 +89,7 @@
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/download"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
@@ -105,7 +105,7 @@
                 android:layout_height="25dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/singer"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
@@ -121,7 +121,7 @@
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/ring"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
@@ -137,7 +137,7 @@
                 android:layout_height="25dp"
                 android:layout_centerInParent="true"
                 android:src="@mipmap/album"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
     </LinearLayout>
@@ -194,7 +194,7 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@mipmap/state_repeat"
-            app:tint="@color/main_title"
+            app:tint="@color/select_indicator_color"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -209,7 +209,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@mipmap/music_pre"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
 
             <FrameLayout
@@ -230,7 +230,7 @@
                         android:layout_height="20dp"
                         android:layout_centerInParent="true"
                         android:src="@mipmap/music_pause"
-                        app:tint="@color/main_title"
+                        app:tint="@color/select_indicator_color"
                         tools:ignore="ContentDescription" />
 
                     <com.android.wy.news.view.RoundProgressBar
@@ -241,8 +241,8 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         app:max="100"
-                        app:roundColor="@color/main_title"
-                        app:roundProgressColor="@color/text_select_color"
+                        app:roundColor="@color/select_indicator_color"
+                        app:roundProgressColor="@color/desktop_lrc_color"
                         app:roundWidth="1dp"
                         app:style="STROKE"
                         app:textIsDisplayable="false" />
@@ -254,7 +254,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@mipmap/music_next"
-                app:tint="@color/main_title"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
@@ -264,7 +264,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:src="@mipmap/music_list"
-            app:tint="@color/main_title"
+            app:tint="@color/select_indicator_color"
             tools:ignore="ContentDescription" />
     </LinearLayout>
 </LinearLayout>

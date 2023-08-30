@@ -149,7 +149,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
                 "我的",
                 selectColor
             )
-            ?.setDefaultColor(AppUtil.getColor(this, R.color.second_title)) //未选中状态的颜色
+            ?.setDefaultColor(AppUtil.getColor(this, R.color.main_title)) //未选中状态的颜色
             ?.enableAnimateLayoutChanges()
         navigationController = materialBuilder?.build()
 

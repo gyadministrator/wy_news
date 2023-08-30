@@ -112,6 +112,7 @@
                 android:gravity="center_vertical"
                 android:src="@mipmap/check"
                 android:visibility="gone"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>
@@ -148,6 +149,7 @@
                 android:gravity="center_vertical"
                 android:src="@mipmap/check"
                 android:visibility="gone"
+                app:tint="@color/select_indicator_color"
                 tools:ignore="ContentDescription" />
 
         </RelativeLayout>

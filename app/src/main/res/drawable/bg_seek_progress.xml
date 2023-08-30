@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/bg_seek_color" />
+            <solid android:color="@color/second_title" />
             <size android:height="1dp" />
             <corners android:radius="1.5dp" />
         </shape>

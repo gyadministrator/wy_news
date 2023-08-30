@@ -46,6 +46,7 @@ class HttpManager {
         val retrofit = Retrofit.Builder()
             .client(builder.build())
             .baseUrl(GlobalConstant.MUSIC_BASE_URL)
+            .addConverterFactory(NullEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()

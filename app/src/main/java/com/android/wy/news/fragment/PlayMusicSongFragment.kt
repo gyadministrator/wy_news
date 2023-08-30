@@ -386,9 +386,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun play() {
-        if (TextUtils.isEmpty(currentPlayUrl)) {
-            LoadingDialog.show(mActivity as AppCompatActivity, "请稍等...")
-        }
         val intent = Intent(context, MusicPlayService::class.java)
         intent.action = MusicNotifyService.MUSIC_STATE_ACTION
         context?.startService(intent)

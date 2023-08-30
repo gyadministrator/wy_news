@@ -38,7 +38,7 @@
             android:layout_height="60dp"
             android:gravity="center"
             android:text="@string/cp_cancel"
-            android:textColor="@color/text_select_color"
+            android:textColor="@color/desktop_lrc_color"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>

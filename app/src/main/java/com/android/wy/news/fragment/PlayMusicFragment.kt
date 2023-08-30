@@ -93,10 +93,10 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
             }
         }
         initTab()
-        ivBg?.let {
+        /*ivBg?.let {
             Glide.with(this).load(this.currentMusicInfo?.pic)
                 .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
-        }
+        }*/
     }
 
     override fun initEvent() {

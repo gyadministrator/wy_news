@@ -19,7 +19,8 @@
     <color name="default_status_bar_color">#111111</color>
     <color name="status_bar_color">#111111</color>
     <color name="text_normal_color">@color/main_title</color>
-    <color name="text_select_color">#FC5E5D</color>
+    <!-- <color name="text_select_color">#FC5E5D</color>-->
+    <color name="text_select_color">@color/select_indicator_color</color>
     <color name="tint_color">#73000000</color>
     <color name="load_color">#73000000</color>
     <color name="title_bar_color">#111111</color>

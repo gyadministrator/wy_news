@@ -201,7 +201,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         MusicRepository.getMusicList(categoryId, pageStart).observe(this) {
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
-            val musicList = musicListData?.musicList
+            var musicList = musicListData?.musicList
+            musicList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -211,17 +212,15 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 refreshLayout.finishLoadMore()
             }
 
-            if (musicList != null) {
-                if (musicList.size == 0) {
-                    if (isLoading) {
-                        refreshLayout.setNoMoreData(true)
-                    }
+            if (musicList.size == 0) {
+                if (isLoading) {
+                    refreshLayout.setNoMoreData(true)
+                }
+            } else {
+                if (isRefresh) {
+                    rvContent.refreshData(musicList)
                 } else {
-                    if (isRefresh) {
-                        rvContent.refreshData(musicList)
-                    } else {
-                        rvContent.loadData(musicList)
-                    }
+                    rvContent.loadData(musicList)
                 }
             }
 
@@ -391,6 +390,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
         startAnim(view, data.pic)
+        playBarView.setCover(data.pic)
     }
 
     private fun startAnim(view: View, pic: String) {

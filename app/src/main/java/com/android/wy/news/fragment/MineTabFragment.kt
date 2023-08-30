@@ -34,6 +34,7 @@ import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.viewmodel.MineTabViewModel
+import org.greenrobot.eventbus.EventBus
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>(),
     IMusicItemChangeListener, BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
@@ -88,7 +89,8 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
             if (!TextUtils.isEmpty(name)) {
                 tvTitle.text = name
             }
-            rvContent.refreshData(data.musicList)
+            val musicList = CommonTools.filterMusicList(data.musicList)
+            rvContent.refreshData(musicList)
         }
     }
 
@@ -155,7 +157,11 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     }
 
     override fun onNotifyDataChanged() {
-
+        GlobalData.indexChange.observe(this) {
+            if (it == 4) {
+                showRecentPlay()
+            }
+        }
     }
 
     override fun onItemClick(view: View, data: MusicInfo) {

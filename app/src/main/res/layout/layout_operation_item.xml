@@ -16,7 +16,7 @@
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
-        app:tint="@color/main_title" />
+        app:tint="@color/select_indicator_color" />
 
     <TextView
         android:id="@+id/tv_title"

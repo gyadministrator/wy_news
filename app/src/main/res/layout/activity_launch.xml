@@ -11,6 +11,7 @@
         android:gravity="center"
         android:text="@string/news_tip"
         android:textSize="20sp"
+        android:textColor="@color/select_indicator_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,8 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginTop="20dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,8 +41,7 @@
             android:layout_marginStart="6dp"
             android:layout_toEndOf="@id/iv_icon"
             android:text="@string/app_name"
-            android:textColor="@color/main_title"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:textColor="@color/select_indicator_color"
+            android:textSize="22sp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

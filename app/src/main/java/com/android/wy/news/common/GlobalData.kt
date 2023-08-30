@@ -41,6 +41,8 @@ object GlobalData {
     val indexChange = MutableLiveData<Int>()
     val doubleClickChange = MutableLiveData<Int>()
     val cityChange = MutableLiveData<String>()
+    const val PAGE_SIZE = 20
+    const val RESPONSE_SUCCESS_CODE = 200
 
     /*--------------------音乐请求Header---------------------*/
     private var headerCookie: String =
@@ -48,9 +50,15 @@ object GlobalData {
     private var headerSecret: String =
         "61d468f39ca361123093b36890c97bc2718f6d7d6f14203b932c42eb40c41c16027cf490"
     var musicHeader: HashMap<String, String> =
-        hashMapOf("Cookie" to headerCookie, "Secret" to headerSecret)
-    val musicCommonRequestParams: Map<String, Any> = mapOf(
-        "httpsStatus" to 1, "reqId" to "18c21420-e4d6-11ed-952f-9f227639ff35", "plat" to "web_www",
-        "from" to ""
-    )
+        hashMapOf(
+            "Cookie" to headerCookie,
+            "Secret" to headerSecret
+        )
+    val musicCommonRequestParams: Map<String, Any> =
+        mapOf(
+            "httpsStatus" to 1,
+            "reqId" to "18c21420-e4d6-11ed-952f-9f227639ff35",
+            "plat" to "web_www",
+            "from" to ""
+        )
 }
