@@ -36,17 +36,18 @@ open class CustomRecyclerView : RecyclerView {
     }
 
     private fun initListener() {
-        //addOnScrollListener(LoadScrollListener(mContext))
+        addOnScrollListener(LoadScrollListener(mContext))
     }
 
     private class LoadScrollListener(var context: Context?) : OnScrollListener() {
+
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             when (newState) {
                 SCROLL_STATE_IDLE ->
                     try {
                         //当屏幕停止滚动，加载图片
-                        if (context != null) Glide.with(context!!).resumeRequests()
+                        context?.let { Glide.with(it).resumeRequests() }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -54,7 +55,7 @@ open class CustomRecyclerView : RecyclerView {
                 SCROLL_STATE_DRAGGING ->
                     try {
                         //当屏幕滚动且用户使用的触碰或手指还在屏幕上，停止加载图片
-                        if (context != null) Glide.with(context!!).pauseRequests()
+                        context?.let { Glide.with(it).pauseRequests() }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -62,7 +63,7 @@ open class CustomRecyclerView : RecyclerView {
                 SCROLL_STATE_SETTLING ->
                     try {
                         //由于用户的操作，屏幕产生惯性滑动，停止加载图片
-                        if (context != null) Glide.with(context!!).pauseRequests()
+                        context?.let { Glide.with(it).pauseRequests() }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

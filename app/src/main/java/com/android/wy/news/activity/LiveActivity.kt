@@ -3,22 +3,19 @@ package com.android.wy.news.activity
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.android.tablib.adapter.FragmentPageAdapter
-import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.ActivityLiveBinding
 import com.android.wy.news.fragment.LiveFragment
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.view.CustomLoadingView
+import com.android.wy.news.view.TabViewPager
 import com.android.wy.news.viewmodel.LiveTabViewModel
 
 @Route(path = RouteManager.PATH_ACTIVITY_LIVE)
-class LiveActivity : BaseActivity<ActivityLiveBinding,LiveTabViewModel>() {
-    private lateinit var tabLayout: CustomTabLayout
-    private lateinit var viewPager: ViewPager
+class LiveActivity : BaseActivity<ActivityLiveBinding, LiveTabViewModel>() {
+    private lateinit var tabViewPager: TabViewPager
     private lateinit var llContent: LinearLayout
     private lateinit var loadingView: CustomLoadingView
 
@@ -39,8 +36,7 @@ class LiveActivity : BaseActivity<ActivityLiveBinding,LiveTabViewModel>() {
     }
 
     override fun initView() {
-        tabLayout = mBinding.tabLayout
-        viewPager = mBinding.viewPager
+        tabViewPager = mBinding.tabViewPager
         llContent = mBinding.llContent
         loadingView = mBinding.loadingView
     }
@@ -59,13 +55,7 @@ class LiveActivity : BaseActivity<ActivityLiveBinding,LiveTabViewModel>() {
                     fragments.add(LiveFragment.newInstance(titleEntity.id))
                 }
             }
-            viewPager.offscreenPageLimit = mTitles.size
-            viewPager.adapter =
-                FragmentPageAdapter(supportFragmentManager, fragments, mTitles.toTypedArray())
-            tabLayout.setupWithViewPager(viewPager)
-            tabLayout.initLayout()
-            viewPager.isSaveEnabled = false
-            tabLayout.setSelectedTabIndicatorHeight(0)
+            tabViewPager.initData(supportFragmentManager, fragments, mTitles)
         }
     }
 
@@ -78,7 +68,7 @@ class LiveActivity : BaseActivity<ActivityLiveBinding,LiveTabViewModel>() {
     }
 
     override fun getViewModel(): LiveTabViewModel {
-        return CommonTools.getViewModel(this,LiveTabViewModel::class.java)
+        return CommonTools.getViewModel(this, LiveTabViewModel::class.java)
     }
 
     override fun onClear() {

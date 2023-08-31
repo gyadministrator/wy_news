@@ -63,8 +63,7 @@
                     android:layout_alignParentBottom="true"
                     android:text="@string/news_tip"
                     android:textColor="@color/select_indicator_color"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
 

@@ -8,20 +8,19 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabMusicBinding
 import com.android.wy.news.manager.PlayMusicManager
+import com.android.wy.news.view.TabViewPager
 import com.android.wy.news.viewmodel.MusicTabViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel>() {
-    private lateinit var tabLayout: CustomTabLayout
-    private lateinit var viewPager: ViewPager
+    private lateinit var tabViewPager: TabViewPager
 
     companion object {
         fun newInstance() = MusicTabFragment()
     }
 
     override fun initView() {
-        tabLayout = mBinding.tabLayout
-        viewPager = mBinding.viewPager
+        tabViewPager = mBinding.tabViewPager
     }
 
     override fun initData() {
@@ -36,13 +35,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
                 val fragment = MusicFragment.newInstance(id)
                 fragments.add(fragment)
             }
-            viewPager.offscreenPageLimit = mTitles.size
-            viewPager.adapter =
-                FragmentPageAdapter(childFragmentManager, fragments, mTitles.toTypedArray())
-            tabLayout.setupWithViewPager(viewPager)
-            tabLayout.initLayout()
-            viewPager.isSaveEnabled = false
-            tabLayout.setSelectedTabIndicatorHeight(0)
+            tabViewPager.initData(childFragmentManager, fragments, mTitles)
         }
     }
 

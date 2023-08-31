@@ -30,7 +30,7 @@ open class BaseRepository {
             val t = result.getOrNull();
             Logger.i("getData=$t")
             if (t == null) {
-                ToastUtil.show("解析数据失败,请稍后重试")
+                ToastUtil.show("获取数据失败,请稍后重试")
             }
             //通知数据变化
             emit(result)

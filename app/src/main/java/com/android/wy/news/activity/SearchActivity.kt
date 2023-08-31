@@ -60,6 +60,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     private lateinit var searchAdapter: SearchAdapter
     private var searchHistoryRepository: SearchHistoryRepository? = null
     private var historyList: ArrayList<SearchHistoryEntity>? = null
+    private var isSearch = false
 
     companion object {
         private const val QUERY = "news_query"
@@ -293,6 +294,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
     override fun onNotifyDataChanged() {
         mViewModel.dataList.observe(this) {
             if (it != null) {
+                isSearch = true
                 refreshLayout.visibility = View.VISIBLE
                 scrollView.visibility = View.GONE
                 CommonTools.closeKeyboard(this, etSearch)
@@ -413,9 +415,22 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>(), O
         refreshLayout.visibility = View.GONE
         scrollView.visibility = View.VISIBLE
         llContent.visibility = View.VISIBLE
+        isSearch = false
+        TaskUtil.runOnThread {
+            getHistoryList()
+        }
     }
 
     override fun onItemLongClickListener(view: View, data: SearchResult) {
 
+    }
+
+    @Deprecated("Deprecated in Java", ReplaceWith("super.onBackPressed()"))
+    override fun onBackPressed() {
+        if (isSearch) {
+            onEditTextClear()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

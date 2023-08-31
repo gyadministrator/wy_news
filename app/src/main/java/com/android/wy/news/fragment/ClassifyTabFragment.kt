@@ -2,25 +2,21 @@ package com.android.wy.news.fragment
 
 import android.text.TextUtils
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
-import com.android.tablib.adapter.FragmentPageAdapter
-import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabClassifyBinding
+import com.android.wy.news.view.TabViewPager
 import com.android.wy.news.viewmodel.ClassifyTabViewModel
 
 class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTabViewModel>() {
-    private lateinit var tabLayout: CustomTabLayout
-    private lateinit var viewPager: ViewPager
+    private lateinit var tabViewPager: TabViewPager
 
     companion object {
         fun newInstance() = ClassifyTabFragment()
     }
 
     override fun initView() {
-        tabLayout = mBinding.tabLayout
-        viewPager = mBinding.viewPager
+        tabViewPager = mBinding.tabViewPager
     }
 
     override fun initData() {
@@ -37,13 +33,7 @@ class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTab
                     fragments.add(fragment)
                 }
             }
-            viewPager.offscreenPageLimit = mTitles.size
-            viewPager.adapter =
-                FragmentPageAdapter(childFragmentManager, fragments, mTitles.toTypedArray())
-            tabLayout.setupWithViewPager(viewPager)
-            tabLayout.initLayout()
-            viewPager.isSaveEnabled = false
-            tabLayout.setSelectedTabIndicatorHeight(0)
+            tabViewPager.initData(childFragmentManager, fragments, mTitles)
         }
     }
 

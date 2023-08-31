@@ -14,6 +14,12 @@ abstract class BaseNewsAdapter<V>(
     private var currentPage = 0
     protected var mDataList = ArrayList<V>()
 
+    /*init {
+        //当数据有唯一ID时，设置为true来提高RecyclerView的性能，
+        //这样数据变化时，RecyclerView可以更准确判断数据项的变化，避免重复绑定数据
+        setHasStableIds(true)
+    }*/
+
     abstract fun onViewHolderCreate(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
 
     abstract fun onBindData(holder: RecyclerView.ViewHolder, position: Int, data: V)

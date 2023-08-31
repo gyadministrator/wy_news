@@ -64,6 +64,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private var materialBuilder: MaterialBuilder? = null
     private var currentSelectPosition = 0
     private lateinit var tvCity: TextView
+    private lateinit var llCity: LinearLayout
     private var firstTime: Long = 0
     private lateinit var marqueeTextView: MarqueeTextView
     private lateinit var rlSearchEdit: RelativeLayout
@@ -93,6 +94,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         viewPager = mBinding.viewPager
         pageNavigationView = mBinding.pageNavigationView
         tvCity = mBinding.tvCity
+        llCity = mBinding.llCity
         marqueeTextView = mBinding.marqueeTextView
         rlSearchEdit = mBinding.rlSearchEdit
         rlSearch = mBinding.rlSearch
@@ -193,7 +195,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlSearchEdit.setOnClickListener {
             SearchActivity.startSearch(this, marqueeTextView.getShowText())
         }
-        tvCity.setOnClickListener {
+        llCity.setOnClickListener {
             goLocationPage()
         }
         jumpUrl()
