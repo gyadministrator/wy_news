@@ -294,7 +294,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
 
     private fun start() {
-        val titleStr = "新闻早报新版本"
+        val titleStr = "每日资讯新版本"
         val contentStr = "正在下载中，请耐心等待"
         //初始化版本控制
         DownloadController.download(this, downloadAppUrl, titleStr, contentStr)

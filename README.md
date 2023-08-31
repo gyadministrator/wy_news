@@ -1,6 +1,6 @@
 # wy_news 1984629668@qq.com
 
-新闻早报(Kotlin+retrofit+mvvm+compose)
+每日资讯(Kotlin+retrofit+mvvm+compose)
 
 [下载app体验](https://github.com/gyadministrator/wy_news/releases/download/v1.0/wy_news_normalRelease_v1.0_product_20230629_2058.apk)
 
