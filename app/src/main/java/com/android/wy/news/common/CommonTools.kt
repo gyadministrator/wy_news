@@ -4,6 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.TextUtils
@@ -33,7 +41,6 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /*
@@ -593,5 +600,43 @@ object CommonTools {
             }
         }
         return headersBuilder.build()
+    }
+
+    private fun addGradient(
+        originalBitmap: Bitmap,
+        colors: IntArray
+    ): Bitmap { //给originalBitmap着渐变色
+        var colorArr = colors
+        if (colors.isEmpty()) { //默认色处理
+            colorArr = intArrayOf(Color.parseColor("#ff9900"), Color.parseColor("#ff9900"))
+        } else if (colors.size == 1) { //单色处理
+            val newColor = intArrayOf(colors[0], colors[0])
+            colorArr = newColor
+        }
+        val width = originalBitmap.width
+        val height = originalBitmap.height
+        val canvas = Canvas(originalBitmap) //Canvas中Bitmap是用来保存像素，相当于画纸
+        val paint = Paint()
+        val shader = LinearGradient(
+            0f,
+            0f,
+            width.toFloat(),
+            height.toFloat(),
+            colorArr,
+            null,
+            Shader.TileMode.CLAMP
+        ) //shader:着色器，线性着色器设置渐变从左上坐标到右下坐标
+        paint.shader = shader //设置着色器
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) //设置图像混合模式
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+        return originalBitmap
+    }
+
+    fun getGradientBitmap(context: Context, drawableId: Int, colors: IntArray): Bitmap {
+        //android不允许直接修改res里面的图片，所以要用copy方法
+        val bitmap = BitmapFactory.decodeResource(context.resources, drawableId)
+            .copy(Bitmap.Config.ARGB_8888, true)
+        addGradient(bitmap, colors)
+        return bitmap
     }
 }

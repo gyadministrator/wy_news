@@ -164,7 +164,6 @@ class SingerMusicActivity : BaseActivity<ActivitySingerMusicBinding, SingerMusic
     }
 
     override fun onItemClickListener(view: View, data: MusicInfo) {
-        PlayMusicManager.setClickMusicInfo(data)
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
     }

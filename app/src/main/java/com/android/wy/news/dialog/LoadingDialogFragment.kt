@@ -70,6 +70,6 @@ class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     }
 
     override fun isTouchDismiss(): Boolean {
-        return false
+        return true
     }
 }

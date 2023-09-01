@@ -7,21 +7,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import com.android.wy.news.R
 import com.android.wy.news.activity.SettingActivity
-import com.android.wy.news.activity.SingerAlbumActivity
-import com.android.wy.news.activity.SingerMusicActivity
-import com.android.wy.news.activity.SingerMvActivity
-import com.android.wy.news.activity.WebFragmentActivity
-import com.android.wy.news.adapter.BaseNewsAdapter
-import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabMineBinding
-import com.android.wy.news.dialog.CommonOperationDialog
-import com.android.wy.news.entity.OperationItemEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.http.repository.MusicRepository
@@ -29,15 +19,13 @@ import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.sql.RecordMusicRepository
-import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.viewmodel.MineTabViewModel
-import org.greenrobot.eventbus.EventBus
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>(),
-    IMusicItemChangeListener, BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
+    IMusicItemChangeListener {
     private lateinit var llSetting: LinearLayout
     private lateinit var llLive: LinearLayout
     private lateinit var llLocal: LinearLayout
@@ -165,7 +153,6 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     }
 
     override fun onItemClick(view: View, data: MusicInfo) {
-        PlayMusicManager.setClickMusicInfo(data)
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
         rvContent.updatePosition(i)
@@ -173,59 +160,5 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     }
 
     override fun onItemLongClick(view: View, data: MusicInfo) {
-        PlayMusicManager.setLongClickMusicInfo(data)
-        val stringBuilder = StringBuilder()
-        val album = data.name
-        val artist = data.artist
-        stringBuilder.append(artist)
-        if (!TextUtils.isEmpty(album)) {
-            stringBuilder.append("-$album")
-        }
-        val activity = mActivity as AppCompatActivity
-        val list = arrayListOf(
-            OperationItemEntity(R.mipmap.download, AppUtil.getString(App.app, R.string.download)),
-            OperationItemEntity(R.mipmap.singer, AppUtil.getString(App.app, R.string.singer)),
-            OperationItemEntity(R.mipmap.album, AppUtil.getString(App.app, R.string.album)),
-            OperationItemEntity(R.mipmap.state_one, AppUtil.getString(App.app, R.string.single)),
-            OperationItemEntity(R.mipmap.video, AppUtil.getString(App.app, R.string.mv)),
-        )
-        CommonOperationDialog.show(activity, stringBuilder.toString(), list, this)
-    }
-
-    override fun onItemClickListener(view: View, data: OperationItemEntity) {
-        val tag = view.tag
-        val musicInfo = PlayMusicManager.getDownloadMusicInfo()
-        val artistId = musicInfo?.artistid
-        if (tag is Int) {
-            when (tag) {
-                0 -> {
-                    musicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
-                }
-
-                1 -> {
-                    WebFragmentActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                2 -> {
-                    SingerAlbumActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                3 -> {
-                    SingerMusicActivity.startActivity(mActivity, artistId.toString(), 0)
-                }
-
-                4 -> {
-                    SingerMvActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                else -> {
-
-                }
-            }
-        }
-    }
-
-    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
-
     }
 }

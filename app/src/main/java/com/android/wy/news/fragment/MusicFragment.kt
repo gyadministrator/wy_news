@@ -1,7 +1,6 @@
 package com.android.wy.news.fragment
 
 import android.animation.Animator
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -15,21 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
-import com.android.wy.news.R
-import com.android.wy.news.activity.SingerAlbumActivity
-import com.android.wy.news.activity.SingerMusicActivity
-import com.android.wy.news.activity.SingerMvActivity
-import com.android.wy.news.activity.WebFragmentActivity
-import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.MusicAdapter
-import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
-import com.android.wy.news.dialog.CommonOperationDialog
-import com.android.wy.news.entity.OperationItemEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicListEvent
@@ -40,14 +30,12 @@ import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicState
-import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
-import com.bumptech.glide.Glide
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
@@ -67,8 +55,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
     OnLoadMoreListener,
-    PlayBarView.OnPlayBarListener, IMusicItemChangeListener,
-    BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
+    PlayBarView.OnPlayBarListener, IMusicItemChangeListener {
     private var pageStart = 1
     private var categoryId: Int = 0
     private lateinit var rvContent: MusicRecyclerView
@@ -94,7 +81,10 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initView() {
-        playBarView = mBinding.playBarView
+        val parentFragment = parentFragment
+        if (parentFragment is MusicTabFragment) {
+            playBarView = parentFragment.getPlayBarView()
+        }
         floatingBtn = mBinding.floatingBtn
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
@@ -282,7 +272,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onClickPlay(position: Int) {
-        this.currentMusicInfo?.let { PlayMusicManager.setClickMusicInfo(it) }
         Logger.i("onClickPlay--->>>position:$position")
         if (mediaHelper != null) {
             if (mediaHelper!!.isPlaying()) {
@@ -348,45 +337,15 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
             }
         }
 
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 1000
-        animatorSet.interpolator = LinearInterpolator()
-        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 0f, 1f)
-        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
-        animatorSet.playTogether(alpha, translationY)
-        animatorSet.start()
-    }
-
-    private fun hidePlayBar() {
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 1000
-        animatorSet.interpolator = LinearInterpolator()
-        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 1f, 0f)
-        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
-        animatorSet.playTogether(alpha, translationY)
-        animatorSet.start()
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(p0: Animator) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animator) {
-                playBarView.visibility = View.GONE
-            }
-
-            override fun onAnimationCancel(p0: Animator) {
-
-            }
-
-            override fun onAnimationRepeat(p0: Animator) {
-
-            }
-
-        })
+        val parentFragment = parentFragment
+        if (parentFragment is MusicTabFragment) {
+            parentFragment.startAnim()
+        }
     }
 
     override fun onItemClick(view: View, data: MusicInfo) {
-        PlayMusicManager.setClickMusicInfo(data)
+        if (currentMusicInfo != null && currentMusicInfo!!.rid == data.rid) return
+        this.currentMusicInfo = data
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
         startAnim(view, data.pic)
@@ -446,59 +405,5 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onItemLongClick(view: View, data: MusicInfo) {
-        PlayMusicManager.setLongClickMusicInfo(data)
-        val stringBuilder = StringBuilder()
-        val album = data.name
-        val artist = data.artist
-        stringBuilder.append(artist)
-        if (!TextUtils.isEmpty(album)) {
-            stringBuilder.append("-$album")
-        }
-        val activity = mActivity as AppCompatActivity
-        val list = arrayListOf(
-            OperationItemEntity(R.mipmap.download, AppUtil.getString(App.app, R.string.download)),
-            OperationItemEntity(R.mipmap.singer, AppUtil.getString(App.app, R.string.singer)),
-            OperationItemEntity(R.mipmap.album, AppUtil.getString(App.app, R.string.album)),
-            OperationItemEntity(R.mipmap.state_one, AppUtil.getString(App.app, R.string.single)),
-            OperationItemEntity(R.mipmap.video, AppUtil.getString(App.app, R.string.mv)),
-        )
-        CommonOperationDialog.show(activity, stringBuilder.toString(), list, this)
-    }
-
-    override fun onItemClickListener(view: View, data: OperationItemEntity) {
-        val tag = view.tag
-        val musicInfo = PlayMusicManager.getDownloadMusicInfo()
-        val artistId = musicInfo?.artistid
-        if (tag is Int) {
-            when (tag) {
-                0 -> {
-                    musicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
-                }
-
-                1 -> {
-                    WebFragmentActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                2 -> {
-                    SingerAlbumActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                3 -> {
-                    SingerMusicActivity.startActivity(mActivity, artistId.toString(), 0)
-                }
-
-                4 -> {
-                    SingerMvActivity.startActivity(mActivity, artistId.toString())
-                }
-
-                else -> {
-
-                }
-            }
-        }
-    }
-
-    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
-
     }
 }

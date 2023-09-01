@@ -50,7 +50,6 @@ object PlayMusicManager {
     private var currentMusicInfo: MusicInfo? = null
     private var currentDownloadMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
-    private var isLongClick = false
     private var lifecycleOwner: LifecycleOwner? = null
     private var musicAdapter: MusicAdapter? = null
     private var recyclerView: RecyclerView? = null
@@ -74,16 +73,6 @@ object PlayMusicManager {
         this.musicAdapter = musicAdapter
         val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
         this.currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
-    }
-
-    fun setLongClickMusicInfo(musicInfo: MusicInfo) {
-        this.isLongClick = true
-        this.currentDownloadMusicInfo = musicInfo
-    }
-
-    fun setClickMusicInfo(musicInfo: MusicInfo) {
-        this.isLongClick = false
-        this.currentMusicInfo = musicInfo
     }
 
     fun prepareMusic(
@@ -167,12 +156,33 @@ object PlayMusicManager {
         }
     }
 
+    fun requestDownloadMusicInfo(musicInfo: MusicInfo) {
+        this.currentDownloadMusicInfo = musicInfo
+        activity?.let { LoadingDialog.show(it, "请稍等...") }
+        val musicId = musicInfo.musicrid
+        if (musicId.contains("_")) {
+            val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
+            lifecycleOwner?.let { it ->
+                MusicRepository.getMusicUrl(mid).observe(it) {
+                    LoadingDialog.hide()
+                    val musicUrlEntity = it.getOrNull()
+                    Logger.i("mid:$mid---->>>musicUrlEntity:$musicUrlEntity")
+                    if (musicUrlEntity != null) {
+                        val musicUrlData = musicUrlEntity.data
+                        if (musicUrlEntity.code == -1) {
+                            ToastUtil.show("该歌曲为付费歌曲,暂时不能免费下载")
+                        }
+                        val url = musicUrlData?.url
+                        Logger.i("mid:$mid---->>>url:$url")
+                        url?.let { it1 -> startDownload(it1) }
+                    }
+                }
+            }
+        }
+    }
+
     fun playMusic(url: String?) {
         this.currentPlayUrl = url
-        if (isLongClick) {
-            url?.let { it1 -> startDownload(it1) }
-            return
-        }
         GlobalData.playUrlChange.postValue(url)
         startMusicService()
         getLrc()
@@ -354,9 +364,5 @@ object PlayMusicManager {
 
     fun getPlayMusicInfo(): MusicInfo? {
         return currentMusicInfo
-    }
-
-    fun getDownloadMusicInfo(): MusicInfo? {
-        return currentDownloadMusicInfo
     }
 }

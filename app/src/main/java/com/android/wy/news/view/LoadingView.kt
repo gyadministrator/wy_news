@@ -7,6 +7,8 @@ import android.util.AttributeSet
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 import com.android.wy.news.R
+import com.android.wy.news.common.CommonTools
+import com.android.wy.news.util.AppUtil
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -24,13 +26,19 @@ class LoadingView : AppCompatImageView {
 
     init {
         this.mContext = context
-        setImageResource(R.drawable.loading)
+        val loadingBitmap = CommonTools.getGradientBitmap(
+            context,
+            R.drawable.loading,
+            intArrayOf(AppUtil.getColor(context, R.color.main_title))
+        )
+        setImageBitmap(loadingBitmap)
+        //setBackgroundResource(R.drawable.loading)
     }
 
     fun startLoadingAnim() {
         visibility = VISIBLE
         val loadObjectAnimator = ObjectAnimator.ofFloat(this, "rotation", 0f, 360f)
-        loadObjectAnimator.duration = 1000
+        loadObjectAnimator.duration = 3000
         loadObjectAnimator.repeatMode = ValueAnimator.RESTART
         loadObjectAnimator.repeatCount = ValueAnimator.INFINITE
         loadObjectAnimator.interpolator = LinearInterpolator()

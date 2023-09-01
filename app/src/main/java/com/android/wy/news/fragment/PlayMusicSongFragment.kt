@@ -15,6 +15,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.wy.news.R
+import com.android.wy.news.activity.SingerAlbumActivity
 import com.android.wy.news.activity.WebFragmentActivity
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.app.App
@@ -43,7 +44,6 @@ import com.android.wy.news.service.MusicPlayService
 import com.android.wy.news.util.AppUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.ToastUtil
-import com.android.wy.news.view.RoundProgressBar
 import com.android.wy.news.viewmodel.PlayMusicSongViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -79,7 +79,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var rlSinger: RelativeLayout? = null
     private var rlRing: RelativeLayout? = null
     private var rlAlbum: RelativeLayout? = null
-    private var roundProgressBar: RoundProgressBar? = null
     private var index = 0
     private var currentPlayUrl: String? = null
     private var pageChangeListener: IPageChangeListener? = null
@@ -149,7 +148,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         Logger.i("PlayMusicSongFragment--->>>onEvent--->>>o:$o")
         if (o is MusicEvent) {
             Logger.i("onEvent--->>>time:${o.time}")
-            roundProgressBar?.setProgress(o.time)
             activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
             setLrcText(o.time.toLong())
             if (!isDragSeek) {
@@ -208,7 +206,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         rlSinger = mBinding.rlSinger
         rlRing = mBinding.rlRing
         rlAlbum = mBinding.rlAlbum
-        roundProgressBar = mBinding.roundProgressBar
 
         llLrcContent?.setOnClickListener {
             pageChangeListener?.changePage(1)
@@ -218,6 +215,10 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         }
         ivMusicMode?.setOnClickListener {
             setMusicMode()
+        }
+        rlAlbum?.setOnClickListener {
+            val artistId = currentMusicInfo?.artistid
+            SingerAlbumActivity.startActivity(mActivity, artistId.toString())
         }
         rlPlay?.setOnClickListener {
             play()
@@ -233,12 +234,9 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
             WebFragmentActivity.startActivity(mActivity, artistId.toString())
         }
         rlDownload?.setOnClickListener {
-            this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
-            PlayMusicManager.getDownloadMusicInfo()
-                ?.let { PlayMusicManager.requestMusicInfo(it) }
+            currentMusicInfo?.let { it1 -> PlayMusicManager.requestDownloadMusicInfo(it1) }
         }
         rlRing?.setOnClickListener {
-            this.currentMusicInfo?.let { it1 -> PlayMusicManager.setLongClickMusicInfo(it1) }
             val stringBuilder = StringBuilder()
             val album = this.currentMusicInfo?.name
             val artist = this.currentMusicInfo?.artist
@@ -422,7 +420,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun setMusic() {
-        roundProgressBar?.setMax(this.currentMusicInfo?.duration?.times(1000)!!)
         sbMusic?.max = (this.currentMusicInfo?.duration)?.times(1000)!!
         tvEnd?.text =
             LrcHelper.formatTime((this.currentMusicInfo?.duration)?.times(1000)!!.toFloat())

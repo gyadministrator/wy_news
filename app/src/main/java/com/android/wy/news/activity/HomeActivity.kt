@@ -26,6 +26,7 @@ import com.android.wy.news.fragment.MineTabFragment
 import com.android.wy.news.fragment.MusicTabFragment
 import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
+import com.android.wy.news.http.HttpController
 import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.location.OnLocationListener
 import com.android.wy.news.locationselect.CityPicker
@@ -62,7 +63,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private var pageNavigationView: PageNavigationView? = null
     private var navigationController: NavigationController? = null
     private var materialBuilder: MaterialBuilder? = null
-    private var currentSelectPosition = 0
     private lateinit var tvCity: TextView
     private lateinit var llCity: LinearLayout
     private var firstTime: Long = 0
@@ -341,6 +341,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     override fun onDestroy() {
         super.onDestroy()
         NotificationHelper.cancelAll()
+        HttpController.removeAllRequest()
     }
 
     override fun onPause() {
@@ -356,15 +357,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlSearch.visibility = View.VISIBLE
     }
 
-    fun getSelectPosition(): Int {
-        return currentSelectPosition
-    }
-
     override fun onSelected(index: Int, old: Int) {
         Logger.i("onSelected: $index old: $old")
         GlobalData.indexChange.postValue(index)
-
-        currentSelectPosition = index
         if (index == 2 || index == 4) {
             hideSearch()
         } else {

@@ -11,6 +11,8 @@ import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.activity.SearchActivity
 import com.android.wy.news.activity.SettingActivity
 import com.android.wy.news.activity.SkinActivity
+import com.android.wy.news.common.CommonTools
+import com.android.wy.news.util.AppUtil
 import java.util.Collections
 
 /*     
@@ -31,11 +33,27 @@ object ShortCutHelper {
 
     fun initShortCut(context: Context) {
         shortCutList.clear()
+        val searchBitmap = CommonTools.getGradientBitmap(
+            context,
+            R.mipmap.cut_search,
+            intArrayOf(AppUtil.getColor(context, R.color.select_indicator_color))
+        )
+        val skinBitmap = CommonTools.getGradientBitmap(
+            context,
+            R.mipmap.cut_skin,
+            intArrayOf(AppUtil.getColor(context, R.color.select_indicator_color))
+        )
+        val settingBitmap = CommonTools.getGradientBitmap(
+            context,
+            R.mipmap.cut_setting,
+            intArrayOf(AppUtil.getColor(context, R.color.select_indicator_color))
+        )
         //动态方式添加一
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             val shortCutSearch = ShortcutInfoCompat.Builder(context, getShortCutId())//唯一标识id
                 .setShortLabel("搜索")//短标签
-                .setIcon(IconCompat.createWithResource(context, R.mipmap.cut_search))//图标
+                //.setIcon(IconCompat.createWithResource(context, R.mipmap.cut_search))//图标
+                .setIcon(IconCompat.createWithBitmap(searchBitmap))
                 //跳转的目标，定义Activity
                 .setIntent(
                     Intent(
@@ -48,13 +66,15 @@ object ShortCutHelper {
                 .build()
             val shortCutSkin = ShortcutInfoCompat.Builder(context, getShortCutId())//唯一标识id
                 .setShortLabel("主题")//短标签
-                .setIcon(IconCompat.createWithResource(context, R.mipmap.cut_skin))//图标
+                //.setIcon(IconCompat.createWithResource(context, R.mipmap.cut_skin))//图标
+                .setIcon(IconCompat.createWithBitmap(skinBitmap))//图标
                 //跳转的目标，定义Activity
                 .setIntent(Intent(Intent.ACTION_MAIN, null, context, SkinActivity::class.java))
                 .build()
             val shortCutSetting = ShortcutInfoCompat.Builder(context, getShortCutId())//唯一标识id
                 .setShortLabel("设置")//短标签
-                .setIcon(IconCompat.createWithResource(context, R.mipmap.cut_setting))//图标
+                //.setIcon(IconCompat.createWithResource(context, R.mipmap.cut_setting))//图标
+                .setIcon(IconCompat.createWithBitmap(settingBitmap))//图标
                 //跳转的目标，定义Activity
                 .setIntent(
                     Intent(

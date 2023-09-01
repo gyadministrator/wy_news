@@ -23,6 +23,7 @@ import com.android.wy.news.databinding.ActivitySettingBinding
 import com.android.wy.news.dialog.CommonConfirmDialog
 import com.android.wy.news.dialog.CommonConfirmDialogFragment
 import com.android.wy.news.entity.UpdateEntity
+import com.android.wy.news.http.HttpController
 import com.android.wy.news.manager.DownloadController
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.update.OnUpdateManagerListener
@@ -317,6 +318,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingViewModel>()
 
     override fun onClear() {
         stop()
+        HttpController.removeRequest(this::class.simpleName.toString())
     }
 
     override fun onNotifyDataChanged() {
