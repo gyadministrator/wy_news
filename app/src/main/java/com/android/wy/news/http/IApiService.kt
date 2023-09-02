@@ -100,10 +100,20 @@ interface IApiService {
         @QueryMap queryMap: MutableMap<String, Any>
     ): Call<MusicUrlEntity>
 
+    @GET("/api/v1/www/music/playUrl")
+    fun getMusicUrlWithResponseBody(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<ResponseBody>
+
     @GET("/newh5/singles/songinfoandlrc")
     fun getMusicLrc(
         @QueryMap queryMap: MutableMap<String, Any>
     ): Call<MusicLrcEntity>
+
+    @GET("/newh5/singles/songinfoandlrc")
+    fun getMusicLrcWithBack(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<ResponseBody>
 
     @GET("/api/www/playlist/playListInfo")
     fun getRecommendMusic(
