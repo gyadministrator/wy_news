@@ -45,11 +45,16 @@ class TabViewPager : LinearLayout {
         fragments: ArrayList<Fragment>,
         titles: ArrayList<String>
     ) {
-        viewPager.offscreenPageLimit = titles.size
+        //一个ViewPager+ABCDE五个Fragment，默认一开始在C Fragment。
+        //a) 如果设置setOffscreenPageLimit(1)，则会提前加载BCD三个
+        //b）如果设置setOffscreenPageLimit(2),则会提前加载ABCDE五个
+        //c) 如果设置setOffscreenPageLimit(1),而从C滑动到D时，E也会被预加载，而B可能会被destroy，也可能只是被remove，具体看adapter实现
+        //viewPager.offscreenPageLimit = titles.size
         viewPager.adapter =
             FragmentPageAdapter(fragmentManager, fragments, titles.toTypedArray())
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.initLayout()
+        //使用viewpager嵌套fragmrnt的时候出现Expected the adapter to be ‘fresh‘ while restoring state.
         viewPager.isSaveEnabled = false
         tabLayout.setSelectedTabIndicatorHeight(0)
     }

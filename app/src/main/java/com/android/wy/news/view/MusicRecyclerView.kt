@@ -97,44 +97,53 @@ class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListe
         if (!TextUtils.isEmpty(album)) {
             stringBuilder.append("-$album")
         }
-        val activity = context as AppCompatActivity
-        val list = arrayListOf(
-            OperationItemEntity(R.mipmap.album, AppUtil.getString(App.app, R.string.album)),
-            OperationItemEntity(R.mipmap.state_one, AppUtil.getString(App.app, R.string.single)),
-            OperationItemEntity(R.mipmap.video, AppUtil.getString(App.app, R.string.mv)),
-        )
-        CommonOperationDialog.show(
-            activity,
-            stringBuilder.toString(),
-            list,
-            object : BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
-                override fun onItemClickListener(view: View, data: OperationItemEntity) {
-                    val tag = view.tag
-                    val artistId = musicInfo.artistid
-                    if (tag is Int) {
-                        when (tag) {
-                            0 -> {
-                                SingerAlbumActivity.startActivity(context, artistId.toString())
-                            }
+        if (context is AppCompatActivity) {
+            val activity = context as AppCompatActivity
+            val list = arrayListOf(
+                OperationItemEntity(R.mipmap.album, AppUtil.getString(App.app, R.string.album)),
+                OperationItemEntity(
+                    R.mipmap.state_one,
+                    AppUtil.getString(App.app, R.string.single)
+                ),
+                OperationItemEntity(R.mipmap.video, AppUtil.getString(App.app, R.string.mv)),
+            )
+            CommonOperationDialog.show(
+                activity,
+                stringBuilder.toString(),
+                list,
+                object : BaseNewsAdapter.OnItemAdapterListener<OperationItemEntity> {
+                    override fun onItemClickListener(view: View, data: OperationItemEntity) {
+                        val tag = view.tag
+                        val artistId = musicInfo.artistid
+                        if (tag is Int) {
+                            when (tag) {
+                                0 -> {
+                                    SingerAlbumActivity.startActivity(context, artistId.toString())
+                                }
 
-                            1 -> {
-                                SingerMusicActivity.startActivity(context, artistId.toString(), 0)
-                            }
+                                1 -> {
+                                    SingerMusicActivity.startActivity(
+                                        context,
+                                        artistId.toString(),
+                                        0
+                                    )
+                                }
 
-                            2 -> {
-                                SingerMvActivity.startActivity(context, artistId.toString())
-                            }
+                                2 -> {
+                                    SingerMvActivity.startActivity(context, artistId.toString())
+                                }
 
-                            else -> {
+                                else -> {
 
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
-                }
-            })
+                    override fun onItemLongClickListener(view: View, data: OperationItemEntity) {
+                    }
+                })
+        }
         //musicItemListener?.onItemLongClick(view, data)
     }
 }
