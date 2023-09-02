@@ -60,7 +60,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
 
     override fun initData() {
         rvContent.getMusicAdapter()
-            ?.let { PlayMusicManager.initMusicInfo(mActivity, rvContent, null, this, it) }
+            ?.let { PlayMusicManager.initMusicInfo(mActivity, rvContent, this, it) }
         showRecentPlay()
         MusicRepository.getRecommendMusic().observe(this) {
             setContent(it)

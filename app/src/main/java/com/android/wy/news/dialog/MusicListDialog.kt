@@ -92,7 +92,7 @@ class MusicListDialog : BaseBottomSheetFragment<MusicListDialogBinding>(),
                 musicAdapter?.let { it2 ->
                     PlayMusicManager.initMusicInfo(
                         it,
-                        it1, null, this, it2
+                        it1, it, it2
                     )
                 }
             }

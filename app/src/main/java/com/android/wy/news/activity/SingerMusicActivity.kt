@@ -71,7 +71,7 @@ class SingerMusicActivity : BaseActivity<ActivitySingerMusicBinding, SingerMusic
         rvContent.layoutManager = LinearLayoutManager(this)
         rvContent.adapter = artistMusicAdapter
 
-        PlayMusicManager.initMusicInfo(this, rvContent, null, this, artistMusicAdapter!!)
+        PlayMusicManager.initMusicInfo(this, rvContent, this, artistMusicAdapter!!)
     }
 
     override fun initData() {

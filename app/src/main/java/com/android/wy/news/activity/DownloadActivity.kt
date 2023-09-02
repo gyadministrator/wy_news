@@ -72,7 +72,7 @@ class DownloadActivity : BaseActivity<ActivityDownloadBinding, DownloadViewModel
             rvContent?.getMusicAdapter()?.let { it1 ->
                 PlayMusicManager.initMusicInfo(
                     this,
-                    it, null, this, it1
+                    it, this, it1
                 )
             }
         }

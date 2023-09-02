@@ -1,10 +1,6 @@
 package com.android.wy.news.fragment
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.view.View
-import android.view.animation.LinearInterpolator
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
@@ -16,7 +12,6 @@ import com.android.wy.news.viewmodel.MusicTabViewModel
 class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel>() {
     private lateinit var tabViewPager: TabViewPager
     private lateinit var playBarView: PlayBarView
-    private var isShowAnim = false
 
     companion object {
         fun newInstance() = MusicTabFragment()
@@ -29,46 +24,6 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
 
     fun getPlayBarView(): PlayBarView {
         return playBarView
-    }
-
-    fun startAnim() {
-        if (isShowAnim) return
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 1000
-        animatorSet.interpolator = LinearInterpolator()
-        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 0f, 1f)
-        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
-        animatorSet.playTogether(alpha, translationY)
-        animatorSet.start()
-        isShowAnim = true
-    }
-
-    private fun stopAnim() {
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 1000
-        animatorSet.interpolator = LinearInterpolator()
-        val alpha = ObjectAnimator.ofFloat(playBarView, "alpha", 1f, 0f)
-        val translationY = ObjectAnimator.ofFloat(playBarView, "translationY", 50f, 0f)
-        animatorSet.playTogether(alpha, translationY)
-        animatorSet.start()
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(p0: Animator) {
-
-            }
-
-            override fun onAnimationEnd(p0: Animator) {
-                playBarView.visibility = View.GONE
-            }
-
-            override fun onAnimationCancel(p0: Animator) {
-
-            }
-
-            override fun onAnimationRepeat(p0: Animator) {
-
-            }
-
-        })
     }
 
     override fun initData() {
@@ -88,7 +43,9 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     override fun initEvent() {
-
+        if (activity is AppCompatActivity) {
+            playBarView.register(activity as AppCompatActivity)
+        }
     }
 
     override fun getViewBinding(): FragmentTabMusicBinding {
@@ -100,7 +57,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
     }
 
     override fun onClear() {
-
+        playBarView.unRegister()
     }
 
     override fun onNotifyDataChanged() {

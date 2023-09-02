@@ -1,27 +1,24 @@
 package com.android.wy.news.dialog
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import com.android.wy.news.R
-import com.android.wy.news.common.CommonTools
-import com.android.wy.news.databinding.LayoutLoadingDialogBinding
-import java.lang.ref.WeakReference
+import com.android.wy.news.app.App
+import com.android.wy.news.common.Logger
+import com.android.wy.news.util.AppUtil
 
 object LoadingDialog {
-    private var loadingDialog: WeakReference<LoadingDialogFragment>? = null
+    private val dialogList = HashMap<String, LoadingDialogFragment>()
 
     @SuppressLint("InflateParams")
-    fun show(activity: FragmentActivity, title: String) {
+    fun show(tag: String, activity: FragmentActivity, title: String) {
+        val background = AppUtil.isBackground(activity)
+        if (background) return
+        Logger.i("LoadingDialog--->>>show:$tag")
         val loadingDialogFragment = LoadingDialogFragment()
-        loadingDialog = WeakReference(loadingDialogFragment)
+        if (!dialogList.containsKey(tag)) {
+            dialogList[tag] = loadingDialogFragment
+        }
         val bundle = Bundle()
         bundle.putString(LoadingDialogFragment.TITLE_KEY, title)
         loadingDialogFragment.arguments = bundle
@@ -34,11 +31,12 @@ object LoadingDialog {
         }
     }
 
-    fun hide() {
-        if (loadingDialog != null) {
-            val loadingDialogFragment = loadingDialog?.get()
-            loadingDialogFragment?.dismiss()
-            loadingDialog = null
+    fun hide(tag: String) {
+        Logger.i("LoadingDialog--->>>hide:$tag")
+        val loadingDialogFragment = dialogList[tag]
+        if (loadingDialogFragment != null) {
+            loadingDialogFragment.dismiss()
+            dialogList.remove(tag)
         }
     }
 }

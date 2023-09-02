@@ -16,9 +16,9 @@ import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
-import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.music.MusicNotifyHelper
 import com.android.wy.news.music.MusicState
@@ -128,9 +128,8 @@ class MusicNotifyService : Service() {
             }
 
             override fun onPauseState() {
-                GlobalData.isPlaying = false
+                GlobalData.isPlaying.postValue(false)
                 Logger.i("onPauseState: ")
-                EventBus.getDefault().postSticky(PlayEvent())
                 startMusicForeground(musicInfo)
                 timer?.cancel()
                 timer = null
@@ -140,9 +139,9 @@ class MusicNotifyService : Service() {
             }
 
             override fun onPlayingState() {
-                GlobalData.isPlaying = true
+                LoadingDialog.hide(GlobalData.MUSIC_LOADING_TAG)
+                GlobalData.isPlaying.postValue(true)
                 Logger.i("onPlayingState: ")
-                EventBus.getDefault().postSticky(PlayEvent())
                 startMusicForeground(musicInfo)
                 timer?.cancel()
                 timer = null
@@ -152,7 +151,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onCompleteState() {
-                GlobalData.isPlaying = false
+                GlobalData.isPlaying.postValue(false)
                 Logger.i("onCompleteState: ")
                 GlobalData.currentLrcData.clear()
                 timer?.cancel()
@@ -166,7 +165,7 @@ class MusicNotifyService : Service() {
             }
 
             override fun onErrorState(what: Int, extra: Int) {
-                GlobalData.isPlaying = false
+                GlobalData.isPlaying.postValue(false)
                 Logger.i("onErrorState: what:$what  extra:$extra")
             }
         })

@@ -1,6 +1,8 @@
 package com.android.wy.news.http
 
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.dialog.LoadingDialog
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,10 +49,12 @@ object HttpController {
         }
 
         override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            LoadingDialog.hide(GlobalData.COMMON_LOADING_TAG)
             httpListener?.onRequestSuccess(response)
         }
 
         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            LoadingDialog.hide(GlobalData.COMMON_LOADING_TAG)
             httpListener?.onRequestError(t)
         }
     }

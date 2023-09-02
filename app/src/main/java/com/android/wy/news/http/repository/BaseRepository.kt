@@ -1,7 +1,9 @@
 package com.android.wy.news.http.repository
 
 import androidx.lifecycle.liveData
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
+import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.util.ToastUtil
 import kotlin.coroutines.CoroutineContext
 
@@ -32,6 +34,7 @@ open class BaseRepository {
             if (t == null) {
                 ToastUtil.show("获取数据失败,请稍后重试")
             }
+            LoadingDialog.hide(GlobalData.COMMON_LOADING_TAG)
             //通知数据变化
             emit(result)
         }

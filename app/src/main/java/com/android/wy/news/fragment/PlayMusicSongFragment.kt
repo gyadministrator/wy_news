@@ -24,14 +24,12 @@ import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayMusicSongBinding
 import com.android.wy.news.dialog.CommonOperationDialog
-import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.dialog.MusicListDialog
 import com.android.wy.news.entity.OperationItemEntity
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicInfoEvent
 import com.android.wy.news.event.MusicListEvent
-import com.android.wy.news.event.PlayEvent
 import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
@@ -83,6 +81,7 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     private var currentPlayUrl: String? = null
     private var pageChangeListener: IPageChangeListener? = null
     private var currentDataList = ArrayList<MusicInfo>()
+    private var musicListDialog: MusicListDialog? = null
 
     fun setPageListener(pageChangeListener: IPageChangeListener) {
         this.pageChangeListener = pageChangeListener
@@ -146,30 +145,27 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onEvent(o: Any) {
         Logger.i("PlayMusicSongFragment--->>>onEvent--->>>o:$o")
-        if (o is MusicEvent) {
-            Logger.i("onEvent--->>>time:${o.time}")
-            activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
-            setLrcText(o.time.toLong())
-            if (!isDragSeek) {
-                sbMusic?.progress = o.time
+        when (o) {
+            is MusicEvent -> {
+                Logger.i("onEvent--->>>time:${o.time}")
+                activity?.let { LrcDesktopManager.showDesktopLrc(it, o.time.toLong()) }
+                setLrcText(o.time.toLong())
+                if (!isDragSeek) {
+                    sbMusic?.progress = o.time
+                }
+                tvStart?.text = LrcHelper.formatTime(o.time.toFloat())
             }
-            tvStart?.text = LrcHelper.formatTime(o.time.toFloat())
-        } else if (o is MusicInfoEvent) {
-            currentMusicInfo = JsonUtil.parseJsonToObject(o.musicJson, MusicInfo::class.java)
-            setMusic()
-        } else if (o is PlayEvent) {
-            if (TextUtils.isEmpty(currentPlayUrl)) {
-                LoadingDialog.hide()
+
+            is MusicInfoEvent -> {
+                currentMusicInfo = JsonUtil.parseJsonToObject(o.musicJson, MusicInfo::class.java)
+                setMusic()
             }
-            if (mediaHelper!!.isPlaying()) {
-                checkState(MusicState.STATE_PLAY)
-            } else {
-                checkState(MusicState.STATE_PAUSE)
+
+            is MusicListEvent -> {
+                val dataList = o.dataList
+                Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
+                currentDataList.addAll(dataList)
             }
-        } else if (o is MusicListEvent) {
-            val dataList = o.dataList
-            Logger.i("onEvent--->>>MusicListEvent.dataList:$dataList")
-            currentDataList.addAll(dataList)
         }
     }
 
@@ -310,16 +306,16 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun showMusicList() {
-        val musicListDialog = MusicListDialog()
+        musicListDialog = MusicListDialog()
         val bundle = Bundle()
         bundle.putString(
             MusicListDialog.MUSIC_LIST_KEY,
             JsonUtil.parseObjectToJson(currentDataList)
         )
-        musicListDialog.arguments = bundle
+        musicListDialog?.arguments = bundle
         val supportFragmentManager = (context as AppCompatActivity).supportFragmentManager
         if (!supportFragmentManager.isDestroyed) {
-            musicListDialog.show(
+            musicListDialog?.show(
                 supportFragmentManager,
                 "music_list_dialog"
             )
@@ -384,9 +380,20 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     }
 
     private fun play() {
-        val intent = Intent(context, MusicPlayService::class.java)
-        intent.action = MusicNotifyService.MUSIC_STATE_ACTION
-        context?.startService(intent)
+        Logger.i("onClickPlay--->>>")
+        if (mediaHelper != null) {
+            if (mediaHelper!!.isPlaying()) {
+                mediaHelper?.pause()
+                this.currentMusicInfo?.state = MusicState.STATE_PAUSE
+            } else {
+                if (!TextUtils.isEmpty(PlayMusicManager.getPlayUrl())) {
+                    mediaHelper?.start()
+                    this.currentMusicInfo?.state = MusicState.STATE_PLAY
+                } else {
+                    currentMusicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
+                }
+            }
+        }
     }
 
     private fun playNext() {
@@ -426,12 +433,6 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
         this.currentMusicInfo?.pic?.let { ivCover?.let { it1 -> CommonTools.loadImage(it, it1) } }
         tvTitle?.text = this.currentMusicInfo?.artist
         tvDesc?.text = this.currentMusicInfo?.name
-
-        if (mediaHelper!!.isPlaying()) {
-            checkState(MusicState.STATE_PLAY)
-        } else {
-            checkState(MusicState.STATE_PAUSE)
-        }
     }
 
     override fun initEvent() {
@@ -454,7 +455,14 @@ class PlayMusicSongFragment : BaseFragment<FragmentPlayMusicSongBinding, PlayMus
     override fun onNotifyDataChanged() {
         GlobalData.playUrlChange.observe(this) {
             currentPlayUrl = it
-            LoadingDialog.hide()
+        }
+        GlobalData.isPlaying.observe(this) {
+            musicListDialog?.dismiss()
+            if (it) {
+                checkState(MusicState.STATE_PLAY)
+            } else {
+                checkState(MusicState.STATE_PAUSE)
+            }
         }
     }
 }

@@ -7,30 +7,18 @@ import android.annotation.SuppressLint
 import android.graphics.Path
 import android.graphics.PathMeasure
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.view.animation.LinearInterpolator
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
-import com.android.wy.news.common.Logger
-import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentMusicBinding
 import com.android.wy.news.entity.music.MusicInfo
-import com.android.wy.news.event.MusicEvent
 import com.android.wy.news.event.MusicListEvent
-import com.android.wy.news.event.MusicUrlEvent
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.listener.IMusicItemChangeListener
-import com.android.wy.news.manager.LrcDesktopManager
 import com.android.wy.news.manager.PlayMusicManager
-import com.android.wy.news.music.MediaPlayerHelper
-import com.android.wy.news.music.MusicState
-import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MusicRecyclerView
@@ -43,8 +31,6 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -54,8 +40,7 @@ import org.greenrobot.eventbus.ThreadMode
  *   }
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
-    OnLoadMoreListener,
-    PlayBarView.OnPlayBarListener, IMusicItemChangeListener {
+    OnLoadMoreListener, IMusicItemChangeListener {
     private var pageStart = 1
     private var categoryId: Int = 0
     private lateinit var rvContent: MusicRecyclerView
@@ -65,8 +50,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private var isLoading = false
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var playBarView: PlayBarView
-    private var currentMusicInfo: MusicInfo? = null
-    private var mediaHelper: MediaPlayerHelper? = null
     private lateinit var floatingBtn: FloatingActionButton
 
     companion object {
@@ -97,53 +80,21 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun initData() {
-        mediaHelper = MediaPlayerHelper.getInstance(mActivity)
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
         musicAdapter = rvContent.getMusicAdapter()
 
-        initPlayBar()
         musicAdapter?.let { it1 ->
             PlayMusicManager.initMusicInfo(
                 mActivity, rvContent,
-                playBarView, this, it1
+                this, it1
             )
         }
         PlayMusicManager.getLrc()
     }
 
-    private fun initPlayBar() {
-        val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
-        this.currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
-        if (this.currentMusicInfo != null) {
-            showPlayBar()
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        EventBus.getDefault().unregister(this)
         PlayMusicManager.unRegisterMusicReceiver()
         PlayMusicManager.stopMusicService()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onEvent(o: Any) {
-        if (o is MusicEvent) {
-            Logger.i("onEvent--->>>time:${o.time}")
-            if (GlobalData.currentLrcData.size == 0) {
-                PlayMusicManager.getLrc()
-            }
-            playBarView.updateProgress(o.time)
-            LrcDesktopManager.showDesktopLrc(mActivity, o.time.toLong())
-            val position =
-                CommonTools.lrcTime2Position(GlobalData.currentLrcData, o.time.toLong())
-            val lrc = GlobalData.currentLrcData[position]
-            playBarView.setTitle(lrc.text)
-        } else if (o is MusicUrlEvent) {
-            PlayMusicManager.playMusic(o.url)
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -247,9 +198,6 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         GlobalData.indexChange.observe(this) {
             if (it == 3) {
                 PlayMusicManager.registerMusicReceiver()
-                if (!EventBus.getDefault().isRegistered(this)) {
-                    EventBus.getDefault().register(this)
-                }
                 initData()
             }
         }
@@ -271,85 +219,12 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
 
     }
 
-    override fun onClickPlay(position: Int) {
-        Logger.i("onClickPlay--->>>position:$position")
-        if (mediaHelper != null) {
-            if (mediaHelper!!.isPlaying()) {
-                mediaHelper?.pause()
-                this.currentMusicInfo?.state = MusicState.STATE_PAUSE
-                rvContent.updatePosition(position)
-            } else {
-                if (!TextUtils.isEmpty(PlayMusicManager.getPlayUrl())) {
-                    mediaHelper?.start()
-                    this.currentMusicInfo?.state = MusicState.STATE_PLAY
-                    rvContent.updatePosition(position)
-                } else {
-                    currentMusicInfo?.let { PlayMusicManager.requestMusicInfo(it) }
-                }
-            }
-        }
-    }
-
-    override fun onClickPlayBar(position: Int) {
-        //显示歌曲页面
-        showLrcPage()
-    }
-
-    private fun showLrcPage() {
-        val fragmentManager = (mActivity as AppCompatActivity).supportFragmentManager
-        var ft: FragmentTransaction? = fragmentManager.beginTransaction()
-        val prev: Fragment? = fragmentManager.findFragmentByTag(PlayMusicFragment.TAG)
-        if (prev != null) {
-            ft?.remove(prev)?.commit()
-            ft = fragmentManager.beginTransaction()
-        }
-        ft?.addToBackStack(null)
-        val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
-        val playMusicFragment =
-            s?.let {
-                PlayMusicFragment.newInstance(
-                    PlayMusicManager.getPlayPosition(),
-                    it,
-                    PlayMusicManager.getPlayUrl()
-                )
-            }
-        if (playMusicFragment != null) {
-            ft?.let { playMusicFragment.show(ft, PlayMusicFragment.TAG) }
-        }
-    }
-
-    private fun showPlayBar() {
-        val stringBuilder = StringBuilder()
-        val album = currentMusicInfo?.name
-        val artist = currentMusicInfo?.artist
-        stringBuilder.append(artist)
-        if (!TextUtils.isEmpty(album)) {
-            stringBuilder.append("-$album")
-        }
-        playBarView.visibility = View.VISIBLE
-        currentMusicInfo?.pic?.let {
-            currentMusicInfo?.duration?.let { it1 ->
-                playBarView.setCover(it).setTitle(stringBuilder.toString())
-                    .setPosition(PlayMusicManager.getPlayPosition())
-                    .setDuration(duration = it1 * 1000)
-                    .showPlayContainer(true)
-                    .addListener(this)
-            }
-        }
-
-        val parentFragment = parentFragment
-        if (parentFragment is MusicTabFragment) {
-            parentFragment.startAnim()
-        }
-    }
-
     override fun onItemClick(view: View, data: MusicInfo) {
-        if (currentMusicInfo != null && currentMusicInfo!!.rid == data.rid) return
-        this.currentMusicInfo = data
+        val checkState = playBarView.checkState(data)
+        if (!checkState) return
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
         startAnim(view, data.pic)
-        playBarView.setCover(data.pic)
     }
 
     private fun startAnim(view: View, pic: String) {

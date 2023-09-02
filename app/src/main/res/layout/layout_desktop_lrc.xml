@@ -61,7 +61,7 @@
             android:gravity="center"
             android:lineSpacingExtra="4dp"
             android:maxLines="3"
-            android:textColor="@color/desktop_lrc_color"
+            android:textColor="@color/select_indicator_color"
             android:textSize="16sp"
             android:visibility="invisible"
             tools:text="123dsdsdsdssddsdsdsds1" />
@@ -76,7 +76,7 @@
             android:lineSpacingExtra="4dp"
             android:maxLines="3"
             android:text="@string/loading_lrc"
-            android:textColor="@color/main_title"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

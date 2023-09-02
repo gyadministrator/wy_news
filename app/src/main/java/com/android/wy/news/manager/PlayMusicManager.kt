@@ -10,6 +10,7 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.adapter.MusicAdapter
 import com.android.wy.news.app.App
@@ -34,9 +35,7 @@ import com.android.wy.news.util.DownloadFileUtil
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
-import com.android.wy.news.view.PlayBarView
 import org.greenrobot.eventbus.EventBus
-import java.lang.ref.WeakReference
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -47,20 +46,18 @@ import java.lang.ref.WeakReference
 object PlayMusicManager {
     private var mServiceIntent: Intent? = null
     private var currentPosition = -1
-    private var currentMusicInfo: MusicInfo? = null
+    private var currentMusicInfo = MutableLiveData<MusicInfo>()
     private var currentDownloadMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
     private var lifecycleOwner: LifecycleOwner? = null
     private var musicAdapter: MusicAdapter? = null
     private var recyclerView: RecyclerView? = null
-    private var playBarView: WeakReference<PlayBarView>? = null
     private var musicReceiver: MusicReceiver? = null
     private var activity: FragmentActivity? = null
 
     fun initMusicInfo(
         activity: Activity,
         recyclerView: RecyclerView,
-        playBarView: PlayBarView?,
         lifecycleOwner: LifecycleOwner,
         musicAdapter: MusicAdapter
     ) {
@@ -68,11 +65,11 @@ object PlayMusicManager {
             this.activity = activity
         }
         this.recyclerView = recyclerView
-        this.playBarView = WeakReference(playBarView)
         this.lifecycleOwner = lifecycleOwner
         this.musicAdapter = musicAdapter
         val s = SpTools.getString(GlobalData.SpKey.LAST_PLAY_MUSIC_KEY)
-        this.currentMusicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
+        val musicInfo = JsonUtil.parseJsonToObject(s, MusicInfo::class.java)
+        this.currentMusicInfo.postValue(musicInfo)
     }
 
     fun prepareMusic(
@@ -89,18 +86,16 @@ object PlayMusicManager {
                 currentPosition = position
                 val musicInfo = dataList[currentPosition]
 
-                this.currentMusicInfo = musicInfo
+                this.currentMusicInfo.postValue(musicInfo)
                 val listenFee = musicInfo.isListenFee
                 if (listenFee) {
                     ToastUtil.show("目前VIP歌曲暂不支持免费播放")
                     return
                 }
 
-                this.currentMusicInfo?.state = MusicState.STATE_PREPARE
+                musicInfo.state = MusicState.STATE_PREPARE
 
-                val json = JsonUtil.parseObjectToJson(
-                    currentMusicInfo!!
-                )
+                val json = JsonUtil.parseObjectToJson(musicInfo)
                 val musicInfoEvent =
                     MusicInfoEvent(json)
                 EventBus.getDefault().postSticky(musicInfoEvent)
@@ -115,11 +110,11 @@ object PlayMusicManager {
 
                 TaskUtil.runOnThread {
                     val recordMusicRepository = RecordMusicRepository(App.app.applicationContext)
-                    val mid = currentMusicInfo?.musicrid
-                    val entity = mid?.let { recordMusicRepository.getRecordMusicByMid(it) }
+                    val mid = musicInfo.musicrid
+                    val entity = recordMusicRepository.getRecordMusicByMid(mid)
                     if (entity == null) {
-                        val recordMusicEntity = mid?.let { RecordMusicEntity(0, it, json) }
-                        recordMusicEntity?.let { recordMusicRepository.addRecordMusic(it) }
+                        val recordMusicEntity = RecordMusicEntity(0, mid, json)
+                        recordMusicRepository.addRecordMusic(recordMusicEntity)
                     }
                 }
             }
@@ -127,28 +122,28 @@ object PlayMusicManager {
     }
 
     fun requestMusicInfo(musicInfo: MusicInfo) {
-        activity?.let { LoadingDialog.show(it, "请稍等...") }
+        activity?.let { LoadingDialog.show(GlobalData.MUSIC_LOADING_TAG, it, "加载歌曲...") }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
             lifecycleOwner?.let { it ->
-                MusicRepository.getMusicUrl(mid).observe(it) {
-                    LoadingDialog.hide()
+                MusicRepository.getMusicUrl(GlobalData.MUSIC_LOADING_TAG, mid).observe(it) {
                     val musicUrlEntity = it.getOrNull()
                     Logger.i("mid:$mid---->>>musicUrlEntity:$musicUrlEntity")
                     if (musicUrlEntity != null) {
                         val musicUrlData = musicUrlEntity.data
                         if (musicUrlEntity.code == -1) {
                             ToastUtil.show("该歌曲为付费歌曲,暂时不能免费播放")
-                        }
-                        val url = musicUrlData?.url
-                        Logger.i("mid:$mid---->>>url:$url")
-                        if (AppUtil.isBackground(App.app)) {
-                            Logger.i("requestMusicUrl--->>>app onBack")
-                            val musicUrlEvent = MusicUrlEvent(url)
-                            EventBus.getDefault().postSticky(musicUrlEvent)
                         } else {
-                            playMusic(url)
+                            val url = musicUrlData?.url
+                            Logger.i("mid:$mid---->>>url:$url")
+                            if (AppUtil.isBackground(App.app)) {
+                                Logger.i("requestMusicUrl--->>>app onBack")
+                                val musicUrlEvent = MusicUrlEvent(url)
+                                EventBus.getDefault().postSticky(musicUrlEvent)
+                            } else {
+                                playMusic(url)
+                            }
                         }
                     }
                 }
@@ -158,23 +153,23 @@ object PlayMusicManager {
 
     fun requestDownloadMusicInfo(musicInfo: MusicInfo) {
         this.currentDownloadMusicInfo = musicInfo
-        activity?.let { LoadingDialog.show(it, "请稍等...") }
+        activity?.let { LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, it, "下载歌曲...") }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
             lifecycleOwner?.let { it ->
-                MusicRepository.getMusicUrl(mid).observe(it) {
-                    LoadingDialog.hide()
+                MusicRepository.getMusicUrl(GlobalData.COMMON_LOADING_TAG, mid).observe(it) {
                     val musicUrlEntity = it.getOrNull()
                     Logger.i("mid:$mid---->>>musicUrlEntity:$musicUrlEntity")
                     if (musicUrlEntity != null) {
                         val musicUrlData = musicUrlEntity.data
                         if (musicUrlEntity.code == -1) {
                             ToastUtil.show("该歌曲为付费歌曲,暂时不能免费下载")
+                        } else {
+                            val url = musicUrlData?.url
+                            Logger.i("mid:$mid---->>>url:$url")
+                            url?.let { it1 -> startDownload(it1) }
                         }
-                        val url = musicUrlData?.url
-                        Logger.i("mid:$mid---->>>url:$url")
-                        url?.let { it1 -> startDownload(it1) }
                     }
                 }
             }
@@ -182,6 +177,7 @@ object PlayMusicManager {
     }
 
     fun playMusic(url: String?) {
+        Logger.i("playMusic--->>>$url")
         this.currentPlayUrl = url
         GlobalData.playUrlChange.postValue(url)
         startMusicService()
@@ -195,7 +191,7 @@ object PlayMusicManager {
         mServiceIntent?.action = MusicNotifyService.MUSIC_PREPARE_ACTION
         mServiceIntent?.putExtra(
             MusicNotifyService.MUSIC_INFO_KEY,
-            this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
+            this.currentMusicInfo.value?.let { JsonUtil.parseObjectToJson(it) }
         )
         mServiceIntent?.putExtra(MusicNotifyService.MUSIC_URL_KEY, this.currentPlayUrl)
         App.app.startService(mServiceIntent)
@@ -227,7 +223,7 @@ object PlayMusicManager {
     }
 
     fun getLrc() {
-        val musicId = this.currentMusicInfo?.musicrid
+        val musicId = this.currentMusicInfo.value?.musicrid
         if (musicId != null && musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
             lifecycleOwner?.let { it ->
@@ -267,19 +263,18 @@ object PlayMusicManager {
                 Logger.i("onReceive---->>>action:$action")
                 when (action) {
                     MusicNotifyService.MUSIC_STATE_ACTION -> {
-                        playBarView?.get()?.getPlayContainer()?.performClick()
+
                     }
 
                     MusicNotifyService.MUSIC_PLAY_ACTION -> {
-                        LoadingDialog.hide()
-                        playBarView?.get()?.setPlay(true)
-                        currentMusicInfo?.state = MusicState.STATE_PLAY
+                        GlobalData.isPlaying.postValue(true)
+                        currentMusicInfo.value?.state = MusicState.STATE_PLAY
                         musicAdapter?.setSelectedIndex(currentPosition)
                     }
 
                     MusicNotifyService.MUSIC_PAUSE_ACTION -> {
-                        currentMusicInfo?.state = MusicState.STATE_PAUSE
-                        playBarView?.get()?.setPlay(false)
+                        currentMusicInfo.value?.state = MusicState.STATE_PAUSE
+                        GlobalData.isPlaying.postValue(false)
                         musicAdapter?.setSelectedIndex(currentPosition)
                     }
 
@@ -362,7 +357,7 @@ object PlayMusicManager {
         return currentPlayUrl
     }
 
-    fun getPlayMusicInfo(): MusicInfo? {
+    fun getPlayMusicInfo(): MutableLiveData<MusicInfo> {
         return currentMusicInfo
     }
 }

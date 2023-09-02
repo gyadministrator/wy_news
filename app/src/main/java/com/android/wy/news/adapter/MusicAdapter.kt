@@ -114,7 +114,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
     private fun checkState(holder: MusicViewHolder, position: Int) {
         val result = mDataList[position]
         val playMusicInfo = PlayMusicManager.getPlayMusicInfo()
-        if (selectedPosition == position && playMusicInfo != null && playMusicInfo.musicrid == result.musicrid) {
+        if (selectedPosition == position && playMusicInfo.value?.musicrid == result.musicrid) {
             when (result.state) {
                 MusicState.STATE_PREPARE -> {
                     holder.viewLine.visibility = View.INVISIBLE

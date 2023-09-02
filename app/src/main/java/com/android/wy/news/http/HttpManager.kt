@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit
  */
 class HttpManager {
     private var builder: OkHttpClient.Builder = OkHttpClient.Builder()
+        .retryOnConnectionFailure(true)//默认重试一次，若需要重试N次，则要实现拦截器。
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .readTimeout(TIMEOUT, TimeUnit.SECONDS)
         .writeTimeout(TIMEOUT, TimeUnit.SECONDS)

@@ -68,7 +68,7 @@ class MusicRecyclerView : CustomRecyclerView, BaseNewsAdapter.OnItemAdapterListe
         if (dataList != null && dataList.size > 0) {
             if (position >= 0 && position < dataList.size) {
                 val musicInfo = dataList[position]
-                if (GlobalData.isPlaying) {
+                if (GlobalData.isPlaying.value==true) {
                     musicInfo.state = MusicState.STATE_PLAY
                     musicAdapter?.setSelectedIndex(position)
                 }

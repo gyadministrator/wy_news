@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import com.android.wy.news.R
 import com.android.wy.news.activity.DownloadActivity
 import com.android.wy.news.activity.WebActivity
+import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalConstant
 import com.android.wy.news.entity.House
@@ -159,6 +160,10 @@ object NotificationHelper {
     }
 
     fun cancelAll() {
+        if (notificationManager == null) {
+            notificationManager =
+                App.app.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
         notificationManager?.cancelAll()
     }
 

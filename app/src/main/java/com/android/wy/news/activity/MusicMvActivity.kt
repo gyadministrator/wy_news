@@ -7,6 +7,7 @@ import android.widget.RelativeLayout
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityMusicMvBinding
 import com.android.wy.news.dialog.LoadingDialog
@@ -71,12 +72,11 @@ class MusicMvActivity : BaseActivity<ActivityMusicMvBinding, MusicMvViewModel>()
     }
 
     private fun getMvInfo() {
-        LoadingDialog.show(this, "获取MV地址中...")
+        LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, this, "获取MV地址中...")
         if (musicId.contains("_")) {
             musicId = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
         }
         MusicRepository.getMusicMv(musicId).observe(this) {
-            LoadingDialog.hide()
             val musicUrlEntity = it.getOrNull()
             val data = musicUrlEntity?.data
             val url = data?.url

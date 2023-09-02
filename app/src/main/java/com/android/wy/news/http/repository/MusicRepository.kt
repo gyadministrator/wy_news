@@ -1,6 +1,7 @@
 package com.android.wy.news.http.repository
 
 import com.android.wy.news.common.GlobalData
+import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.http.NetworkRequest
 import kotlinx.coroutines.Dispatchers
 
@@ -28,13 +29,16 @@ object MusicRepository : BaseRepository() {
         else Result.failure(RuntimeException("getMusicList is error"))
     }
 
-    fun getMusicUrl(mid: String) = getData(Dispatchers.IO) {
+    fun getMusicUrl(tag: String, mid: String) = getData(Dispatchers.IO) {
         addParam()
         params["type"] = "music"
         params["mid"] = mid
         val musicUrlEntity = NetworkRequest.getMusicUrl(params)
         if (musicUrlEntity.code == GlobalData.RESPONSE_SUCCESS_CODE) Result.success(musicUrlEntity)
-        else Result.failure(RuntimeException("getMusicUrl is error"))
+        else {
+            LoadingDialog.hide(tag)
+            Result.failure(RuntimeException("getMusicUrl is error"))
+        }
     }
 
     fun getMusicMv(mid: String) = getData(Dispatchers.IO) {

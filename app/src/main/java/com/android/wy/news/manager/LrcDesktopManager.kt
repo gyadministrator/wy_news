@@ -58,7 +58,7 @@ object LrcDesktopManager {
     fun showDesktopLrc(activity: Activity, time: Long) {
         val background = AppUtil.isBackground(activity)
         val isShowDesktop = SpTools.getBoolean(GlobalData.SpKey.IS_SHOW_DESKTOP_LRC)
-        if (!background || isShowDesktop == null || isShowDesktop == false || !GlobalData.isPlaying) return
+        if (!background || isShowDesktop == null || isShowDesktop == false || GlobalData.isPlaying.value==false) return
         if (hasAddView) {
             val tvCurrentLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_current_lrc)
             val tvNextLrc = mContentView?.get()?.findViewById<TextView>(R.id.tv_next_lrc)

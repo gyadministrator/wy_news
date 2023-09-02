@@ -1,9 +1,7 @@
 package com.android.wy.news.activity
 
-import android.view.LayoutInflater
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityRecordBinding
 import com.android.wy.news.entity.music.MusicInfo
@@ -70,7 +68,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding, RecordViewModel>(),
             rvContent?.getMusicAdapter()?.let { it1 ->
                 PlayMusicManager.initMusicInfo(
                     this,
-                    it, null, this, it1
+                    it, this, it1
                 )
             }
         }

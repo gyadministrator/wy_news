@@ -30,7 +30,7 @@ object GlobalData {
     /*-----------------全局数据----------------------*/
     var isLock: Boolean = false
     const val MUSIC_NOTIFY_ID = 100
-    var isPlaying: Boolean = false
+    var isPlaying = MutableLiveData(false)
     const val LOCATION_KEY = "7f0d79866211bd1622b599d4ffae5a73"
     val mNewsTitleList = arrayListOf<NewsClassifyEntity>()
     val mNewsLiveTitleList = arrayListOf<LiveClassifyEntity>()
@@ -43,6 +43,8 @@ object GlobalData {
     val cityChange = MutableLiveData<String>()
     const val PAGE_SIZE = 20
     const val RESPONSE_SUCCESS_CODE = 200
+    const val COMMON_LOADING_TAG = "common_loading_tag"
+    const val MUSIC_LOADING_TAG = "music_loading_tag"
 
     /*--------------------音乐请求Header---------------------*/
     private var headerCookie: String =

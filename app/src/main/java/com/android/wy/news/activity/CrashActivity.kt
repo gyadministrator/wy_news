@@ -2,13 +2,18 @@ package com.android.wy.news.activity
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Intent
 import android.view.View
 import android.widget.TextView
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.ActivityCrashBinding
+import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.manager.RouteManager
+import com.android.wy.news.notification.NotificationHelper
+import com.android.wy.news.service.MusicNotifyService
 import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.viewmodel.CrashViewModel
 
@@ -43,6 +48,9 @@ class CrashActivity : BaseActivity<ActivityCrashBinding, CrashViewModel>() {
     }
 
     override fun initData() {
+        val service = Intent(App.app, MusicNotifyService::class.java)
+        stopService(service)
+        NotificationHelper.cancelAll()
         val config = CustomActivityOnCrash.getConfigFromIntent(intent)
         if (config == null) {
             finish()
