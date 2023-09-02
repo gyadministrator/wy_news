@@ -18,7 +18,7 @@ object UpdateManager {
         activity: AppCompatActivity,
         onUpdateManagerListener: OnUpdateManagerListener?
     ) {
-        LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, activity, "检查更新中...")
+        LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, activity, "检查更新中...", true)
         val apiService =
             HttpManager.mInstance.getApiService(
                 GlobalConstant.APP_UPDATE_BASE_URL,

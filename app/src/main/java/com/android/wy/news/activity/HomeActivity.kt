@@ -315,6 +315,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         }
 
         GlobalData.cityChange.observe(this) {
+            mBinding.ivDown.visibility = View.VISIBLE
             tvCity.text = it
         }
     }
@@ -402,6 +403,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     }
 
     override fun onPick(position: Int, data: City?) {
+        mBinding.ivDown.visibility = View.VISIBLE
         tvCity.text = data?.name
         GlobalData.cityChange.postValue(data?.name)
         Logger.i("选中的城市: " + data?.name)

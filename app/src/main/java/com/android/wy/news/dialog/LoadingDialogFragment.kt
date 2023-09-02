@@ -17,10 +17,12 @@ import com.android.wy.news.view.LoadingView
 class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     private var loadingView: LoadingView? = null
     private var tvTitle: TextView? = null
-    private var title:String?=null
+    private var title: String? = null
+    private var isTouch: Boolean = false
 
     companion object {
         const val TITLE_KEY = "title_key"
+        const val IS_TOUCH = "is_touch"
     }
 
     override fun initView() {
@@ -51,6 +53,7 @@ class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
 
     override fun initIntent() {
         title = arguments?.getString(TITLE_KEY)
+        isTouch = arguments?.getBoolean(IS_TOUCH)!!
     }
 
     override fun getLayoutHeight(): Int {
@@ -70,6 +73,6 @@ class LoadingDialogFragment : BaseDialogFragment<LayoutLoadingDialogBinding>() {
     }
 
     override fun isTouchDismiss(): Boolean {
-        return true
+        return isTouch
     }
 }

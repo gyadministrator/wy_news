@@ -72,7 +72,7 @@ class MusicMvActivity : BaseActivity<ActivityMusicMvBinding, MusicMvViewModel>()
     }
 
     private fun getMvInfo() {
-        LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, this, "获取MV地址中...")
+        LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, this, "获取MV地址中...",true)
         if (musicId.contains("_")) {
             musicId = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
         }

@@ -47,7 +47,8 @@
             android:layout_weight="1"
             android:background="@drawable/bg_common_press_radius"
             android:gravity="center"
-            android:text="@string/restart_app" />
+            android:text="@string/restart_app"
+            android:textColor="@color/select_indicator_color" />
 
         <TextView
             android:id="@+id/tv_close"
@@ -57,7 +58,8 @@
             android:layout_weight="1"
             android:background="@drawable/bg_common_press_radius"
             android:gravity="center"
-            android:text="@string/close_app" />
+            android:text="@string/close_app"
+            android:textColor="@color/desktop_lrc_color" />
     </LinearLayout>
 
     <TextView

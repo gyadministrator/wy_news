@@ -11,7 +11,7 @@ object LoadingDialog {
     private val dialogList = HashMap<String, LoadingDialogFragment>()
 
     @SuppressLint("InflateParams")
-    fun show(tag: String, activity: FragmentActivity, title: String) {
+    fun show(tag: String, activity: FragmentActivity, title: String, isTouch: Boolean) {
         val background = AppUtil.isBackground(activity)
         if (background) return
         Logger.i("LoadingDialog--->>>show:$tag")
@@ -21,6 +21,7 @@ object LoadingDialog {
         }
         val bundle = Bundle()
         bundle.putString(LoadingDialogFragment.TITLE_KEY, title)
+        bundle.putBoolean(LoadingDialogFragment.IS_TOUCH, isTouch)
         loadingDialogFragment.arguments = bundle
         val supportFragmentManager = activity.supportFragmentManager
         if (!supportFragmentManager.isDestroyed) {

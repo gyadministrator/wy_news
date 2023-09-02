@@ -38,10 +38,13 @@
                     tools:ignore="RtlSymmetry" />
 
                 <ImageView
+                    android:id="@+id/iv_down"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@mipmap/ic_down"
-                    app:tint="@color/main_title" />
+                    android:visibility="gone"
+                    app:tint="@color/main_title"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
 
             <RelativeLayout

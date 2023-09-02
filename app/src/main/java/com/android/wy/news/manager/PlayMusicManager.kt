@@ -129,7 +129,7 @@ object PlayMusicManager {
     }
 
     fun requestMusicInfo(musicInfo: MusicInfo) {
-        activity?.let { LoadingDialog.show(GlobalData.MUSIC_LOADING_TAG, it, "加载歌曲...") }
+        activity?.let { LoadingDialog.show(GlobalData.MUSIC_LOADING_TAG, it, "加载歌曲...",false) }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -193,7 +193,7 @@ object PlayMusicManager {
 
     fun requestDownloadMusicInfo(musicInfo: MusicInfo) {
         this.currentDownloadMusicInfo = musicInfo
-        activity?.let { LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, it, "下载歌曲...") }
+        activity?.let { LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, it, "下载歌曲...",true) }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -282,7 +282,7 @@ object PlayMusicManager {
             val musicLrcData = musicLrcEntity.data
             if (musicLrcData != null) {
                 val lrcList = musicLrcData.lrclist
-                if (lrcList.isNotEmpty()) {
+                if (!lrcList.isNullOrEmpty()) {
                     val currentLrcList = CommonTools.parseLrc(lrcList)
                     GlobalData.currentLrcData.clear()
                     GlobalData.currentLrcData.addAll(currentLrcList)

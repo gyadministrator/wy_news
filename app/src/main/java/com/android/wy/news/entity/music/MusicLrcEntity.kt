@@ -16,7 +16,7 @@ data class MusicLrcEntity(
 )
 
 data class MusicLrcData(
-    val lrclist: List<Lrclist>,
+    val lrclist: List<Lrclist>?,
     val simpl: Simpl,
     val songinfo: Songinfo
 )
