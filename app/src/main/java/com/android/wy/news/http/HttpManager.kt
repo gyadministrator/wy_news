@@ -65,25 +65,30 @@ class HttpManager {
     }
 
     fun <T> getTestApiService(url: String, clazz: Class<T>): T {
+        val musicHeader = GlobalData.musicHeader
         builder.addInterceptor { chain ->
-            val request: Request = chain.request()
+            val header = chain.request()
                 .newBuilder()
-                //.addHeader("Accept", "application/json, text/plain, */*")
-                //.addHeader("Accept-Encoding", "gzip, deflate")
-                //.addHeader("Accept-Language", "en-US,en;q=0.9")
-                //.addHeader("Connection", "keep-alive")
-                .addHeader(
-                    "Cookie",
-                    "_ga=GA1.2.1097867330.1688692040; _gid=GA1.2.527365140.1692754772; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1692754772,1692840272; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1692844674; _ga_ETPBRPM9ML=GS1.2.1692843852.7.1.1692844675.57.0.0; Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=Amw8eXExKca8yPtiknQbXsQwPiMxj2ty"
-                )
-                //.addHeader("Host", "www.kuwo.cn")
-                //.addHeader("Referer", "http://www.kuwo.cn/rankList")
-                .addHeader(
-                    "Secret",
-                    "61d468f39ca361123093b36890c97bc2718f6d7d6f14203b932c42eb40c41c16027cf490"
-                )
-                //.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
-                .build()
+            //.addHeader("Accept", "application/json, text/plain, */*")
+            //.addHeader("Accept-Encoding", "gzip, deflate")
+            //.addHeader("Accept-Language", "en-US,en;q=0.9")
+            //.addHeader("Connection", "keep-alive")
+            /*.addHeader(
+                "Cookie",
+                "_ga=GA1.2.1097867330.1688692040; _gid=GA1.2.527365140.1692754772; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1692754772,1692840272; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1692844674; _ga_ETPBRPM9ML=GS1.2.1692843852.7.1.1692844675.57.0.0; Hm_Iuvt_cdb524f42f0cer9b268e4v7y734w5esq24=Amw8eXExKca8yPtiknQbXsQwPiMxj2ty"
+            )
+            //.addHeader("Host", "www.kuwo.cn")
+            //.addHeader("Referer", "http://www.kuwo.cn/rankList")
+            .addHeader(
+                "Secret",
+                "61d468f39ca361123093b36890c97bc2718f6d7d6f14203b932c42eb40c41c16027cf490"
+            )*/
+            for ((k, v) in musicHeader) {
+                header.addHeader(k, v)
+            }
+            //.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
+            //.build()
+            val request = header.build()
             chain.proceed(request)
         }
         val retrofit = Retrofit.Builder()

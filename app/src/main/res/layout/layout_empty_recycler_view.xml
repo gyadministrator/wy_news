@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.android.wy.news.view.MusicRecyclerView
         android:id="@+id/rv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

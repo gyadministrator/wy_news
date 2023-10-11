@@ -23,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.android.wy.news.view.MusicRecyclerView
-                android:id="@+id/rv_content"
+            <com.android.wy.news.view.EmptyMusicRecyclerView
+                android:id="@+id/rv_empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="6dp"

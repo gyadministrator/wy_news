@@ -41,6 +41,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /*
@@ -483,9 +484,10 @@ object CommonTools {
         return videoList
     }
 
-    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo> {
-        val dataList = ArrayList<MusicInfo>()
+    fun filterMusicList(musicList: ArrayList<MusicInfo>?): ArrayList<MusicInfo>? {
+        var dataList: ArrayList<MusicInfo>? = null
         if (musicList != null && musicList.size > 0) {
+            dataList = ArrayList()
             for (i in 0 until musicList.size) {
                 val musicInfo = musicList[i]
                 val listenFee = musicInfo.isListenFee

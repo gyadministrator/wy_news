@@ -78,7 +78,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
                 tvTitle.text = name
             }
             val musicList = CommonTools.filterMusicList(data.musicList)
-            rvContent.refreshData(musicList)
+            musicList?.let { it1 -> rvContent.refreshData(it1) }
         }
     }
 

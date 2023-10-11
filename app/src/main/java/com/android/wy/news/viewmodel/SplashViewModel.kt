@@ -17,7 +17,9 @@ import com.android.wy.news.http.IApiService
 import com.android.wy.news.manager.JsoupManager
 import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
+import com.android.wy.news.util.ToastUtil
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +40,6 @@ class SplashViewModel : BaseViewModel() {
         TaskUtil.runOnThread { JsoupManager.getCityInfo() }
         TaskUtil.runOnThread { getSplash() }
         TaskUtil.runOnUiThread { getMusicHeader() }
-        //TaskUtil.runOnUiThread { testMusicList() }
     }
 
     private fun getMusicHeader() {
@@ -77,6 +78,7 @@ class SplashViewModel : BaseViewModel() {
                 }
             }
         }
+        TaskUtil.runOnUiThread { testMusicList() }
         Logger.i("parseHeader--->>>GlobalData.musicHeader:" + GlobalData.musicHeader)
     }
 
@@ -141,6 +143,7 @@ class SplashViewModel : BaseViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val s = response.body()?.string()
                 Logger.i("testMusicList--->>>$s")
+                handleResult(s)
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -148,6 +151,18 @@ class SplashViewModel : BaseViewModel() {
                 t.message?.let { msg.postValue(it) }
             }
         })
+    }
+
+    private fun handleResult(s: String?) {
+        if (s != null) {
+            val jsonObject = JSONObject(s)
+            val message = jsonObject.optString("message")
+            val success = jsonObject.optBoolean("success")
+            val code = jsonObject.optInt("code")
+            if (!success && code != 200) {
+                ToastUtil.show(message)
+            }
+        }
     }
 
     private fun readNewsTitle(context: Context) {

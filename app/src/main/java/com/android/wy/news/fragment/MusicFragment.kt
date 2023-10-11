@@ -21,6 +21,7 @@ import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.util.ToastUtil
+import com.android.wy.news.view.EmptyMusicRecyclerView
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.view.PlayBarView
 import com.android.wy.news.viewmodel.MusicViewModel
@@ -40,10 +41,11 @@ import org.greenrobot.eventbus.EventBus
  *   }
  */
 class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRefreshListener,
-    OnLoadMoreListener, IMusicItemChangeListener {
+    OnLoadMoreListener, IMusicItemChangeListener, EmptyMusicRecyclerView.OnReloadListener {
     private var pageStart = 1
     private var categoryId: Int = 0
-    private lateinit var rvContent: MusicRecyclerView
+    private lateinit var emptyRecyclerView: EmptyMusicRecyclerView
+    private var rvContent: MusicRecyclerView? = null
     private lateinit var shimmerRecyclerView: ShimmerRecyclerView
     private var musicAdapter: MusicAdapter? = null
     private var isRefresh = false
@@ -71,22 +73,26 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         floatingBtn = mBinding.floatingBtn
         shimmerRecyclerView = mBinding.shimmerRecyclerView
         shimmerRecyclerView.showShimmerAdapter()
-        rvContent = mBinding.rvContent
+        emptyRecyclerView = mBinding.rvEmpty
         refreshLayout = mBinding.refreshLayout
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setOnLoadMoreListener(this)
         refreshLayout.setEnableFooterFollowWhenNoMoreData(true)
-        rvContent.seItemListener(this)
+        rvContent = emptyRecyclerView.getRecyclerView()
+        emptyRecyclerView.setLoadListener(this)
+        rvContent?.seItemListener(this)
     }
 
     override fun initData() {
-        musicAdapter = rvContent.getMusicAdapter()
+        musicAdapter = rvContent?.getMusicAdapter()
 
         musicAdapter?.let { it1 ->
-            PlayMusicManager.initMusicInfo(
-                mActivity, rvContent,
-                this, it1
-            )
+            rvContent?.let {
+                PlayMusicManager.initMusicInfo(
+                    mActivity, it,
+                    this, it1
+                )
+            }
         }
         PlayMusicManager.getLrc()
     }
@@ -106,7 +112,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         }
         getMusicList()
 
-        rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        rvContent?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val playPosition = PlayMusicManager.getPlayPosition()
@@ -134,7 +140,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     private fun scrollPosition() {
         val playPosition = PlayMusicManager.getPlayPosition()
         if (playPosition >= 0) {
-            rvContent.smoothScrollToPosition(playPosition)
+            rvContent?.smoothScrollToPosition(playPosition)
         }
     }
 
@@ -142,8 +148,9 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         MusicRepository.getMusicList(categoryId, pageStart).observe(this) {
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
-            var musicList = musicListData?.musicList
-            musicList = CommonTools.filterMusicList(musicList)
+            val musicList = musicListData?.musicList
+            //过滤
+            //musicList = CommonTools.filterMusicList(musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()
@@ -153,16 +160,25 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
                 refreshLayout.finishLoadMore()
             }
 
-            if (musicList.size == 0) {
-                if (isLoading) {
-                    refreshLayout.setNoMoreData(true)
+            if (musicList != null) {
+                if (musicList.size == 0) {
+                    if (isLoading) {
+                        refreshLayout.setNoMoreData(true)
+                    } else {
+                        emptyRecyclerView.showData(false)
+                        refreshLayout.setEnableLoadMore(false)
+                    }
+                } else {
+                    emptyRecyclerView.showData(true)
+                    if (isRefresh) {
+                        rvContent?.refreshData(musicList)
+                    } else {
+                        rvContent?.loadData(musicList)
+                    }
                 }
             } else {
-                if (isRefresh) {
-                    rvContent.refreshData(musicList)
-                } else {
-                    rvContent.loadData(musicList)
-                }
+                emptyRecyclerView.showData(false)
+                refreshLayout.setEnableLoadMore(false)
             }
 
             val musicListEvent = musicAdapter?.getDataList()?.let { it1 -> MusicListEvent(it1) }
@@ -280,5 +296,11 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
     }
 
     override fun onItemLongClick(view: View, data: MusicInfo) {
+    }
+
+    override fun onReload() {
+        isRefresh = true
+        pageStart = 1
+        getMusicList()
     }
 }
