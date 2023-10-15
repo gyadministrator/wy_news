@@ -33,13 +33,22 @@ import retrofit2.Response
  */
 class SplashViewModel : BaseViewModel() {
     var isReadFinish = MutableLiveData(false)
+    var retryCount = 3
 
     fun init(context: Context) {
+        readMusicHeader()
         TaskUtil.runOnThread { readNewsTitle(context) }
         TaskUtil.runOnThread { getLiveClassify() }
         TaskUtil.runOnThread { JsoupManager.getCityInfo() }
         TaskUtil.runOnThread { getSplash() }
-        TaskUtil.runOnUiThread { getMusicHeader() }
+        TaskUtil.runOnThread { getMusicHeader() }
+    }
+
+    private fun readMusicHeader() {
+        val s = SpTools.getString(GlobalData.SpKey.MUSIC_HEADER)
+        if (!TextUtils.isEmpty(s)) {
+            GlobalData.musicHeader = JsonUtil.parseJsonToMap(s)!!
+        }
     }
 
     private fun getMusicHeader() {
@@ -63,6 +72,11 @@ class SplashViewModel : BaseViewModel() {
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Logger.i("getMusicHeader--->>>${t.message}")
+                Logger.i("getMusicHeader--->>>retryCount:${retryCount}")
+                if (retryCount > 0) {
+                    retryCount--
+                    TaskUtil.runOnThread { getMusicHeader() }
+                }
             }
         })
     }
@@ -76,6 +90,11 @@ class SplashViewModel : BaseViewModel() {
                 for ((k, v) in dataList) {
                     GlobalData.musicHeader[k] = v
                 }
+                //保存在本地
+                SpTools.putString(
+                    GlobalData.SpKey.MUSIC_HEADER,
+                    JsonUtil.parseObjectToJson(GlobalData.musicHeader)
+                )
             }
         }
         TaskUtil.runOnUiThread { testMusicList() }

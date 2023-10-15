@@ -25,6 +25,7 @@ object GlobalData {
         const val NOTICE_STATUS = "notice_status"
         var LAST_PLAY_MUSIC_KEY = "last_play_music_key"
         var LRC_TYPE = "lrc_type"
+        const val MUSIC_HEADER = "music_header"
     }
 
     /*-----------------全局数据----------------------*/
