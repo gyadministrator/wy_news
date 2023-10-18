@@ -52,16 +52,13 @@ class SplashViewModel : BaseViewModel() {
     }
 
     private fun getMusicHeader() {
-        val apiService =
-            HttpManager.mInstance.getApiService(
-                GlobalConstant.APP_UPDATE_BASE_URL,
-                IApiService::class.java
-            )
+        val apiService = HttpManager.mInstance.getApiService(
+            GlobalConstant.APP_UPDATE_BASE_URL, IApiService::class.java
+        )
         val observable = apiService.requestMusicHeader()
         observable.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(
-                call: Call<ResponseBody>,
-                response: Response<ResponseBody>
+                call: Call<ResponseBody>, response: Response<ResponseBody>
             ) {
                 val body = response.body()
                 val bytes = body?.bytes()
@@ -147,11 +144,9 @@ class SplashViewModel : BaseViewModel() {
     }
 
     private fun testMusicList() {
-        val apiService =
-            HttpManager.mInstance.getTestApiService(
-                GlobalConstant.MUSIC_BASE_URL,
-                IApiService::class.java
-            )
+        val apiService = HttpManager.mInstance.getTestApiService(
+            GlobalConstant.MUSIC_BASE_URL, IApiService::class.java
+        )
         val params = HashMap<String, Any>()
         params["bangId"] = 17
         params["pn"] = 1
@@ -174,12 +169,25 @@ class SplashViewModel : BaseViewModel() {
 
     private fun handleResult(s: String?) {
         if (s != null) {
-            val jsonObject = JSONObject(s)
-            val message = jsonObject.optString("message")
-            val success = jsonObject.optBoolean("success")
-            val code = jsonObject.optInt("code")
-            if (!success && code != 200) {
-                ToastUtil.show(message)
+            try {
+                val jsonObject = JSONObject(s)
+                var message = ""
+                var success = false
+                var code = 0
+                if (jsonObject.has("message")) {
+                    message = jsonObject.optString("message")
+                }
+                if (jsonObject.has("success")) {
+                    success = jsonObject.optBoolean("success")
+                }
+                if (jsonObject.has("code")) {
+                    code = jsonObject.optInt("code")
+                }
+                if (!success && code != 200) {
+                    ToastUtil.show(message)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
