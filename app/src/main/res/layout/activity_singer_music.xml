@@ -45,7 +45,8 @@
                 app:shimmer_demo_child_count="10"
                 app:shimmer_demo_grid_child_count="2"
                 app:shimmer_demo_layout="@layout/layout_music_shimmer_item"
-                app:shimmer_demo_layout_manager_type="linear_vertical" />
+                app:shimmer_demo_layout_manager_type="linear_vertical"
+                app:shimmer_demo_shimmer_color="@color/demo_light_transparent" />
         </FrameLayout>
 
         <com.android.wy.news.refresh.CustomRefreshFooter
