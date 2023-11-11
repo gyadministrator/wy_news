@@ -140,7 +140,7 @@ class PlayBarView : LinearLayout, View.OnClickListener {
             setPlay(it)
         }
         PlayMusicManager.getPlayMusicInfo().observe(appCompatActivity) {
-            setCover(it.pic)
+            it.pic?.let { it1 -> setCover(it1) }
         }
     }
 

@@ -46,7 +46,7 @@ data class MusicInfo(
     val originalsongtype: Int,
     val pay: String,
     val payInfo: PayInfo,
-    val pic: String,
+    val pic: String?,
     val pic120: String,
     val rank_change: String,
     val releaseDate: String,
