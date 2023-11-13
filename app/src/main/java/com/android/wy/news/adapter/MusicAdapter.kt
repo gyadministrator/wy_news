@@ -82,7 +82,7 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
          }*/
             holder.tvMv.tag = data
             holder.tvMv.setOnClickListener(onMvClickListener)
-            CommonTools.loadImage(data.pic, holder.ivCover)
+            data.pic?.let { CommonTools.loadImage(it, holder.ivCover) }
             checkState(holder, position)
         }
     }
@@ -101,12 +101,14 @@ class MusicAdapter(itemAdapterListener: OnItemAdapterListener<MusicInfo>) :
                 stringBuilder.append(artist)
             }
             p0.context?.let {
-                MusicMvActivity.startMv(
-                    it,
-                    stringBuilder.toString(),
-                    tag.pic,
-                    tag.musicrid
-                )
+                tag.pic?.let { it1 ->
+                    MusicMvActivity.startMv(
+                        it,
+                        stringBuilder.toString(),
+                        it1,
+                        tag.musicrid
+                    )
+                }
             }
         }
     }

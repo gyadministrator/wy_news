@@ -103,12 +103,14 @@ class LocalMusicAdapter(itemAdapterListener: OnItemAdapterListener<LocalMusic>) 
                 stringBuilder.append(artist)
             }
             p0.context?.let {
-                MusicMvActivity.startMv(
-                    it,
-                    stringBuilder.toString(),
-                    tag.pic,
-                    tag.musicrid
-                )
+                tag.pic?.let { it1 ->
+                    MusicMvActivity.startMv(
+                        it,
+                        stringBuilder.toString(),
+                        it1,
+                        tag.musicrid
+                    )
+                }
             }
         }
     }
