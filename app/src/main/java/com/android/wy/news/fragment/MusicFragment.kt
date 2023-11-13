@@ -240,7 +240,7 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         if (!checkState) return
         val i = view.tag as Int
         PlayMusicManager.prepareMusic(i)
-        startAnim(view, data.pic)
+        data.pic?.let { startAnim(view, it) }
     }
 
     private fun startAnim(view: View, pic: String) {
