@@ -54,7 +54,7 @@ import retrofit2.Response
 object PlayMusicManager {
     private var mServiceIntent: Intent? = null
     private var currentPosition = -1
-    private var currentMusicInfo = MutableLiveData<MusicInfo>()
+    private var currentMusicInfo = MutableLiveData<MusicInfo?>()
     private var currentDownloadMusicInfo: MusicInfo? = null
     private var currentPlayUrl: String? = ""
     private var lifecycleOwner: LifecycleOwner? = null
@@ -428,7 +428,7 @@ object PlayMusicManager {
         return currentPlayUrl
     }
 
-    fun getPlayMusicInfo(): MutableLiveData<MusicInfo> {
+    fun getPlayMusicInfo(): MutableLiveData<MusicInfo?> {
         return currentMusicInfo
     }
 }
