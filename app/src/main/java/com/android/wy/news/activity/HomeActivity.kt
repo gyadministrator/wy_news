@@ -56,6 +56,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+
 @Route(path = RouteManager.PATH_ACTIVITY_HOME)
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabItemSelectedListener,
     OnPickListener {
@@ -105,22 +106,63 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         val normalItemView = NormalItemView(this)
         normalItemView.initialize(drawable, checkedDrawable, text)
         normalItemView.setTextDefaultColor(AppUtil.getColor(this, R.color.main_title))
-        normalItemView.setTextCheckedColor(AppUtil.getColor(this, R.color.text_select_color))
+        normalItemView.setTextCheckedColor(AppUtil.getColor(this, R.color.desktop_lrc_color))
         return normalItemView
     }
 
     override fun initData() {
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
-        initBottomBar()
-        setMessagePoint(3, true)
-        setMessagePoint(4, true)
+        initCustomBottomBar()
+        initNaviController()
         TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
     }
 
-    private fun initBottomBar() {
+    private fun initCustomBottomBar() {
+        val customBuilder = pageNavigationView?.custom()
+            ?.addItem(
+                newItem(
+                    R.mipmap.top,
+                    R.mipmap.top_p,
+                    "头条"
+                )
+            )
+            ?.addItem(
+                newItem(
+                    R.mipmap.classify,
+                    R.mipmap.classify_p,
+                    "精选"
+                )
+            )
+            ?.addItem(
+                newItem(
+                    R.mipmap.video,
+                    R.mipmap.video_p,
+                    "视频"
+                )
+            )
+            ?.addItem(
+                newItem(
+                    R.mipmap.music,
+                    R.mipmap.music_p,
+                    "聆听"
+                )
+            )
+            ?.addItem(
+                newItem(
+                    R.mipmap.my,
+                    R.mipmap.my_p,
+                    "我的"
+                )
+            )
+            ?.enableAnimateLayoutChanges()
+        navigationController = customBuilder?.build()
+    }
+
+    private fun initMaterialBottomBar() {
         materialBuilder = pageNavigationView?.material()
+            //?.setMode(MaterialMode.HIDE_TEXT)
             ?.addItem(
                 R.mipmap.top,
                 R.mipmap.top_p,
@@ -152,10 +194,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
                 selectColor
             )
             ?.setDefaultColor(AppUtil.getColor(this, R.color.main_title)) //未选中状态的颜色
+            //切换的动效
             ?.enableAnimateLayoutChanges()
         navigationController = materialBuilder?.build()
+    }
 
-
+    private fun initNaviController() {
         val fragmentList = arrayListOf<Fragment>(
             TopTabFragment.newInstance(),
             ClassifyTabFragment.newInstance(),
@@ -388,9 +432,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         }
         if (index == 0) {
             setMessageNum(0, 0)
-        }
-        if (index == 3) {
-            setMessagePoint(3, false)
         }
     }
 

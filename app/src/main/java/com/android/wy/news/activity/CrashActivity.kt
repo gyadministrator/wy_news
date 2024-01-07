@@ -9,8 +9,8 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.android.wy.news.app.App
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.ActivityCrashBinding
-import com.android.wy.news.manager.PlayMusicManager
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.notification.NotificationHelper
 import com.android.wy.news.service.MusicNotifyService
@@ -71,6 +71,7 @@ class CrashActivity : BaseActivity<ActivityCrashBinding, CrashViewModel>() {
             val errorDetailsFromIntent =
                 CustomActivityOnCrash.getAllErrorDetailsFromIntent(this, intent)
             tvErrorInfo?.text = errorDetailsFromIntent
+            Logger.e(errorDetailsFromIntent)
         }
         tvErrorInfo?.setOnLongClickListener {
             copyErrorToClipboard()
