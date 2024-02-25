@@ -63,6 +63,9 @@ object NetworkRequest {
     suspend fun getAlbumInfo(map: MutableMap<String, Any>) =
         musicService.getAlbumInfo(map).await()
 
+    suspend fun getPopByType(map: MutableMap<String, Any>) =
+        musicService.getPopByType(map).await()
+
     /**
      * Retrofit网络返回处理
      */

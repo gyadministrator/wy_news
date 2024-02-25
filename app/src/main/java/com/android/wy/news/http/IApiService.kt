@@ -9,6 +9,7 @@ import com.android.wy.news.entity.music.MusicListEntity
 import com.android.wy.news.entity.music.MusicLrcEntity
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.MusicUrlEntity
+import com.android.wy.news.entity.music.PropType
 import com.android.wy.news.entity.music.SearchMusicEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -144,4 +145,9 @@ interface IApiService {
     fun getAlbumInfo(
         @QueryMap queryMap: MutableMap<String, Any>
     ): Call<ArtistAlbumInfoEntity>
+
+    @GET("/openapi/v2/pc/popConfig/getPopByType")
+    fun getPopByType(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<PropType>
 }

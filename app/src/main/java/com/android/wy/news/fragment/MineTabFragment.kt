@@ -8,12 +8,15 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.android.wy.news.activity.SettingActivity
+import com.android.wy.news.activity.WebActivity
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
+import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabMineBinding
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.entity.music.MusicRecommendEntity
+import com.android.wy.news.entity.music.PropType
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.PlayMusicManager
@@ -23,9 +26,12 @@ import com.android.wy.news.util.JsonUtil
 import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.view.MusicRecyclerView
 import com.android.wy.news.viewmodel.MineTabViewModel
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>(),
-    IMusicItemChangeListener {
+    IMusicItemChangeListener, OnRefreshListener {
     private lateinit var llSetting: LinearLayout
     private lateinit var llLive: LinearLayout
     private lateinit var llLocal: LinearLayout
@@ -38,6 +44,9 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     private lateinit var tvPlay: TextView
     private lateinit var rvContent: MusicRecyclerView
     private lateinit var tvTitle: TextView
+    private lateinit var refreshLayout: SmartRefreshLayout
+    private var hasPropType = false
+    private var jumpUrlStr: String? = ""
 
     companion object {
         fun newInstance() = MineTabFragment()
@@ -56,14 +65,54 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         rlReCommendPlay = mBinding.rlRecommendPlay
         rvContent = mBinding.rvContent
         tvTitle = mBinding.tvTitle
+        refreshLayout = mBinding.refreshLayout
+        refreshLayout.setOnRefreshListener(this)
+        refreshLayout.setEnableLoadMore(false)
+        ivRecommendCover.setOnClickListener {
+            jumpUrlStr?.let { it1 -> WebActivity.startActivity(mActivity, it1) }
+        }
     }
 
     override fun initData() {
         rvContent.getMusicAdapter()
             ?.let { PlayMusicManager.initMusicInfo(mActivity, rvContent, this, it) }
         showRecentPlay()
+        requestPropType()
+        requestRecommendMusic()
+    }
+
+    private fun requestRecommendMusic() {
         MusicRepository.getRecommendMusic().observe(this) {
+            refreshLayout.finishRefresh()
             setContent(it)
+        }
+    }
+
+    private fun requestPropType() {
+        MusicRepository.getPopByType().observe(this) {
+            refreshLayout.finishRefresh()
+            setPropType(it)
+        }
+    }
+
+    private fun setPropType(it: Result<PropType>?) {
+        if (it != null) {
+            Logger.i("setPropType--->>>$it")
+            val propType = it.getOrNull()
+            if (propType != null) {
+                val data = propType.data
+                val popImgUrl = data.popImgUrl
+                if (!TextUtils.isEmpty(popImgUrl)) {
+                    hasPropType = true
+                }
+                CommonTools.loadImage(popImgUrl, ivRecommendCover)
+                val onlineTime = data.onlineTime
+                val offlineTime = data.offlineTime
+                val onlineTimeStr: String = CommonTools.parseTime(onlineTime)
+                val offlineTimeStr: String = CommonTools.parseTime(offlineTime)
+                Logger.i("setPropType--->>>onlineTimeStr=$onlineTimeStr  offlineTimeStr=$offlineTimeStr")
+                jumpUrlStr = data.jumpUrl
+            }
         }
     }
 
@@ -71,7 +120,9 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         val musicRecommendEntity = it?.getOrNull()
         if (musicRecommendEntity != null) {
             val data = musicRecommendEntity.data
-            CommonTools.loadImage(data.img700, ivRecommendCover)
+            if (!hasPropType) {
+                CommonTools.loadImage(data.img700, ivRecommendCover)
+            }
             rlReCommendPlay.visibility = View.VISIBLE
             val name = data.name
             if (!TextUtils.isEmpty(name)) {
@@ -160,5 +211,14 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     }
 
     override fun onItemLongClick(view: View, data: MusicInfo) {
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        TaskUtil.runOnUiThread({
+            if (refreshLayout.isRefreshing) {
+                refreshLayout.finishRefresh()
+            }
+        }, 2000)
+        initData()
     }
 }

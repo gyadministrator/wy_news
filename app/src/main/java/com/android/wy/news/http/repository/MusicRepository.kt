@@ -125,4 +125,13 @@ object MusicRepository : BaseRepository() {
         if (artistMvEntity.code == GlobalData.RESPONSE_SUCCESS_CODE) Result.success(artistMvEntity)
         else Result.failure(RuntimeException("getAlbumInfo is error"))
     }
+
+    fun getPopByType() = getData(Dispatchers.IO) {
+        addParam()
+        params["uuid"] = "6b5f3d45-0bbb-4b97-8fd1-3b2d5b1bc499"
+        params["type"] = "vipPop"
+        val artistMvEntity = NetworkRequest.getPopByType(params)
+        if (artistMvEntity.code == GlobalData.RESPONSE_SUCCESS_CODE) Result.success(artistMvEntity)
+        else Result.failure(RuntimeException("getPopByType is error"))
+    }
 }

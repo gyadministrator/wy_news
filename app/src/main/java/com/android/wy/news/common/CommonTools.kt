@@ -41,7 +41,6 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /*
@@ -213,6 +212,11 @@ object CommonTools {
             return format.format(date)
         }
         return ""
+    }
+
+    fun parseTime(time: Long): String {
+        val date = Date(time)
+        return android.text.format.DateFormat.getLongDateFormat(App.app).format(date)
     }
 
     @SuppressLint("SimpleDateFormat")

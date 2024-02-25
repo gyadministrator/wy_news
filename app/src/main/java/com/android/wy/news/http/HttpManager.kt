@@ -36,7 +36,7 @@ class HttpManager {
     }
 
     private fun <T> getMusicApiService(clazz: Class<T>): T {
-        val musicHeaders = CommonTools.getMusicHeaders();
+        val musicHeaders = CommonTools.getMusicHeaders()
         builder.addInterceptor { chain ->
             val request: Request = chain.request()
                 .newBuilder()

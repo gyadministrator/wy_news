@@ -42,6 +42,7 @@ class SplashViewModel : BaseViewModel() {
         TaskUtil.runOnThread { JsoupManager.getCityInfo() }
         TaskUtil.runOnThread { getSplash() }
         TaskUtil.runOnThread { getMusicHeader() }
+        TaskUtil.runOnThread { testMusicList() }
     }
 
     private fun readMusicHeader() {
@@ -70,6 +71,7 @@ class SplashViewModel : BaseViewModel() {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Logger.i("getMusicHeader--->>>${t.message}")
                 Logger.i("getMusicHeader--->>>retryCount:${retryCount}")
+                TaskUtil.runOnThread { testMusicList() }
                 if (retryCount > 0) {
                     retryCount--
                     TaskUtil.runOnThread { getMusicHeader() }
@@ -94,7 +96,7 @@ class SplashViewModel : BaseViewModel() {
                 )
             }
         }
-        TaskUtil.runOnUiThread { testMusicList() }
+        TaskUtil.runOnThread { testMusicList() }
         Logger.i("parseHeader--->>>GlobalData.musicHeader:" + GlobalData.musicHeader)
     }
 
