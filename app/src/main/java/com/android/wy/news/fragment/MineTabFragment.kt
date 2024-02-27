@@ -44,6 +44,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     private lateinit var tvPlay: TextView
     private lateinit var rvContent: MusicRecyclerView
     private lateinit var tvTitle: TextView
+    private lateinit var tvLimit: TextView
     private lateinit var refreshLayout: SmartRefreshLayout
     private var hasPropType = false
     private var jumpUrlStr: String? = ""
@@ -66,6 +67,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         rvContent = mBinding.rvContent
         tvTitle = mBinding.tvTitle
         refreshLayout = mBinding.refreshLayout
+        tvLimit = mBinding.tvLimit
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setEnableLoadMore(false)
         ivRecommendCover.setOnClickListener {
@@ -95,6 +97,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setPropType(it: Result<PropType>?) {
         if (it != null) {
             Logger.i("setPropType--->>>$it")
@@ -111,6 +114,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
                 val onlineTimeStr: String = CommonTools.parseTime(onlineTime)
                 val offlineTimeStr: String = CommonTools.parseTime(offlineTime)
                 Logger.i("setPropType--->>>onlineTimeStr=$onlineTimeStr  offlineTimeStr=$offlineTimeStr")
+                tvLimit.text = "$onlineTimeStr-$offlineTimeStr"
                 jumpUrlStr = data.jumpUrl
             }
         }
@@ -121,6 +125,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         if (musicRecommendEntity != null) {
             val data = musicRecommendEntity.data
             if (!hasPropType) {
+                tvLimit.visibility = View.GONE
                 CommonTools.loadImage(data.img700, ivRecommendCover)
             }
             rlReCommendPlay.visibility = View.VISIBLE
