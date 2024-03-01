@@ -25,14 +25,15 @@ open class BaseRepository {
             val result = try {
                 block()
             } catch (e: Exception) {
-                e.message?.let { ToastUtil.show(it) }
+                //e.message?.let { ToastUtil.show(it) }
                 Logger.i("getData--->>>e:" + e.message)
                 Result.failure(e)
             }
             val t = result.getOrNull();
             Logger.i("getData=$t")
             if (t == null) {
-                ToastUtil.show("获取数据失败,请稍后重试")
+                //ToastUtil.show("获取数据失败,请稍后重试")
+                Logger.e("获取数据失败,请稍后重试")
             }
             LoadingDialog.hide(GlobalData.COMMON_LOADING_TAG)
             //通知数据变化

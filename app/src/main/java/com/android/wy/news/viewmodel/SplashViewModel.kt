@@ -186,7 +186,8 @@ class SplashViewModel : BaseViewModel() {
                     code = jsonObject.optInt("code")
                 }
                 if (!success && code != 200) {
-                    ToastUtil.show(message)
+                    //ToastUtil.show(message)
+                    Logger.e("handleResult--->>>$message")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
