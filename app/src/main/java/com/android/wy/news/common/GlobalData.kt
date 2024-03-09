@@ -64,4 +64,6 @@ object GlobalData {
             "plat" to "web_www",
             "from" to ""
         )
+
+    const val DEFAULT_MUSIC_TYPE: String = "1082685104"
 }

@@ -18,7 +18,7 @@ data class MusicRecommendEntity(
 
 data class MusicRecommendData(
     val desc: String,
-    val id: Int,
+    val id: String,
     val img: String,
     val img300: String,
     val img500: String,

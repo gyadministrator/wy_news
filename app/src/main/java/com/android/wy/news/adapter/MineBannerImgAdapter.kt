@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.wy.news.R
 import com.android.wy.news.common.CommonTools
-import com.android.wy.news.entity.House
+import com.android.wy.news.entity.music.RecommendMusicType
 import com.youth.banner.adapter.BannerAdapter
 
 /*
@@ -17,8 +17,8 @@ import com.youth.banner.adapter.BannerAdapter
   * @Version:        1.0
   * @Description:
  */
-class BannerImgAdapter(dataList: ArrayList<House>) :
-    BannerAdapter<House, BannerImgAdapter.BannerImageViewHolder>(dataList) {
+class MineBannerImgAdapter(dataList: List<RecommendMusicType>) :
+    BannerAdapter<RecommendMusicType, MineBannerImgAdapter.BannerImageViewHolder>(dataList) {
 
 
     class BannerImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,26 +34,23 @@ class BannerImgAdapter(dataList: ArrayList<House>) :
     override fun onCreateHolder(parent: ViewGroup?, viewType: Int): BannerImageViewHolder {
         val view =
             LayoutInflater.from(parent!!.context)
-                .inflate(R.layout.layout_banner_item, parent, false)
+                .inflate(R.layout.layout_mine_banner_item, parent, false)
         return BannerImageViewHolder(view)
     }
 
     override fun onBindView(
         holder: BannerImageViewHolder?,
-        data: House?,
+        data: RecommendMusicType?,
         position: Int,
         size: Int
     ) {
         if (holder != null) {
             if (data != null) {
-                val picInfo = data.picInfo
-                if (!picInfo.isNullOrEmpty()) {
-                    val info = picInfo[0]
-                    info?.let { CommonTools.loadImage(it.url, holder.ivCover) }
-                }
+                val img500 = data.img500
+                CommonTools.loadImage(img500, holder.ivCover)
             }
             if (data != null) {
-                holder.tvTitle.text = data.title
+                holder.tvTitle.text = data.name
             }
         }
     }

@@ -45,6 +45,9 @@ object NetworkRequest {
     suspend fun getRecommendMusic(map: MutableMap<String, Any>) =
         musicService.getRecommendMusic(map).await()
 
+    suspend fun getRecommendMusicType(map: MutableMap<String, Any>) =
+        musicService.getRecommendMusicType(map).await()
+
     suspend fun getMusicByKey(map: MutableMap<String, Any>) =
         musicService.getMusicByKey(map).await()
 

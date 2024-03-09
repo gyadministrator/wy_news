@@ -12,7 +12,7 @@ import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
 import com.android.wy.news.activity.HomeActivity
 import com.android.wy.news.activity.WebActivity
-import com.android.wy.news.adapter.BannerImgAdapter
+import com.android.wy.news.adapter.TopBannerImgAdapter
 import com.android.wy.news.adapter.BaseNewsAdapter
 import com.android.wy.news.adapter.TopAdapter
 import com.android.wy.news.common.CommonTools
@@ -258,15 +258,10 @@ class TopTabFragment : BaseFragment<FragmentTabTopBinding, TopViewModel>(), OnRe
 
     private fun addBannerHeader(it: ArrayList<House>?) {
         val banner = mBinding.banner
-        banner.visibility = View.VISIBLE
-        val titleList = ArrayList<String>()
 
         if (it != null && it.size > 0) {
-            for (i in it.indices) {
-                val house = it[i]
-                titleList.add(house.title)
-            }
-            banner.setAdapter(BannerImgAdapter(it)).addBannerLifecycleObserver(this) //添加生命周期观察者
+            banner.visibility = View.VISIBLE
+            banner.setAdapter(TopBannerImgAdapter(it)).addBannerLifecycleObserver(this) //添加生命周期观察者
                 //.setIndicator(CircleIndicator(mActivity))
                 .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
                 .setIndicatorNormalColorRes(R.color.text_normal_color)

@@ -1,5 +1,6 @@
 package com.android.wy.news.http.repository
 
+import android.text.TextUtils
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.http.NetworkRequest
@@ -50,9 +51,9 @@ object MusicRepository : BaseRepository() {
         else Result.failure(RuntimeException("getMusicMv is error"))
     }
 
-    fun getRecommendMusic() = getData(Dispatchers.IO) {
+    fun getRecommendMusic(pid: String) = getData(Dispatchers.IO) {
         addParam()
-        params["pid"] = "1082685104"
+        params["pid"] = pid
         params["pn"] = 1
         params["rn"] = GlobalData.PAGE_SIZE
         val musicRecommendEntity = NetworkRequest.getRecommendMusic(params)
@@ -60,6 +61,18 @@ object MusicRepository : BaseRepository() {
             musicRecommendEntity
         )
         else Result.failure(RuntimeException("getRecommendMusic is error"))
+    }
+
+    fun getRecommendMusicType() = getData(Dispatchers.IO) {
+        addParam()
+        params["id"] = "rcm"
+        params["pn"] = 1
+        params["rn"] = GlobalData.PAGE_SIZE
+        val musicRecommendTypeEntity = NetworkRequest.getRecommendMusicType(params)
+        if (musicRecommendTypeEntity.code == GlobalData.RESPONSE_SUCCESS_CODE) Result.success(
+            musicRecommendTypeEntity
+        )
+        else Result.failure(RuntimeException("getRecommendMusicType is error"))
     }
 
     fun getMusicByKey(key: String) = getData(Dispatchers.IO) {

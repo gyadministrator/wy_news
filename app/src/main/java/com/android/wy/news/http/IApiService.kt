@@ -10,6 +10,7 @@ import com.android.wy.news.entity.music.MusicLrcEntity
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.MusicUrlEntity
 import com.android.wy.news.entity.music.PropType
+import com.android.wy.news.entity.music.RecommendMusicTypeEntity
 import com.android.wy.news.entity.music.SearchMusicEntity
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -120,6 +121,11 @@ interface IApiService {
     fun getRecommendMusic(
         @QueryMap queryMap: MutableMap<String, Any>
     ): Call<MusicRecommendEntity>
+
+    @GET("/api/www/rcm/index/playlist")
+    fun getRecommendMusicType(
+        @QueryMap queryMap: MutableMap<String, Any>
+    ): Call<RecommendMusicTypeEntity>
 
     @GET("/api/www/search/searchMusicBykeyWord")
     fun getMusicByKey(

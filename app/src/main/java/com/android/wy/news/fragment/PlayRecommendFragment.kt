@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentPlayRecommendBinding
 import com.android.wy.news.entity.music.MusicRecommendEntity
@@ -49,7 +50,7 @@ class PlayRecommendFragment : BaseFragment<FragmentPlayRecommendBinding, PlayRec
     }
 
     override fun initData() {
-        MusicRepository.getRecommendMusic().observe(this) {
+        MusicRepository.getRecommendMusic(GlobalData.DEFAULT_MUSIC_TYPE).observe(this) {
             Logger.i("getRecommendMusic--->>>$it")
             setContent(it)
         }

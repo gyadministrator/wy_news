@@ -7,16 +7,22 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import com.android.wy.news.R
 import com.android.wy.news.activity.SettingActivity
 import com.android.wy.news.activity.WebActivity
+import com.android.wy.news.adapter.MineBannerImgAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
 import com.android.wy.news.common.SpTools
 import com.android.wy.news.databinding.FragmentTabMineBinding
+import com.android.wy.news.dialog.LoadingDialog
 import com.android.wy.news.entity.music.MusicInfo
 import com.android.wy.news.entity.music.MusicRecommendEntity
 import com.android.wy.news.entity.music.PropType
+import com.android.wy.news.entity.music.RecommendMusicType
+import com.android.wy.news.entity.music.RecommendMusicTypeEntity
 import com.android.wy.news.http.repository.MusicRepository
 import com.android.wy.news.listener.IMusicItemChangeListener
 import com.android.wy.news.manager.PlayMusicManager
@@ -29,6 +35,9 @@ import com.android.wy.news.viewmodel.MineTabViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.youth.banner.config.IndicatorConfig
+import com.youth.banner.listener.OnBannerListener
+import java.util.Random
 
 class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>(),
     IMusicItemChangeListener, OnRefreshListener {
@@ -45,8 +54,8 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
     private lateinit var rvContent: MusicRecyclerView
     private lateinit var tvTitle: TextView
     private lateinit var tvLimit: TextView
+    private lateinit var rlAd: RelativeLayout
     private lateinit var refreshLayout: SmartRefreshLayout
-    private var hasPropType = false
     private var jumpUrlStr: String? = ""
 
     companion object {
@@ -68,6 +77,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         tvTitle = mBinding.tvTitle
         refreshLayout = mBinding.refreshLayout
         tvLimit = mBinding.tvLimit
+        rlAd = mBinding.rlAd
         refreshLayout.setOnRefreshListener(this)
         refreshLayout.setEnableLoadMore(false)
         ivRecommendCover.setOnClickListener {
@@ -80,11 +90,56 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
             ?.let { PlayMusicManager.initMusicInfo(mActivity, rvContent, this, it) }
         showRecentPlay()
         requestPropType()
-        requestRecommendMusic()
+        requestRecommendMusicType()
     }
 
-    private fun requestRecommendMusic() {
-        MusicRepository.getRecommendMusic().observe(this) {
+    private fun requestRecommendMusicType() {
+        MusicRepository.getRecommendMusicType().observe(this) {
+            refreshLayout.finishRefresh()
+            setMusicType(it)
+        }
+    }
+
+    private fun setMusicType(it: Result<RecommendMusicTypeEntity>) {
+        val banner = mBinding.banner
+        val recommendMusicTypeEntity = it.getOrNull()
+        if (recommendMusicTypeEntity != null) {
+            val recommendMusicTypeData = recommendMusicTypeEntity.data
+            val list = recommendMusicTypeData.list
+            Logger.i("setMusicType--->>>$list")
+            if (list.isNotEmpty()) {
+                banner.visibility = View.VISIBLE
+                banner.setAdapter(MineBannerImgAdapter(list))
+                    .addBannerLifecycleObserver(this) //添加生命周期观察者
+                    //.setIndicator(CircleIndicator(mActivity))
+                    .setBannerGalleryEffect(10, 10).setIndicatorHeight(20).setIndicatorHeight(20)
+                    .setIndicatorNormalColorRes(R.color.text_normal_color)
+                    .setIndicatorSelectedColorRes(R.color.text_select_color).setIndicatorSpace(15)
+                    .setIndicatorGravity(IndicatorConfig.Direction.CENTER)
+                    .setOnBannerListener(bannerItemListener)
+
+                val random = Random()
+                val i = random.nextInt(list.size - 1)
+                Logger.i("setMusicType--->>>i=$i,pid=" + list[i].id)
+                requestRecommendMusic(list[i].id)
+            }
+        }
+    }
+
+    private val bannerItemListener = OnBannerListener<RecommendMusicType> { data, _ ->
+        Logger.i("setMusicType--->>>${data.id}")
+        LoadingDialog.show(
+            GlobalData.COMMON_LOADING_TAG,
+            mActivity as FragmentActivity,
+            "获取中...",
+            true
+        )
+        requestRecommendMusic(data.id)
+    }
+
+    private fun requestRecommendMusic(pid: String) {
+        MusicRepository.getRecommendMusic(pid).observe(this) {
+            LoadingDialog.hide(GlobalData.COMMON_LOADING_TAG)
             refreshLayout.finishRefresh()
             setContent(it)
         }
@@ -106,7 +161,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
                 val data = propType.data
                 val popImgUrl = data.popImgUrl
                 if (!TextUtils.isEmpty(popImgUrl)) {
-                    hasPropType = true
+                    rlAd.visibility = View.VISIBLE
                 }
                 CommonTools.loadImage(popImgUrl, ivRecommendCover)
                 val onlineTime = data.onlineTime
@@ -124,10 +179,7 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         val musicRecommendEntity = it?.getOrNull()
         if (musicRecommendEntity != null) {
             val data = musicRecommendEntity.data
-            if (!hasPropType) {
-                tvLimit.visibility = View.GONE
-                CommonTools.loadImage(data.img700, ivRecommendCover)
-            }
+
             rlReCommendPlay.visibility = View.VISIBLE
             val name = data.name
             if (!TextUtils.isEmpty(name)) {
