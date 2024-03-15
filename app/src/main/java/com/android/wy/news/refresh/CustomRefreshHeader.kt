@@ -16,14 +16,13 @@ import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
 import com.scwang.smart.refresh.layout.constant.SpinnerStyle
+import com.wang.avi.AVLoadingIndicatorView
 
 
 class CustomRefreshHeader : LinearLayout, RefreshHeader {
-    private var mImage: ImageView? = null
-    private var mAnimPull: AnimationDrawable? = null
-    private var mAnimRefresh: AnimationDrawable? = null
     private var textHeaderTipColor: Int? = null
     private var tvTip: TextView? = null
+    private var mImage: AVLoadingIndicatorView? = null
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -31,8 +30,8 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         context, attrs, defStyleAttr
     ) {
         val view = inflate(context, R.layout.layout_custom_refresh_header, this)
-        mImage = view.findViewById(R.id.iv_refresh_header)
         tvTip = view.findViewById(R.id.tv_tip)
+        mImage = view.findViewById(R.id.iv_refresh_footer)
 
         val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshHeader)
         textHeaderTipColor = context?.resources?.getColor(R.color.main_title)?.let {
@@ -54,17 +53,13 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         refreshLayout: RefreshLayout, oldState: RefreshState, newState: RefreshState
     ) {
         when (newState) {
-            RefreshState.PullDownToRefresh -> mImage?.setImageResource(R.mipmap.ic_launcher)
+            RefreshState.PullDownToRefresh -> {}
             RefreshState.ReleaseToRefresh -> {
-                mImage?.setImageResource(R.drawable.anim_pull_end)
-                mAnimPull = mImage?.drawable as AnimationDrawable
-                mAnimPull?.start()
+                mImage?.show()
             }
 
             RefreshState.Refreshing -> {
-                mImage?.setImageResource(R.drawable.anim_pull_refreshing)
-                mAnimRefresh = mImage?.drawable as AnimationDrawable
-                mAnimRefresh?.start()
+                mImage?.show()
             }
 
             else -> {}
@@ -119,12 +114,7 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
      */
     @SuppressLint("RestrictedApi")
     override fun onFinish(refreshLayout: RefreshLayout, success: Boolean): Int {
-        if (mAnimRefresh != null && mAnimRefresh!!.isRunning) {
-            mAnimRefresh?.stop()
-        }
-        if (mAnimPull != null && mAnimPull!!.isRunning) {
-            mAnimPull?.stop()
-        }
+        mImage?.hide()
         return 0
     }
 
