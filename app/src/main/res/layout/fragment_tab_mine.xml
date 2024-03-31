@@ -89,14 +89,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <com.youth.banner.Banner
-                        android:id="@+id/banner"
-                        android:layout_width="match_parent"
-                        android:layout_height="140dp"
-                        app:banner_auto_loop="true"
-                        app:banner_loop_time="3000"
-                        app:banner_radius="4dp" />
-
                     <RelativeLayout
                         android:id="@+id/rl_ad"
                         android:layout_width="match_parent"
@@ -104,15 +96,15 @@
                         android:layout_margin="10dp"
                         android:visibility="gone">
 
-                        <com.makeramen.roundedimageview.RoundedImageView
+                        <ImageView
                             android:id="@+id/iv_recommend_cover"
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
                             android:scaleType="centerCrop"
                             android:src="@mipmap/empty"
-                            app:riv_corner_radius="4dp" />
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:id="@+id/tv_limit"
@@ -121,10 +113,19 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
                             android:gravity="center"
-                            android:textColor="@color/main_title"
+                            android:visibility="gone"
+                            android:textColor="@color/text_select_color"
                             android:textSize="12sp"
                             tools:text="2024.2.27-2024.3.2" />
                     </RelativeLayout>
+
+                    <com.youth.banner.Banner
+                        android:id="@+id/banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        app:banner_auto_loop="true"
+                        app:banner_loop_time="3000"
+                        app:banner_radius="4dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

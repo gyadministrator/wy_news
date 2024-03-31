@@ -221,39 +221,47 @@ object CommonTools {
 
     @SuppressLint("SimpleDateFormat")
     fun getTimeDiff(time: String): String {
+        Logger.i("getTimeDiff--->>>$time")
         var result = ""
-        val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val date = df.parse(time)
-        val nowDate = Date()
-        if (date != null) {
-            val diff = nowDate.time - date.time
-            val day = diff / (1000 * 60 * 60 * 24)
-            val hour = diff / (60 * 60 * 1000) - day * 24
-            val minute = diff / (60 * 1000) - day * 24 * 60 - hour * 60
-            val second = diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60
-            val y = day / 365
-            if (y > 0) {
-                result = y.toString() + "年前"
-            } else {
-                val m = day / 30
-                if (m > 0) {
-                    result = m.toString() + "月前"
+        try {
+            var df: SimpleDateFormat? = null
+            if (time.contains(",")) {
+                df = SimpleDateFormat("yyyy-MM-dd HH,mm,ss")
+            } else if (time.contains(":")) {
+                df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            }
+            val date = df?.parse(time)
+            val nowDate = Date()
+            if (date != null) {
+                val diff = nowDate.time - date.time
+                val day = diff / (1000 * 60 * 60 * 24)
+                val hour = diff / (60 * 60 * 1000) - day * 24
+                val minute = diff / (60 * 1000) - day * 24 * 60 - hour * 60
+                val second = diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60
+                val y = day / 365
+                if (y > 0) {
+                    result = y.toString() + "年前"
                 } else {
-                    val w = day / 7
-                    if (w > 0) {
-                        result = w.toString() + "周前"
+                    val m = day / 30
+                    if (m > 0) {
+                        result = m.toString() + "月前"
                     } else {
-                        if (day > 0) {
-                            result = day.toString() + "天前"
+                        val w = day / 7
+                        if (w > 0) {
+                            result = w.toString() + "周前"
                         } else {
-                            if (hour > 0) {
-                                result = hour.toString() + "小时前"
+                            if (day > 0) {
+                                result = day.toString() + "天前"
                             } else {
-                                if (minute > 0) {
-                                    result = minute.toString() + "分钟前"
+                                if (hour > 0) {
+                                    result = hour.toString() + "小时前"
                                 } else {
-                                    if (second > 0) {
-                                        result = second.toString() + "秒前"
+                                    if (minute > 0) {
+                                        result = minute.toString() + "分钟前"
+                                    } else {
+                                        if (second > 0) {
+                                            result = second.toString() + "秒前"
+                                        }
                                     }
                                 }
                             }
@@ -261,6 +269,9 @@ object CommonTools {
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.message?.let { Logger.e(it) }
+            e.fillInStackTrace()
         }
         return result
     }
