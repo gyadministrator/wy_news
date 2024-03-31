@@ -11,7 +11,7 @@ import com.android.wy.news.adapter.VideoAdapter
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.databinding.FragmentTabVideoBinding
-import com.android.wy.news.entity.RecommendVideoEntity
+import com.android.wy.news.entity.RecommendVideoData
 import com.android.wy.news.listener.OnViewPagerListener
 import com.android.wy.news.manager.JsoupManager
 import com.android.wy.news.manager.VideoLayoutManager
@@ -26,7 +26,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
 class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel>(),
     OnRefreshListener, OnLoadMoreListener, VideoAdapter.OnVideoListener, OnViewPagerListener,
-    BaseNewsAdapter.OnItemAdapterListener<RecommendVideoEntity> {
+    BaseNewsAdapter.OnItemAdapterListener<RecommendVideoData> {
     private lateinit var rvContent: RecyclerView
     private var isRefresh = false
     private var isLoading = false
@@ -126,7 +126,8 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun getVideoData() {
-        mViewModel.getRecommendVideoList(pageStart)
+        //mViewModel.getRecommendVideoList(pageStart)
+        mViewModel.getRecommendVideoList()
     }
 
     override fun onVideoFinish() {
@@ -165,9 +166,9 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
 
     private fun getRealUrl(screenVideoView: ScreenVideoView, vid: String) {
         TaskUtil.runOnThread {
-            val videoUrl = JsoupManager.getVideoUrl(vid)
+            //val videoUrl = JsoupManager.getVideoUrl(vid)
             TaskUtil.runOnUiThread {
-                screenVideoView.setUp(videoUrl)
+                //screenVideoView.setUp(videoUrl)
                 screenVideoView.play()
             }
         }
@@ -213,11 +214,11 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         return true
     }
 
-    override fun onItemClickListener(view: View, data: RecommendVideoEntity) {
+    override fun onItemClickListener(view: View, data: RecommendVideoData) {
 
     }
 
-    override fun onItemLongClickListener(view: View, data: RecommendVideoEntity) {
+    override fun onItemLongClickListener(view: View, data: RecommendVideoData) {
 
     }
 }

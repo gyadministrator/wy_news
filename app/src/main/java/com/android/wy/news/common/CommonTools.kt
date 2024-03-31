@@ -81,16 +81,20 @@ object CommonTools {
         return (pxValue / scale + 0.5f).toInt() // 四舍五入取整
     }
 
-    fun parseRecommendVideoData(data: String?): ArrayList<RecommendVideoEntity> {
-        var dataList = ArrayList<RecommendVideoEntity>()
+    fun parseRecommendVideoData(data: String?): ArrayList<RecommendVideoData> {
+        var dataList = ArrayList<RecommendVideoData>()
         if (data != null && !TextUtils.isEmpty(data)) {
-            if (data.contains("(") && data.endsWith(")")) {
+            /*if (data.contains("(") && data.endsWith(")")) {
                 val content = data.substring(data.indexOf("(") + 1, data.length - 1)
                 if (content.contains("[") && content.endsWith("]}")) {
                     val realContent =
                         content.substring(content.indexOf("["), content.length - 1)
                     dataList = JsonUtil.parseJsonToList(realContent)
                 }
+            }*/
+            if (data.contains("{") && data.endsWith("}")) {
+                val content = data.substring(data.indexOf(":") + 1, data.length - 1)
+                dataList = JsonUtil.parseJsonToList(content)
             }
         }
         return dataList

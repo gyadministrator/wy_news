@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.android.wy.news.R
 import com.android.wy.news.databinding.LayoutVideoFullListBinding
+import com.android.wy.news.entity.RecommendVideoData
 import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.view.ScreenVideoView
 
@@ -18,10 +19,10 @@ import com.android.wy.news.view.ScreenVideoView
   * @Description:    
  */
 class VideoAdapter(
-    itemAdapterListener: OnItemAdapterListener<RecommendVideoEntity>,
+    itemAdapterListener: OnItemAdapterListener<RecommendVideoData>,
     private var videoListener: OnVideoListener
 ) :
-    BaseNewsAdapter<RecommendVideoEntity>(itemAdapterListener),
+    BaseNewsAdapter<RecommendVideoData>(itemAdapterListener),
     ScreenVideoView.OnScreenVideoListener {
 
     class VideoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,7 +36,7 @@ class VideoAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindData(holder: ViewHolder, position: Int, data: RecommendVideoEntity) {
+    override fun onBindData(holder: ViewHolder, position: Int, data: RecommendVideoData) {
         if (holder is VideoViewHolder) {
             holder.playVideo.setPlayState(data.isPlaying)
             holder.playVideo.tag = data.vid

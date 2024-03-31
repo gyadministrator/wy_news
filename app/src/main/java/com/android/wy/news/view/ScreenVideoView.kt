@@ -17,9 +17,10 @@ import cn.jzvd.Jzvd
 import com.android.wy.news.R
 import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
+import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
 
-class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnClickListener{
+class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnClickListener {
     private lateinit var tvTitle: TextView
     private lateinit var tvPlay: TextView
     private lateinit var tvTime: TextView
@@ -126,6 +127,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     }
 
     fun setUp(url: String, videoCover: String, isShowCover: Boolean): ScreenVideoView {
+        Logger.i("setUp--->>>$url")
         val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
         videoPlayer.setUp(proxyUrl, "")
         if (isShowCover) {

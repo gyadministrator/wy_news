@@ -7,6 +7,7 @@ import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
@@ -60,6 +61,16 @@ class HttpManager {
             .baseUrl(url)
             //.addConverterFactory(GsonConverterFactory.create())
             //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+        return retrofit.create(clazz)
+    }
+
+    fun <T> getApiGsonService(url: String, clazz: Class<T>): T {
+        val retrofit = Retrofit.Builder()
+            .client(builder.build())
+            .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
         return retrofit.create(clazz)
     }

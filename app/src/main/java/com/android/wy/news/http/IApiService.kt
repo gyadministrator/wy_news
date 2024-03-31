@@ -1,6 +1,7 @@
 package com.android.wy.news.http
 
 import com.android.wy.news.entity.HotEntity
+import com.android.wy.news.entity.RecommendVideoEntity
 import com.android.wy.news.entity.music.ArtistAlbumEntity
 import com.android.wy.news.entity.music.ArtistAlbumInfoEntity
 import com.android.wy.news.entity.music.ArtistMusicEntity
@@ -67,8 +68,11 @@ interface IApiService {
     @GET("/HPImageArchive.aspx?format=js&idx=0&n=1")
     fun getSplash(): Call<ResponseBody>
 
-    @GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-20.do?callback=videoList")
-    fun getRecommendVideo(@Path("pageStart") pageStart: Int): Call<ResponseBody>
+    /*@GET("/touch/nc/api/video/recommend/Video_Recom/{pageStart}-20.do?callback=videoList")
+    fun getRecommendVideo(@Path("pageStart") pageStart: Int): Call<ResponseBody>*/
+
+    @GET("/recommend/getChanListNews?channel=T1457068979049&size=20")
+    fun getRecommendVideo(): Call<ResponseBody>
 
     /**@Streaming
      * 添加这个注解用来下载大文件
