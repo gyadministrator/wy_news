@@ -121,13 +121,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     private fun initCustomBottomBar() {
         val customBuilder = pageNavigationView?.custom()
-            ?.addItem(
+            /*?.addItem(
                 newItem(
                     R.mipmap.top,
                     R.mipmap.top_p,
                     "头条"
                 )
-            )
+            )*/
             ?.addItem(
                 newItem(
                     R.mipmap.classify,
@@ -163,12 +163,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private fun initMaterialBottomBar() {
         materialBuilder = pageNavigationView?.material()
             //?.setMode(MaterialMode.HIDE_TEXT)
-            ?.addItem(
+            /*?.addItem(
                 R.mipmap.top,
                 R.mipmap.top_p,
                 "头条",
                 selectColor
-            )
+            )*/
             ?.addItem(
                 R.mipmap.classify,
                 R.mipmap.classify_p,
@@ -201,7 +201,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     private fun initNaviController() {
         val fragmentList = arrayListOf<Fragment>(
-            TopTabFragment.newInstance(),
+            //TopTabFragment.newInstance(),
             ClassifyTabFragment.newInstance(),
             VideoTabFragment.newInstance(),
             MusicTabFragment.newInstance(),
@@ -405,41 +405,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     override fun onSelected(index: Int, old: Int) {
         Logger.i("onSelected: $index old: $old")
         GlobalData.indexChange.postValue(index)
-        if (index == 2 || index == 4) {
+        if (index == 3) {
             hideSearch()
         } else {
             showSearch()
         }
-        if (index == 2) {
-            ImmersionBar.with(this).statusBarColor(R.color.black)
-                .navigationBarColor(R.color.black)
-                .statusBarDarkFont(false).keyboardEnable(false).init()
-            pageNavigationView?.setBackgroundColor(
-                AppUtil.getColor(
-                    this,
-                    R.color.black
-                )
-            )
-        } else {
+        if (index != 1) {
             Jzvd.releaseAllVideos()
-            UiModeManager.onUiModeChange(this)
-            pageNavigationView?.setBackgroundColor(
-                AppUtil.getColor(
-                    this,
-                    R.color.default_status_bar_color
-                )
-            )
-        }
-        if (index == 0) {
-            setMessageNum(0, 0)
         }
     }
 
     override fun onRepeat(index: Int) {
         Logger.i("onRepeat: $index")
-        if (index == 0) {
-            setMessageNum(0, 0)
-        }
         GlobalData.doubleClickChange.postValue(index)
     }
 

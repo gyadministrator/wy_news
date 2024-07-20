@@ -119,14 +119,13 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
         }
 
         GlobalData.indexChange.observe(this) {
-            if (it == 2) {
+            if (it == 1) {
                 rePlay()
             }
         }
     }
 
     private fun getVideoData() {
-        //mViewModel.getRecommendVideoList(pageStart)
         mViewModel.getRecommendVideoList()
     }
 
@@ -179,7 +178,7 @@ class VideoTabFragment : BaseFragment<FragmentTabVideoBinding, VideoTabViewModel
     }
 
     private fun releaseVideo(index: Int) {
-        //Jzvd.releaseAllVideos()
+
     }
 
     override fun onPageSelected(position: Int, isBottom: Boolean) {

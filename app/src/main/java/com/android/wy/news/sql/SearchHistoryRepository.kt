@@ -9,10 +9,8 @@ import android.content.Context
   * @Description:    
  */
 class SearchHistoryRepository(context: Context) {
-    private var searchHistoryController: SearchHistoryController
-
-    init {
-        searchHistoryController = NewsDataBase.getInstance(context).getSearchHistoryDao()
+    private val searchHistoryController: SearchHistoryController by lazy {
+        NewsDataBase.getInstance(context).getSearchHistoryDao()
     }
 
     fun getSearchHistoryList(): ArrayList<SearchHistoryEntity> {

@@ -9,10 +9,8 @@ import android.content.Context
   * @Description:    
  */
 class RecordMusicRepository(context: Context) {
-    private var recordMusicController: RecordMusicController
-
-    init {
-        recordMusicController = NewsDataBase.getInstance(context).getRecordMusicDao()
+    private val recordMusicController: RecordMusicController by lazy {
+        NewsDataBase.getInstance(context).getRecordMusicDao()
     }
 
     fun getRecordMusicList(): ArrayList<RecordMusicEntity> {

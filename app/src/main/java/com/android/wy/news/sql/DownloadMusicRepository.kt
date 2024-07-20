@@ -9,10 +9,8 @@ import android.content.Context
   * @Description:    
  */
 class DownloadMusicRepository(context: Context) {
-    private var downloadMusicController: DownloadMusicController
-
-    init {
-        downloadMusicController = NewsDataBase.getInstance(context).getDownloadMusicDao()
+    private val downloadMusicController: DownloadMusicController by lazy {
+        NewsDataBase.getInstance(context).getDownloadMusicDao()
     }
 
     fun getDownloadMusicList(): ArrayList<DownloadMusicEntity> {
