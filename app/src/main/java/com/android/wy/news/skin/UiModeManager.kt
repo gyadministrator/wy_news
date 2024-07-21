@@ -3,10 +3,16 @@ package com.android.wy.news.skin
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
+import androidx.fragment.app.FragmentActivity
 import com.android.wy.news.R
 import com.android.wy.news.common.SkinType
 import com.android.wy.news.common.SpTools
+import com.android.wy.news.dialog.CommonConfirmDialog
+import com.android.wy.news.dialog.CommonConfirmDialogFragment
+import com.android.wy.news.util.AppUtil
 import com.gyf.immersionbar.ImmersionBar
 
 /*     
@@ -78,6 +84,45 @@ object UiModeManager {
             }
         }
         SpTools.putInt(SkinType.SKIN_TYPE, skinType)
+    }
+
+    fun setCurrentUiMode(skinType: Int, activity: FragmentActivity) {
+        CommonConfirmDialog.show(
+            activity,
+            false,
+            "温馨提示",
+            "为了更好的体验,此操作需要重启app才能生效",
+            "确定",
+            "取消",
+            object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                override fun onClickBtn(view: View, isClickSure: Boolean) {
+                    if (isClickSure) {
+                        SpTools.putInt(SkinType.SKIN_TYPE, skinType)
+                        //重启
+                        AppUtil.startApp(activity)
+                    }
+                }
+            })
+    }
+
+    fun setCurrentUiMode(skinType: Int, activity: FragmentActivity, switchCompat: SwitchCompat) {
+        CommonConfirmDialog.show(
+            activity,
+            false,
+            "温馨提示",
+            "为了更好的体验,此操作需要重启app才能生效",
+            "确定",
+            "取消",
+            object : CommonConfirmDialogFragment.OnDialogFragmentListener {
+                override fun onClickBtn(view: View, isClickSure: Boolean) {
+                    if (isClickSure) {
+                        SpTools.putInt(SkinType.SKIN_TYPE, skinType)
+                        //重启
+                        AppUtil.startApp(activity)
+                    }
+                    switchCompat.isChecked = isClickSure
+                }
+            })
     }
 
     fun onUiModeChange(activity: Activity) {

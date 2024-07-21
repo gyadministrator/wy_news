@@ -405,13 +405,30 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     override fun onSelected(index: Int, old: Int) {
         Logger.i("onSelected: $index old: $old")
         GlobalData.indexChange.postValue(index)
-        if (index == 3) {
+        if (index == 1 || index == 3) {
             hideSearch()
         } else {
             showSearch()
         }
-        if (index != 1) {
+        if (index == 1) {
+            ImmersionBar.with(this).statusBarColor(R.color.black)
+                .navigationBarColor(R.color.black)
+                .statusBarDarkFont(false).keyboardEnable(false).init()
+            pageNavigationView?.setBackgroundColor(
+                AppUtil.getColor(
+                    this,
+                    R.color.black
+                )
+            )
+        } else {
             Jzvd.releaseAllVideos()
+            UiModeManager.onUiModeChange(this)
+            pageNavigationView?.setBackgroundColor(
+                AppUtil.getColor(
+                    this,
+                    R.color.default_status_bar_color
+                )
+            )
         }
     }
 
