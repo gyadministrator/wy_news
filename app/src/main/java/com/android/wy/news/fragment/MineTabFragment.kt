@@ -89,7 +89,8 @@ class MineTabFragment : BaseFragment<FragmentTabMineBinding, MineTabViewModel>()
         rvContent.getMusicAdapter()
             ?.let { PlayMusicManager.initMusicInfo(mActivity, rvContent, this, it) }
         showRecentPlay()
-        requestPropType()
+        // TODO: 广告
+        //requestPropType()
         requestRecommendMusicType()
     }
 

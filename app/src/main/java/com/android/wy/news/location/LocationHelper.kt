@@ -28,9 +28,13 @@ import kotlin.system.exitProcess
 object LocationHelper {
     private var client: WeakReference<AMapLocationClient>? = null
     private var clientOption: AMapLocationClientOption? = null
+    private val listeners = mutableListOf<OnLocationListener>()
 
     @SuppressLint("SimpleDateFormat")
     fun startLocation(context: Context, onLocationListener: OnLocationListener) {
+        if (!listeners.contains(onLocationListener)) {
+            listeners.add(onLocationListener)
+        }
         val locationClient = AMapLocationClient(context)
         client = WeakReference(locationClient)
         clientOption = getDefaultOption()
@@ -80,11 +84,15 @@ object LocationHelper {
                     mapLocation.cityCode
                     //地区编码
                     mapLocation.adCode
-                    onLocationListener.success(mapLocation)
+                    listeners.forEach {
+                        it.success(mapLocation)
+                    }
                     Logger.i("当前定位城市: ${mapLocation.city}")
                     stopLocation()
                 } else {
-                    onLocationListener.error(getErrorCodeMsg(errorCode = mapLocation.errorCode))
+                    listeners.forEach {
+                        it.error(getErrorCodeMsg(errorCode = mapLocation.errorCode))
+                    }
                     //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
                     Logger.i(getErrorCodeMsg(errorCode = mapLocation.errorCode))
                 }
@@ -267,6 +275,7 @@ object LocationHelper {
             // 停止定位
             val locationClient: AMapLocationClient? = client?.get()
             locationClient?.stopLocation()
+            listeners.clear()
         } catch (e: Exception) {
             e.printStackTrace()
         }

@@ -122,7 +122,7 @@
                     <com.youth.banner.Banner
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_height="wrap_content"
                         app:banner_auto_loop="true"
                         app:banner_loop_time="3000"
                         app:banner_radius="4dp" />

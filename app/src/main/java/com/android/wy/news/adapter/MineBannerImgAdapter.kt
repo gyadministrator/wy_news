@@ -22,13 +22,8 @@ class MineBannerImgAdapter(dataList: List<RecommendMusicType>) :
 
 
     class BannerImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivCover: ImageView
-        var tvTitle: TextView
-
-        init {
-            ivCover = itemView.findViewById(R.id.iv_cover)
-            tvTitle = itemView.findViewById(R.id.tv_title)
-        }
+        var ivCover: ImageView = itemView.findViewById(R.id.iv_cover)
+        var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
     }
 
     override fun onCreateHolder(parent: ViewGroup?, viewType: Int): BannerImageViewHolder {

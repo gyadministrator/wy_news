@@ -7,6 +7,7 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
+import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.FragmentTabClassifyBinding
 import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.location.OnLocationListener
@@ -57,6 +58,7 @@ class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTab
         TaskUtil.runOnUiThread({
             LocationHelper.startLocation(mActivity, object : OnLocationListener {
                 override fun success(aMapLocation: AMapLocation) {
+                    Logger.i("initLocation ### aMapLocation: $aMapLocation")
                     currentCity = aMapLocation.city
                     GlobalData.cityChange.postValue(currentCity)
                     //getCityData()
