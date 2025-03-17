@@ -13,14 +13,6 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.wang.avi.AVLoadingIndicatorView
-            android:id="@+id/iv_refresh_footer"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center"
-            app:indicatorColor="@color/main_title"
-            app:indicatorName="LineSpinFadeLoaderIndicator" />
-
         <TextView
             android:id="@+id/tv_footer_tip"
             android:layout_width="wrap_content"

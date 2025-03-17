@@ -41,8 +41,8 @@ class MineBannerImgAdapter(dataList: List<RecommendMusicType>) :
     ) {
         if (holder != null) {
             if (data != null) {
-                val img500 = data.img500
-                CommonTools.loadImage(img500, holder.ivCover)
+                val img = data.img
+                CommonTools.loadImage(img, holder.ivCover, 120, 120)
             }
             if (data != null) {
                 holder.tvTitle.text = data.name

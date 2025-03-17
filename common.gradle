@@ -44,7 +44,7 @@ ext {
             //高斯模糊
             'jp.wasabeef:glide-transformations'                    : '4.3.0',
             //webView
-            'com.just.agentweb:agentweb'                           : '4.1.3',
+            'io.github.justson:agentweb-core'                      : 'v5.1.1-androidx',
             //状态栏
             'com.geyifeng.immersionbar:immersionbar'               : '3.2.2',
             //列表加载前loading
@@ -55,10 +55,6 @@ ext {
             'cn.jzvd:jiaozivideoplayer'                            : '7.7.0',
             //圆角
             'com.makeramen:roundedimageview'                       : '2.2.1',
-            //动画加载
-            'com.wang.avi:library'                                 : '2.1.3',
-            //视频缓存
-            'com.danikula:videocache'                              : '2.7.1',
             //网络爬虫
             'org.jsoup:jsoup'                                      : '1.13.1',
             //权限
@@ -114,20 +110,18 @@ ext {
             gson                         : "com.squareup.retrofit2:converter-gson:${versions['com.squareup.retrofit2:converter-gson']}",
             glide                        : "com.github.bumptech.glide:glide:${versions['com.github.bumptech.glide:glide']}",
             glideTransformations         : "jp.wasabeef:glide-transformations:${versions['jp.wasabeef:glide-transformations']}",
-            agentweb                     : "com.just.agentweb:agentweb:${versions['com.just.agentweb:agentweb']}",
+            agentweb                     : "io.github.justson:agentweb-core:${versions['io.github.justson:agentweb-core']}",
             immersionbar                 : "com.geyifeng.immersionbar:immersionbar:${versions["com.geyifeng.immersionbar:immersionbar"]}",
             shimmerRecyclerView          : "com.github.sharish:ShimmerRecyclerView:${versions["com.github.sharish:ShimmerRecyclerView"]}",
             banner                       : "io.github.youth5201314:banner:${versions['io.github.youth5201314:banner']}",
             jiaozivideoplayer            : "cn.jzvd:jiaozivideoplayer:${versions['cn.jzvd:jiaozivideoplayer']}",
             roundedimageview             : "com.makeramen:roundedimageview:${versions['com.makeramen:roundedimageview']}",
-            videocache                   : "com.danikula:videocache:${versions['com.danikula:videocache']}",
             jsoup                        : "org.jsoup:jsoup:${versions['org.jsoup:jsoup']}",
             permission                   : "com.github.getActivity:XXPermissions:${versions['com.github.getActivity:XXPermissions']}",
             roomRuntime                  : "androidx.room:room-runtime:${versions['androidx.room:room-runtime']}",
             roomCompiler                 : "androidx.room:room-compiler:${versions['androidx.room:room-compiler']}",
             roomKtx                      : "androidx.room:room-ktx:${versions['androidx.room:room-ktx']}",
             refresh                      : "io.github.scwang90:refresh-layout-kernel:${versions['io.github.scwang90:refresh-layout-kernel']}",
-            avi                          : "com.wang.avi:library:${versions['com.wang.avi:library']}",
 
             //compose框架
             composeUi                    : "androidx.compose.ui:ui:${versions['androidx.compose.ui:ui']}",

@@ -207,6 +207,41 @@ object CommonTools {
             })
     }
 
+    fun loadImage(imgSrc: String, ivCover: ImageView, width: Int, height: Int) {
+        Glide.with(ivCover.context)
+            .asBitmap()
+            .load(imgSrc)
+            //.apply(RequestOptions.bitmapTransform(RoundedCorners(10)))
+            //DiskCacheStrategy.NONE：表示不缓存任何内容。
+            //DiskCacheStrategy.SOURCE：表示只缓存原始图片。
+            //DiskCacheStrategy.RESULT：表示只缓存转换过后的图片（默认选项）。
+            //DiskCacheStrategy.ALL ：表示既缓存原始图片，也缓存转换过后的图片。
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .override(
+                //关键代码，加载原始大小
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL,
+                com.bumptech.glide.request.target.Target.SIZE_ORIGINAL
+            )
+            //设置为这种格式去掉透明度通道，可以减少内存占有
+            .format(DecodeFormat.PREFER_RGB_565)
+            //.placeholder(R.mipmap.img_default)
+            //.error(R.mipmap.img_error)
+            .into(object : CustomTarget<Bitmap>(
+                width,
+                height
+            ) {
+                override fun onResourceReady(
+                    resource: Bitmap, transition: Transition<in Bitmap?>?
+                ) {
+                    ivCover.setImageBitmap(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+            })
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun parseTime(time: String): String {
         var format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

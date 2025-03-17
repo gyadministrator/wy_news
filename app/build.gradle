@@ -116,25 +116,6 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-
-    productFlavors {
-        //根据渠道配置
-        wy_news_normal {
-            buildConfigField "String", "CHANNEL", "\"_release\""
-        }
-        wy_news_vivo {
-            buildConfigField "String", "CHANNEL", "\"_debug\""
-        }
-        wy_news_oppo {
-            buildConfigField "String", "CHANNEL", "\"_release\""
-        }
-        wy_news_xiaomi {
-            buildConfigField "String", "CHANNEL", "\"_release\""
-        }
-        wy_news_huawei {
-            buildConfigField "String", "CHANNEL", "\"_release\""
-        }
-    }
 }
 
 dependencies {
@@ -170,8 +151,6 @@ dependencies {
     //轮播图
     implementation rootProject.ext.dependencies.banner
     implementation rootProject.ext.dependencies.roundedimageview
-    implementation rootProject.ext.dependencies.avi
-    implementation rootProject.ext.dependencies.videocache
     implementation rootProject.ext.dependencies.jsoup
     implementation rootProject.ext.dependencies.permission
     //Room数据库

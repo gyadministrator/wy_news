@@ -55,7 +55,7 @@
             android:paddingTop="8dp"
             android:paddingRight="12dp"
             android:paddingBottom="8dp"
-            android:progressDrawable="@drawable/jz_bottom_seek_progress"
+            android:progressDrawable="@drawable/vb_seek_progress"
             android:thumb="@drawable/jz_bottom_seek_poster" />
 
         <TextView
@@ -95,7 +95,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="25dp"
         android:max="100"
-        android:progressDrawable="@drawable/jz_bottom_progress" />
+        android:progressDrawable="@drawable/vb_seek_progress" />
 
     <ImageView
         android:id="@+id/back_tiny"

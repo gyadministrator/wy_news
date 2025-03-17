@@ -5,7 +5,6 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -15,7 +14,6 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import cn.jzvd.Jzvd
 import com.android.wy.news.R
-import com.android.wy.news.cache.VideoCacheManager
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.Logger
 import com.android.wy.news.databinding.LayoutScreenVideoBinding
@@ -128,8 +126,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
 
     fun setUp(url: String, videoCover: String, isShowCover: Boolean): ScreenVideoView {
         Logger.i("setUp--->>>$url")
-        val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
-        videoPlayer.setUp(proxyUrl, "")
+        videoPlayer.setUp(url, "")
         if (isShowCover) {
             val thumbImageView = videoPlayer.posterImageView
             thumbImageView.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -139,8 +136,7 @@ class ScreenVideoView : FrameLayout, CustomVideoPlayer.OnVideoListener, View.OnC
     }
 
     fun setUp(url: String): ScreenVideoView {
-        val proxyUrl = VideoCacheManager.getProxyUrl(context, url)
-        videoPlayer.setUp(proxyUrl, "")
+        videoPlayer.setUp(url, "")
         return this
     }
 

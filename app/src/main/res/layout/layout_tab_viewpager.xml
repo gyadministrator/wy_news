@@ -23,6 +23,7 @@
             app:selectTextSize="10sp"
             app:tabIndicatorColor="@color/text_select_color"
             app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="2dp"
             app:tabMaxWidth="0dp"
             app:tabMode="auto"
             app:tabRippleColor="@null" />

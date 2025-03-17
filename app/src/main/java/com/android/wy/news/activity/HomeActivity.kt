@@ -112,7 +112,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     override fun initData() {
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
-        initCustomBottomBar()
+        initMaterialBottomBar()
+        //initCustomBottomBar()
         initNaviController()
         TaskUtil.runOnThread {
             mViewModel.getHotWord()

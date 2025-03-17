@@ -54,8 +54,8 @@ class TabViewPager : LinearLayout {
             FragmentPageAdapter(fragmentManager, fragments, titles.toTypedArray())
         tabLayout.setupWithViewPager(viewPager)
         tabLayout.initLayout()
-        //使用viewpager嵌套fragmrnt的时候出现Expected the adapter to be ‘fresh‘ while restoring state.
+        //使用viewpager嵌套fragment的时候出现Expected the adapter to be ‘fresh‘ while restoring state.
         viewPager.isSaveEnabled = false
-        tabLayout.setSelectedTabIndicatorHeight(0)
+        //tabLayout.setSelectedTabIndicatorHeight(0)
     }
 }

@@ -2,27 +2,22 @@ package com.android.wy.news.refresh
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.AnimationDrawable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.withStyledAttributes
 import com.android.wy.news.R
-import com.android.wy.news.app.App
-import com.android.wy.news.util.AppUtil
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
 import com.scwang.smart.refresh.layout.constant.SpinnerStyle
-import com.wang.avi.AVLoadingIndicatorView
 
 
 class CustomRefreshHeader : LinearLayout, RefreshHeader {
     private var textHeaderTipColor: Int? = null
     private var tvTip: TextView? = null
-    private var mImage: AVLoadingIndicatorView? = null
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -31,17 +26,15 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
     ) {
         val view = inflate(context, R.layout.layout_custom_refresh_header, this)
         tvTip = view.findViewById(R.id.tv_tip)
-        mImage = view.findViewById(R.id.iv_refresh_footer)
-
-        val typedArray = context?.obtainStyledAttributes(attrs, R.styleable.CustomRefreshHeader)
-        textHeaderTipColor = context?.resources?.getColor(R.color.main_title)?.let {
-            typedArray?.getColor(
-                R.styleable.CustomRefreshHeader_textHeaderTipColor,
-                it
-            )
+        context?.withStyledAttributes(attrs, R.styleable.CustomRefreshHeader) {
+            textHeaderTipColor = context.resources?.getColor(R.color.main_title)?.let {
+                this.getColor(
+                    R.styleable.CustomRefreshHeader_textHeaderTipColor,
+                    it
+                )
+            }
+            textHeaderTipColor?.let { tvTip?.setTextColor(it) }
         }
-        textHeaderTipColor?.let { tvTip?.setTextColor(it) }
-        typedArray?.recycle()
     }
 
     /**
@@ -55,11 +48,11 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
         when (newState) {
             RefreshState.PullDownToRefresh -> {}
             RefreshState.ReleaseToRefresh -> {
-                mImage?.show()
+
             }
 
             RefreshState.Refreshing -> {
-                mImage?.show()
+
             }
 
             else -> {}
@@ -95,10 +88,7 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
     override fun onMoving(
         isDragging: Boolean, percent: Float, offset: Int, height: Int, maxDragHeight: Int
     ) {
-        if (percent < 1) {
-            mImage?.scaleX = percent
-            mImage?.scaleY = percent
-        }
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -114,7 +104,6 @@ class CustomRefreshHeader : LinearLayout, RefreshHeader {
      */
     @SuppressLint("RestrictedApi")
     override fun onFinish(refreshLayout: RefreshLayout, success: Boolean): Int {
-        mImage?.hide()
         return 0
     }
 
