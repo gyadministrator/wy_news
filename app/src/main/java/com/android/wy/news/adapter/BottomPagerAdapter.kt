@@ -2,7 +2,7 @@ package com.android.wy.news.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 /*     
   * @Author:         gao_yun@leapmotor.com
@@ -10,23 +10,14 @@ import androidx.fragment.app.FragmentPagerAdapter
   * @Version:        1.0
   * @Description:    
  */
-class BottomPagerAdapter(fm: FragmentManager, fragmentList: ArrayList<Fragment>) :
-    FragmentPagerAdapter(fm) {
-    private var fragmentList: ArrayList<Fragment>? = null
-
-    init {
-        this.fragmentList = fragmentList
-    }
+class BottomPagerAdapter(fm: FragmentManager, private val fragmentList: MutableList<Fragment>) :
+    FragmentStatePagerAdapter(fm) {
 
     override fun getCount(): Int {
-        return if (fragmentList == null) {
-            0
-        } else {
-            fragmentList?.size!!
-        }
+        return fragmentList.size
     }
 
     override fun getItem(position: Int): Fragment {
-        return fragmentList?.get(position)!!
+        return fragmentList[position]
     }
 }

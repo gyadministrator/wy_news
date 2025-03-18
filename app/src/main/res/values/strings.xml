@@ -70,4 +70,5 @@
     <string name="singer">歌手</string>
     <string name="single">单曲</string>
     <string name="recommend_music">推荐音乐</string>
+    <string name="jump">跳过</string>
 </resources>

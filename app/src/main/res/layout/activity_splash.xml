@@ -66,18 +66,18 @@
                     android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_down"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/bg_count"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            tools:text="1s" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_down"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_count"
+        android:gravity="center"
+        android:text="@string/jump"
+        android:textColor="@color/text_select_color"
+        android:textSize="14sp" />
 </FrameLayout>

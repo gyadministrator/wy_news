@@ -24,7 +24,6 @@ import com.android.wy.news.event.NoticeEvent
 import com.android.wy.news.fragment.ClassifyTabFragment
 import com.android.wy.news.fragment.MineTabFragment
 import com.android.wy.news.fragment.MusicTabFragment
-import com.android.wy.news.fragment.TopTabFragment
 import com.android.wy.news.fragment.VideoTabFragment
 import com.android.wy.news.http.HttpController
 import com.android.wy.news.location.LocationHelper
@@ -50,7 +49,6 @@ import com.gyf.immersionbar.ImmersionBar
 import me.majiajie.pagerbottomtabstrip.NavigationController
 import me.majiajie.pagerbottomtabstrip.PageNavigationView
 import me.majiajie.pagerbottomtabstrip.PageNavigationView.MaterialBuilder
-import me.majiajie.pagerbottomtabstrip.item.NormalItemView
 import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -60,8 +58,8 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = RouteManager.PATH_ACTIVITY_HOME)
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabItemSelectedListener,
     OnPickListener {
-    private var viewPager: ViewPager? = null
-    private var pageNavigationView: PageNavigationView? = null
+    private lateinit var viewPager: ViewPager
+    private lateinit var pageNavigationView: PageNavigationView
     private var navigationController: NavigationController? = null
     private var materialBuilder: MaterialBuilder? = null
     private lateinit var tvCity: TextView
@@ -73,7 +71,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private lateinit var rlSearch: LinearLayout
     private val list = ArrayList<String>()
     private var selectColor: Int = 0
-    private var cityPicker: CityPicker? = null
+    private lateinit var cityPicker: CityPicker
 
     override fun setDefaultImmersionBar(): Boolean {
         return true
@@ -102,74 +100,17 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         rlIdentify = mBinding.rlIdentify
     }
 
-    private fun newItem(drawable: Int, checkedDrawable: Int, text: String): NormalItemView {
-        val normalItemView = NormalItemView(this)
-        normalItemView.initialize(drawable, checkedDrawable, text)
-        normalItemView.setTextDefaultColor(AppUtil.getColor(this, R.color.main_title))
-        normalItemView.setTextCheckedColor(AppUtil.getColor(this, R.color.desktop_lrc_color))
-        return normalItemView
-    }
-
     override fun initData() {
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
         initMaterialBottomBar()
-        //initCustomBottomBar()
         initNaviController()
         TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
     }
 
-    private fun initCustomBottomBar() {
-        val customBuilder = pageNavigationView?.custom()
-            /*?.addItem(
-                newItem(
-                    R.mipmap.top,
-                    R.mipmap.top_p,
-                    "头条"
-                )
-            )*/
-            ?.addItem(
-                newItem(
-                    R.mipmap.classify,
-                    R.mipmap.classify_p,
-                    "精选"
-                )
-            )
-            ?.addItem(
-                newItem(
-                    R.mipmap.video,
-                    R.mipmap.video_p,
-                    "视频"
-                )
-            )
-            ?.addItem(
-                newItem(
-                    R.mipmap.music,
-                    R.mipmap.music_p,
-                    "聆听"
-                )
-            )
-            ?.addItem(
-                newItem(
-                    R.mipmap.my,
-                    R.mipmap.my_p,
-                    "我的"
-                )
-            )
-            ?.enableAnimateLayoutChanges()
-        navigationController = customBuilder?.build()
-    }
-
     private fun initMaterialBottomBar() {
-        materialBuilder = pageNavigationView?.material()
-            //?.setMode(MaterialMode.HIDE_TEXT)
-            /*?.addItem(
-                R.mipmap.top,
-                R.mipmap.top_p,
-                "头条",
-                selectColor
-            )*/
+        materialBuilder = pageNavigationView.material()
             ?.addItem(
                 R.mipmap.classify,
                 R.mipmap.classify_p,
@@ -201,17 +142,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     }
 
     private fun initNaviController() {
-        val fragmentList = arrayListOf<Fragment>(
-            //TopTabFragment.newInstance(),
+        val fragmentList = mutableListOf<Fragment>(
             ClassifyTabFragment.newInstance(),
             VideoTabFragment.newInstance(),
             MusicTabFragment.newInstance(),
             MineTabFragment.newInstance()
         )
-        viewPager?.adapter = BottomPagerAdapter(supportFragmentManager, fragmentList)
-        // 自动适配ViewPager页面切换
-        viewPager?.let { navigationController?.setupWithViewPager(it) }
-        // 也可以设置Item选中事件的监听
+        viewPager.adapter = BottomPagerAdapter(supportFragmentManager, fragmentList)
+        //自动适配ViewPager页面切换
+        viewPager.let { navigationController?.setupWithViewPager(it) }
+        //也可以设置Item选中事件的监听
         navigationController?.addTabItemSelectedListener(this)
     }
 
@@ -294,13 +234,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         //activity或者fragment
         cityPicker = CityPicker.from(this)
         //启用动画效果
-        cityPicker?.enableAnimation(true)
+        cityPicker.enableAnimation(true)
             //APP自身已定位的城市，传null会自动定位（默认）
-            ?.setLocatedCity(null)
+            .setLocatedCity(null)
             //指定热门城市
-            ?.setHotCities(hotCities)
-            ?.setOnPickListener(this)
-            ?.show()
+            .setHotCities(hotCities)
+            .setOnPickListener(this)
+            .show()
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -415,7 +355,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
             ImmersionBar.with(this).statusBarColor(R.color.black)
                 .navigationBarColor(R.color.black)
                 .statusBarDarkFont(false).keyboardEnable(false).init()
-            pageNavigationView?.setBackgroundColor(
+            pageNavigationView.setBackgroundColor(
                 AppUtil.getColor(
                     this,
                     R.color.black
@@ -424,7 +364,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         } else {
             Jzvd.releaseAllVideos()
             UiModeManager.onUiModeChange(this)
-            pageNavigationView?.setBackgroundColor(
+            pageNavigationView.setBackgroundColor(
                 AppUtil.getColor(
                     this,
                     R.color.default_status_bar_color
@@ -449,11 +389,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
         MapsInitializer.updatePrivacyShow(this, true, true)
         MapsInitializer.updatePrivacyAgree(this, true)
         TaskUtil.runOnUiThread({
-            LocationHelper.startLocation(this,
+            LocationHelper.startLocation(
+                this,
                 object : OnLocationListener {
                     override fun success(aMapLocation: AMapLocation) {
                         //定位完成之后更新数据
-                        cityPicker?.locateComplete(
+                        cityPicker.locateComplete(
                             LocatedCity(
                                 aMapLocation.city,
                                 aMapLocation.province,

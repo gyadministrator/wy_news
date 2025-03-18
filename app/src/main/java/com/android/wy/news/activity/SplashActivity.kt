@@ -2,9 +2,6 @@ package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
@@ -21,6 +18,7 @@ import com.android.wy.news.location.LocationHelper
 import com.android.wy.news.location.OnPrivacyListener
 import com.android.wy.news.manager.RouteManager
 import com.android.wy.news.permission.PermissionHelper
+import com.android.wy.news.util.TaskUtil
 import com.android.wy.news.viewmodel.SplashViewModel
 
 @SuppressLint("CustomSplashScreen")
@@ -29,19 +27,17 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     OnPrivacyListener {
     private lateinit var ivAd: ImageView
     private lateinit var rlContent: RelativeLayout
-    private lateinit var tvDown: TextView
+
     private var splashAD: String? = null
     private var isShowAD = false
     private var delayTime = 500L
-    private var handlerNum = 3
     private var url: String = ""
 
     override fun initView() {
         ivAd = mBinding.ivAd
         rlContent = mBinding.rlContent
-        tvDown = mBinding.tvDown
-        tvDown.setOnClickListener {
-            stopCountDownHandler()
+        mBinding.tvDown.setOnClickListener {
+            jump()
         }
     }
 
@@ -98,30 +94,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
     private fun handlerRead(it: Boolean?) {
         if (it == true) {
             if (isShowAD) {
-                tvDown.text = "跳过 " + handlerNum.toString() + "s"
-                countDownHandler()
-            } else {
-                mHandler.postDelayed({
-                    jump()
-                }, delayTime)
+                delayTime = 3000L
             }
-        }
-    }
-
-    private val mHandler = object : Handler(Looper.getMainLooper()) {
-        @SuppressLint("SetTextI18n")
-        override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                1 -> {
-                    if (handlerNum > 0) {
-                        handlerNum--
-                        tvDown.text = "跳过 " + handlerNum.toString() + "s"
-                        countDownHandler()
-                    } else {
-                        stopCountDownHandler()
-                    }
-                }
-            }
+            TaskUtil.runOnUiThread({
+                jump()
+            }, delayTime)
         }
     }
 
@@ -130,21 +107,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(),
         intent.putExtra(WebActivity.WEB_URL, url)
         startActivity(intent)
         finish()
-    }
-
-    fun countDownHandler() {
-        mHandler.sendEmptyMessageDelayed(1, 1000)
-    }
-
-    fun stopCountDownHandler() {
-        mHandler.removeCallbacksAndMessages(null)
-        jump()
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        stopCountDownHandler()
     }
 
     override fun setDefaultImmersionBar(): Boolean {
