@@ -7,14 +7,14 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import cn.jzvd.Jzvd
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.amap.api.location.AMapLocation
 import com.amap.api.maps.MapsInitializer
 import com.android.wy.news.R
-import com.android.wy.news.adapter.BottomPagerAdapter
+import com.android.wy.news.bottombar.BottomBarManager
+import com.android.wy.news.bottombar.model.BarItem
+import com.android.wy.news.bottombar.view.BottomBar
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.common.GlobalData
 import com.android.wy.news.common.Logger
@@ -46,22 +46,15 @@ import com.android.wy.news.util.ToastUtil
 import com.android.wy.news.view.MarqueeTextView
 import com.android.wy.news.viewmodel.HomeViewModel
 import com.gyf.immersionbar.ImmersionBar
-import me.majiajie.pagerbottomtabstrip.NavigationController
-import me.majiajie.pagerbottomtabstrip.PageNavigationView
-import me.majiajie.pagerbottomtabstrip.PageNavigationView.MaterialBuilder
-import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectedListener
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
 @Route(path = RouteManager.PATH_ACTIVITY_HOME)
-class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabItemSelectedListener,
+class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(),
     OnPickListener {
-    private lateinit var viewPager: ViewPager
-    private lateinit var pageNavigationView: PageNavigationView
-    private var navigationController: NavigationController? = null
-    private var materialBuilder: MaterialBuilder? = null
+    private lateinit var bottomBar: BottomBar
     private lateinit var tvCity: TextView
     private lateinit var llCity: LinearLayout
     private var firstTime: Long = 0
@@ -71,6 +64,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     private lateinit var rlSearch: LinearLayout
     private val list = ArrayList<String>()
     private var selectColor: Int = 0
+    private var normalColor: Int = 0
     private lateinit var cityPicker: CityPicker
 
     override fun setDefaultImmersionBar(): Boolean {
@@ -90,8 +84,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
     }
 
     override fun initView() {
-        viewPager = mBinding.viewPager
-        pageNavigationView = mBinding.pageNavigationView
+        bottomBar = mBinding.bottomBar
         tvCity = mBinding.tvCity
         llCity = mBinding.llCity
         marqueeTextView = mBinding.marqueeTextView
@@ -102,65 +95,79 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     override fun initData() {
         selectColor = AppUtil.getColor(this, R.color.text_select_color)
-        initMaterialBottomBar()
-        initNaviController()
+        normalColor = AppUtil.getColor(this, R.color.text_normal_color)
+        initBottomBar()
         TaskUtil.runOnThread {
             mViewModel.getHotWord()
         }
     }
 
-    private fun initMaterialBottomBar() {
-        materialBuilder = pageNavigationView.material()
-            ?.addItem(
-                R.mipmap.classify,
-                R.mipmap.classify_p,
-                "精选",
-                selectColor
-            )
-            ?.addItem(
-                R.mipmap.video,
-                R.mipmap.video_p,
-                "视频",
-                selectColor
-            )
-            ?.addItem(
-                R.mipmap.music,
-                R.mipmap.music_p,
-                "聆听",
-                selectColor
-            )
-            ?.addItem(
-                R.mipmap.my,
-                R.mipmap.my_p,
-                "我的",
-                selectColor
-            )
-            ?.setDefaultColor(AppUtil.getColor(this, R.color.main_title)) //未选中状态的颜色
-            //切换的动效
-            ?.enableAnimateLayoutChanges()
-        navigationController = materialBuilder?.build()
+    private val bottomBarSelectListener = object : BottomBar.OnBottomBarSelectListener {
+        override fun onItemSelect(position: Int) {
+            Logger.i("onItemSelect ### position$position")
+            GlobalData.indexChange.postValue(position)
+            if (position == 1 || position == 3) {
+                hideSearch()
+            } else {
+                showSearch()
+            }
+            if (position == 1) {
+                ImmersionBar.with(mActivity).statusBarColor(R.color.black)
+                    .navigationBarColor(R.color.black)
+                    .statusBarDarkFont(false).keyboardEnable(false).init()
+                bottomBar.setBackgroundColor(
+                    AppUtil.getColor(
+                        mActivity,
+                        R.color.black
+                    )
+                )
+            } else {
+                Jzvd.releaseAllVideos()
+                UiModeManager.onUiModeChange(mActivity)
+                bottomBar.setBackgroundColor(
+                    AppUtil.getColor(
+                        mActivity,
+                        R.color.default_status_bar_color
+                    )
+                )
+            }
+        }
     }
 
-    private fun initNaviController() {
-        val fragmentList = mutableListOf<Fragment>(
-            ClassifyTabFragment.newInstance(),
-            VideoTabFragment.newInstance(),
-            MusicTabFragment.newInstance(),
-            MineTabFragment.newInstance()
+    private fun initBottomBar() {
+        BottomBarManager.initBottomBar(
+            bottomBar,
+            mutableListOf(
+                BarItem(
+                    ClassifyTabFragment.newInstance(),
+                    "精选",
+                    R.mipmap.classify,
+                    R.mipmap.classify_p
+                ),
+                BarItem(
+                    VideoTabFragment.newInstance(),
+                    "视频",
+                    R.mipmap.video,
+                    R.mipmap.video_p
+                ),
+                BarItem(
+                    MusicTabFragment.newInstance(),
+                    "聆听",
+                    R.mipmap.music,
+                    R.mipmap.music_p
+                ),
+                BarItem(
+                    MineTabFragment.newInstance(),
+                    "我的",
+                    R.mipmap.my,
+                    R.mipmap.my_p
+                )
+            ),
+            R.id.fl_container,
+            normalColor,
+            selectColor,
+            bottomBarSelectListener
         )
-        viewPager.adapter = BottomPagerAdapter(supportFragmentManager, fragmentList)
-        //自动适配ViewPager页面切换
-        viewPager.let { navigationController?.setupWithViewPager(it) }
-        //也可以设置Item选中事件的监听
-        navigationController?.addTabItemSelectedListener(this)
-    }
-
-    fun setMessageNum(index: Int, num: Int) {
-        navigationController?.setMessageNumber(index, num)
-    }
-
-    private fun setMessagePoint(index: Int, hasMsg: Boolean) {
-        navigationController?.setHasMessage(index, hasMsg)
     }
 
     override fun initEvent() {
@@ -341,41 +348,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), OnTabIt
 
     private fun showSearch() {
         rlSearch.visibility = View.VISIBLE
-    }
-
-    override fun onSelected(index: Int, old: Int) {
-        Logger.i("onSelected: $index old: $old")
-        GlobalData.indexChange.postValue(index)
-        if (index == 1 || index == 3) {
-            hideSearch()
-        } else {
-            showSearch()
-        }
-        if (index == 1) {
-            ImmersionBar.with(this).statusBarColor(R.color.black)
-                .navigationBarColor(R.color.black)
-                .statusBarDarkFont(false).keyboardEnable(false).init()
-            pageNavigationView.setBackgroundColor(
-                AppUtil.getColor(
-                    this,
-                    R.color.black
-                )
-            )
-        } else {
-            Jzvd.releaseAllVideos()
-            UiModeManager.onUiModeChange(this)
-            pageNavigationView.setBackgroundColor(
-                AppUtil.getColor(
-                    this,
-                    R.color.default_status_bar_color
-                )
-            )
-        }
-    }
-
-    override fun onRepeat(index: Int) {
-        Logger.i("onRepeat: $index")
-        GlobalData.doubleClickChange.postValue(index)
     }
 
     override fun onPick(position: Int, data: City?) {

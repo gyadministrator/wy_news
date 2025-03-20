@@ -40,6 +40,7 @@ import com.android.wy.news.locationselect.view.SideIndexBar
   * @Version:        1.0
   * @Description:    
  */
+@Suppress("DEPRECATION")
 class CityPickerDialogFragment : DialogFragment(), TextWatcher, View.OnClickListener,
     SideIndexBar.OnIndexTouchedChangedListener, InnerListener {
     private var mContentView: View? = null
@@ -206,6 +207,7 @@ class CityPickerDialogFragment : DialogFragment(), TextWatcher, View.OnClickList
     }
 
     //测量宽高
+    @SuppressLint("ObsoleteSdkInt")
     private fun measure() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             val dm = DisplayMetrics()

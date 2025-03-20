@@ -12,36 +12,28 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
-import com.android.tablib.adapter.FragmentPageAdapter
-import com.android.tablib.view.CustomTabLayout
 import com.android.wy.news.common.CommonTools
 import com.android.wy.news.databinding.FragmentPlayMusicBinding
 import com.android.wy.news.dialog.BaseDialogFragment
 import com.android.wy.news.dialog.LrcTypeDialog
 import com.android.wy.news.entity.music.MusicInfo
-import com.android.wy.news.listener.IPageChangeListener
 import com.android.wy.news.util.JsonUtil
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.android.wy.news.view.TabViewPager
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
-import jp.wasabeef.glide.transformations.BlurTransformation
 
 
-class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageChangeListener {
+class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>() {
     private var currentPosition = -1
     private var currentMusicInfo: MusicInfo? = null
     private var height = 0
     private var width = 0
-    private var ivBg: ImageView? = null
     private var rlDown: RelativeLayout? = null
     private var rlMore: RelativeLayout? = null
+    private lateinit var tabViewPager: TabViewPager
     private var mAnimStyle: Int =
         com.android.wy.news.locationselect.R.style.DefaultCityPickerAnimation
     private var currentPlayUrl: String? = null
-    private var tabLayout: CustomTabLayout? = null
-    private var viewPager: ViewPager? = null
 
     companion object {
         const val POSITION_KEY = "position_key"
@@ -61,11 +53,9 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
     }
 
     override fun initView() {
-        ivBg = mBinding.ivBg
         rlDown = mBinding.rlDown
         rlMore = mBinding.rlMore
-        viewPager = mBinding.viewPager
-        tabLayout = mBinding.tabLayout
+        tabViewPager = mBinding.tabViewPager
         rlDown?.setOnClickListener {
             dismiss()
         }
@@ -93,10 +83,6 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
             }
         }
         initTab()
-        /*ivBg?.let {
-            Glide.with(this).load(this.currentMusicInfo?.pic)
-                .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 10))).into(it)
-        }*/
     }
 
     override fun initEvent() {
@@ -137,25 +123,16 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
 
     private fun initTab() {
         val fragments = ArrayList<Fragment>()
-        val mTitles = arrayListOf(/*"推荐", */"歌曲", "歌词")
+        val mTitles = arrayListOf("歌曲", "歌词")
         val s = this.currentMusicInfo?.let { JsonUtil.parseObjectToJson(it) }
-        /*val playRecommendFragment =
-            s?.let { PlayRecommendFragment.newInstance(currentPosition, it, currentPlayUrl) }*/
         val playMusicSongFragment =
-            s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl, this) }
+            s?.let { PlayMusicSongFragment.newInstance(currentPosition, it, currentPlayUrl) }
         val playMusicLrcFragment =
             s?.let { PlayMusicLrcFragment.newInstance(currentPosition, it, currentPlayUrl) }
-        //playRecommendFragment?.let { fragments.add(it) }
         playMusicSongFragment?.let { fragments.add(it) }
         playMusicLrcFragment?.let { fragments.add(it) }
-        viewPager?.offscreenPageLimit = mTitles.size
-        viewPager?.adapter =
-            FragmentPageAdapter(childFragmentManager, fragments, mTitles.toTypedArray())
-        tabLayout?.setupWithViewPager(viewPager)
-        tabLayout?.initLayout()
-        viewPager?.isSaveEnabled = false
-        tabLayout?.setSelectedTabIndicatorHeight(0)
-        viewPager?.currentItem = 0
+        tabViewPager.initData(childFragmentManager, fragments, mTitles)
+        tabViewPager.showLine(false)
     }
 
     override fun onResume() {
@@ -201,12 +178,6 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>(), IPageC
             val dm = resources.displayMetrics
             height = dm.heightPixels
             width = dm.widthPixels
-        }
-    }
-
-    override fun changePage(page: Int) {
-        if (page < 3) {
-            viewPager?.currentItem = page
         }
     }
 }

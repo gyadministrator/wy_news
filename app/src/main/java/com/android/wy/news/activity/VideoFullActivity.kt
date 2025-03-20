@@ -179,10 +179,6 @@ class VideoFullActivity : BaseActivity<ActivityVideoFullBinding, VideoFullViewMo
     }
 
     override fun onPageRelease(isNext: Boolean, position: Int) {
-        releaseVideo(position)
-    }
-
-    private fun releaseVideo(position: Int) {
 
     }
 

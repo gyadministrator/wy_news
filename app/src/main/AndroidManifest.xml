@@ -144,12 +144,6 @@
         这样会让屏幕整体上移。如果加上的是
         android:windowSoftInputMode="adjustPan"这样键盘就会覆盖屏幕。
         -->
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/DefaultCityPickerTheme"
-            android:windowSoftInputMode="adjustPan" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.4" /> <!-- 适配小米（xiaomi）刘海屏 -->

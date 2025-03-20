@@ -30,6 +30,7 @@ import kotlin.math.min
   * @Version:        1.0
   * @Description:    
  */
+@Suppress("DEPRECATION")
 class LrcView : View, ILrcView {
     companion object {
         const val TAG = "LrcView"

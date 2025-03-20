@@ -11,6 +11,8 @@ plugins {
     id 'kotlin-kapt'
 }
 
+android.buildFeatures.buildConfig = true
+
 // 构建时间
 def buildTime = System.currentTimeMillis()
 // 是否显示Log
@@ -135,17 +137,16 @@ dependencies {
     implementation rootProject.ext.dependencies.splashScreen
     //作者的库
     implementation rootProject.ext.dependencies.customTabLayout
-
-    // Retrofit库
+    //Retrofit库
     implementation rootProject.ext.dependencies.retrofit
     implementation rootProject.ext.dependencies.rxjava2
-    // json解析，可以自行替换
+    //json解析，可以自行替换
     implementation rootProject.ext.dependencies.gson
     implementation rootProject.ext.dependencies.glide
     implementation rootProject.ext.dependencies.glideTransformations
-    // (必选)使用这个基础的webView实现
+    //使用这个基础的webView实现
     implementation rootProject.ext.dependencies.agentweb
-    // 基础依赖包，必须要依赖
+    //基础依赖包，必须要依赖
     implementation rootProject.ext.dependencies.immersionbar
     implementation rootProject.ext.dependencies.shimmerRecyclerView
     //轮播图
@@ -160,7 +161,7 @@ dependencies {
     implementation rootProject.ext.dependencies.roomKtx
     //刷新
     implementation rootProject.ext.dependencies.refresh
-    //compose 核心
+    //compose核心
     implementation rootProject.ext.dependencies.composeUi
     implementation rootProject.ext.dependencies.composeMaterial
     implementation rootProject.ext.dependencies.composePreview
@@ -181,7 +182,6 @@ dependencies {
     //kotlin路由导入
     implementation rootProject.ext.dependencies.arouterApi
     kapt rootProject.ext.dependencies.arouterCompiler
-    implementation rootProject.ext.dependencies.pagerBottomTabStrip
     implementation rootProject.ext.dependencies.rxAndroid
     implementation rootProject.ext.dependencies.fileDownloader
     //崩溃处理依赖

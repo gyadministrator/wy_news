@@ -18,7 +18,7 @@ import com.gyf.immersionbar.ImmersionBar
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/5/29 13:10
   * @Version:        1.0
-  * @Description:    
+  * @Description:
  */
 abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment(), IBaseDialogFragment<V> {
     protected lateinit var mBinding: V
@@ -88,7 +88,9 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment(), IBaseDial
         dialog?.setOnShowListener {
             dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
             //清除FLAG后,部分手机会再次显示底部导航栏,所以需要再次设置为全屏
-            ImmersionBar.with(this).fullScreen(true).init()
+            if (this.activity != null) {
+                ImmersionBar.with(this).fullScreen(true).init()
+            }
         }
         initData()
         initEvent()

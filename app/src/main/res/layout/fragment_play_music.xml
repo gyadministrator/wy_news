@@ -6,18 +6,15 @@
     android:layout_height="match_parent"
     android:background="@color/bg_item_color">
 
-    <ImageView
-        android:id="@+id/iv_bg"
+    <com.android.wy.news.view.TabViewPager
+        android:id="@+id/tab_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
+        android:fitsSystemWindows="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_lrc_color"
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
@@ -25,23 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:orientation="horizontal">
-
-            <com.android.tablib.view.CustomTabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:paddingBottom="6dp"
-                app:normalTextColor="@color/text_normal_color"
-                app:normalTextSize="9sp"
-                app:selectTextColor="@color/text_select_color"
-                app:selectTextSize="10sp"
-                app:tabIndicatorColor="@color/text_select_color"
-                app:tabIndicatorFullWidth="false"
-                app:tabMaxWidth="0dp"
-                app:tabMode="auto"
-                app:tabRippleColor="@null" />
 
             <RelativeLayout
                 android:id="@+id/rl_down"
@@ -72,10 +52,5 @@
                     tools:ignore="ContentDescription" />
             </RelativeLayout>
         </RelativeLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 </FrameLayout>

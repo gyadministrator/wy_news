@@ -1,10 +1,8 @@
 package com.android.wy.news.bottombar.view
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -15,6 +13,8 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 
@@ -23,13 +23,12 @@ import androidx.fragment.app.FragmentTransaction
   * @Author:         gao_yun@leapmotor.com
   * @CreateDate:     2023/5/17 10:29
   * @Version:        1.0
-  * @Description:    
+  * @Description:
  */
 open class BottomBar : View {
     private var context: Context? = null
     private var containerId = 0
 
-    private var fragmentClassList: ArrayList<Class<*>> = ArrayList()
     private var titleList = ArrayList<String>()
     private var iconResBeforeList = ArrayList<Int>()
     private var iconResAfterList = ArrayList<Int>()
@@ -47,8 +46,8 @@ open class BottomBar : View {
     private var currentCheckedIndex = 0
     private var firstCheckedIndex = 0
 
-    private var titleColorBefore = Color.parseColor("#999999")
-    private var titleColorAfter = Color.parseColor("#ff5d5e")
+    private var titleColorBefore = "#999999".toColorInt()
+    private var titleColorAfter = "#ff5d5e".toColorInt()
 
     private var titleSizeInDp = 10
     private var iconWidth = 20
@@ -83,11 +82,11 @@ open class BottomBar : View {
      * 支持"#333333"这种形式
      */
     fun setTitleBeforeAndAfterColor(
-        beforeResCode: String?,
-        afterResCode: String?
+        beforeResCode: String,
+        afterResCode: String
     ): BottomBar {
-        titleColorBefore = Color.parseColor(beforeResCode)
-        titleColorAfter = Color.parseColor(afterResCode)
+        titleColorBefore = beforeResCode.toColorInt()
+        titleColorAfter = afterResCode.toColorInt()
         return this
     }
 
@@ -126,12 +125,12 @@ open class BottomBar : View {
     }
 
     fun addItem(
-        fragmentClass: Class<*>,
+        fragment: Fragment,
         title: String,
         iconResBefore: Int,
         iconResAfter: Int
     ): BottomBar {
-        fragmentClassList.add(fragmentClass)
+        fragmentList.add(fragment)
         titleList.add(title)
         iconResBeforeList.add(iconResBefore)
         iconResAfterList.add(iconResAfter)
@@ -144,7 +143,7 @@ open class BottomBar : View {
     }
 
     fun build() {
-        itemCount = fragmentClassList.size
+        itemCount = fragmentList.size
         //预创建bitmap的Rect并缓存
         //预创建icon的Rect并缓存
         for (i in 0 until itemCount) {
@@ -154,15 +153,6 @@ open class BottomBar : View {
             iconBitmapAfterList.add(afterBitmap)
             val rect = Rect()
             iconRectList.add(rect)
-            val clx = fragmentClassList[i]
-            try {
-                val fragment = clx.newInstance() as Fragment
-                fragmentList.add(fragment)
-            } catch (e: InstantiationException) {
-                e.printStackTrace()
-            } catch (e: IllegalAccessException) {
-                e.printStackTrace()
-            }
         }
         currentCheckedIndex = firstCheckedIndex
         switchFragment(currentCheckedIndex)
@@ -234,7 +224,7 @@ open class BottomBar : View {
      */
     private fun makeTintBitmap(inputBitmap: Bitmap, tintColor: Int): Bitmap? {
         val outputBitmap =
-            Bitmap.createBitmap(inputBitmap.width, inputBitmap.height, inputBitmap.config)
+            createBitmap(inputBitmap.width, inputBitmap.height, inputBitmap.config)
         val canvas = Canvas(outputBitmap)
         val paint = Paint()
         paint.colorFilter = PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
