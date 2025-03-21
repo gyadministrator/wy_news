@@ -1,6 +1,7 @@
 package com.android.wy.news.util
 
 import android.text.TextUtils
+import com.android.wy.news.common.Logger
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -43,6 +44,7 @@ object JsonUtil {
         var t: T? = null
         try {
             t = gson.fromJson(json, cls)
+            Logger.d("parseJsonToObject ### json:${json},t:${t}")
         } catch (e: Exception) {
             e.printStackTrace()
         }

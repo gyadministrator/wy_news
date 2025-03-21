@@ -85,13 +85,14 @@ object PlayMusicManager {
     ) {
         if (currentPosition == position) return
         val dataList = musicAdapter?.getDataList()
-        if (position < 0) currentPosition = 0
+        Logger.i("prepareMusic ### currentPosition:$currentPosition,size:${dataList?.size}")
         if (dataList != null) {
-            if (position > dataList.size) currentPosition = dataList.size - 1
-        }
-        if (dataList != null) {
+            if (position < 0) currentPosition = dataList.size - 1
+            if (position > dataList.size - 1) currentPosition = 0
             if (position < dataList.size) {
                 currentPosition = position
+                //滑动到播放的歌曲
+                recyclerView?.scrollToPosition(currentPosition)
                 val musicInfo = dataList[currentPosition]
 
                 this.currentMusicInfo.postValue(musicInfo)
@@ -129,7 +130,7 @@ object PlayMusicManager {
     }
 
     fun requestMusicInfo(musicInfo: MusicInfo) {
-        activity?.let { LoadingDialog.show(GlobalData.MUSIC_LOADING_TAG, it, "加载歌曲...",false) }
+        activity?.let { LoadingDialog.show(GlobalData.MUSIC_LOADING_TAG, it, "加载歌曲...", true) }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -175,14 +176,21 @@ object PlayMusicManager {
             GlobalConstant.MUSIC_BASE_URL, IApiService::class.java
         )
         val observable = apiService.getMusicUrlWithResponseBody(params)
-        HttpController.startRequest(this::class.java.name,
+        HttpController.startRequest(
+            this::class.java.name,
             observable,
             object : HttpController.OnHttpListener {
                 override fun onRequestSuccess(response: Response<ResponseBody>) {
-                    val body = response.body()
+                    val s = response.body()?.string()
+                    Logger.d("onRequestSuccess ### $s")
                     val musicUrlEntity =
-                        JsonUtil.parseJsonToObject(body?.string(), MusicUrlEntity::class.java)
-                    parseMusicUrl(mid, musicUrlEntity)
+                        JsonUtil.parseJsonToObject(s, MusicUrlEntity::class.java)
+                    Logger.d("onRequestSuccess ### musicUrlEntity:${musicUrlEntity}")
+                    if (musicUrlEntity?.data != null) {
+                        parseMusicUrl(mid, musicUrlEntity)
+                    }else{
+                        ToastUtil.show("请求错误，请稍后再试")
+                    }
                 }
 
                 override fun onRequestError(t: Throwable) {
@@ -193,7 +201,7 @@ object PlayMusicManager {
 
     fun requestDownloadMusicInfo(musicInfo: MusicInfo) {
         this.currentDownloadMusicInfo = musicInfo
-        activity?.let { LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, it, "下载歌曲...",true) }
+        activity?.let { LoadingDialog.show(GlobalData.COMMON_LOADING_TAG, it, "下载歌曲...", true) }
         val musicId = musicInfo.musicrid
         if (musicId.contains("_")) {
             val mid = musicId.substring(musicId.indexOf("_") + 1, musicId.length)
@@ -229,8 +237,10 @@ object PlayMusicManager {
             mServiceIntent = Intent(App.app, MusicNotifyService::class.java)
         }
         mServiceIntent?.action = MusicNotifyService.MUSIC_PREPARE_ACTION
-        mServiceIntent?.putExtra(MusicNotifyService.MUSIC_INFO_KEY,
+        mServiceIntent?.putExtra(
+            MusicNotifyService.MUSIC_INFO_KEY,
             this.currentMusicInfo.value?.let { JsonUtil.parseObjectToJson(it) })
+        Logger.i("startMusicService ### currentPlayUrl:${this.currentPlayUrl}")
         mServiceIntent?.putExtra(MusicNotifyService.MUSIC_URL_KEY, this.currentPlayUrl)
         App.app.startService(mServiceIntent)
     }
@@ -243,19 +253,12 @@ object PlayMusicManager {
 
     fun playNext() {
         Logger.i("playNext: ")
-        val dataList = musicAdapter?.getDataList()
-        if (currentPosition + 1 > dataList!!.size - 1) currentPosition = dataList.size - 2
-        //滑动到播放的歌曲
-        recyclerView?.scrollToPosition(currentPosition + 1)
         //下一曲
         prepareMusic(currentPosition + 1)
     }
 
     private fun playPre() {
         Logger.i("playPre: ")
-        if (currentPosition - 1 < 0) currentPosition = 1
-        //滑动到播放的歌曲
-        recyclerView?.scrollToPosition(currentPosition - 1)
         //上一曲
         prepareMusic(currentPosition - 1)
     }
@@ -300,7 +303,8 @@ object PlayMusicManager {
             GlobalConstant.MUSIC_BASE_URL, IApiService::class.java
         )
         val observable = apiService.getMusicLrcWithBack(params)
-        HttpController.startRequest(this::class.java.name,
+        HttpController.startRequest(
+            this::class.java.name,
             observable,
             object : HttpController.OnHttpListener {
                 override fun onRequestSuccess(response: Response<ResponseBody>) {

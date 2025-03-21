@@ -33,6 +33,8 @@ object LoadingDialog {
     }
 
     fun hide(tag: String) {
+        val background = AppUtil.isBackground(App.app)
+        if (background) return
         Logger.i("LoadingDialog--->>>hide:$tag")
         val loadingDialogFragment = dialogList[tag]
         if (loadingDialogFragment != null) {
