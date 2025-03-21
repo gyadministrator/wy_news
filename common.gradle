@@ -31,9 +31,6 @@ ext {
             'androidx.core:core-splashscreen'                      : '1.0.0-beta02',
             'androidx.compose.ui:ui-tooling-preview'               : '1.0.1',
 
-            // 作者的库
-            'com.github.gyadministrator:CustomTabLayout'           : '1.1',
-
             // 三方框架
             //网络
             'com.squareup.retrofit2:retrofit'                      : '2.9.0',
@@ -100,9 +97,6 @@ ext {
             junitExt                     : "androidx.test.ext:junit:${versions['androidx.test.ext:junit']}",
             splashScreen                 : "androidx.core:core-splashscreen:${versions['androidx.core:core-splashscreen']}",
             espressoCore                 : "androidx.test.espresso:espresso-core:${versions['androidx.test.espresso:espresso-core']}",
-
-            // 作者的库
-            customTabLayout              : "com.github.gyadministrator:CustomTabLayout:${versions['com.github.gyadministrator:CustomTabLayout']}",
 
             // 三方框架
             retrofit                     : "com.squareup.retrofit2:retrofit:${versions['com.squareup.retrofit2:retrofit']}",

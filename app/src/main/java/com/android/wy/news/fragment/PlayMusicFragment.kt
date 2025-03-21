@@ -131,8 +131,10 @@ class PlayMusicFragment : BaseDialogFragment<FragmentPlayMusicBinding>() {
             s?.let { PlayMusicLrcFragment.newInstance(currentPosition, it, currentPlayUrl) }
         playMusicSongFragment?.let { fragments.add(it) }
         playMusicLrcFragment?.let { fragments.add(it) }
-        tabViewPager.initData(childFragmentManager, fragments, mTitles)
-        tabViewPager.showLine(false)
+        tabViewPager.initViewPager(lifecycle, childFragmentManager, fragments, mTitles)
+            .apply {
+                showLine(false)
+            }
     }
 
     override fun onResume() {

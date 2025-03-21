@@ -39,7 +39,7 @@ class LiveTabFragment : BaseFragment<FragmentTabLiveBinding, LiveTabViewModel>()
                     fragments.add(LiveFragment.newInstance(titleEntity.id))
                 }
             }
-            tabViewPager.initData(childFragmentManager, fragments, mTitles)
+            tabViewPager.initViewPager(lifecycle, childFragmentManager, fragments, mTitles)
         }
     }
 

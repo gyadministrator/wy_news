@@ -42,7 +42,7 @@ class ClassifyTabFragment : BaseFragment<FragmentTabClassifyBinding, ClassifyTab
                     fragments.add(fragment)
                 }
             }
-            tabViewPager.initData(childFragmentManager, fragments, mTitles)
+            tabViewPager.initViewPager(lifecycle, childFragmentManager, fragments, mTitles)
         }
     }
 

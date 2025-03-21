@@ -38,7 +38,7 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
                 val fragment = MusicFragment.newInstance(id)
                 fragments.add(fragment)
             }
-            tabViewPager.initData(childFragmentManager, fragments, mTitles)
+            tabViewPager.initViewPager(lifecycle, childFragmentManager, fragments, mTitles)
         }
     }
 

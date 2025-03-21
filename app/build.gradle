@@ -97,9 +97,9 @@ android {
             def date = new Date(buildTime)
             def dateStr = dateFormat.format(date)
             if (variant.buildType.name == "release") {
-                outputFileName = "${variant.name}_v${variant.versionName}_product_${dateStr}.apk"
+                outputFileName = "News_${variant.versionName}.apk"
             } else {
-                outputFileName = "${variant.name}_v${variant.versionName}_develop_${dateStr}.apk"
+                outputFileName = "News_${variant.versionName}_${dateStr}.apk"
             }
         }
     }
@@ -135,8 +135,6 @@ dependencies {
     androidTestImplementation rootProject.ext.dependencies.junitExt
     androidTestImplementation rootProject.ext.dependencies.espressoCore
     implementation rootProject.ext.dependencies.splashScreen
-    //作者的库
-    implementation rootProject.ext.dependencies.customTabLayout
     //Retrofit库
     implementation rootProject.ext.dependencies.retrofit
     implementation rootProject.ext.dependencies.rxjava2

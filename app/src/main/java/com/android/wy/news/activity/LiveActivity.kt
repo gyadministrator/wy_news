@@ -55,7 +55,7 @@ class LiveActivity : BaseActivity<ActivityLiveBinding, LiveTabViewModel>() {
                     fragments.add(LiveFragment.newInstance(titleEntity.id))
                 }
             }
-            tabViewPager.initData(supportFragmentManager, fragments, mTitles)
+            tabViewPager.initViewPager(lifecycle,supportFragmentManager, fragments, mTitles)
         }
     }
 
