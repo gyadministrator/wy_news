@@ -8,5 +8,6 @@ package com.android.wy.news.entity.music
  */
 data class MusicTypeEntity(
     val id: Int,
-    val title: String
+    val title: String,
+    val show: Boolean
 )

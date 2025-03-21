@@ -33,10 +33,12 @@ class MusicTabFragment : BaseFragment<FragmentTabMusicBinding, MusicTabViewModel
         if (titleList.size > 0) {
             for (i in titleList.indices) {
                 val titleEntity = titleList[i]
-                val id = titleEntity.id
-                mTitles.add(titleEntity.title)
-                val fragment = MusicFragment.newInstance(id)
-                fragments.add(fragment)
+                if (titleEntity.show) {
+                    val id = titleEntity.id
+                    mTitles.add(titleEntity.title)
+                    val fragment = MusicFragment.newInstance(id)
+                    fragments.add(fragment)
+                }
             }
             tabViewPager.initViewPager(lifecycle, childFragmentManager, fragments, mTitles)
         }

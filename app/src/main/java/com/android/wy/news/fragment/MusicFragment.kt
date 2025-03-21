@@ -148,9 +148,8 @@ class MusicFragment : BaseFragment<FragmentMusicBinding, MusicViewModel>(), OnRe
         MusicRepository.getMusicList(categoryId, pageStart).observe(this) {
             val musicListEntity = it.getOrNull()
             val musicListData = musicListEntity?.data
-            val musicList = musicListData?.musicList
             //过滤
-            //musicList = CommonTools.filterMusicList(musicList)
+            val musicList = CommonTools.filterMusicList(musicListData?.musicList)
             if (isRefresh) {
                 refreshLayout.setNoMoreData(false)
                 refreshLayout.finishRefresh()

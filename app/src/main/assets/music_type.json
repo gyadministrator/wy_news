@@ -1,114 +1,142 @@
 [
   {
     "title": "抖音歌曲榜",
-    "id": 158
+    "id": 158,
+    "show": false
   },
   {
     "title": "飙升榜",
-    "id": 93
+    "id": 93,
+    "show": false
   },
   {
     "title": "新歌榜",
-    "id": 17
+    "id": 17,
+    "show": false
   },
   {
     "title": "热歌榜",
-    "id": 16
+    "id": 16,
+    "show": false
   },
   {
     "title": "DJ榜",
-    "id": 176
+    "id": 176,
+    "show": false
   },
   {
     "title": "经典怀旧榜",
-    "id": 26
+    "id": 26,
+    "show": false
   },
   {
     "title": "网红新歌榜",
-    "id": 153
+    "id": 153,
+    "show": true
   },
   {
     "title": "古风音乐榜",
-    "id": 278
+    "id": 278,
+    "show": false
   },
   {
     "title": "酷我热评榜",
-    "id": 284
+    "id": 284,
+    "show": false
   },
   {
     "title": "最强翻唱榜",
-    "id": 185
+    "id": 185,
+    "show": false
   },
   {
     "title": "极品电音榜",
-    "id": 242
+    "id": 242,
+    "show": true
   },
   {
     "title": "流行趋势榜",
-    "id": 187
+    "id": 187,
+    "show": true
   },
   {
     "title": "酷我综艺榜",
-    "id": 154
+    "id": 154,
+    "show": false
   },
   {
     "title": "影视金曲榜",
-    "id": 64
+    "id": 64,
+    "show": true
   },
   {
     "title": "酷我说唱榜",
-    "id": 329
+    "id": 329,
+    "show": false
   },
   {
     "title": "禅心佛乐榜",
-    "id": 294
+    "id": 294,
+    "show": true
   },
   {
     "title": "ACG新歌榜",
-    "id": 290
+    "id": 290,
+    "show": true
   },
   {
     "title": "酷我铃声榜",
-    "id": 292
+    "id": 292,
+    "show": true
   },
   {
     "title": "爆笑相声榜",
-    "id": 291
+    "id": 291,
+    "show": true
   },
   {
     "title": "车载歌曲榜",
-    "id": 328
+    "id": 328,
+    "show": false
   },
   {
     "title": "夏日清爽榜",
-    "id": 279
+    "id": 279,
+    "show": false
   },
   {
     "title": "跑步健身榜",
-    "id": 297
+    "id": 297,
+    "show": false
   },
   {
     "title": "宝宝哄睡榜",
-    "id": 295
+    "id": 295,
+    "show": true
   },
   {
     "title": "睡前放松榜",
-    "id": 283
+    "id": 283,
+    "show": true
   },
   {
     "title": "熬夜修仙榜",
-    "id": 282
+    "id": 282,
+    "show": false
   },
   {
     "title": "Vlog必备榜",
-    "id": 264
+    "id": 264,
+    "show": false
   },
   {
     "title": "KTV点唱榜",
-    "id": 255
+    "id": 255,
+    "show": false
   },
   {
     "title": "通勤路上榜",
-    "id": 281
+    "id": 281,
+    "show": false
   }
 ]
