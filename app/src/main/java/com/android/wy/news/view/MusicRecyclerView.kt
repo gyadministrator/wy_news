@@ -24,7 +24,7 @@ import com.android.wy.news.music.MusicState
 import com.android.wy.news.util.AppUtil
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/27 15:06
   * @Version:        1.0
   * @Description:    

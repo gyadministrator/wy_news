@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/15 13:48
   * @Version:        1.0
   * @Description:    

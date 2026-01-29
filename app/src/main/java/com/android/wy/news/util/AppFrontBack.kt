@@ -5,7 +5,7 @@ import android.app.Application
 import android.os.Bundle
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/9 13:34
   * @Version:        1.0
   * @Description:    

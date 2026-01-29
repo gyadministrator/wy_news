@@ -3,7 +3,7 @@ import okhttp3.ResponseBody
 import java.io.File
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/29 15:29
   * @Version:        1.0
   * @Description:    

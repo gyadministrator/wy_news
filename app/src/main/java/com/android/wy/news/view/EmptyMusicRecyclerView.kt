@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/17 14:00
   * @Version:        1.0
   * @Description:    

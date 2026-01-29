@@ -12,7 +12,7 @@ import java.util.Locale
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/27 14:01
   * @Version:        1.0
   * @Description:    

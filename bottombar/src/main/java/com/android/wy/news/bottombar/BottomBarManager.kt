@@ -5,7 +5,7 @@ import com.android.wy.news.bottombar.model.BarItem
 import com.android.wy.news.bottombar.view.BottomBar
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/17 10:49
   * @Version:        1.0
   * @Description:

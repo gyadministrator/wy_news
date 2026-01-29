@@ -3,7 +3,7 @@ package com.android.wy.news.lrc.listener
 import com.android.wy.news.lrc.impl.LrcRow
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/22 10:09
   * @Version:        1.0
   * @Description:    展示歌词的接口

@@ -8,7 +8,7 @@ import com.android.wy.news.util.ToastUtil
 import kotlin.coroutines.CoroutineContext
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/24 10:15
   * @Version:        1.0
   * @Description:    

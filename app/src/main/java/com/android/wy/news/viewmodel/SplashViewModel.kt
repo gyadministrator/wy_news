@@ -26,7 +26,7 @@ import retrofit2.Response
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/16 19:31
   * @Version:        1.0
   * @Description:    

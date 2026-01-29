@@ -3,7 +3,7 @@ package com.android.wy.news.manager
 import com.alibaba.android.arouter.launcher.ARouter
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/16 10:51
   * @Version:        1.0
   * @Description:    

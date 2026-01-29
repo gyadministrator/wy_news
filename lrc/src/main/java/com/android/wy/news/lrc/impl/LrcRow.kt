@@ -1,7 +1,7 @@
 package com.android.wy.news.lrc.impl
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/22 9:45
   * @Version:        1.0
   * @Description:

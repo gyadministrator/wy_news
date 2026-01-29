@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/3 14:51
   * @Version:        1.0
   * @Description:    

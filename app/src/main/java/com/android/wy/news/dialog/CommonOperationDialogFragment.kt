@@ -15,7 +15,7 @@ import com.android.wy.news.util.JsonUtil
 
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/15 14:37
   * @Version:        1.0
   * @Description:    

@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/13 16:51
   * @Version:        1.0
   * @Description:    

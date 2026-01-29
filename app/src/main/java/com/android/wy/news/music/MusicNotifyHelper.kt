@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/26 10:30
   * @Version:        1.0
   * @Description:    

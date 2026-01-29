@@ -5,7 +5,7 @@ import android.util.Log
 import com.android.wy.news.lrc.impl.LrcRow
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/22 10:13
   * @Version:        1.0
   * @Description:    

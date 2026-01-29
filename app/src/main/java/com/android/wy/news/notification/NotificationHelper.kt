@@ -28,7 +28,7 @@ import com.bumptech.glide.request.transition.Transition
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/12 13:23
   * @Version:        1.0
   * @Description:    

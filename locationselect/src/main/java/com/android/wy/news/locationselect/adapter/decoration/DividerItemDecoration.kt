@@ -11,7 +11,7 @@ import com.android.wy.news.locationselect.R
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/15 13:46
   * @Version:        1.0
   * @Description:    

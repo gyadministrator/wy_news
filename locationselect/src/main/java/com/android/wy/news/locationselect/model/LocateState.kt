@@ -5,7 +5,7 @@ import java.lang.annotation.RetentionPolicy
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/15 13:18
   * @Version:        1.0
   * @Description:    

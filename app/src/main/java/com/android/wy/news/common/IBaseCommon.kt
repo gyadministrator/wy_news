@@ -4,7 +4,7 @@ import androidx.viewbinding.ViewBinding
 import com.android.wy.news.viewmodel.BaseViewModel
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/16 14:57
   * @Version:        1.0
   * @Description:    

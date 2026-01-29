@@ -46,7 +46,7 @@ import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/30 9:14
   * @Version:        1.0
   * @Description:    

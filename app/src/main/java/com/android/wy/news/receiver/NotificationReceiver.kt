@@ -11,7 +11,7 @@ import com.android.wy.news.util.AppUtil
 import org.greenrobot.eventbus.EventBus
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/14 9:37
   * @Version:        1.0
   * @Description:    

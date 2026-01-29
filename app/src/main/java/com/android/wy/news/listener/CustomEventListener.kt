@@ -5,7 +5,7 @@ import com.android.wy.news.common.Logger
 
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/13 13:19
   * @Version:        1.0
   * @Description:    

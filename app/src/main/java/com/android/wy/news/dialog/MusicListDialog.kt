@@ -17,7 +17,7 @@ import com.android.wy.news.view.MusicRecyclerView
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/5 15:19
   * @Version:        1.0
   * @Description:    

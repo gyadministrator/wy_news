@@ -24,7 +24,7 @@ import com.liulishuo.filedownloader.connection.FileDownloadUrlConnection
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/16 19:28
   * @Version:        1.0
   * @Description:    

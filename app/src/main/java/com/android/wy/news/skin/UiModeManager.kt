@@ -16,7 +16,7 @@ import com.android.wy.news.util.AppUtil
 import com.gyf.immersionbar.ImmersionBar
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/4 17:34
   * @Version:        1.0
   * @Description:    

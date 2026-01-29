@@ -12,7 +12,7 @@ import com.android.wy.news.entity.House
 import com.youth.banner.adapter.BannerAdapter
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/28 15:06
   * @Version:        1.0
   * @Description:

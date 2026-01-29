@@ -13,7 +13,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/17 11:21
   * @Version:        1.0
   * @Description:    

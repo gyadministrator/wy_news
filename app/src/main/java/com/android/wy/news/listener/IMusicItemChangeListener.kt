@@ -4,7 +4,7 @@ import android.view.View
 import com.android.wy.news.entity.music.MusicInfo
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/30 13:24
   * @Version:        1.0
   * @Description:    

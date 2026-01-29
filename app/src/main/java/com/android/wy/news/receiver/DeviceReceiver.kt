@@ -9,7 +9,7 @@ import com.android.wy.news.util.ToastUtil
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/14 13:47
   * @Version:        1.0
   * @Description:    

@@ -11,7 +11,7 @@ import com.android.wy.news.common.CommonTools
 import com.android.wy.news.util.AppUtil
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/2/3 13:27
   * @Version:        1.0
   * @Description:    

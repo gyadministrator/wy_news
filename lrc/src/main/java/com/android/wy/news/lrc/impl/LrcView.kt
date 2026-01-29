@@ -25,7 +25,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/22 10:42
   * @Version:        1.0
   * @Description:    

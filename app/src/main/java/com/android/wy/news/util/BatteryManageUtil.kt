@@ -11,7 +11,7 @@ import android.provider.Settings
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/9 9:29
   * @Version:        1.0
   * @Description:    对电池进行管理，使APP避免被电池优化

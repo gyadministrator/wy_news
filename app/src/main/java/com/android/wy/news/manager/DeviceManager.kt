@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/14 13:33
   * @Version:        1.0
   * @Description:    DeviceReceiver 继承自 DeviceAdminReceiver

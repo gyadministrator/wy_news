@@ -4,7 +4,7 @@ import com.android.wy.news.common.SpTools
 import kotlin.random.Random
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/5 13:13
   * @Version:        1.0
   * @Description:    

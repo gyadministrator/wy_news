@@ -16,7 +16,7 @@ import com.android.wy.news.util.AppUtil
 import java.util.Collections
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/21 13:14
   * @Version:        1.0
   * @Description:    

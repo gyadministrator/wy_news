@@ -13,7 +13,7 @@ import com.android.wy.news.view.ScreenVideoView
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/17 13:45
   * @Version:        1.0
   * @Description:    

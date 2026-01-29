@@ -3,7 +3,7 @@ package com.android.wy.news.common
 import androidx.viewbinding.ViewBinding
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/29 13:08
   * @Version:        1.0
   * @Description:    

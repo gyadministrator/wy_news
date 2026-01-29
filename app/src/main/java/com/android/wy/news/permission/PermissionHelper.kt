@@ -8,7 +8,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/10 11:20
   * @Version:        1.0
   * @Description:    

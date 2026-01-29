@@ -13,7 +13,7 @@ import kotlin.math.roundToInt
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/4/3 16:55
   * @Version:        1.0
   * @Description:    

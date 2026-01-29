@@ -6,7 +6,7 @@ import com.android.wy.news.music.MediaPlayerHelper
 import com.android.wy.news.util.JsonUtil
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/19 14:48
   * @Version:        1.0
   * @Description:    

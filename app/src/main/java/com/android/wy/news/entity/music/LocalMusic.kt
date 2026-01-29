@@ -2,7 +2,7 @@ package com.android.wy.news.entity.music
 
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/6/8 15:14
   * @Version:        1.0
   * @Description:    

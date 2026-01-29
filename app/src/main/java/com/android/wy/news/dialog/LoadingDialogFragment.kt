@@ -9,7 +9,7 @@ import com.android.wy.news.databinding.LayoutLoadingDialogBinding
 import com.android.wy.news.view.LoadingView
 
 /*     
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/30 11:10
   * @Version:        1.0
   * @Description:    
