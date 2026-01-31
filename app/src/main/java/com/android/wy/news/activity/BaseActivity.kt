@@ -16,7 +16,7 @@ import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/3/16 14:45
   * @Version:        1.0
   * @Description:

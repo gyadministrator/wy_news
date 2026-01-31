@@ -7,7 +7,7 @@ import com.android.wy.news.entity.music.MusicTypeEntity
 import com.android.wy.news.music.lrc.Lrc
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/5/16 9:36
   * @Version:        1.0
   * @Description:   全局数据相关

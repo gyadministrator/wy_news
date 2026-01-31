@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 
 /*
-  * @Author:         gao_yun@leapmotor.com
+  * @Author:         gao_yun
   * @CreateDate:     2023/8/31 13:55
   * @Version:        1.0
   * @Description:
