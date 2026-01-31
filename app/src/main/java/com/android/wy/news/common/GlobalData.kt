@@ -1,4 +1,4 @@
-package com.android.wy.news.commongao_yun
+package com.android.wy.news.common
 
 import androidx.lifecycle.MutableLiveData
 import com.android.wy.news.entity.LiveClassifyEntity

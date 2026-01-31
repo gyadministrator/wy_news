@@ -1,4 +1,4 @@
-package com.android.wy.news.bottombar.modelgao_yun
+package com.android.wy.news.bottombar.model
 
 import androidx.fragment.app.Fragment
 

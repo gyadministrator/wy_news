@@ -1,4 +1,4 @@
-package com.android.wy.news.activitygao_yun
+package com.android.wy.news.activity
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo

@@ -1,4 +1,4 @@
-package com.android.wy.news.viewgao_yun
+package com.android.wy.news.view
 
 import android.content.Context
 import android.util.AttributeSet
